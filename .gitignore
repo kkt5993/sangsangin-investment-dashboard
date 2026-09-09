@@ -1,0 +1,17 @@
+.env
+.env.*
+!.env.example
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+source/
+private/
+data/raw/
+*.duckdb
+*.sqlite
+*.pdf
+*.mp4
+*.pem
+*.key
+.DS_Store

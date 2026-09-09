@@ -3,14 +3,14 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 주목 상황 / 지역 모니터 / 복합지표 / 키워드 트렌드 / 시장 지표 / 뉴스 원장.
+**부분 구현** · 가격 기준 2026-09-08. 주목 상황 / 지역 모니터 / 복합지표 / 키워드 트렌드 / 시장 지표 / 뉴스 원장 / 인과·영향 모델 / GPR 세부.
 
-- 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [events_data.py](../../pipeline/events_data.py)
+- 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [events_data.py](../../pipeline/events_data.py) · [geoecon_views.py](../../pipeline/geoecon_views.py) · [gpr_data.py](../../pipeline/gpr_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/geoecon.json)
-- 계산/자료 계약: 정책 불확실성과 시장 반응을 분리해 비교합니다. 원본의 EPU·VIX, DXY·원유, 금리·신용 3개 이중축 구조입니다. 뉴스는 RSS의 제목·발행일·원문 링크만 수집합니다. 지역·키워드는 제목의 명시적 단어 일치이며 국가 위험도나 감성/인과 판정이 아닙니다. 복합지표는 EPU·VIX·HY OAS의252일 z 동일가중 평균입니다.
-- 남은 범위: 원본의 LLM 감성·인과 전파·위성 시설 관측은 연결되지 않았습니다. RSS 수집 범위와 실패 제공처를 표시합니다.
+- 계산/자료 계약: 보존 RSS 제목을 URL별로 합치고 한국시간 기준일까지의30일 발행 기사만 사용합니다. 15주제/4카테고리·위험/완화 단어·6채널 규칙은 공개 팀 설정입니다. 시장 3개 이중축·3개 복합 z는 최근1년 구조로 정렬합니다. 월간 GPR의 원지수와 다른 신문 표본의 기사 비중은 별도 축입니다.
+- 남은 범위: 제목 표현 분류는 기사 전체의 LLM 감성·사실 검증이 아닙니다. 채널 화살표는 경제적 경로 가정, 노출0~7은 현재 기사 표본 비중×7이며 피해 크기·수익률·확률이 아닙니다. 보도 이후 가격은 인과 효과가 아닙니다. / RSS 보존 이력이 짧고 제공처별 발행주기/수집 실패가 달라 전체 뉴스량이나 완전한 일별 과거 표본을 확보하지 않았습니다. 위성 배경·시설 관측과 원본 비공개 감성 가중치는 미연결입니다.
 
-연결된 하위 그룹: 시장 지표, 주목 상황, 지역 모니터, 키워드 트렌드, 뉴스 원장, 복합지표.
+연결된 하위 그룹: 시장 지표, 주목 상황, 복합지표, 키워드 트렌드, 인과·영향 모델, 뉴스 원장, 지역 모니터, GPR 세부.
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 

@@ -110,3 +110,10 @@ DRAGONGLASS 후속(2026-09-09): 관계39객체(기업22/테마13/관측2/가정2
 Overview 후속(2026-09-09): overview_state.py/overview-views.js로TESSERACT6축·CROWDING5축·36시점궤적/4시점적층·회전/드래그/프레임취소·주도주웜홀/선택/원단위표 연결. z최대120/최소60/ddof0, SPY/EEM50:50, Wilshire가격지수/GDP상대변화는실제시총/GDP아님. 시총50표본중가격/분기NI가용49에서상위10;전체글로벌시총상위아님. 단위/발표시차/셧다운보정은 research/OVERVIEW_CONTRACT.md. CPQ4+3개월, 2025Q3GDP/CP는2025-12-23, 2025Q4GDP2026-03-13/CP2026-04-09로확인된지연보정;최신수정치PIT아님.
 
 WTREGEN1거시/SPHB·SPLV·^W5000역사추가, ^FTW5000은37개관측으로긴창미사용. 원자료빈티지20260909T143552Z,가격1131/거시60/재무195. 원본사이트요청0;공식FRED/BEA/지수정의검증. 검사114Python·두검증기·3JS/13구문·51SVG래스터통과,새5이미지확인;브라우저QA없음. 로컬90.34MiB/512·공개JSON7.177MiB/8(게시패키지생성전). 실행ID20260909T145933Z,실제공개완료는runtime/state.json. 전체목표는진행이며다음은지정학상황/키워드기간변화/영향채널/공식GPR세부,위성/실적추정/SEC/KR달력과REFERENCE_PARITY의남은계약이다.
+
+
+지정학 후속(2026-09-10): geoecon_views.py/geo-views.js로15주제4카테고리·상위6상황·5관심지역·19키워드30일/7일비중·6채널·3복합z/밴드·시장3이중축1년·GPR3지수/8역사분류/8국가1/3/10년 연결. RSS2/RDF/Atom 파싱을수정해BIS/DW미검출해소;이번7요청6성공/IMF HTTP실패,143응답. 부모빈티지URL합집합·KST가격기준일종료/수집미래제외·first_seen보존으로79제목. 짧은수집역사를당시완전한뉴스량이라고주장하지않는다. 제목단어/3단어부정어·주목도기사+위험표현2배는팀규칙. 채널노출=기사비중×7·주제중복제외,27자산/기사관측경로D0~20은인과효과아님.
+
+GPR Stata1요청764625bytes/gzip334921을private빈티지보존, GPR/GPRT/GPRA272개월/상세120개월. SHAREH8은3신문기사%,국가GPRC8은10신문기사%,3최근지수1985–2019=100과가산금지. refresh는gpr_details7일기준으로정기갱신. 기존ASK네번째핵심도3복합중VIX/HY참조로정렬;과거3입력EPU/VIX/HY와차이문서화. 상세research/GEOECON_CONTRACT.md,코드/검사에공개. 새가격/원본사이트요청0.
+
+검사121Python·두검증기·3JS(geo추가)/14구문·59SVG래스터통과,8신규이미지확인,브라우저QA없음. 원자료/실행파일98.18MiB/512·공개JSON7.405MiB/8. 게시실행ID20260909T152214Z/raw빈티지20260909T150119Z,실제공개상태는runtime/state.json. 전체목표는진행;다음estimate_verify/us_consensus분기/연간세부·위성실관측·SEC13F/P·KR달력/옵션·RS기간계약등REFERENCE_PARITY의미완료를계속구현한다.

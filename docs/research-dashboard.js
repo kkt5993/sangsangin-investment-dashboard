@@ -31,6 +31,7 @@
  function digestTrend(p){return `<p>가용 ${p.available}/${p.expected}자산 · 관측 수익률 %</p>`+C.bars(p.rows,{unit:'%',title:p.title})+table({title:p.title+' · 관측일',columns:['자산','심볼','분류','과거 수익률 %','실제 가격일'],rows:p.rows.map(r=>[r.name,r.symbol,r.group,r.value,r.date])});}
  function digestSources(rows){return rows.map(r=>`<p><strong>${E(r.name)} · ${E(r.symbol)}</strong> ${E(r.role)}<br><a href="${E(safe(r.source))}" target="_blank" rel="noopener noreferrer">공식 사업 설명 ↗</a></p>`).join('');}
  function section(s,i,st){
+  if(['geosituations','geocomposites','geokeywords','geochannels','geogpr'].includes(s.type))return heading(s.title)+root.GeoViews.render(s,i);
   if(s.type==='relationlab'||s.type==='relationscenario')return root.RelationViews.render(s,i);
   if(s.type==='notebook')return root.ResearchNotes.view(s,i);
   if(s.type==='digestbrief')return heading(s.title)+`<article class="panel"><h3>${E(s.headline)}</h3><p>${E(s.market)}</p><div class="digest-grid">${s.horizons.map(r=>`<div><h4>${E(r.title)}</h4><p>${E(r.text)}</p></div>`).join('')}</div><p class="quiet">${E(s.note)}</p></article>`;
@@ -112,6 +113,7 @@
   const filter=()=>{const q=st.q.toLocaleLowerCase();container.querySelectorAll('tbody tr:not(.table-group),.reading-card,.discovery-row,.scan-card').forEach(row=>{row.hidden=q&&!row.textContent.toLocaleLowerCase().includes(q);});};
   container.querySelector('#analysis-search')?.addEventListener('input',e=>{st.q=e.target.value;filter();});filter();
   bindSort(container);
+  root.GeoViews.bind(container,d.sections);
   container.querySelectorAll('[data-digest-trends]').forEach(box=>box.querySelector('[data-digest-horizon]').addEventListener('change',e=>{const p=d.sections[+box.dataset.digestTrends].panels.find(p=>p.id===e.target.value);box.querySelector('[data-digest-trend-output]').innerHTML=p?digestTrend(p):'<p>해당 기간 없음</p>';bindSort(box);}));
   container.querySelectorAll('[data-review-charts]').forEach(box=>box.querySelector('[data-review-date]').addEventListener('change',e=>{const s=d.sections[+box.dataset.reviewCharts],r=s.archives.find(r=>r.period===e.target.value),charts=e.target.value==='latest'?s.latest:r?.charts||[];box.querySelector('[data-review-figures]').innerHTML=reviewFigures(charts);}));
   container.querySelectorAll('[data-moe]').forEach(box=>{const selector=box.querySelector('[data-moe-target]');if(selector)selector.addEventListener('change',()=>{const cards=d.sections[+box.dataset.moe].cards.filter(c=>c.symbol===selector.value);box.querySelector('[data-moe-output]').innerHTML=moeOutput(cards);bindSort(box);});});

@@ -17,6 +17,26 @@ def save(path,data):
 
 def read(path):return json.loads(gzip.decompress(path.read_bytes()))
 
+def parse_feed(blob,source):
+    """RSS2, RDF/RSS1 and Atom; accept only dated HTTPS headline links."""
+    root=ET.fromstring(blob);rows=[]
+    local=lambda tag:tag.rsplit('}',1)[-1]
+    for item in [e for e in root.iter() if local(e.tag) in ['item','entry']][:60]:
+        fields={local(e.tag):e for e in item};value=lambda k:''.join(fields[k].itertext()).strip() if k in fields else ''
+        title=value('title');link=value('link')
+        if not link:
+            links=[e for e in item if local(e.tag)=='link' and e.attrib.get('rel','alternate')=='alternate']
+            link=links[0].attrib.get('href','') if links else ''
+        date=value('pubDate') or value('published') or value('date') or value('updated')
+        try:
+            try:t=parsedate_to_datetime(date)
+            except (ValueError,TypeError):t=pd.Timestamp(date)
+            t=pd.Timestamp(t)
+            if pd.isna(t) or t.tzinfo is None:continue
+        except (ValueError,TypeError,OverflowError):continue
+        if title and link.startswith('https://'):rows.append(dict(title=title,url=link,published_at=t.isoformat(),source=source))
+    return rows
+
 def collect_events(d,limit=60):
     folder=d.base/'events';folder.mkdir(parents=True,exist_ok=True)
     symbols=sorted([s for s,a in d.fund.items() if a.get('info',{}).get('country')=='United States' and s in d.frames],key=lambda s:d.fund[s]['info'].get('marketCap') or 0,reverse=True)[:limit]
@@ -40,14 +60,7 @@ def collect_news(d):
     items=[];sources=[]
     for source,url in FEEDS:
         try:
-            r=requests.get(url,timeout=20);r.raise_for_status();root=ET.fromstring(r.content)
-            count=0
-            for item in root.findall('.//item')[:60]:
-                title=item.findtext('title','').strip();link=item.findtext('link','').strip();date=item.findtext('pubDate','')
-                try:published=parsedate_to_datetime(date).isoformat()
-                except (ValueError,TypeError):continue
-                if not title or not link.startswith('https://'):continue
-                items.append(dict(title=title,url=link,published_at=published,source=source));count+=1
+            r=requests.get(url,timeout=20);r.raise_for_status();parsed=parse_feed(r.content,source);items.extend(parsed);count=len(parsed)
             sources.append(dict(name=source,url=url,status='ok' if count else 'empty',items=count))
         except Exception as e:sources.append(dict(name=source,url=url,status='error',error_type=type(e).__name__))
         time.sleep(.5)

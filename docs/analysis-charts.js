@@ -15,7 +15,8 @@
   const vals=a=>series.filter(s=>(s.axis||'left')===a).flatMap(s=>s.points.map(p=>p[1]));
   const lr=c.limits||range([...vals('left'),...(c.guides||[])]),rr=vals('right').length?range(vals('right')):lr;
   const Y=(v,a='left')=>{const [lo,hi]=a==='right'?rr:lr;return T+(hi-v)/(hi-lo)*(H-T-B);};
-  let body=(c.zones||[]).map(z=>{const a=Math.max(L,X(z.start)),b=Math.min(W-R,X(z.end));return b>a?`<rect data-time-zone="${E(z.kind)}" x="${a}" y="${T}" width="${b-a}" height="${H-T-B}" fill="${z.kind==='high'?'#e1efe8':'#f3e4e9'}"/>`:'';}).join('');
+  let body=(Array.isArray(c.bands)?c.bands:[]).filter(b=>finite(b.low)&&finite(b.high)&&b.high>b.low).map(b=>{const top=Math.max(T,Y(b.high)),bottom=Math.min(H-B,Y(b.low));return bottom>top?`<rect data-value-band="${b.low}:${b.high}" x="${L}" y="${top}" width="${W-L-R}" height="${bottom-top}" fill="${E(b.color||'#e4eee8')}"/>`:'';}).join('');
+  body+=(c.zones||[]).map(z=>{const a=Math.max(L,X(z.start)),b=Math.min(W-R,X(z.end));return b>a?`<rect data-time-zone="${E(z.kind)}" x="${a}" y="${T}" width="${b-a}" height="${H-T-B}" fill="${z.kind==='high'?'#e1efe8':'#f3e4e9'}"/>`:'';}).join('');
   for(let i=0;i<6;i++){let v=lr[0]+(lr[1]-lr[0])*i/5,y=Y(v);body+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" class="grid-line"/><text x="${L-8}" y="${y+4}" text-anchor="end" class="axis">${n(v)}</text>`;if(vals('right').length)body+=`<text x="${W-R+8}" y="${y+4}" class="axis">${n(rr[0]+(rr[1]-rr[0])*i/5)}</text>`;}
   for(let i=0;i<6;i++){const date=new Date(t0+(t1-t0)*i/5).toISOString().slice(0,10);body+=`<text x="${X(date)}" y="${H-24}" text-anchor="middle" class="axis">${c.date_format==='day'?date.slice(5):date.slice(0,7)}</text>`;}
   body+=(c.guides||[]).map(v=>`<line data-guide="${v}" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="reference-line" stroke-dasharray="5 5"/>`).join('');

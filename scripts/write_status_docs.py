@@ -22,6 +22,7 @@ CODE['regime']+=' · reflexivity.py · industry_details.py'
 CODE['regime']+=' · valuation.py · calendar_data.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py'
+CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
 CODE['dragonglass']+=' · entities.py · relation_model.py · relation_views.py'
 CODE['multiasset']+=' · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
 CODE['watch']+=' · technical_scan.py'
@@ -51,7 +52,7 @@ PARITY={
  'iw':('월말15복기·주간14연대기·국면/ML2그림·판단 원장','원점/실현 방향 집계·지난주 수치/차트 보존·36월3띠/7계열ML·기록별 그림 선택·첨부/백업','현재 자료 OOS 재구성·팀 국면 규칙이며 과거 실제 발행본/PIT/공용 DB 미연결'),
  'pm_weekend':('주말 매크로 다중 선·이중축·지표표','미국/한국 금리·물가·유동성 등 5년 패널·단위/최신일','원본 주간 서술 대신 자체 관측표'),
  'etfmon':('9분류·73위치, 분배율 막대·기간 수익률·투자금 현금흐름','9그룹·TTM실제분배/현재종가·조정수익률·투자금 변경','분배는 과거12M의 세전 월평균; 미래 지급액·실제 자금유입 추정 아님'),
- 'geoecon':('정책·지정학 뉴스와 위험 시계열','EPU/VIX·DXY/WTI·금리/크레딧 이중축','뉴스 원장·NLP/LLM 지정학 종합 점수 미연결'),
+ 'geoecon':('상황6·지역5·채널6·복합3·키워드·카테고리4·뉴스','제목15주제/4카테고리·30일/7일변화·6채널과보도후가격·3복합z·GPR3지수/8분류/8국가','팀 단어/채널 규칙·제한RSS범위·위성 배경/시설·원본 비공개 감성가중치 미연결'),
  'ask_digest':('시장 brief·3기간·10테마·16종목·21자산·위험/4지표·모듈요약','달력수익·사업공식출처·RS16·9위험관측·4차트·20모듈·로컬 질문/첨부','1~2기업 테마 표본·구루/전체뉴스량·자동 AI 질의 미연결'),
 }
 labels={'partial':'부분 구현','operational':'계산·화면 연결','blocked':'추가 데이터 필요'}

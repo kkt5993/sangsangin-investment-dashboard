@@ -56,7 +56,7 @@ def collect(parent,base,as_of,env,config,log):
     summary=prices(parent,base,as_of,members)
     run('pipeline.acquire','macro')
     if due(parent,'oecd_cli_collection.json',7):run('pipeline.oecd_data')
-    if due(parent,'macro/GPR.csv',7):
+    if due(parent,'gpr_details.json.gz',7):
         from .gpr_data import collect as collect_gpr
         collect_gpr(base,as_of)
     if config.get('ecos_key_file'):run('pipeline.ecos_data','--key-file',config['ecos_key_file'])

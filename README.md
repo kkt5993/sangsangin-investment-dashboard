@@ -21,6 +21,8 @@ Vercel은 검증한 docs 결과를 게시하고, GitHub에는 코드·문서·�
 
 Overview는 TESSERACT6축·CROWDING5축의36시점 궤적, 4시점 적층 레이더와 시총 표본 내 주도주10개를 표시합니다. [축·정보 시차·표본 계약](research/OVERVIEW_CONTRACT.md)에 원본 구조와 팀 계산 설정의 차이를 기록했습니다.
 
+지정학은15주제·4카테고리, 19키워드의30일 분포와7일 비교, 3개 복합지표, 6개 영향 채널 및 보도 후 가격 관측을 제공합니다. 공식 GPR의 전체/위협/행위 지수와8분류·8국가 자료는 [별도 단위와 표본](research/GEOECON_CONTRACT.md)으로 표시합니다.
+
 ```powershell
 python -m http.server 8769 --bind 127.0.0.1 --directory docs
 ```

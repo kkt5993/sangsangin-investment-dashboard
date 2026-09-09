@@ -13,6 +13,31 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind in ['geosituations','geokeywords','geochannels']:
+        ids={r['id'] for r in s['news']};assert len(ids)==len(s['news'])
+        for r in s['news']:assert r['date']<=cutoff and r['direction'] in [-1,0,1] and r['url'].startswith('https://') and r['first_seen']
+    if kind=='geosituations':
+        assert len(s['topics'])==15 and len({r['category'] for r in s['topics']})==4
+        for r in s['topics']:assert r['attention']==r['count']+r['risk']*2 and set(r['articles'])<=ids
+    if kind=='geokeywords':
+        assert len(s['terms'])==19
+        for t in s['terms']:
+            assert len(t['daily'])==30 and sum(r['count'] for r in t['daily'])==t['count'] and set(t['articles'])<=ids
+            assert t['recent']<=t['recent_total'] and t['prior']<=t['prior_total']
+            for r in t['daily']:assert 0<=r['count']<=r['total'] and r['date']<=cutoff and (r['share'] is None or 0<=r['share']<=100)
+    if kind=='geocomposites':
+        assert [p['id'] for p in s['panels']]==['stress','geoenergy','policy']
+        for p in s['panels']:section(p['chart'],cutoff,module);assert len(p['chart']['bands'])==2 and (p['date'] is None or p['date']<=cutoff)
+    if kind=='geochannels':
+        assert len(s['channels'])==6
+        for c in s['channels']:
+            assert c['exposure'] is None or 0<=c['exposure']<=7
+            assert c['count']==sum(bool(set(c['topics'])&set(r['topics'])) for r in s['news'])
+            for r in c['studies']:assert r['article'] in ids and r['first_session']<=cutoff and all(p['name']<=cutoff and 0<=p['x']<=20 for p in r['curve'])
+    if kind=='geogpr':
+        assert len(s['categories'])==len(s['countries'])==8 and len(s['rows'])<=120
+        assert [r['date'] for r in s['rows']]==sorted(set(r['date'] for r in s['rows']))
+        for r in s['rows']:assert r['date'][:7]<cutoff[:7] and all(v is None or math.isfinite(v) and v>=0 for k,v in r.items() if k!='date')
     if kind=='relationlab':
         nodes={r['id']:r for r in s['nodes']};edges={r['id']:r for r in s['links']}
         assert len(nodes)==len(s['nodes']) and len(edges)==len(s['links'])

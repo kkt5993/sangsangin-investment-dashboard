@@ -88,9 +88,10 @@ def key_charts(d,objects):
         s=ratio(d,a,b).loc[:d.as_of]
         result.append(dict(title=name,value=number(s.iloc[-1]) if len(s) else None,change=ret(s,63),change_unit='%',date=str(s.index[-1].date()) if len(s) else None,
             chart=curve(name+' · 최근180공통관측',[(name,s.tail(180),'left')],'가격비')))
-    source=next(s for s in objects['geoecon']['sections'] if s.get('group')=='복합지표' and s['type']=='line')
+    composite=next((s for s in objects['geoecon']['sections'] if s['type']=='geocomposites'),None)
+    source=next(p['chart'] for p in composite['panels'] if p['id']=='stress') if composite else next(s for s in objects['geoecon']['sections'] if s.get('group')=='복합지표' and s['type']=='line')
     chart=copy.deepcopy(source);points=chart['series'][0]['points'];last=points[-1] if points else [None,None]
-    result.append(dict(title='금융·정책 스트레스',value=last[1],date=last[0],change=number(last[1]-points[-64][1]) if len(points)>63 else None,change_unit='z 차이',chart=chart))
+    result.append(dict(title='금융 스트레스 · VIX/HY' if composite else '금융·정책 스트레스',value=last[1],date=last[0],change=number(last[1]-points[-64][1]) if len(points)>63 else None,change_unit='z 차이',chart=chart))
     return result
 
 

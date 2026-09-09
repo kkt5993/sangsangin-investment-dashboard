@@ -82,28 +82,10 @@ def revision_views(d,obj,events):
             if h in t.index:trends.append(dict(name=s+' '+h,group=h,values=[number(t.loc[h].get(k)) for k in ['90daysAgo','60daysAgo','30daysAgo','7daysAgo','current']]))
     obj['sections'] += [dict(table('FY EPS 추정치 상향·하향',['종목','회계연도','30D 상향 수','30D 하향 수','순상향 수','수집일'],rows),group='추정치 변화'),dict(heat('EPS 추정 빈티지 · 원통화/주',['90일 전','60일 전','30일 전','7일 전','현재'],trends),group='추정치 변화')]
 
-REGIONS=[('미국',-98,39,r'\b(United States|U\.S\.|American|Federal Reserve|Trump)\b'),('유럽',15,50,r'\b(Europe|European|ECB|Germany|France|Ukraine|Russia)\b'),('중동',45,28,r'\b(Iran|Israel|Gaza|Hormuz|Middle East|Lebanon)\b'),('동아시아',123,34,r'\b(China|Taiwan|Korea|Japan|Chinese)\b'),('남아시아',78,22,r'\b(India|Pakistan|Bangladesh)\b')]
-KEYWORDS=['war','tariff','trade','inflation','rates','energy','oil','sanctions','conflict','debt','growth','China','Taiwan','Iran','Ukraine','Russia','Korea','peace','ceasefire']
 def news_views(d,obj):
-    path=d.resource('news.json.gz');raw=read(path) if path.exists() else dict(items=[],sources=[],retrieved_at=None)
-    now=pd.Timestamp(raw['retrieved_at']) if raw['retrieved_at'] else pd.Timestamp(d.as_of,tz='UTC')
-    items=[r for r in raw['items'] if now-pd.Timedelta(days=30)<=pd.Timestamp(r['published_at'])<=now]
-    classified=[]
-    for r in items:
-        terms=[k for k in KEYWORDS if re.search(r'\b'+k+r'\b',r['title'],re.I)];regions=[n for n,_,_,pat in REGIONS if re.search(pat,r['title'],re.I)]
-        classified.append(dict(r,keywords=terms,regions=regions,kind='공식 발표' if r['source'] not in ['BBC World','DW'] else '보도 헤드라인',date=r['published_at'][:10],core=r['title'],evidence=' · '.join(regions+terms) or '분류어 미검출'))
-    counts=Counter(k for r in classified for k in r['keywords']);countries=[]
-    for n,lon,lat,_ in REGIONS:
-        chosen=[r for r in classified if n in r['regions']]
-        if chosen:countries.append(dict(name=n,lon=lon,lat=lat,count=len(chosen),companies=[dict(name=r['title'],symbol=r['source'],sector='뉴스',ytd=None,margin=None) for r in chosen],news=[dict(title=r['title'],url=r['url'],date=r['date']) for r in chosen]))
-    for s in obj['sections']:s['group']='시장 지표'
-    obj['sections'] += [dict(type='library',title='최근 주목 상황',group='주목 상황',items=classified[:12]),dict(type='globe',title='기사 언급 지역 · 실제 위성 관측 아님',group='지역 모니터',countries=countries),dict(type='wordcloud',title='30일 헤드라인 키워드 · 기사별 1회 집계',group='키워드 트렌드',words=[dict(term=k,count=v) for k,v in counts.most_common()]),dict(bars('언급 빈도',counts.most_common(),'기사'),group='키워드 트렌드'),dict(type='library',title='뉴스 원장 · 발행일/출처/원문',group='뉴스 원장',items=classified),dict(table('RSS 수집 상태',['제공처','상태','수집 항목 수'],[[a['name'],a['status'],a.get('items',0)] for a in raw['sources']]),group='뉴스 원장')]
-    frame_=pd.concat(dict(epu=d.mac('USEPUINDXD'),vix=d.price('^VIX',False),credit=d.mac('BAMLH0A0HYM2')),axis=1).dropna()
-    z=pd.DataFrame({k:zscore(frame_[k],252) for k in frame_});mix=z.mean(axis=1,skipna=False)
-    obj['sections'].append(dict(curve('정책·시장 스트레스 · 동일가중 z',[('EPU/VIX/HY 평균 z',mix.tail(252),'left')],'z',guides=[-1,0,1,2]),group='복합지표'))
-    obj['method_note']+=' 뉴스는 RSS의 제목·발행일·원문 링크만 수집합니다. 지역·키워드는 제목의 명시적 단어 일치이며 국가 위험도나 감성/인과 판정이 아닙니다. 복합지표는 EPU·VIX·HY OAS의252일 z 동일가중 평균입니다.'
-    obj['missing']=['원본의 LLM 감성·인과 전파·위성 시설 관측은 연결되지 않았습니다. RSS 수집 범위와 실패 제공처를 표시합니다.']
-    obj['news_as_of']=raw['retrieved_at'];return classified
+    from .geoecon_views import news_views as build_news
+    return build_news(d,obj)
+
 
 def regime_views(d,obj,calendar):
     for s in obj['sections']:

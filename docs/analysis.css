@@ -49,3 +49,5 @@
 .earnings-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.earnings-card{min-width:0}.earnings-scroll{overflow-x:auto}.earnings-scroll svg{display:block;width:100%;min-width:480px}.earnings-card p{overflow-wrap:anywhere}.earnings-card details{margin-top:14px}@media(max-width:900px){.earnings-card-grid{grid-template-columns:1fr}}
 
 .earnings-global svg{min-width:980px}
+
+.ownership-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:18px 0}.ownership-card{min-width:0}.ownership-card svg{display:block;width:100%;height:auto}.ownership-card button{display:block;margin-top:12px}.ownership-card h3 small{display:block;margin-top:7px;font-size:12px;color:#527d76}

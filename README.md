@@ -86,3 +86,5 @@ PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하�
 IW는15개월 복기와14주 연대기·보존 차트를 제공합니다. ASK는3기간 추세·사업 근거10테마·RS16종목·21자산·9위험관측·4차트·20모듈 요약을 정기 재생성합니다. [IW 날짜/보존 계약](research/IW_REVIEW_CONTRACT.md)과 [ASK 계산/출처 계약](research/DIGEST_CONTRACT.md)을 참조하세요.
 
 실적은 글로벌 NI 표본Top20의 겹침 막대, 한국2기업 OP/지배NI와 미국10기업 NI근사/매출 상세, 기업 검색·연간/분기3패널을 제공합니다. 회계연도·환율·추정 기준과 직접 컨센서스/근사의 차이는 [실적 계산 계약](research/EARNINGS_CONTRACT.md)에 기록했습니다.
+
+내부자 매수는 SEC 비파생 코드P·취득A와 접수시각을 확인한 공시의90일 카드·미니 가격선·거래 원장을 제공합니다. 원문 대조 표본과 PC 자동수집 상태를 구분하며, [집계·날짜·제외 규칙](research/OWNERSHIP_CONTRACT.md)을 공개합니다.

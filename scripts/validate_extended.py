@@ -1,7 +1,8 @@
 """Financial/date/shape invariants for every new public snapshot, offline."""
 from pathlib import Path
 import json,math,re,base64,struct
-from datetime import date
+from datetime import date,datetime,timedelta,timezone
+from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parents[1]
 def load(p):return json.loads(p.read_text(encoding='utf8'),parse_constant=lambda v:(_ for _ in ()).throw(ValueError(v)))
 
@@ -13,6 +14,37 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='ownership':
+        assert s['scope']['end']==cutoff and s['scope']['cutoff_timezone']=='America/New_York'
+        start=(date.fromisoformat(cutoff)-timedelta(days=89)).isoformat();assert start==s['scope']['start']
+        end=datetime.fromisoformat(cutoff).replace(tzinfo=ZoneInfo('America/New_York'))+timedelta(days=1)
+        filings=[f for c in s['cards'] for f in c['filings']]
+        all_filings=filings+s['pending'];assert len({f['accession'] for f in all_filings})==len(all_filings)
+        assert len(filings)==s['scope']['confirmed_filings'] and len(all_filings)==s['scope']['reviewed_filings']
+        assert sum(len(f['transactions']) for f in filings)==s['scope']['confirmed_rows']
+        for f in all_filings:
+            assert re.fullmatch(r'\d{10}-\d{2}-\d{6}',f['accession']) and f['source_url'].startswith('https://www.sec.gov/Archives/')
+            assert f['owners'] and all(re.fullmatch(r'\d{10}',o['cik']) for o in f['owners'])
+            assert f['mode'] in ['direct_xml','source_review'] and f['retrieved_at']
+            for r in f['transactions']:
+                assert date.fromisoformat(r['date']).isoformat()==r['date'] and start<=r['date']<=cutoff
+                assert (r['kind'],r['code'],r['side'])==('nonDerivative','P','A') and r['shares']>0 and r['price']>0
+                assert abs(r['amount']-r['shares']*r['price'])<1e-5
+        for f in filings:
+            at=datetime.fromisoformat(f['accepted_at']);assert at.tzinfo is not None and at<end and not f['reasons'] and f['form']=='4'
+            assert all(r['date']<=at.astimezone(ZoneInfo('America/New_York')).date().isoformat() for r in f['transactions'])
+            if f['study']:
+                assert f['study']['first_session']<=cutoff
+                assert all(p['name']<=cutoff and 0<=p['x']<=20 for p in f['study']['curve'])
+        assert all(f['reasons'] for f in s['pending'])
+        for c in s['cards']:
+            assert c['filing_count']==len(c['filings']) and c['transaction_count']==sum(len(f['transactions']) for f in c['filings'])
+            assert c['buyers']==len({o['cik'] for f in c['filings'] for o in f['owners']})
+            assert abs(c['amount_mn']-sum(r['amount'] for f in c['filings'] for r in f['transactions'])/1e6)<1e-6
+            assert len(c['spark'])<=44 and (c['price_date'] is None or c['price_date']<=cutoff)
+            series(dict(name=c['symbol'],points=c['spark']),cutoff)
+        assert len(s['comparison'])==s['scope']['candidate_rows']
+        assert s['collection']['status'] in ['ok','partial','access_refused','error','not_collected']
     if kind=='earningsglobal':
         assert len(s['rows'])<=20 and s['available']<=s['expected']
         assert [r['values'][0] for r in s['rows']]==sorted([r['values'][0] for r in s['rows']],reverse=True)

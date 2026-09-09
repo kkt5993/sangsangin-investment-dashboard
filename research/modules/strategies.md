@@ -5,12 +5,12 @@
 
 **부분 구현** · 가격 기준 2026-09-08. 턴어라운드 / 내부자 매수 / PEAD / 스탯아브 페어 / 실적 모멘텀.
 
-- 계산 코드: [financial_modules.py](../../pipeline/financial_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [events_data.py](../../pipeline/events_data.py)
+- 계산 코드: [financial_modules.py](../../pipeline/financial_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [events_data.py](../../pipeline/events_data.py) · [sec_ownership.py](../../pipeline/sec_ownership.py) · [ownership_views.py](../../pipeline/ownership_views.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/strategies.json)
-- 계산/자료 계약: 재무제표의 전년 동분기 순이익 적자→흑자 전환을 실제 분기값으로 선별합니다. EPS 서프라이즈와 최근 수익률은 각각 별도 열로 표시합니다. 공급자의 earnings_history 날짜는 발표일이 아니라 실적 대상 분기말입니다. 내부자 매수는 제공처 Text의 Purchase·양의 금액만 선별하며 주식보상·증여·매도는 제외합니다. SEC 원문 코드P를 직접 대조한 목록은 아닙니다. PEAD는 실제 발표 시각을 미국 동부시간으로 정렬해 첫 반응 세션(D0) 이후 5·20거래일 수익률과 SPY 대비를 계산합니다. 현재 관측 이벤트 연구이며 매매 백테스트가 아닙니다.
-- 남은 범위: 내부자 거래의 SEC 원문 코드P·제출시점 교차검증과 전략별 거래비용 후 OOS는 남아 있습니다. 신규 수집 대상은 미국 60개 기업이며 전체 미국 시장을 의미하지 않습니다.
+- 계산/자료 계약: 재무제표의 전년 동분기 순이익 적자→흑자 전환을 실제 분기값으로 선별합니다. EPS 서프라이즈와 최근 수익률은 각각 별도 열로 표시합니다. 공급자의 earnings_history 날짜는 발표일이 아니라 실적 대상 분기말입니다. 내부자 후보는 제공처 Purchase 행에서 시작하며, 클러스터에는 SEC 비파생 코드P·취득A·양의 수량/가격과 기준일 이내 접수시각을 확인한 공시만 포함합니다. P는 공개시장 또는 사적 매수여서 공개시장 매수만이라고 단정하지 않습니다. PEAD는 실제 발표 시각을 미국 동부시간으로 정렬해 첫 반응 세션(D0) 이후 5·20거래일 수익률과 SPY 대비를 계산합니다. 현재 관측 이벤트 연구이며 매매 백테스트가 아닙니다. 접수시각은 SEC 색인의 미국 동부시각 또는 API의 명시된 시간대를 UTC로 변환합니다. SEC가 문서를 처음 공개한 실제 시각은 별도 없으므로 접수 기반 가격 관측은 참고이며 체결 백테스트가 아닙니다. 정정공시는 자동 합산하지 않습니다.
+- 남은 범위: SEC 연속 자동수집은 PC HTTP 접근 상태에 따라 제한됩니다. 현재 원문 대조 표본과 미확인 후보를 구분하며 전체 미국 시장의 모든 내부자 거래를 의미하지 않습니다. Form4/A 정정 대조·13F·전략별 비용 후 OOS는 후속 대상입니다.
 
-연결된 하위 그룹: 턴어라운드, 실적 모멘텀, 내부자 매수, PEAD, 스탯아브 페어.
+연결된 하위 그룹: 턴어라운드, 실적 모멘텀, PEAD, 스탯아브 페어, 내부자 매수.
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 

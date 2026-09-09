@@ -126,3 +126,12 @@ Yahoo이미받은earningsTrend의period/endDate만추가보존(추가요청없�
 검사129Python·두검증기·3JS(earnings추가)/15구문·64SVG래스터통과,새5이미지확인,브라우저QA없음. 데이터가격1136/거시62/재무연결197,개발raw빈티지20260909T152436Z. 로컬106.33MiB/512·공개JSON7.609MiB/8(배포패키지생성전). 게시실행ID 20260909T224449Z 실제공개완료는runtime/state.json. 전체목표는계속진행;한국증권사별원문/해외직접NI·OP/PIT,위성실관측,SEC코드P/13F,KR거시일정/옵션,RS/모멘텀/ETF기간계약등REFERENCE_PARITY 미완료를계속한다.
 
 실적 게시 완료: 4ad84a5, run20260909T224449Z, Vercel47/47파일바이트일치확인. 최초deploy Not authorized였지만whoami/project inspect로기존계정·프로젝트접근확인후동일패키지재시도성공. 토큰만료원인확정아님. vercel_deploy.py에whoami사전검사추가(인증갱신은CLI소유,계정출력로그제외),실패시패키지/업로드미실행2fixture추가. 이운영코드변경은대시보드정적결과가같아추가Vercel배포불필요;다음정기실행부터적용. tests전체129+신규2=131,새운영검사는test_refresh전체로통과. 현재진행중exec없고배포pending없음.
+
+
+SEC 내부자 후속(2026-09-10): sec_ownership.py/ownership_views.py/ownership-views.js로비파생P·취득A·접수시각확인90일카드/미니선/검색/복수보고주체필터·공시원장·SPY대비D0~20관측연결. 제공처후보8행대조→7공시9거래행4기업(PFE/CVNA/VST/CEG), AVGO1공시는원문P확인했으나접수시각미확보로집계제외. VST1제공처행은8/31·9/1의2실거래행,CVNA도2가격행. 공시/행/보고CIK수를분리하고가중가격·D/I·원문/색인·검토시각표시. P는공개시장또는사적매수,주체CIK는독립된경제주체보장아님. 10b5체크미확인은미확인그대로보존.
+
+config/sec_ownership_reviews.json은공개SEC원문/색인에서검토한사실8공시이며자동갱신결과아님. 직접XML수집은같은accession을대체;Form4/A와관련원공시는격리. PC의company_tickers/submissions2요청은HTTP403로중단,추가원본사이트요청0·시세요청0. sec_collection.json.gz실패상태보존/화면표시,refresh에24시간단위시도연결(전체401/403/429즉시중단·최근120일·최대새300공시·최근목록기간부족partial·원자료512MiB). 전체미국시장/연속자동SEC피드성공이라고표현하지말것. raw개발빈티지20260909T225247Z(부모20260909T152436Z),기준2026-09-08. 상세research/OWNERSHIP_CONTRACT.md.
+
+전체목표는여전히진행: 위성실관측·KR옵션/거시달력·SEC13F/연속수집·글로벌직접NI/OP·본사/교역·PDF추출/팀DB·RS/모멘텀/ETF계약은REFERENCE_PARITY에서계속. 새차트66개래스터중내부자2개육안확인,브라우저QA없음. 갱신에따라90일창이비어도동작하도록JS는실출력검사+날짜고정소스fixture로검사. 새검사/게시ID·커밋은아래최종기록과runtime/state.json을기준으로확인.
+
+최종검사143Python·두자료검증기·3JS/16JS구문·66SVG래스터통과. 공개JSON약7.631MiB/8,PC원자료/실행약114.28MiB/512(배포패키지생성전). 게시실행ID 20260909T231908Z; 실제게시완료는runtime/state.json확인.

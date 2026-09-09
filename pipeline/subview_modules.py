@@ -141,6 +141,8 @@ def extend(d,objects,ranks):
     from .earnings_details import earnings_detail_views
     earnings_detail_views(d,objects['earnings'])
     events=event_data(d);calendar=strategy_views(d,objects['strategies'],events,objects['quant'])
+    from .ownership_views import ownership_views
+    ownership_views(d,objects['strategies'],events)
     revision_views(d,objects['earnings'],events);news=news_views(d,objects['geoecon']);regime_views(d,objects['regime'],calendar)
     dragon_views(d,objects['dragonglass'],ranks,news,events)
     from .pm_details import extend_pm

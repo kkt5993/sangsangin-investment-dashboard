@@ -5,7 +5,7 @@ from unittest.mock import patch
 import numpy as np
 import pandas as pd
 from pipeline.cache import make_patch,apply_patch_frame,chain
-from pipeline.incremental import completed_date,valid_frame
+from pipeline.incremental import completed_date,valid_frame,universe_symbols
 from pipeline.refresh import price_cutoff,publish,prune_staging
 from pipeline.subview_modules import event_returns
 
@@ -16,6 +16,10 @@ def prices(n=12):
     return f
 
 class RefreshTests(unittest.TestCase):
+    def test_classification_lookup_does_not_expand_collection_universe(self):
+        members={'kr_largecap':{'members':[{'symbol':'005930.KS'}]},'kr_sectors':{'members':[{'symbol':'005930.KS'},{'symbol':'OUTSIDE.KS'}]}}
+        self.assertEqual(universe_symbols(members),{'005930.KS'})
+
     def test_delta_reconstructs_and_does_not_repeat_unchanged_history(self):
         all_=prices();old=all_.iloc[:10];new=all_.iloc[6:]
         delta=make_patch(old,new)

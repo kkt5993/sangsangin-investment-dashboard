@@ -38,11 +38,16 @@ def valid_frame(f,symbol):
     # Korean OHLC inconsistencies are reconciled with KRX before publication.
     return f
 
+def universe_symbols(members):
+    # kr_sectors is the classification dictionary for the entire exchange; it
+    # must not silently turn a large-cap refresh into an all-listings download.
+    return {m['symbol'] for key in ['kr_largecap','kospi200','us_largecap','kr_screen'] for m in members.get(key,{}).get('members',[]) if 'symbol' in m}
+
 def prices(parent,base,as_of,members=None,now=None):
     dest=base/'price_delta.json.gz';out=read(dest) if dest.exists() else dict(as_of=as_of,instruments={},attempts={})
     logging.getLogger('yfinance').setLevel(logging.CRITICAL)
     now=now or datetime.now(ZoneInfo('UTC'))
-    wanted={m['symbol'] for group in (members or parent.members).values() for m in group.get('members',[]) if 'symbol' in m}
+    wanted=universe_symbols(members or parent.members)
     # Newly disclosed constituents get one bounded 3-year history. Subsequent
     # runs add only changed bars. Unavailable tickers remain explicit coverage gaps.
     additions=sorted(wanted-set(parent.frames))[:25]

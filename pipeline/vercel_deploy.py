@@ -31,9 +31,16 @@ def package_site(site,dest,project=None):
 
 def deploy(site,dest,config,env,log):
     dest=Path(dest)
+    command=cli(config)
+    process_env={**env,'VERCEL_TELEMETRY_DISABLED':'1','NO_COLOR':'1','CI':'1'}
+    # Resolve the CLI's saved session before its prebuilt upload path. In the
+    # observed recovery, whoami succeeded and the identical upload then worked.
+    # Let the CLI own renewal; never read or copy its credentials ourselves.
+    auth=subprocess.run(command+['whoami'],cwd=ROOT,env=process_env,capture_output=True,text=True,encoding='utf8',errors='replace',timeout=60)
+    if auth.returncode:raise RuntimeError('Vercel authentication check failed; renew the local CLI login before publishing')
     if not (dest/'.vercel/output/static').exists():package_site(site,dest,ROOT/'.vercel/project.json')
-    args=cli(config)+['deploy','--prebuilt','--prod','--yes','--cwd',str(dest)]
-    p=subprocess.run(args,cwd=ROOT,env={**env,'VERCEL_TELEMETRY_DISABLED':'1','NO_COLOR':'1','CI':'1'},capture_output=True,text=True,encoding='utf8',errors='replace',timeout=300)
+    args=command+['deploy','--prebuilt','--prod','--yes','--cwd',str(dest)]
+    p=subprocess.run(args,cwd=ROOT,env=process_env,capture_output=True,text=True,encoding='utf8',errors='replace',timeout=300)
     with log.open('a',encoding='utf8') as f:f.write(p.stdout+'\n'+p.stderr+'\n')
     if p.returncode:raise RuntimeError('Vercel deployment failed; inspect local run log')
     urls=re.findall(r'https://[A-Za-z0-9.-]+\.vercel\.app',p.stdout)

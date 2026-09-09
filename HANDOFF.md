@@ -124,3 +124,5 @@ GPR Stata1요청764625bytes/gzip334921을private빈티지보존, GPR/GPRT/GPRA27
 Yahoo이미받은earningsTrend의period/endDate만추가보존(추가요청없음),이번22기업재조회와FX5개수집. FY연속8일허용·통화일치·전년매출/FY2기준EPS5%이상차이차단·양의이전NI/EPS요구. NVIDIA의SEC FY2026실제말일1/25와제공처1/31구분,MSFT6월결산확인. BRK매출정의/TSMADREPS통화/SoftBank·Toyota전년기준불일치는NI근사미산출;원본의임의보수적보정복제없음. KR는QuantiWiseE121500/E122710/E121000 최신as_of≤가격기준,억원÷10000조원;현재2026-08-07추정날짜유지,2024/25AS를실제라고가장하지않음. FX는현재환율(최대7일경과)환산이며평균환율아님. 상세research/EARNINGS_CONTRACT.md.
 
 검사129Python·두검증기·3JS(earnings추가)/15구문·64SVG래스터통과,새5이미지확인,브라우저QA없음. 데이터가격1136/거시62/재무연결197,개발raw빈티지20260909T152436Z. 로컬106.33MiB/512·공개JSON7.609MiB/8(배포패키지생성전). 게시실행ID 20260909T224449Z 실제공개완료는runtime/state.json. 전체목표는계속진행;한국증권사별원문/해외직접NI·OP/PIT,위성실관측,SEC코드P/13F,KR거시일정/옵션,RS/모멘텀/ETF기간계약등REFERENCE_PARITY 미완료를계속한다.
+
+실적 게시 완료: 4ad84a5, run20260909T224449Z, Vercel47/47파일바이트일치확인. 최초deploy Not authorized였지만whoami/project inspect로기존계정·프로젝트접근확인후동일패키지재시도성공. 토큰만료원인확정아님. vercel_deploy.py에whoami사전검사추가(인증갱신은CLI소유,계정출력로그제외),실패시패키지/업로드미실행2fixture추가. 이운영코드변경은대시보드정적결과가같아추가Vercel배포불필요;다음정기실행부터적용. tests전체129+신규2=131,새운영검사는test_refresh전체로통과. 현재진행중exec없고배포pending없음.

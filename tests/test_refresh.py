@@ -8,7 +8,8 @@ from pipeline.cache import make_patch,apply_patch_frame,chain
 from pipeline.incremental import completed_date,valid_frame,universe_symbols
 from pipeline.refresh import price_cutoff,publish,prune_staging
 from pipeline.subview_modules import event_returns
-from pipeline.vercel_deploy import package_site,verify
+from pipeline.vercel_deploy import package_site,verify,deploy
+from subprocess import CompletedProcess
 
 def prices(n=12):
     f=pd.DataFrame(index=pd.bdate_range('2026-08-03',periods=n))
@@ -17,6 +18,18 @@ def prices(n=12):
     return f
 
 class RefreshTests(unittest.TestCase):
+    def test_vercel_checks_saved_session_before_upload_without_logging_identity(self):
+        with tempfile.TemporaryDirectory() as tmp,patch('pipeline.vercel_deploy.cli',return_value=['node','vercel']),patch('pipeline.vercel_deploy.package_site') as package,patch('pipeline.vercel_deploy.subprocess.run') as run:
+            run.side_effect=[CompletedProcess([],0,'private-account-name',''),CompletedProcess([],0,'https://example.vercel.app','')]
+            p=Path(tmp);url=deploy(p/'site',p/'deploy',{}, {},p/'run.log')
+            self.assertEqual(url,'https://example.vercel.app');self.assertEqual(run.call_args_list[0].args[0],['node','vercel','whoami']);self.assertIn('--prebuilt',run.call_args_list[1].args[0]);package.assert_called_once();self.assertNotIn('private-account-name',(p/'run.log').read_text())
+
+    def test_vercel_failed_authentication_never_packages_or_uploads(self):
+        with tempfile.TemporaryDirectory() as tmp,patch('pipeline.vercel_deploy.cli',return_value=['node','vercel']),patch('pipeline.vercel_deploy.package_site') as package,patch('pipeline.vercel_deploy.subprocess.run',return_value=CompletedProcess([],1,'','Not authorized')) as run:
+            p=Path(tmp)
+            with self.assertRaisesRegex(RuntimeError,'authentication check failed'):deploy(p/'site',p/'deploy',{}, {},p/'run.log')
+            run.assert_called_once();package.assert_not_called();self.assertFalse((p/'run.log').exists())
+
     def test_vercel_package_contains_only_public_output(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);site=root/'docs';site.mkdir();(site/'index.html').write_text('<html>test</html>');(site/'data').mkdir();(site/'data/refresh.json').write_text('{}')

@@ -20,6 +20,8 @@ Vercel CLI59.13.1을 별도 로컬 도구 폴더에 설치했다. 최초 사용�
 
 `vercel.json`은 Other 프레임워크, 빌드/설치 명령 없음, 출력 docs다. 예약 실행은 검증된 정적 파일만 `.vercel/output/static`으로 복사하고 Build Output API v3의 `deploy --prebuilt --prod`로 배포한다. Python·KRX/ECOS 인증·컨센서스 DB를 Vercel에 올리지 않는다. 공개 결과 JSON은 갱신 확인이 가능하도록 재검증 캐시 정책을 사용한다.
 
+배포 전 `vercel whoami`로 기존 CLI 세션을 확인한다. 실패하면 업로드 전에 중단하며 사용자 인증정보를 직접 읽거나 로그에 복사하지 않는다. 2026-09-10 배포에서 `Not authorized`가 발생했으나 계정/프로젝트 조회 후 같은 패키지 재시도는 성공했다. 원인이 토큰 만료였다고 확정한 것은 아니다. 인증 조회도 실패하면 CLI 재로그인이 필요하다. [공식 로그인 안내](https://vercel.com/docs/cli/login).
+
 수집 중단 후에는 `--resume-run <미완료 빈티지>`로 같은 부모의 완료된 수집 결과를 재사용할 수 있다. 정상 게시가 확인된 빈티지 자체에는 재수집하지 않는다.
 
 근거: [Vercel 정적 빌드](https://vercel.com/docs/builds), [Build Output API](https://vercel.com/docs/build-output-api), [CLI 배포](https://vercel.com/docs/cli/deploy).

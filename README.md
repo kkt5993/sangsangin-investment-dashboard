@@ -16,7 +16,7 @@ RS·모멘텀, ETF·멀티에셋, 국면·리스크·주말 매크로, 퀀트·�
 
 추가 연결: PEAD 발표 시각 정렬, 내부자 매수 원장, EPS 추정치 변화, 실적 발표 달력, 국면별 자산 성과와 종목 밸류에이션, RSS 지역·키워드·뉴스 원장, CFTC 선물 포지션, DRAGONGLASS의 선형 Beta 시나리오·트리거·자료 현황. 위성 현장·인과 전파·Soros 엔진·국내 옵션 숏감마는 미연결로 표시합니다.
 
-GitHub Pages는 main의 docs를 게시합니다. 화면을 열 때 원본 사이트나 시세 API를 호출하지 않습니다. 자체 SVG 차트와 로컬 지도 데이터로 표시합니다.
+Vercel은 검증한 docs 결과를 게시하고, GitHub에는 코드·문서·작은 계산 결과를 보관합니다. 화면을 열 때 원본 사이트나 시세 API를 호출하지 않습니다. 자체 SVG 차트와 로컬 지도 데이터로 표시합니다.
 
 ```powershell
 python -m http.server 8769 --bind 127.0.0.1 --directory docs
@@ -27,7 +27,7 @@ python -m http.server 8769 --bind 127.0.0.1 --directory docs
 Python 3.13과 [requirements.txt](requirements.txt)의 환경을 사용합니다. 원자료는 형제 폴더 sangsangin-investment-data에 저장합니다. SANGSANGIN_DATA_DIR로 경로를 바꿀 수 있습니다. 사용자가 승인한 실행 시간은 **한국시간 평일 오전8시·오후6시**입니다. 이 PC와 Codex 앱이 실행 중이어야 합니다. 예약은 Codex 앱의 자동화에서 관리하며, 아래 명령은 예약과 수동 실행이 공통으로 사용합니다.
 
 ```powershell
-# 수집 → 별도 폴더 계산 → 검사 → 커밋/푸시 → Pages 확인
+# 수집 → 별도 폴더 계산 → 검사 → 커밋/푸시 → Vercel 확인
 python -m pipeline.refresh --publish
 # 네트워크 수집·게시 없이 직전 정상 빈티지 재계산 및 검사
 python -m pipeline.refresh --offline

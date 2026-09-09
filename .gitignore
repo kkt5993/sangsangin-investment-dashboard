@@ -15,3 +15,7 @@ data/raw/
 *.pem
 *.key
 .DS_Store
+.vercel/
+
+.vercel
+.env*

@@ -21,7 +21,7 @@ for key in ['risk','pm_weekend']:CODE[key]+=' · cot_data.py'
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
  'overview':('전체 탭 요약·카드·탐색','25탭 상태, 데이터 수, 바로가기','원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외'),
- 'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Pages·평일08/18시 갱신·512MiB 변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
+ 'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Vercel·평일08/18시 갱신·512MiB 변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
  'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','3지수·13종목·2거시, 전문가 가중치와 예측·확률·기여 차트','원본 10전문가/로지스틱 게이트/SIS 대신 명시적 3모델 기준모형'),
  'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','3D 관계·Entity 360·로컬 원장 3개 화면','시설·위성·물류·전파모델 8개 화면은 데이터/설정 미연결'),
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),

@@ -9,7 +9,7 @@
 | 탭 | 상태 | 연결 범위 | 남은 범위 |
 |---|---|---|---|
 | [Summary](modules/overview.md) | 계산·화면 연결 | 25탭 상태, 데이터 수, 바로가기 | 원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외 |
-| [At a Glance](modules/glance.md) | 계산·화면 연결 | PC 수집→검증→Pages·평일08/18시 갱신·512MiB 변경분 캐시 | 원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용 |
+| [At a Glance](modules/glance.md) | 계산·화면 연결 | PC 수집→검증→Vercel·평일08/18시 갱신·512MiB 변경분 캐시 | 원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용 |
 | [MAXIMUS](modules/maximus.md) | 부분 구현 | 지수 · S&P500 / 지수 · KOSPI / 지수 · NASDAQ / 종목 · NVIDIA / 종목 · Microsoft / 종목 · Apple / 종목 · Alphabet / 종목 · Amazon / 종목 · Meta / 종목 · Broadcom / 종목 · Tesla / 종목 · Netflix / 종목 · 삼성전자 / 종목 · SK하이닉스 / 종목 · 삼성바이오로직스 / 종목 · 현대차 / 매크로 · 미국 10Y 금리 변화 / 매크로 · CPI MoM | 원본 10-expert MoE·SIS·ADF 파이프라인과 다른 명시적 기준모형입니다. 원본 모델을 실행했다고 표시하지 않습니다. / GitHub Pages에서 Python 재학습·임의 종목 서버 요청은 실행하지 않습니다. 로컬 명령으로 캐시를 갱신합니다. |
 | [DRAGONGLASS](modules/dragonglass.md) | 부분 구현 | 관계 지도 / 지금 주목 / Entity 360 / 시나리오 / 결정 원장 / 트리거·촉매 / 리서치 / 데이터 소스 / 현황판 / 방법론 | 위성 현장은 시설별 좌표·실관측 시계열이 없어 남아 있습니다. 시나리오는 원본의 공급망 인과 전파 엔진과 다릅니다. 결정 원장은 브라우저 로컬 저장입니다. |
 | [ARAGORN MAP](modules/aragorn.md) | 부분 구현 | 종합 | 원본의 매크로 인과 그래프 생성기가 없어 소속 관계를 인과관계로 표시하지 않습니다. |

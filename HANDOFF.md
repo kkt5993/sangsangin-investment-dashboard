@@ -4,7 +4,7 @@
 
 - 사용자 목표: 가능한 모든 탭 실제 구현. 색은 자유롭지만 축·기간·패널 구조 유지. 외부 공식 지수·업종 정의를 적극 활용한다.
 - 사용자가 기존 KRX 계정 인증 조회를 허용했다. --allow-krx-auth가 있어야 pykrx를 import한다. 설치된 pykrx는 import 때 인증할 수 있어 stdout/stderr를 억제하고 계정 정보를 출력하지 않는다.
-- 기존 GitHub Pages main/docs에 코드·문서·작은 파생 결과 게시가 허용되었다. Sites/Cloudflare로 옮기지 않는다.
+- 코드·문서·작은 파생 결과는 기존 GitHub에 보관한다. 2026-09-09 사용자가 사이트 호스팅을 Vercel로 변경 요청했다. 검증된 docs 정적 결과만 Vercel에 게시한다.
 - 원본 보존본은 형제 aragorn_investium_study. 다시 크롤링하지 않는다. 원본 서술·차트·소스를 공개 저장소에 복사하지 않는다.
 - 원자료는 형제 sangsangin-investment-data/expanded/2026-09-08, 초기 가격은 sangsangin-investment-data/2026-09-08. 사용자 승인 한도 512 MiB. JSON gzip 변환은 압축 해제 해시를 검증했고 원본 DB는 변경하지 않았다.
 - KRX 대형주1002의 100종목, KOSPI200 공식 조회 목록, IVV 공시 주식504개. KOSPI200 응답201개는 그대로 표시한다. 역사 구성종목 백테스트라고 주장하지 않는다.

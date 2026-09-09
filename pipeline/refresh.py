@@ -1,4 +1,4 @@
-"""One-command collect -> stage -> validate -> commit -> Pages verification.
+"""One-command collect -> stage -> validate -> commit -> Vercel verification.
 
 Credentials remain in existing local config/Git Credential Manager. A lock
 prevents overlapping runs. Failed staging never replaces the published site.
@@ -101,11 +101,12 @@ def validate(stage,env,log):
     steps += [['node','--check',str(p)] for p in (stage/'docs').glob('*.js')]
     for step in steps:command(step,stage,env,log)
 
-def publish(stage,env,log):
+def publish(stage,env,log,config=None):
+    config=config or {}
     dirty=subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)
     if dirty.strip():raise RuntimeError('Working tree has changes; validated staging retained, publication stopped')
     # Copy only generated public outputs. Code and user files are never committed
-    # by the recurring refresh. GitHub deploys the following commit atomically.
+    # by the recurring refresh. Vercel receives this validated public output.
     for p in (stage/'docs/data').glob('*.json'):shutil.copy2(p,ROOT/'docs/data'/p.name)
     shutil.copy2(stage/'docs/status.js',ROOT/'docs/status.js')
     generated=['research/IMPLEMENTATION_STATUS.md','research/CHART_PARITY.md','research/SUBVIEWS.md']
@@ -116,30 +117,36 @@ def publish(stage,env,log):
     command(['git','commit','-m','Refresh validated research snapshots'],ROOT,env,log)
     head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     snapshot=read_json(stage/'docs/data/refresh.json')
-    pending=dict(commit=head,as_of=snapshot['as_of'],vintage=snapshot['vintage'],run_id=snapshot['run_id'])
+    pending=dict(commit=head,as_of=snapshot['as_of'],vintage=snapshot['vintage'],run_id=snapshot['run_id'],target=config.get('publish_target','vercel'))
     write_json(RUNTIME/'pending_publish.json',pending)
-    return complete_publication(pending,env,log)
+    return complete_publication(pending,env,log,config)
 
-def complete_publication(pending,env,log):
+def complete_publication(pending,env,log,config=None):
+    config=config or {}
     head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     if head!=pending['commit']:raise RuntimeError('Pending publication commit changed; review local state')
     command(['git','-c','credential.interactive=never','push','origin','main'],ROOT,env,log)
-    import requests
-    url='https://kkt5993.github.io/sangsangin-investment-dashboard/data/refresh.json'
-    expected=(ROOT/'docs/data/refresh.json').read_bytes()
-    for _ in range(18):
-        try:
-            r=requests.get(url,params={'v':head},timeout=20)
-            if r.status_code==200 and r.content==expected:
-                write_json(RUNTIME/'state.json',pending)
-                (RUNTIME/'pending_publish.json').unlink(missing_ok=True)
-                return head
-        except requests.RequestException:pass
-        time.sleep(10)
-    raise RuntimeError('Git push succeeded; Pages verification pending')
+    if pending.get('target')=='vercel':
+        from .vercel_deploy import deploy,verify
+        if not pending.get('deployment_url'):
+            package=RUNTIME/'staging'/pending['run_id']/'vercel-deploy'
+            pending['deployment_url']=deploy(ROOT/'docs',package,config,env,log)
+            write_json(RUNTIME/'pending_publish.json',pending)
+        url=config.get('site_url') or pending['deployment_url']
+        expected=(ROOT/'docs/data/refresh.json').read_bytes()
+        for _ in range(12):
+            try:
+                if verify(url,expected):
+                    pending['site_url']=url;write_json(RUNTIME/'state.json',pending)
+                    (RUNTIME/'pending_publish.json').unlink(missing_ok=True)
+                    print('VERCEL VERIFIED',url,flush=True);return head
+            except Exception:pass
+            time.sleep(10)
+        raise RuntimeError('Vercel deployment created; public URL verification pending')
+    raise RuntimeError('Only Vercel publication is configured')
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--as-of');p.add_argument('--offline',action='store_true');p.add_argument('--publish',action='store_true');p.add_argument('--force-models',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--as-of');p.add_argument('--offline',action='store_true');p.add_argument('--publish',action='store_true');p.add_argument('--force-models',action='store_true');p.add_argument('--resume-run');a=p.parse_args()
     config_file=RUNTIME/'config.json';config=read_json(config_file) if config_file.exists() else {}
     state_file=RUNTIME/'state.json';state=read_json(state_file) if state_file.exists() else read_json(ROOT/'docs/data/status.json')
     parent_vintage=state.get('vintage') or state['as_of'];as_of=a.as_of or price_cutoff();run_id=datetime.now(ZoneInfo('UTC')).strftime('%Y%m%dT%H%M%SZ')
@@ -149,11 +156,17 @@ def main():
             if not a.offline and (as_of>price_cutoff() or as_of<state['as_of']):raise ValueError('Requested date is outside the completed refresh range')
             if a.publish and subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip():raise RuntimeError('Working tree has changes')
             if a.publish and (RUNTIME/'pending_publish.json').exists():
-                head=complete_publication(read_json(RUNTIME/'pending_publish.json'),os.environ.copy(),log)
+                head=complete_publication(read_json(RUNTIME/'pending_publish.json'),os.environ.copy(),log,config)
                 print(json.dumps(dict(status='published',resumed=True,commit=head)),flush=True);return
             prune_staging()
             parent=Data(state['as_of'],parent_vintage)
-            if a.offline:vintage=parent_vintage;as_of=state['as_of'];report['as_of']=as_of
+            if a.resume_run:
+                from .cache import chain
+                chain(DATA,a.resume_run);vintage=a.resume_run;base=DATA/'expanded'/vintage
+                resumed=read_json(base/'parent.json')
+                if resumed['vintage']!=parent_vintage:raise ValueError('Resume run belongs to another published parent')
+                as_of=resumed['as_of'];report['as_of']=as_of
+            elif a.offline:vintage=parent_vintage;as_of=state['as_of'];report['as_of']=as_of
             else:
                 vintage=run_id;base=DATA/'expanded'/vintage;base.mkdir(parents=True);write_json(base/'parent.json',dict(vintage=parent_vintage,as_of=as_of));budget()
             env={**os.environ,'SANGSANGIN_DATA_DIR':str(DATA),'SANGSANGIN_VINTAGE':vintage,'PYTHONIOENCODING':'utf-8','GIT_TERMINAL_PROMPT':'0','GCM_INTERACTIVE':'never'}
@@ -167,7 +180,7 @@ def main():
             write_json(stage/'docs/data/refresh.json',report)
             command([sys.executable,'scripts/write_status_docs.py'],stage,env,log);validate(stage,env,log)
             if a.publish:
-                report['commit']=publish(stage,env,log);report['status']='published';write_json(state_file,dict(as_of=as_of,vintage=vintage,commit=report['commit'],run_id=run_id))
+                report['commit']=publish(stage,env,log,config);report['status']='published'
             write_json(RUNTIME/(run_id+'.json'),report)
             print(json.dumps(dict(status=report['status'],run_id=run_id,as_of=as_of,vintage=vintage,commit=report.get('commit')),ensure_ascii=False),flush=True)
         except Exception as e:

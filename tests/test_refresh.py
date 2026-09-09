@@ -8,6 +8,7 @@ from pipeline.cache import make_patch,apply_patch_frame,chain
 from pipeline.incremental import completed_date,valid_frame,universe_symbols
 from pipeline.refresh import price_cutoff,publish,prune_staging
 from pipeline.subview_modules import event_returns
+from pipeline.vercel_deploy import package_site,verify
 
 def prices(n=12):
     f=pd.DataFrame(index=pd.bdate_range('2026-08-03',periods=n))
@@ -16,6 +17,25 @@ def prices(n=12):
     return f
 
 class RefreshTests(unittest.TestCase):
+    def test_vercel_package_contains_only_public_output(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);site=root/'docs';site.mkdir();(site/'index.html').write_text('<html>test</html>');(site/'data').mkdir();(site/'data/refresh.json').write_text('{}')
+            (root/'private.json').write_text('not for publication')
+            package_site(site,root/'package')
+            static=root/'package/.vercel/output/static'
+            self.assertEqual((static/'index.html').read_text(),'<html>test</html>')
+            self.assertFalse((static/'private.json').exists())
+            self.assertEqual(json.loads((root/'package/.vercel/output/config.json').read_text())['version'],3)
+            (site/'.env').write_text('secret')
+            with self.assertRaises(ValueError):package_site(site,root/'invalid')
+
+    def test_vercel_verification_requires_matching_public_bytes(self):
+        with patch('pipeline.vercel_deploy.requests.get') as get:
+            get.return_value.status_code=200;get.return_value.content=b'previous snapshot'
+            self.assertFalse(verify('https://example.vercel.app',b'current snapshot'))
+            get.return_value.content=b'current snapshot'
+            self.assertTrue(verify('https://example.vercel.app',b'current snapshot'))
+
     def test_classification_lookup_does_not_expand_collection_universe(self):
         members={'kr_largecap':{'members':[{'symbol':'005930.KS'}]},'kr_sectors':{'members':[{'symbol':'005930.KS'},{'symbol':'OUTSIDE.KS'}]}}
         self.assertEqual(universe_symbols(members),{'005930.KS'})

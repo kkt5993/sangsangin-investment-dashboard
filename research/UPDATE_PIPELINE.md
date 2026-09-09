@@ -1,6 +1,6 @@
 # 정기 갱신 운영
 
-사용자 승인: 한국시간 평일 08:00·18:00, 이 PC에서 수집·검증·GitHub Pages 게시. 로컬 데이터 최대512MiB. 예약은 Codex 앱의 자동화에서 관리한다. PC가 꺼져 있거나 앱이 실행 중이지 않으면 정시 실행을 보장하지 않는다. 거래 기능은 없다.
+사용자 승인: 한국시간 평일 08:00·18:00, 이 PC에서 수집·검증·Vercel 게시. 로컬 데이터 최대512MiB. 예약은 Codex 앱의 자동화에서 관리한다. PC가 꺼져 있거나 앱이 실행 중이지 않으면 정시 실행을 보장하지 않는다. 거래 기능은 없다.
 
 ## 실행과 저장 위치
 
@@ -8,11 +8,21 @@
 
 - `../sangsangin-investment-data/expanded/<run_id>/`: 원자료의 변경분, 부모 빈티지, 해시.
 - `../sangsangin-investment-data/runtime/config.json`: 로컬 설정. KRX 인증 허용 여부, 기존 ECOS 키 파일 경로, 기존 컨센서스 DB 경로, 이벤트 기업 수60. 키·경로·DB는 Git에 올리지 않는다.
-- `runtime/state.json`: Pages 게시 확인을 마친 빈티지.
+- `runtime/state.json`: Vercel 게시 확인을 마친 빈티지.
 - `runtime/<run_id>.json`, `.log`: 결과·오류, 외부 공개하지 않음.
 - `runtime/staging/`: 최근 계산·검사용 프로젝트 복사. 오래된 복사만 정리하며 원자료 빈티지는 보존한다.
-- `runtime/pending_publish.json`: 푸시 또는 Pages 확인 대기. 다음 실행은 동일 커밋의 게시를 먼저 재시도한다.
+- `runtime/pending_publish.json`: 푸시 또는 Vercel 확인 대기. 다음 실행은 동일 커밋의 게시를 먼저 재시도한다.
 - 공개 `docs/data/refresh.json`: 마지막 검증 시각, 기준일, 수집 건수. 홈페이지에서 확인한다.
+
+## Vercel 연결
+
+Vercel CLI59.13.1을 별도 로컬 도구 폴더에 설치했다. 최초 사용자 계정 인증과 `.vercel/project.json` 프로젝트 연결이 필요하며 이 파일과 `.env.local`은 Git에서 제외한다. 설정의 `vercel_cli`·`node_executable`은 로컬 실행 경로이고 `publish_target`은 `vercel`이다. `site_url`은 확인된 운영 도메인으로 설정한다. GitHub OAuth 연결 없이도 이 PC의 CLI 인증으로 배포할 수 있다.
+
+`vercel.json`은 Other 프레임워크, 빌드/설치 명령 없음, 출력 docs다. 예약 실행은 검증된 정적 파일만 `.vercel/output/static`으로 복사하고 Build Output API v3의 `deploy --prebuilt --prod`로 배포한다. Python·KRX/ECOS 인증·컨센서스 DB를 Vercel에 올리지 않는다. 공개 결과 JSON은 갱신 확인이 가능하도록 재검증 캐시 정책을 사용한다.
+
+수집 중단 후에는 `--resume-run <미완료 빈티지>`로 같은 부모의 완료된 수집 결과를 재사용할 수 있다. 정상 게시가 확인된 빈티지 자체에는 재수집하지 않는다.
+
+근거: [Vercel 정적 빌드](https://vercel.com/docs/builds), [Build Output API](https://vercel.com/docs/build-output-api), [CLI 배포](https://vercel.com/docs/cli/deploy).
 
 ## 수집 주기
 
@@ -34,6 +44,6 @@
 
 중복 실행은 Windows 파일 잠금으로 차단한다. 수집 이후 기존 공개 사이트와 분리한 복사본에서 모든 탭을 계산한다. Python 계산 검사, 자료별 날짜·OHLC·그룹·단위 검사, JavaScript 전체 섹션 렌더링·구문 검사를 모두 통과해야 게시한다.
 
-가격 API 실패가20건 이상 시도 중10%를 넘거나, 최신 가격 확보가 직전 대비3% 이상 감소하면 중단한다. 파일 해시 오류·예산 초과·계산/검사 오류도 중단한다. 실패한 계산 결과를 공개 폴더에 덮어쓰지 않는다. 작업 트리가 수정 중이면 코드를 자동 커밋하지 않는다. 깨끗한 작업 트리에서 검증된 파생 JSON·상태·생성 문서만 커밋하고 기존 Git Credential Manager로 푸시한다. 실제 Pages의 갱신 JSON이 로컬 파일과 일치해야 정상 게시로 기록한다.
+가격 API 실패가20건 이상 시도 중10%를 넘거나, 최신 가격 확보가 직전 대비3% 이상 감소하면 중단한다. 파일 해시 오류·예산 초과·계산/검사 오류도 중단한다. 실패한 계산 결과를 공개 폴더에 덮어쓰지 않는다. 작업 트리가 수정 중이면 코드를 자동 커밋하지 않는다. 깨끗한 작업 트리에서 검증된 파생 JSON·상태·생성 문서만 커밋하고 기존 Git Credential Manager로 푸시한다. 이어서 정적 파일만 Vercel Build Output API v3 패키지로 배포한다. 실제 Vercel의 갱신 JSON이 로컬 파일과 일치해야 정상 게시로 기록한다.
 
 모든 API 실패를 자동으로 해결할 수는 없다. 실패 시 로컬 로그를 확인하고 같은 명령으로 재시도한다. 최신 데이터가 없는 종목/옵션/지표는 개별 날짜와 미확보 범위를 확인한다. QuantiWise 원본 DB가 오래되었으면 수집 실행일이 새로워도 컨센서스 기준일은 그대로 표시한다.

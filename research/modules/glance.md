@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**계산·화면 연결** · 가격 기준 2026-09-08. PC 수집→검증→Pages·평일08/18시 갱신·512MiB 변경분 캐시.
+**계산·화면 연결** · 가격 기준 2026-09-08. PC 수집→검증→Vercel·평일08/18시 갱신·512MiB 변경분 캐시.
 
 - 화면: [app.js](../../docs/app.js) · [전체 상태](../../docs/data/status.json)
 - 남은 범위: 원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용
@@ -15,13 +15,14 @@
 
 
 
+
 설계 철학, 모듈 설명, 자동 운영, 데이터 소스, 학술적 배경을 한곳에 정리한 안내 화면.
 
 ## 구현 순서
 
 1. glance.js의 PILLARS·CROSS·STACK·SCREENS·APIS·SCHED_CHIPS를 설명 콘텐츠로 옮긴다.
 2. SVG로 4단 투자 프로세스와 수집→Python builder→GitHub→Cloudflare Pages 운영 흐름을 그린다.
-3. 팀 운영은 한국시간 평일08시·18시 PC 수집→검증→Pages 게시다. pipeline.refresh 명령과512MiB 변경분 캐시를 사용한다. PC와 Codex 앱이 실행 중이어야 한다.
+3. 팀 운영은 한국시간 평일08시·18시 PC 수집→검증→Vercel 게시다. pipeline.refresh 명령과512MiB 변경분 캐시를 사용한다. PC와 Codex 앱이 실행 중이어야 한다.
 4. 실제 메뉴는 app.js와 index.json에서 생성되므로 SCREENS를 그대로 메뉴 명세로 삼지 말고 실제 메뉴와 대조한다.
 
 ## 검증 과제

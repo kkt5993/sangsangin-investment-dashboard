@@ -1,0 +1,4 @@
+# Tested with Python 3.13.5. A project-specific venv is optional if these exist.
+numpy==2.4.4
+pandas==2.3.3
+yfinance==1.3.0

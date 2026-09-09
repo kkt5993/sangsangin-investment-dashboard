@@ -1,6 +1,6 @@
 # 세부 화면 연결 현황
 
-가격 기준 2026-09-08. 연결은 해당 화면에 실자료 계산·탐색이 있다는 뜻이며 원본 알고리즘의 완전 복제를 뜻하지 않습니다. 각 탭의 남은 범위도 함께 확인하세요. 현재 화면 그룹 목록: 연결 131개, 미연결 3개. 이 숫자는 완성된 원본 세부 기능 수가 아닙니다. RS/모멘텀과 원본의 중첩 화면·그룹 내부 기능은 별도 대조가 필요하며 [원본 기능 대조](REFERENCE_PARITY.md)에서 관리합니다.
+가격 기준 2026-09-08. 연결은 해당 화면에 실자료 계산·탐색이 있다는 뜻이며 원본 알고리즘의 완전 복제를 뜻하지 않습니다. 각 탭의 남은 범위도 함께 확인하세요. 현재 화면 그룹 목록: 연결 134개, 미연결 3개. 이 숫자는 완성된 원본 세부 기능 수가 아닙니다. RS/모멘텀과 원본의 중첩 화면·그룹 내부 기능은 별도 대조가 필요하며 [원본 기능 대조](REFERENCE_PARITY.md)에서 관리합니다.
 
 | 대형 탭 | 세부 화면 | 상태 | 섹션 수 | 필요한 자료 |
 |---|---|---|---:|---|
@@ -79,13 +79,16 @@
 | 워칭 차트 · 패턴 스캐너 (📈상승·📉하락) | KR · 약세 추세 | 연결 | 4 |  |
 | 워칭 차트 · 패턴 스캐너 (📈상승·📉하락) | US · 상승 패턴 | 연결 | 6 |  |
 | 워칭 차트 · 패턴 스캐너 (📈상승·📉하락) | US · 약세 추세 | 연결 | 4 |  |
-| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | S&P500 · 1M | 연결 | 1 |  |
-| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | S&P500 · 3M | 연결 | 1 |  |
+| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | 전망 요약 | 연결 | 3 |  |
 | ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | KOSPI · 1M | 연결 | 1 |  |
 | ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | KOSPI · 3M | 연결 | 1 |  |
 | ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | NASDAQ · 1M | 연결 | 1 |  |
 | ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | NASDAQ · 3M | 연결 | 1 |  |
-| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | 종합 | 연결 | 2 |  |
+| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | S&P500 · 1M | 연결 | 1 |  |
+| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | S&P500 · 3M | 연결 | 1 |  |
+| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | 모델 비교 | 연결 | 3 |  |
+| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | SHAP 해석 | 연결 | 2 |  |
+| ML·DL 지수예측 (KOSPI·NASDAQ·S&P) | 변수 선택 | 연결 | 2 |  |
 | Quant Hedge (Multi Quant) | Stat Arb | 연결 | 11 |  |
 | Quant Hedge (Multi Quant) | 멀티팩터 | 연결 | 2 |  |
 | Quant Hedge (Multi Quant) | BAB | 연결 | 2 |  |

@@ -5,7 +5,7 @@ if(!out)throw Error('Output directory required');fs.mkdirSync(out,{recursive:tru
 const ctx=vm.createContext({window:{},console});for(const n of ['charts','analysis-charts','network-views'])vm.runInContext(fs.readFileSync(path.join(root,'docs',n+'.js'),'utf8'),ctx);
 const data=n=>JSON.parse(fs.readFileSync(path.join(root,'docs/data',n+'.json'),'utf8')),A=ctx.window.AnalysisCharts,G=ctx.window.NetworkViews;
 const styles='<style>.axis{fill:#506d80;font-size:12px}.grid-line{stroke:#dce6ec;stroke-width:1}.reference-line{stroke:#93a8b6;stroke-width:1}.bar-name{fill:#274d66;font-size:13px}</style><rect width="100%" height="100%" fill="white"/>';
-const samples={dynamics:A.surface(data('dynamics').sections[0].surface),risk:A.line(data('dynamics').sections[0].charts[0]),candles:A.candles(data('watch').sections[0]),forecast:A.forecast(data('ml').sections[0]),growth:A.scatter3d(data('growth').sections[0]),globe:G.sphere(data('globe').sections[0],data('coastlines').arcs),network:G.graph(data('aragorn').sections[0])};
+const samples={dynamics:A.surface(data('dynamics').sections[0].surface),risk:A.line(data('dynamics').sections[0].charts[0]),candles:A.candles(data('watch').sections[0]),forecast:A.forecast(data('ml').sections.find(s=>s.type==='ml')),growth:A.scatter3d(data('growth').sections[0]),globe:G.sphere(data('globe').sections[0],data('coastlines').arcs),network:G.graph(data('aragorn').sections[0])};
 samples.pead=A.scatter(data('strategies').sections.find(s=>s.group==='PEAD'&&s.type==='scatter'));
 samples.reflex_hologram=A.hologram(data('regime').sections.find(s=>s.type==='hologram'));
 samples.reflex_radar=A.radar(data('regime').sections.find(s=>s.type==='hologram'));
@@ -22,5 +22,12 @@ samples.news_regions=G.sphere(data('geoecon').sections.find(s=>s.type==='globe')
 const entity=data('dragonglass').sections.find(s=>s.type==='entities').entities[0];samples.entity=A.line({title:entity.name+' · 3개월',left:'시작=100',date_format:'day',series:[{name:entity.name,axis:'left',points:entity.curve}]});
 samples.scanner=A.scanCandles(data('multiasset').sections.find(s=>s.type==='scanner').items[0]);
 samples.allocation=A.line(data('multiasset').sections.find(s=>s.type==='allocation').chart);
+const ml=data('ml'),mlTarget=ml.sections.find(s=>s.type==='ml');
+samples.ml_long=A.line(mlTarget.charts[0]);samples.ml_recent=A.line(mlTarget.charts[1]);
+samples.ml_composite=A.line(ml.sections.find(s=>s.type==='line'&&s.group==='전망 요약'));
+samples.ml_lag=A.lagCorrelation(ml.sections.find(s=>s.type==='lagcorrelation'));
+samples.ml_models=A.modelLeaderboard({panels:[ml.sections.find(s=>s.type==='modelleaderboard').panels[0]]});
+samples.ml_features=A.featureSelection(ml.sections.find(s=>s.type==='featureselection').panels[1]);
+samples.ml_shap=A.shap(ml.sections.find(s=>s.type==='shap'));
 samples.scenario=ctx.window.ResearchCharts.bars(data('dragonglass').sections.find(s=>s.type==='scenario').rows.filter(r=>r.market==='KR').map(r=>({name:r.name,value:r.beta*-10})),{unit:'%',title:'시장 −10% 가정 · Beta 민감도'});
 (async()=>{for(const [name,html] of Object.entries(samples)){let s=html.match(/<svg[\s\S]*<\/svg>/)?.[0];if(!s)throw Error(name+' empty');s=s.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" font-family="Malgun Gothic, sans-serif" ').replace(/(<svg[^>]*>)/,'$1'+styles);fs.writeFileSync(path.join(out,name+'.svg'),s);await sharp(Buffer.from(s)).resize({width:1100}).png().toFile(path.join(out,name+'.png'));}console.log('Rasterized',Object.keys(samples).length,'chart samples without a browser.');})().catch(e=>{console.error(e);process.exitCode=1;});

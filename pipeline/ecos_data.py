@@ -12,6 +12,7 @@ SERIES=[('KR_CPI','901Y009','M','0','한국 CPI'),('KR_LEAD','901Y067','M','I16E
  ('KR_REAL_GDP','200Y104','Q','1400','한국 실질 GDP 계절조정'),
  ('KR_CHEM_EXPORT','403Y003','M','3051AA','기초화학물질 수출물량지수'),
  ('KR_CORP_NI','501Y002','A','ZZZ00/A/270000','한국 전산업·종합 당기순손익')]
+SERIES += [('KR_DEPOSIT','901Y056','M','S23A','투자자 예탁금'),('KR_MARGIN','901Y056','M','S23E','신용융자 잔고')]
 
 def period_date(value,freq):
     return pd.Period(value,freq='Y').start_time if freq=='A' else pd.Period(value,freq='Q').start_time if freq=='Q' else pd.to_datetime(value,format='%Y%m' if freq=='M' else '%Y%m%d')

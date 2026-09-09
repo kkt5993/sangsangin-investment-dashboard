@@ -10,9 +10,10 @@ for(const file of ['charts','analysis-charts','network-views','decision-ledger',
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
 // Minimal event targets exercise the actual tab and scenario callbacks offline.
 function interactiveContainer(){
+ const attr=s=>s.replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
  const node=(value='',dataset={})=>({value,dataset,innerHTML:'',events:{},setAttribute(k,v){this[k]=v;},addEventListener(k,f){this.events[k]=f;},fire(k){this.events[k]?.({target:this});}});
  const c={html:'',buttons:[],boxes:[],select:node('all'),get innerHTML(){return this.html;},set innerHTML(h){
-  this.html=h;this.select=node('all');this.buttons=[...h.matchAll(/data-subview="([^"]+)"/g)].map(m=>node('',{subview:m[1]}));
+  this.html=h;this.select=node('all');this.buttons=[...h.matchAll(/data-subview="([^"]+)"/g)].map(m=>node('',{subview:attr(m[1])}));
   this.boxes=[...h.matchAll(/data-scenario="(\d+)"/g)].map(m=>{const market=node('KR'),shock=node('-10'),output=node();return {dataset:{scenario:m[1]},market,shock,output,querySelector:s=>({'[data-scenario-market]':market,'[data-shock]':shock,'[data-scenario-output]':output}[s]||null),querySelectorAll:()=>[market,shock]};});
   this.holos=[...h.matchAll(/data-hologram="(\d+)"/g)].map(m=>{const yaw=node('60'),output=node();return {dataset:{hologram:m[1]},yaw,output,querySelector:s=>s==='[data-holo-yaw]'?yaw:output};});
   this.rebals=[...h.matchAll(/data-rebalancing="(\d+)"/g)].map(m=>{const shock=node('5'),output=node();return {dataset:{rebalancing:m[1]},shock,output,querySelector:s=>s==='[data-rebal-shock]'?shock:output};});
@@ -75,6 +76,20 @@ function interactiveContainer(){
  const watch=data.watch.sections[0];assert.equal(watch.candles.length,120);assert.equal(watch.weekly.length,52);assert.equal((A.candles(watch).match(/data-volume="1"/g)||[]).length,120);
  assert(data.watch.sections.some(s=>s.pattern&&A.candles(s).includes('data-pattern="1"')),'geometric candidates have overlays');
  const ml=data.ml.sections.find(s=>s.type==='ml');assert(A.forecast(ml).includes('data-interval="90"'));assert(A.forecast(ml).includes('data-interval="68"'));assert(A.forecast(ml).includes('data-prediction="1"'));
+ const board=data.ml.sections.find(s=>s.type==='modelleaderboard'),boardSVG=A.modelLeaderboard(board);
+ assert.equal((boardSVG.match(/data-chart-type="model-leaderboard"/g)||[]).length,3);
+ assert.equal((boardSVG.match(/data-model-bar="1M"/g)||[]).length,39);assert.equal((boardSVG.match(/data-model-bar="3M"/g)||[]).length,39);
+ assert.equal((boardSVG.match(/data-model-chance="50"/g)||[]).length,3);assert(boardSVG.includes('Transformer'));
+ const composite=data.ml.sections.find(s=>s.type==='line'&&s.group==='전망 요약');assert.equal(composite.series.length,7);
+ assert.equal(composite.series.filter(s=>s.dashed).length,3);assert(A.line(composite).includes('data-time-zone='));
+ const lag=data.ml.sections.find(s=>s.type==='lagcorrelation');assert.equal((A.lagCorrelation(lag).match(/data-lag=/g)||[]).length,6);
+ const explanations=data.ml.sections.filter(s=>s.type==='shap');assert.equal(explanations.length,2);
+ const shapIds=[];for(const s of explanations){const svg=A.shap(s);assert.equal((svg.match(/data-shap-value=/g)||[]).length,15*120);shapIds.push(svg.match(/linearGradient id="([^"]+)"/)[1]);}
+ assert.equal(new Set(shapIds).size,2);
+ for(const p of data.ml.sections.find(s=>s.type==='featureselection').panels){const svg=A.featureSelection(p);assert.equal((svg.match(/data-shadow-wins=/g)||[]).length,p.rows.length);assert(!svg.includes('width="-'));}
+ for(const s of data.ml.sections.filter(s=>s.type==='ml')){assert.equal(s.detail_table.rows.length,24);assert.equal(s.charts[0].series.length,2);assert(s.charts[0].series.every(a=>a.axis==='left'));assert.equal(s.charts[1].series[0].points.length,36);assert.equal((A.line(s.charts[1]).match(/data-line-marker=/g)||[]).length,37);assert(A.line(s.charts[1]).includes('data-axis="right"'));}
+ context.location.hash='#ml';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='ml'));
+ for(const group of ['모델 비교','변수 선택','SHAP 해석',...data.ml.sections.filter(s=>s.type==='ml').map(s=>s.group)]){interactive.buttons.find(b=>b.dataset.subview===group).fire('click');assert(!interactive.innerHTML.includes('role="alert"'));assert(interactive.innerHTML.includes(context.window.ResearchCharts.esc(group)));}
  assert(A.line({title:'test',left:'%',right:'index',guides:[0],series:[{name:'left',axis:'left',points:[['2026-01-01',1],['2026-02-01',2]]},{name:'right',axis:'right',points:[['2026-01-01',100],['2026-02-01',200]]}]}).includes('data-axis="right"'));
  const xss=context.window.ResearchDashboard.section({type:'table',title:'<img>',columns:['x'],rows:[['<script>alert(1)</script>']]},0,{});assert(!xss.includes('<script>'));assert(xss.includes('&lt;script&gt;'));
  console.log('PASS:',count,'new tabs, every subview, cache, real SVG structures, 120D/52W candles, dual axes, 3D surface, 68/90 bands and escaping.');

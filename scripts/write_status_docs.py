@@ -11,7 +11,7 @@ CODE={
  'etfmon':'market_modules.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
  'regime':'macro_modules.py','risk':'macro_modules.py · option_analytics.py','pm_weekend':'macro_modules.py','geoecon':'macro_modules.py',
  'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'discovery.py · financial_modules.py','strategies':'financial_modules.py',
- 'quant':'quant_modules.py','ml':'ml_models.py','maximus':'maximus_model.py · ml_models.py',
+ 'quant':'quant_modules.py','ml':'ml_models.py · ml_features.py · ml_ensemble.py · ml_transformer.py · ml_views.py','maximus':'maximus_model.py · ml_models.py',
  'principium':'platform_modules.py','ask_digest':'platform_modules.py','iw':'platform_modules.py','aragorn':'platform_modules.py','dragonglass':'platform_modules.py','globe':'platform_modules.py',
 }
 for key in ['regime','risk','pm_weekend','geoecon','strategies','earnings','dragonglass','ask_digest','multiasset']:
@@ -45,7 +45,7 @@ PARITY={
  'multiasset':('21자산 막대·열지도·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),
  'risk':('옵션 GEX/스팟곡선·VIX/SKEW·CSD·포트폴리오 위험','3ETF 만기 제한 GEX·OI PCR, CSD·곡선·VaR/CVaR·스트레스','딜러 실제 포지션·전 만기·실제 팀 포트폴리오 없음'),
  'watch':('KR/US 상승6·하락4, 일/주봉·MA·거래량·패턴 근거','5기하 패턴·피벗·120일/52주·MA·ADX/DI/MA4조건·12지표 점수','미공개 판정/ADX 합성 점수 동등성 미검증, 적합도는 성공확률 아님'),
- 'ml':('3지수×1M/3M, 실제 막대/예측선·68/90%·적중점·z/확률/가격·OOS','6그룹·만기 정렬 walk-forward·모델 평가·이중축·계수','Boruta/SHAP/LSTM·비공개 모델 선택과 PIT 빈티지 미복제'),
+ 'ml':('3지수×1M/3M, 실제 막대/예측선·68/90%·적중점·z/확률/가격·OOS','6타깃·11모델+2앙상블·Shadow/강제변수·TreeSHAP·3패널 비교·장기/36월·24월표','CAPE/감성 등 일부 입력·원본 하이퍼파라미터·PIT 빈티지 동등성 미검증'),
  'quant':('Stat Arb·8팩터·BAB·TSMOM·단기반전 5뷰','페어 z 0/±2·상관/Hurst/공적분/반감기·요인/비중·후보','현재 단면 스크리닝, 역사 구성·모든 전략 비용 후 OOS 필요'),
  'dynamics':('3지수+15주식, 8룩백×시간 변동성표면·β×τ·위험/가격·노출성과','18대상·표면 회전/시간·위상·0~100/65선·가격 우축·전일노출','21D/5D/expanding252는 명시적 팀 파라미터, 거래비용·차입금리 미반영'),
  'iw':('주간 관측·글과 이미지·판단 원장','수치 요약과 개인 메모 저장/수정/삭제/JSON 이동','원본 개인 논평과 과거 기록·팀 공용 저장 없음'),
@@ -83,7 +83,7 @@ for m in modules:
     block += ['[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)','',
        '아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.','<!-- implementation:end -->','']
     path.write_text(first+'\n'+'\n'.join(block)+'\n'+rest.lstrip('\n'),encoding='utf8')
-status_lines += ['','## 이번 검증 범위','','Python 날짜·수익률·학습 타깃·미래 변경 불변성·기하 패턴 검증, 실제 스냅샷의 OHLC/행렬/그래프 검증, JS 전체 23개 데이터 탭과 모든 하위 섹션의 오프라인 렌더링을 검사한다. 7종 대표 SVG는 브라우저 없이 래스터화하여 차트 배치와 한글을 확인한다. 브라우저 이벤트 전체나 원본 픽셀 일치 검증을 완료했다는 뜻은 아니다.','',
+status_lines += ['','## 이번 검증 범위','','Python 날짜·수익률·학습 타깃·미래 변경 불변성·기하 패턴 검증, 실제 스냅샷의 OHLC/행렬/그래프 검증, JS 전체 23개 데이터 탭과 모든 하위 섹션의 오프라인 렌더링을 검사한다. 대표 SVG는 브라우저 없이 래스터화하여 차트 배치와 한글을 확인한다. 브라우저 이벤트 전체나 원본 픽셀 일치 검증을 완료했다는 뜻은 아니다.','',
  '재계산은 [README](../README.md), 공개 정의는 [DATA_DEFINITIONS](DATA_DEFINITIONS.md), 다음 보완은 [ROADMAP](ROADMAP.md)을 따른다.']
 parity += ['','## 공통 표시와 검사','','결측값은 0으로 채우지 않는다. 좁은 화면에서는 패널을 한 열로 배치하고 표는 스크롤한다. 신규 SVG는 로컬 코드로 생성하며 외부 차트 CDN을 요구하지 않는다. RS/모멘텀은 키보드 날짜 탐색, 새 3D/지구본은 회전·선택 제어를 제공한다.','',
  '시계열은 날짜 순서와 중복·미래 관측을 검사한다. 예측 타깃만 미래를 허용한다. OHLC 범위, 학습 타깃 만기, 구간 순서, 8개 표면 룩백, 캔들 120일/52주, 25탭 연결, 코드와 데이터 크기를 검사한다. 대표 SVG의 육안 확인을 브라우저 기능 검사 또는 원본 계산 동등성으로 표현하지 않는다.']

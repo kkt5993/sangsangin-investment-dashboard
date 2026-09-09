@@ -16,3 +16,4 @@ pykrx==1.2.7
 lightgbm==4.7.0
 Boruta==0.4.3
 torch==2.11.0
+xgboost==3.4.1

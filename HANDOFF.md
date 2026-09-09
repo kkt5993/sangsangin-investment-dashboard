@@ -11,7 +11,7 @@
 - KR 페어는 공식 상품명으로 정의를 확정했다. IT266370, 대형주337140, 가치275290/성장325010, 필수소비재266410, 지주307520. 조선0115D0은 역사 부족으로 5Y z가 비어 있을 수 있다.
 - Yahoo 국내 과거 종가의 일부 OHLC 범위 오류를 KRX로 확인했다. 별도 price_corrections.json.gz를 적용하고 원본 CSV는 보존한다. 시가·고가·저가의 일치 배율로 분할 조정을 정렬하고 기존 배당 조정 계수를 유지한다. 정렬 불가는 격리한다. FX·선물 settlement 범위 차이와 구분한다.
 - 23개 분석·콘텐츠 탭이 연결되었으나 모두 완전한 원본 복제는 아니다. 삭제 요청한 소유자 전용 탭과 만든이 표시는 제거했다. 각 탭의 missing 항목을 유지한다.
-- ML은 월별 3모델 기준모형. macro를 가격의 월 인덱스에 먼저 reindex한 뒤 shift(2)한다. 순서를 바꾸면 예측월이 잘린다. 최신 수정 거시 빈티지의 결과는 PIT 실시간 성과가 아니다.
+- 지수 ML은 ml_ensemble의10종+ml_transformer의 Transformer와 평균/중앙값을 비교한다. ml_models의 legacy3종 함수는 MAXIMUS 호환용이며 지수 ML 화면에 쓰지 않는다. macro를 가격의 월 인덱스에 먼저 reindex한 뒤 shift(2)한다. 순서를 바꾸면 예측월이 잘린다. 최신 수정 거시 빈티지의 결과는 PIT 실시간 성과가 아니다.
 - MAXIMUS는 3-expert OOS 역 MSE 게이트이며 원본 10-expert MoE가 아니다. Python 서버 실행·임의 종목 입력은 정적 웹에 없다.
 - 성장 3D 축은 FY1/FY2 영업이익 성장×YTD×영업이익률. 로컬 컨센서스 기준2026-08-07을 가격일과 구분한다. 해외 EPS를 영업이익으로 대체하지 않는다.
 - 옵션은 SPY·QQQ·IWM의 제한된 3개 만기 OI·IV 관측. 콜+/풋− 부호 가정이며 실제 딜러 inventory가 아니다.
@@ -58,3 +58,10 @@ DRAGONGLASS 후속: `entities.py` 현재공식유니버스 합집합700개(재�
 FOMC 공식연도/월/종료일/SEP달력을추가. 현재52예정·10원천. 월경계회의·서면표결배제·시간미확인검사; FOMC한국시간임의입력금지. 한국경제일정은여전히남음. 다음실제구현은 REFERENCE_PARITY의관계증거/시나리오/위성,ML6그룹본모델,MAXIMUS10전문가,실적추정상세,콘텐츠등록/첨부부터확인한다. 이문서의이전'남음'문장은현재표와대조한다.
 
 배포 준비 검사: Python73개, 두 데이터 검증기, 3개 JS 렌더/동작 검사, JS9개 구문, SVG24개 래스터 통과. 스캐너/배분 이미지를 확인했다. 공개 JSON 약4.87MiB, 로컬 원자료/실행파일 약72MiB. 학습 선택 상태는 확정84·미확정19·순위대체22원점이며 세 리스크온 모형은125원점 모두 산출. ML 성과를60/40보다 우수하다고 주장하지 않는다. 최신 run_id=20260909T104824Z; 게시 성공 여부는 runtime/state.json.
+
+
+지수 ML 후속(2026-09-09): `ml_features.py`142후보, `ml_ensemble.py`10종/Shadow12회/6개월일반·12개월LSTM, `ml_transformer.py`Transformer 추가·선택/잔차 재생, `ml_views.py`10세부그룹16섹션. 원본 설명10종과 실제 평가표13열(11종+2앙상블)이 달라 실제 chart 구조를 따랐다. 1M164·3M162원점, 최소96라벨,3M만기·당시120개평가선택/24잔차검사. TreeSHAP는 full available-label 별도 LightGBM의최근120개15변수 해석으로OOS/인과 아님. 최신3개 MLP수렴경고를진단에표시. 최종선택은SP5001M XGBoost/3M ExtraTrees,KOSPI1M LightGBM/3M Lasso,NASDAQ1M·3M ExtraTrees.
+
+신규 ECOS901Y056 M S23A/S23E는 원 단위272개월. raw빈티지20260909T105501Z,부모102452Z,거시59. XGBoost3.4.1 Windows46.7MiB패키지를추가했고기존CPU Torch를재사용. 공개JSON약5.09MiB로상한6MiB, DATA전체약51.6MiB(스테이징정리후)로승인512MiB이내. 캐시는입력/코드해시별타깃gzip,코드변경시전체과거재생; 증분학습이라고표현하지않는다. refresh가model_spec2변경도검사. legacy ml_models.features/walk_forward는MAXIMUS3전문가가쓰므로삭제금지.
+
+검사78unittest·두검증기·3JS검사·9JS구문·31SVG래스터통과,새ML7종이미지중모형/SHAP/36월/컴포짓/상관/변수배치확인. 브라우저QA없음. 공개커밋의원본사이트요청0. 지수ML남은차이는 ML_MODEL_CONTRACT와REFERENCE_PARITY,다음은MAXIMUS·관계근거/전파·위성·추정상세·콘텐츠기능. run_id=20260909T113437Z; 실제게시확인은runtime/state.json.

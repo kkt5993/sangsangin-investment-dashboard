@@ -62,6 +62,22 @@ def section(s,cutoff,module):
     if kind in ['heatmap','preference']:assert all(len(r['values'])==len(s['columns']) for r in s['rows']),s['title']
     if kind=='line':
         for line in s['series']:series(line,cutoff,s.get('forecast',False))
+        for z in s.get('zones',[]):assert z['start']<z['end']<=cutoff and z['kind'] in ['high','low']
+    if kind=='modelleaderboard':
+        assert len(s['panels'])==3
+        for p in s['panels']:
+            assert len(p['rows'])==13 and len({r['name'] for r in p['rows']})==13
+            assert all(len(r['values'])==2 and all(v is None or 0<=v<=100 for v in r['values']) for r in p['rows'])
+    if kind=='lagcorrelation':
+        assert [r['name'] for r in s['rows']]==[str(i) for i in range(-2,4)]
+        assert all(r['observations']>=24 and (r['value'] is None or -1<=r['value']<=1) for r in s['rows'])
+    if kind=='featureselection':
+        assert len(s['panels'])==2
+        for p in s['panels']:assert p['repeats']==12 and all(0<=r['value']<=12 for r in p['rows'])
+    if kind=='shap':
+        assert len(s['rows'])==15 and s['additive_error']<=1e-6 and 'not OOS' in s['scope']
+        assert s['training_end']<=cutoff and len(s['dates'])<=120 and s['dates']==sorted(set(s['dates']))
+        for r in s['rows']:assert len(r['points'])==len(s['dates']) and all(math.isfinite(p[0]) and 0<=p[1]<=1 for p in r['points'])
     if kind=='dynamics':
         a=s['surface'];assert a['windows']==[5,10,20,40,60,90,120,180];assert len(a['dates'])==len(a['values']);assert all(len(r)==8 for r in a['values']);assert a['dates'][-1]<=cutoff
         assert 0<=s['current']['risk']<=100 and 0<=s['current']['exposure']<=1.5
@@ -76,11 +92,18 @@ def section(s,cutoff,module):
             assert 0<=p['score']<=100
     if kind=='ml':
         for c in s['charts']:section(c,cutoff,module)
+        if s.get('detail_table'):
+            section(s['detail_table'],cutoff,module)
+            assert len(s['detail_table']['rows'])==24 and len(s['diagnostics']['models'])==13
         for r in s['records']:
             assert r['train_target_end']<=r['origin']<r['target']
             assert r['origin']<=cutoff
             if r['probability'] is not None:assert 0<=r['probability']<=100 and r['calibration_observations']>=24
             if r['interval']:assert r['interval']['0.05']<=r['interval']['0.16']<=r['interval']['0.84']<=r['interval']['0.95']
+            if r.get('selected_model'):
+                assert len(r['models'])==13 and r['prediction']==r['models'][r['selected_model']]
+                assert r['lstm_fit_origin']<=r['origin'] and r['transformer_fit_origin']<=r['origin']
+                assert 0<r['feature_count']<=142
     if kind=='graph':
         ids={n['id'] for n in s['nodes']};assert len(ids)==len(s['nodes'])
         assert all(e['source'] in ids and e['target'] in ids for e in s['links'])

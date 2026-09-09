@@ -1,4 +1,4 @@
-"""Small walk-forward baseline. No reference model weights or retrospective tuning."""
+"""ML dashboard entry point; legacy baseline helpers remain for MAXIMUS."""
 import argparse
 import numpy as np
 import pandas as pd
@@ -46,7 +46,7 @@ def walk_forward(X,p,h,min_train=60,target=None):
         ridge=models['Ridge'].named_steps['ridge'];importance=[dict(name=n,value=number(c)) for n,c in zip(X.columns,ridge.coef_)]
     return records,importance
 
-def build(d):
+def baseline_build(d):
     sections=[];leaderboard=[];hits=[];cards=[]
     for code,s,name in INDICES:
         X,p=features(d,s)
@@ -73,6 +73,11 @@ def build(d):
     sections.append(heat('방향 적중 스트립 (+1 적중 / −1 실패)',[f'-{36-i}개월' for i in range(36)],hits))
     return module('ml',d.as_of,'Ridge·BayesianRidge·ExtraTrees의 동일가중 기준모형입니다. 월말 가격·거시 13개 내외 변수, 최소 60개월 학습, 매월 재학습, 1M·3M 타깃 만기 이후만 학습합니다. 과거 OOS 잔차 24개 이상으로 경험적 68%·90% 구간과 상승확률을 계산합니다. 1M 방향전략은 편도 5bp입니다.',sections,cards,
         missing=['원본의 Boruta·SHAP·LSTM·모델 선택 규칙을 복제한 모델이 아닙니다. 최종 모델의 표준화 Ridge 계수를 별도로 표시합니다.','거시 데이터는 최신 수정 빈티지에 2개월 시차를 적용했습니다. 발표일·개정치를 복원한 point-in-time 실시간 성과는 아닙니다.'])
+
+def build(d):
+    from .ml_transformer import build as train
+    from .ml_views import build_view
+    return build_view(d,train(d))
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--as-of',default='2026-09-08');a=p.parse_args();d=Data(a.as_of);d.export(build(d))

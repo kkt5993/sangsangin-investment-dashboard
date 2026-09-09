@@ -182,7 +182,9 @@ def main():
             stage=RUNTIME/'staging'/run_id;stage.mkdir(parents=True);stage_project(stage)
             run=lambda mod:command([sys.executable,'-m',mod,'--as-of',as_of],stage,env,log)
             model=read_json(ROOT/'docs/data/ml.json');model_age=(datetime.fromisoformat(as_of)-datetime.fromisoformat(model['as_of'])).days
-            if a.force_models or model_age>=7 or as_of[:7]!=model['as_of'][:7]:run('pipeline.ml_models');run('pipeline.maximus_model')
+            model_due=a.force_models or model_age>=7 or as_of[:7]!=model['as_of'][:7]
+            if model_due or model.get('model_spec')!=2:run('pipeline.ml_models')
+            if model_due:run('pipeline.maximus_model')
             from .events_data import read as read_gzip
             from .allocation_model import MODEL_SPEC
             current=Data(as_of,vintage=vintage);allocation=current.resource('allocation_model.json.gz')

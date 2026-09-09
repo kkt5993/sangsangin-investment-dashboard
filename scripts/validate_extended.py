@@ -14,6 +14,20 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='releasecalendar':
+        assert (date.fromisoformat(s['to_date'])-date.fromisoformat(s['from_date'])).days==s['days']-1==89
+        sources={r['id']:r for r in s['sources']};assert len(sources)==len(s['sources'])
+        assert len({r['id'] for r in s['items']})==len(s['items'])
+        for r in s['items']:
+            assert r['source_id'] in sources and s['from_date']<=r['display_date']<=s['to_date'] and r['region'] in ['US','KR']
+            assert r['source_status']==sources[r['source_id']]['status'] and r['url'].startswith('https://')
+            assert r['observed_kst_date']==datetime.fromisoformat(r['observed_at']).astimezone(ZoneInfo('Asia/Seoul')).date().isoformat()
+            assert r['age_days']==max(0,(date.fromisoformat(s['from_date'])-date.fromisoformat(r['observed_kst_date'])).days)
+            if r['at']:
+                at=datetime.fromisoformat(r['at']);assert at.tzinfo is not None
+                kst=at.astimezone(ZoneInfo('Asia/Seoul'));assert r['kst_at']==kst.isoformat() and r['display_date']==kst.date().isoformat()
+            else:assert r['kst_at'] is None and r['display_date']==r['date']
+        for id,r in sources.items():assert r['visible_count']==sum(e['source_id']==id for e in s['items'])
     if kind=='ownership':
         assert s['scope']['end']==cutoff and s['scope']['cutoff_timezone']=='America/New_York'
         start=(date.fromisoformat(cutoff)-timedelta(days=89)).isoformat();assert start==s['scope']['start']

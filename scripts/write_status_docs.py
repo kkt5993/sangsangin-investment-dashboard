@@ -19,7 +19,7 @@ for key in ['regime','risk','pm_weekend','geoecon','strategies','earnings','drag
 for key in ['strategies','earnings','geoecon']:CODE[key]+=' · events_data.py'
 for key in ['risk','pm_weekend']:CODE[key]+=' · cot_data.py'
 CODE['regime']+=' · reflexivity.py · industry_details.py'
-CODE['regime']+=' · valuation.py · calendar_data.py'
+CODE['regime']+=' · valuation.py · calendar_data.py · kr_calendar.py · calendar_views.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py'
 CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
@@ -38,7 +38,7 @@ PARITY={
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),
  'globe':('지구본·국가/기업 탐색·교역 관계','로컬 지도 경계·정사영 회전·국가/기업 선택·수치표','본사 좌표·교역 경로/품목/금액은 미연결'),
  'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF/이미지·휴지통/백업','자동 추출/LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),
- 'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이 빈도·주간 RSI와 가격·성장/물가 3년 패널','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
+ 'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이·주간 RSI/가격·성장/물가·한미13출처90일달력·국가/기간/분류검색','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
  'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약6·15위표','공식 상품 35페어·KR/US 종목 1W선별 1M막대·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
  'momentum':('32자산·24섹터, 기간 히트맵, 상위16×3M/6M=32곡선','동일 그룹 수·5기간·3M/6M 짝·0선·양음 영역','조선 5Y z 없음, 누적 비율/달력 월 계약은 팀 설정'),
  'discovery':('4개 분류·3개 평가축·공식 유니버스 발굴','KR기술100%, US45/30/25%, 시장·분류·검색·더 보기·근거 상세','비공개 정규화/리서치 서술 엔진 대신 공개 팀 규칙'),

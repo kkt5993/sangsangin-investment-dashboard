@@ -78,6 +78,7 @@ def collect(parent,base,as_of,env,config,log):
     if due(parent,'sec_collection.json.gz',1):run('pipeline.sec_ownership')
     if due(parent,'cot.json.gz',7):run('pipeline.cot_data')
     if due(parent,'release_calendar.json.gz',7):run('pipeline.calendar_data')
+    if due(parent,'kr_release_calendar.json.gz',7):run('pipeline.kr_calendar')
     run('pipeline.options_data')
     run('pipeline.flows_data','--market','US')
     if config.get('allow_krx_auth'):run('pipeline.flows_data','--market','KR','--allow-krx-auth')

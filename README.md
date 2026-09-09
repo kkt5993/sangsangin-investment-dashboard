@@ -2,7 +2,7 @@
 
 25개 공개 탭 중 **23개 분석·콘텐츠 탭에 계산 또는 탐색·기록 기능을 연결**했습니다. Overview와 At a Glance는 전체 현황을 표시합니다. 연결된 대형 탭도 세부 기능은 부분 구현일 수 있으며, 화면의 세부 탭과 아래 현황 문서에서 범위를 구분합니다.
 
-- [팀 페이지](https://kkt5993.github.io/sangsangin-investment-dashboard/)
+- [팀 페이지](https://sangsangin-investment-dashboard.vercel.app/)
 - [탭별 현황](research/IMPLEMENTATION_STATUS.md)
 - [공식 유니버스·단위·날짜](research/DATA_DEFINITIONS.md)
 - [차트 구조 대응표](research/CHART_PARITY.md)

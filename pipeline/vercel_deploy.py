@@ -38,7 +38,8 @@ def deploy(site,dest,config,env,log):
     if p.returncode:raise RuntimeError('Vercel deployment failed; inspect local run log')
     urls=re.findall(r'https://[A-Za-z0-9.-]+\.vercel\.app',p.stdout)
     if not urls:raise RuntimeError('Vercel did not return a deployment URL')
-    return urls[-1]
+    aliases=re.findall(r'Aliased:\s*(https://[A-Za-z0-9.-]+\.vercel\.app)',p.stdout+'\n'+p.stderr)
+    return config.get('site_url') or (aliases[-1] if aliases else urls[-1])
 
 def verify(url,expected):
     from urllib.parse import urlparse

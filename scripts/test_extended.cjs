@@ -1,11 +1,12 @@
 /* Real snapshot render checks without browser or external calls. */
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+require('./test_decisions.cjs');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','decision-ledger','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
 // Minimal event targets exercise the actual tab and scenario callbacks offline.
 function interactiveContainer(){

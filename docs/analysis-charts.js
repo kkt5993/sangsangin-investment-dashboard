@@ -17,7 +17,7 @@
   const Y=(v,a='left')=>{const [lo,hi]=a==='right'?rr:lr;return T+(hi-v)/(hi-lo)*(H-T-B);};
   let body='';
   for(let i=0;i<6;i++){let v=lr[0]+(lr[1]-lr[0])*i/5,y=Y(v);body+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" class="grid-line"/><text x="${L-8}" y="${y+4}" text-anchor="end" class="axis">${n(v)}</text>`;if(vals('right').length)body+=`<text x="${W-R+8}" y="${y+4}" class="axis">${n(rr[0]+(rr[1]-rr[0])*i/5)}</text>`;}
-  for(let i=0;i<6;i++){const date=new Date(t0+(t1-t0)*i/5).toISOString().slice(0,10);body+=`<text x="${X(date)}" y="${H-24}" text-anchor="middle" class="axis">${date.slice(0,7)}</text>`;}
+  for(let i=0;i<6;i++){const date=new Date(t0+(t1-t0)*i/5).toISOString().slice(0,10);body+=`<text x="${X(date)}" y="${H-24}" text-anchor="middle" class="axis">${c.date_format==='day'?date.slice(5):date.slice(0,7)}</text>`;}
   body+=(c.guides||[]).map(v=>`<line data-guide="${v}" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="reference-line" stroke-dasharray="5 5"/>`).join('');
   series.forEach((s,i)=>{const color=colors[i%colors.length];body+=`<polyline data-analysis-series="${E(s.name)}" data-axis="${E(s.axis)}" points="${s.points.map(p=>`${X(p[0]).toFixed(2)},${Y(p[1],s.axis).toFixed(2)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="1.9"/><text x="${L+i*190}" y="20" fill="${color}" class="axis">${E(s.name)}</text>`;const last=s.points.at(-1);body+=`<circle cx="${X(last[0])}" cy="${Y(last[1],s.axis)}" r="3" fill="${color}"><title>${E(s.name)} · ${last[0]} · ${n(last[1])}</title></circle>`;});
   body+=`<text x="${L}" y="${H-5}" class="axis">${E(c.left||'')}</text><text x="${W-R}" y="${H-5}" text-anchor="end" class="axis">${E(c.right||'')}</text>`;

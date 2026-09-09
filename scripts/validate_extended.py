@@ -26,6 +26,13 @@ def section(s,cutoff,module):
         for r in s['stocks']+s['indices']:
             assert r['coefficient']>0 and r['aum']>0 and len(r['funds'])>0
             if r['adv'] is not None:assert r['adv']>0 and r['price_date']<=cutoff
+    if kind=='entities':
+        assert len({e['id'] for e in s['entities']})==len(s['entities'])
+        for e in s['entities']:
+            assert e['id']=='stock:'+e['symbol'] and e['date']<=cutoff and len(e['returns'])==5
+            assert len(e['curve'])<=14 and e['curve'][0][1]==100 and e['curve'][-1][0]<=cutoff
+            b=e['sensitivity']
+            if b:assert b['observations']>=200 and b['start']<b['end']<=cutoff and (b['r2'] is None or 0<=b['r2']<=1)
     if kind=='table':assert all(len(r)==len(s['columns']) for r in s['rows']),s['title']
     if kind=='heatmap':assert all(len(r['values'])==len(s['columns']) for r in s['rows']),s['title']
     if kind=='line':

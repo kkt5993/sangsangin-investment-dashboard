@@ -22,6 +22,7 @@ CODE['regime']+=' · reflexivity.py · industry_details.py'
 CODE['regime']+=' · valuation.py · calendar_data.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py'
+CODE['dragonglass']+=' · entities.py'
 for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_data.py'
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
@@ -79,7 +80,7 @@ for m in modules:
     else:block += [f'- 화면: [app.js](../../docs/app.js) · [전체 상태](../../docs/data/status.json)',f'- 남은 범위: {gap}','']
     block += ['[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)','',
        '아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.','<!-- implementation:end -->','']
-    path.write_text(first+'\n'+'\n'.join(block)+rest,encoding='utf8')
+    path.write_text(first+'\n'+'\n'.join(block)+'\n'+rest.lstrip('\n'),encoding='utf8')
 status_lines += ['','## 이번 검증 범위','','Python 날짜·수익률·학습 타깃·미래 변경 불변성·기하 패턴 검증, 실제 스냅샷의 OHLC/행렬/그래프 검증, JS 전체 23개 데이터 탭과 모든 하위 섹션의 오프라인 렌더링을 검사한다. 7종 대표 SVG는 브라우저 없이 래스터화하여 차트 배치와 한글을 확인한다. 브라우저 이벤트 전체나 원본 픽셀 일치 검증을 완료했다는 뜻은 아니다.','',
  '재계산은 [README](../README.md), 공개 정의는 [DATA_DEFINITIONS](DATA_DEFINITIONS.md), 다음 보완은 [ROADMAP](ROADMAP.md)을 따른다.']
 parity += ['','## 공통 표시와 검사','','결측값은 0으로 채우지 않는다. 좁은 화면에서는 패널을 한 열로 배치하고 표는 스크롤한다. 신규 SVG는 로컬 코드로 생성하며 외부 차트 CDN을 요구하지 않는다. RS/모멘텀은 키보드 날짜 탐색, 새 3D/지구본은 회전·선택 제어를 제공한다.','',

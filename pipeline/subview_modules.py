@@ -180,4 +180,6 @@ def extend(d,objects,ranks):
     objects['multiasset']['sections'][2]=scanner_view(d)
     for i,s in enumerate(objects['multiasset']['sections']):s['group']='자산 모니터' if i<2 else '패턴 스캐너' if i==2 else '자산배분'
     objects['ask_digest']['sections'].insert(0,dict(type='library',title='최근 발표·보도 원문',group='최근 뉴스',items=news[:30]))
+    from .iw_review import iw_views
+    iw_views(d,objects)
     return objects

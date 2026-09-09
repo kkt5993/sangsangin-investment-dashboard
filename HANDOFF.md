@@ -72,7 +72,7 @@ CPI는YoY의다음%p변화이고관측월M→정보월M+1. DGS10은상대금리�
 
 raw빈티지20260909T114624Z(부모105501Z), KODEX레버리지122630.KS4041봉추가·총가격1127/거시59, catalog에TQQQ/122630/069500반영. 로컬약58.4MiB,공개JSON약5.57MiB. MODEL_SPEC1추가시정기갱신도재학습판정한다. legacy `maximus_model.baseline_build`는이전3전문가연구용이고현재build에서호출하지않는다. 검사84unittest·두검증기·3JS·9JS구문·33SVG래스터,팬/네트워크배치확인. 브라우저QA와원본요청없음. 새실행/게시ID는public refresh.json과private runtime/state.json확인.
 
-다음은콘텐츠기능: 보존principium.js에article/report/primer별문서보드·5단상세·키워드구체/공동출현그래프·등록/수정/첨부구조가있다. 자체콘텐츠로구현하며원본관리자/비밀번호/저자기록을복제하지않는다. IW원본은29판단행과2차트, ASK digest는brief/기간별trends·테마10·주식16·21crossasset·위험양/음·4차트·모듈요약schema다. 이들현재기본메모만으로완료처리하지말것. 이후관계전파/위성/추정상세등은REFERENCE_PARITY지속확장.
+다음은콘텐츠기능: 보존principium.js에article/report/primer별문서보드·5단상세·키워드구체/공동출현그래프·등록/수정/첨부구조가있다. 자체콘텐츠로구현하며원본관리자/비밀번호/저자기록을복제하지않는다. IW원본은월말복기15건+주간연대기14건과2차트, ASK digest는brief/기간별trends·테마10·주식16·21crossasset·위험양/음·4차트·모듈요약schema다. 이들현재기본메모만으로완료처리하지말것. 이후관계전파/위성/추정상세등은REFERENCE_PARITY지속확장.
 
 로컬 리서치 후속(2026-09-09): `research-store.js` IndexedDB(meta+files)·500건/UTF8메타2MiB/첨부64MiB·파일8MiB/기록12개·SHA256동일파일공유. 같은트랜잭션에메타/Blob저장·고아파일삭제, 중간quota실패롤백·revision및기록history충돌방지. 가져오기90MiB·첨부hash/크기/형식검사·동일건중복건너뛰기·충돌사본. 이전localStorage키보존/명시적가져오기·내용hash기반ID. 영구삭제는휴지통만, 다른글이참조한첨부유지. PDF다운로드·래스터이미지만Blob미리보기, 네트워크전송없음. 실제브라우저저장소를도구로열거나사용자자료를추가하지않았다.
 
@@ -81,3 +81,6 @@ raw빈티지20260909T114624Z(부모105501Z), KODEX레버리지122630.KS4041봉�
 `test_research_store.cjs` 실제IndexedDB API를메모리어댑터로검사하고 `test_research_notes.cjs`는기존test_dom_stub의실제양식콜백을호출한다. test_extended가두검사를순서대로await하여quota실패주입이겹치지않는다. 기존84Python·두검증기·3JS(새2개포함)·11JS구문·35SVG래스터통과. 긴한국어제목의관계도잘림을래스터검사에서수정했다. 문서키워드가겹치지않는공개4노트에는선0개가정상이며공유키워드양성fixture도검사한다. 브라우저QA없음.
 
 실제공개기준은runtime/state.json. 원자료/실행파일64.2MiB·공개JSON5.573MiB(배포패키지생성전). 다음은원본IW29판단행/두차트·ASKbrief/기간별추세/테마/종목/위험모듈집계,관계근거/전파/위성/추정상세다. PDF자동추출/LLM요약·팀공용DB/로그인·서버방문통계는아직미연결이며이번로컬저장을그기능완료로세지않는다. 자세한계약은LOCAL_RESEARCH.md.
+
+
+IW 후속(2026-09-09): 원본29행은15월말 복기+14주간 연대기였으며29독립판단 지표라는 이전 해석을 정정했다. `iw_review.py`는1M ML 원장과같은표에서 방향집계·3지수/6전망/4거시·36완료월3국면띠/7계열ML을 생성한다. 성장/CPI/M2/Sahm2개월·NFCI7일팀정보시차, 위험5필수조건 결측은회색. 첫과거13주는재구성표시,지난주는기록/차트동결,현재주만갱신/최초시각보존. private iw_journal.json.gz 전체누적·공개14주,모형hash/빈티지/방법버전저장. 월중확정국면제외·표시구간z재계산, 상세계약 research/IW_REVIEW_CONTRACT.md. `subview_modules.extend`끝에서연결하므로정기갱신에포함. 개발raw빈티지20260909T131712Z(부모114624Z),추가외부/원본요청0. 검사89Python·두검증기·3JS/11구문·38SVG래스터,국면/과거ML배치확인;브라우저QA없음. 공개JSON약5.99MiB로현재6MiB한도에가까움;이후작은파생탭추가시필요하면공개한도만합리적으로확장하고raw512MiB승인한도유지. 다음ASK brief/기간별추세/테마/종목/crossasset/위험·모듈요약을기존수치로구현. 게시실행ID 20260909T133351Z의실제완료는runtime/state.json확인.

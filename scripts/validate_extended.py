@@ -13,6 +13,36 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='statetimeline':
+        assert len(s['panels'])==3 and [len(p['labels']) for p in s['panels']]==[4,4,3]
+        rows=s['rows'];assert len(rows)==36 and [r[0] for r in rows]==sorted(set(r[0] for r in rows))
+        assert rows[-1][0]<cutoff[:7]+'-01'
+        for r in rows:
+            assert len(r)==4 and all(v is None or isinstance(v,int) and 0<=v<len(s['panels'][i]['labels']) for i,v in enumerate(r[1:]))
+    if kind=='reviewcharts':
+        assert len(s['latest'])==2 and len(s['archives'])==14
+        for c in s['latest']:section(c,cutoff,module)
+        for a in s['archives']:
+            assert a['as_of']<=cutoff and len(a['charts'])==2 and isinstance(a['retrospective'],bool)
+            for c in a['charts']:section(c,a['as_of'],module)
+            assert len(a['charts'][1]['series'])==7
+            assert all(p[0]<a['as_of'][:7]+'-01' for z in a['charts'][1]['series'] for p in z['points'])
+    if kind=='reviewlog':
+        items=s['items'];assert len(items)==(15 if s['group']=='월말 복기' else 14)
+        assert [r['period'] for r in items]==sorted(set(r['period'] for r in items),reverse=True)
+        for r in items:
+            assert r['as_of']<=cutoff;section(r['table'],r['as_of'],module)
+            if 'scored' in r:
+                rows=r['table']['rows'];assert len(rows)==3
+                assert r['hits']==sum(a[4]=='일치' for a in rows) and r['scored']==sum(a[4] in ['일치','불일치'] for a in rows)
+                assert f"{r['hits']}/{r['scored']}" in r['summary']
+                assert all(a[7]<=a[6]<r['as_of'] for a in rows if a[6] is not None)
+            else:
+                assert r['first_recorded_at']<=r['updated_at'] and re.fullmatch('[a-f0-9]{64}',r['model_hash'])
+                assert len(r['forecasts']['rows'])==6 and len(r['macro']['rows'])==4
+                assert all(a[1] is None or a[1]<=r['as_of'] for a in r['table']['rows'])
+                assert all(a[2] is None or a[2]<=r['as_of'] and a[2]<a[3] for a in r['forecasts']['rows'])
+                assert all(a[2] is None or a[2]<=r['as_of'] for a in r['macro']['rows'])
     if kind=='notebook':
         assert s['mode']==module and module in ['principium','iw','ask_digest']
         assert isinstance(s['items'],list)

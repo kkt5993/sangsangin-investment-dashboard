@@ -22,7 +22,7 @@ def libraries(d):
         a=d.stats(s)
         if a:digest.append(dict(kind='market',title=n+' 시장 메모',source='로컬 가격 계산',date=d.as_of,keywords=['시장','모멘텀'],core=f"1M {a['r1m']:.2f}%, 3M {a['r3m']:.2f}%, YTD {a['ytd']:.2f}%. RSI14 {a['rsi']:.1f}.",evidence=f"가격 관측일 {a['as_of']} · {s} · 배당 조정종가"))
     ask=module('ask_digest',d.as_of,'시장 수치·근거 원문과 질문/답변 메모를 구분합니다. 질문·내 해석·참조 근거·추가 확인을 기록하고 PDF·이미지를 첨부할 수 있습니다. 기록은 이 브라우저에만 보관하며 자동 AI 답변으로 표시하지 않습니다.',[dict(type='library',title='시장 다이제스트',group='시장',items=digest),dict(type='library',title='방법론',group='방법론',items=LIBRARY),dict(type='notebook',title='질문·근거 기록',group='질문·근거 기록',mode='ask_digest',items=[])],missing=['원본 brief/기간별 추세·테마·종목·모듈별 위험 집계는 추가 구현 대상입니다. 외부 ASK 토론·원본 자동 AI 질의 서버와 연결하지 않았습니다.','기록·첨부는 브라우저 로컬이며 팀 공용 저장·자동 LLM 요약은 미연결입니다.'])
-    iw=module('iw',d.as_of,'관측·판단·근거·대응을 구분하고 방향·기간·확신도·무효화·재검토 날짜를 기록합니다. PDF·이미지 첨부, 수정/휴지통/복원/백업을 제공하며 기본 시장 요약은 계산된 수치입니다. 새 기록은 이 브라우저에 보관합니다.',[dict(type='library',title='이번 주 관측',group='관측 요약',items=digest),dict(type='notebook',title='주간 판단 원장',group='주간 판단 원장',mode='iw',items=[])],missing=['원본 작성자의 주간 논평·과거 개인 기록을 복제하지 않습니다. 원본29판단 항목·두차트의 팀 계산 대응은 추가 구현 대상입니다.','팀 공용 DB·동시 편집 서버는 미연결입니다. 로컬 백업 JSON은 첨부 파일을 포함합니다.'])
+    iw=module('iw',d.as_of,'관측·판단·근거·대응을 구분하고 방향·기간·확신도·무효화·재검토 날짜를 기록합니다. PDF·이미지 첨부, 수정/휴지통/복원/백업을 제공하며 기본 시장 요약은 계산된 수치입니다. 새 기록은 이 브라우저에 보관합니다.',[dict(type='library',title='이번 주 관측',group='관측 요약',items=digest),dict(type='notebook',title='주간 판단 원장',group='주간 판단 원장',mode='iw',items=[])],missing=['원본 작성자의 주간 논평·과거 개인 기록을 복제하지 않습니다. 월말15복기·주간14연대기·두차트는 iw_review에서 팀 원장으로 생성합니다.','팀 공용 DB·동시 편집 서버는 미연결입니다. 로컬 백업 JSON은 첨부 파일을 포함합니다.'])
     return [lib,ask,iw]
 
 def network_data(d,financial,ranks):

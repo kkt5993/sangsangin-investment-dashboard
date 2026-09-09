@@ -181,5 +181,15 @@
   for(const [y,label] of [[125,'경제·거시 R'],[260,'기술·시장 I']])b+=`<rect x="${ix-55}" y="${y-20}" width="110" height="40" rx="6" fill="#edf3f8"/><text x="${ix}" y="${y+4}" text-anchor="middle" class="axis">${label}</text>`;
   b+=`<text x="490" y="384" text-anchor="middle" class="axis">완료된 캐시의 전문가 결합 · 여러 대상이면 평균 가중치</text>`;return svg(b,'입력→10전문가→게이트→예측',W,H,'data-chart-type="moe-topology"');
  }
- root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,scanCandles,modelLeaderboard,lagCorrelation,shap,featureSelection,moeFan,moeTopology,n,empty};
+ function stateTimeline(s){
+  if(!s.rows.length)return empty();const W=1100,H=545,L=22,R=190,T=48,step=143,bar=103,bw=(W-L-R)/s.rows.length,palette=[['#69ad99','#78b5ce','#d298a8','#929acc'],['#69ad99','#e3c16d','#d49b72','#929acc'],['#69ad99','#e3c16d','#cf8e99']];let body='';
+  s.panels.forEach((p,i)=>{const y=T+i*step;body+=`<text data-timeline-panel="${i}" x="${L}" y="${y-12}" class="axis">${E(p.name)}</text>`;
+   s.rows.forEach((r,j)=>{const v=r[i+1],label=v===null?'미산출':p.labels[v];body+=`<rect data-timeline-cell="${i}-${j}" x="${L+j*bw}" y="${y}" width="${bw}" height="${bar}" fill="${v===null?'#e0e5e9':palette[i][v]}" stroke="white" stroke-width=".7"><title>${E(r[0])} · ${E(label)}</title></rect>`;});
+   let start=0;for(let j=1;j<=s.rows.length;j++){if(j<s.rows.length&&s.rows[j][i+1]===s.rows[start][i+1])continue;const value=s.rows[start][i+1],label=value===null?'미산출':p.labels[value],width=(j-start)*bw;if(width>label.length*10+14)body+=`<text x="${L+(start+j)*bw/2}" y="${y+bar/2+4}" text-anchor="middle" fill="#1d3c4b" font-size="12">${E(label)}</text>`;start=j;}
+   p.labels.forEach((label,j)=>{body+=`<rect x="${W-R+15}" y="${y+7+j*23}" width="13" height="13" fill="${palette[i][j]}"/><text x="${W-R+35}" y="${y+18+j*23}" class="axis">${E(label)}</text>`;});
+  });
+  s.rows.forEach((r,i)=>{if(i%3===0||i===s.rows.length-1){const x=L+(i+.5)*bw,y=T+2*step+bar+16;body+=`<text x="${x}" y="${y}" transform="rotate(-40 ${x} ${y})" text-anchor="end" class="axis">${E(r[0].slice(2,7))}</text>`;}});
+  body+=`<text x="${L}" y="${H-12}" class="axis">회색: 필수 입력 미산출 · 각 칸은 완료된 한 달</text>`;return svg(body,s.title,W,H,'data-chart-type="state-timeline"');
+ }
+ root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,scanCandles,modelLeaderboard,lagCorrelation,shap,featureSelection,moeFan,moeTopology,stateTimeline,n,empty};
 })(typeof window==='undefined'?globalThis:window);

@@ -48,9 +48,11 @@ python -m pipeline.options_data --as-of 2026-09-08
 python -m pipeline.ecos_data --key-file '<로컬 ECOS 키 설정 파일>' --as-of 2026-09-08
 python -m pipeline.local_consensus '<로컬 qw_consensus.duckdb>' --as-of 2026-09-08
 python -m pipeline.krx_reconcile --allow-krx-auth --as-of 2026-09-08
+python -m pipeline.oecd_data --as-of 2026-09-08
 # 아래 계산은 네트워크를 사용하지 않음
 python -m pipeline.ml_models --as-of 2026-09-08
 python -m pipeline.maximus_model --as-of 2026-09-08
+python -m pipeline.allocation_model --as-of 2026-09-08
 python -m pipeline.build_all --as-of 2026-09-08
 ```
 

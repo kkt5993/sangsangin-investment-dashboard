@@ -148,5 +148,15 @@
   b+=`</g><text x="${L}" y="${H-5}" class="axis">${E(c.profit_name)} · ${rows[0].date} ~ ${latest.date}</text>`;
   return svg(b,c.name+' 3단 비교',W,H,'data-chart-type="valuation"');
  }
- root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,n,empty};
+ function scanCandles(c){
+  const rows=c.candles;if(!rows?.length)return empty();
+  const W=660,H=290,L=12,R=75,T=29,B=28,values=rows.flatMap(r=>r.slice(1)).concat(c.lines.flatMap(a=>a.values||a.points.map(p=>p[1])).filter(finite)),[lo,hi]=range(values);
+  const X=i=>L+(i+.5)/rows.length*(W-L-R),Y=v=>T+(hi-v)/(hi-lo)*(H-T-B),width=Math.max(1,(W-L-R)/rows.length*.6);
+  let b='';for(let i=0;i<5;i++){const v=lo+(hi-lo)*i/4;b+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="grid-line"/><text data-price-axis="right" x="${W-R+8}" y="${Y(v)+4}" class="axis">${n(v)}</text>`;}
+  rows.forEach((r,i)=>{const color=r[4]>=r[1]?'#237965':'#b75b69',x=X(i);b+=`<g data-scan-candle="${E(r[0])}"><title>${E(r[0])} · O ${n(r[1])} H ${n(r[2])} L ${n(r[3])} C ${n(r[4])}</title><line x1="${x}" x2="${x}" y1="${Y(r[2])}" y2="${Y(r[3])}" stroke="${color}"/><rect x="${x-width/2}" y="${Math.min(Y(r[1]),Y(r[4]))}" width="${width}" height="${Math.max(1,Math.abs(Y(r[1])-Y(r[4])))}" fill="${color}"/></g>`;});
+  for(const [i,line] of c.lines.entries()){const coords=(line.values?line.values.map((v,j)=>[j,v]):line.points.map(p=>[rows.findIndex(r=>r[0]===p[0]),p[1]])).filter(p=>p[0]>=0&&finite(p[1]));b+=`<polyline data-scan-ma="${E(line.name)}" points="${coords.map(([j,v])=>X(j)+','+Y(v)).join(' ')}" stroke="${colors[i]}" fill="none" stroke-dasharray="4 3"/><text x="${L+i*120}" y="17" fill="${colors[i]}" class="axis">${E(line.name)}</text>`;}
+  for(let i=0;i<5;i++){const j=Math.round(i*(rows.length-1)/4);b+=`<text x="${X(j)}" y="${H-6}" text-anchor="${i===0?'start':i===4?'end':'middle'}" class="axis">${E(rows[j][0].slice(5))}</text>`;}
+  return svg(b,c.name+' · 90봉 OHLC·MA20/60',W,H,'data-chart-type="scan-candles"');
+ }
+ root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,scanCandles,n,empty};
 })(typeof window==='undefined'?globalThis:window);

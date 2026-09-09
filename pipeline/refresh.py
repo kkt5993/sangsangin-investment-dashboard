@@ -55,6 +55,7 @@ def collect(parent,base,as_of,env,config,log):
     members=Data(parent.as_of,base.name).members
     summary=prices(parent,base,as_of,members)
     run('pipeline.acquire','macro')
+    if due(parent,'oecd_cli_collection.json',7):run('pipeline.oecd_data')
     if due(parent,'macro/GPR.csv',7):
         from .gpr_data import collect as collect_gpr
         collect_gpr(base,as_of)
@@ -182,6 +183,10 @@ def main():
             run=lambda mod:command([sys.executable,'-m',mod,'--as-of',as_of],stage,env,log)
             model=read_json(ROOT/'docs/data/ml.json');model_age=(datetime.fromisoformat(as_of)-datetime.fromisoformat(model['as_of'])).days
             if a.force_models or model_age>=7 or as_of[:7]!=model['as_of'][:7]:run('pipeline.ml_models');run('pipeline.maximus_model')
+            from .events_data import read as read_gzip
+            from .allocation_model import MODEL_SPEC
+            current=Data(as_of,vintage=vintage);allocation=current.resource('allocation_model.json.gz')
+            if a.force_models or not allocation.exists() or read_gzip(allocation).get('model_spec')!=MODEL_SPEC or read_gzip(allocation).get('origin')!=str(current.monthly('SPY').index[-1].date()):run('pipeline.allocation_model')
             run('pipeline.build_all');report.update(status='validated',vintage=vintage,completed_at=stamp())
             write_json(stage/'docs/data/refresh.json',report)
             command([sys.executable,'scripts/write_status_docs.py'],stage,env,log);validate(stage,env,log)

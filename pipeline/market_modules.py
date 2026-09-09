@@ -108,6 +108,7 @@ def candle_section(d,s,name,group=None,annotation=None):
         lines=[dict(name=f'MA{n}',points=points(p.rolling(n).mean().reindex(f.index))) for n in [20,50,200]])
 
 def watch(d,ranks):
+    from .technical_scan import scan
     picks=[]
     for market in ['KR','US']:
         rows=ranks[market]['rows'];bull=[]
@@ -123,6 +124,8 @@ def watch(d,ranks):
                 if pattern:note+=' · '+pattern['evidence']+f" · 기하 적합도 {pattern['score']:.1f}/100 · "+('종가 저항 돌파' if pattern['confirmed'] else '저항 돌파 미확인')
                 c=candle_section(d,a['symbol'],title,market+' · '+label,note)
                 if c:
+                    tech=scan(d.frames[a['symbol']]);c['technical']={k:tech[k] for k in ['score','available','adx','plus_di','minus_di','atr','ma_stars']}
+                    c['annotation']+=' · ADX14 '+str(tech['adx'])+' · MA '+str(tech['ma_stars'])+'/4 · 12지표 합계 '+str(tech['score'])
                     if pattern:c['pattern']=pattern
                     picks.append(c)
-    return module('watch',d.as_of,'공식 대형주에서 W바닥·컵앤핸들·상승깃발·역헤드앤숄더·상승삼각형을 명시한 수치 규칙으로 선별합니다. 피벗은 좌우 3봉이 확보된 과거 종가로 확인하며 미확인 돌파를 구분합니다. 적합도는 기하 조건 점수로 성공확률이 아닙니다. 약세는 가격<MA50<MA200 및 1M<0입니다. 120일·52주 조정 OHLC, 일봉 MA20/50/200, 거래량을 제공합니다.',picks,[('선별 종목',len(picks)),('기하 패턴 종류',5)],missing=['원본의 미공개 패턴 판정·신뢰도·ADX 합성 신호와 수치 동등성은 미검증입니다. 현재 후보의 향후 수익 성과를 의미하지 않습니다.'])
+    return module('watch',d.as_of,'공식 대형주에서 W바닥·컵앤핸들·상승깃발·역헤드앤숄더·상승삼각형을 명시한 수치 규칙으로 선별합니다. 피벗은 좌우 3봉이 확보된 과거 종가로 확인하며 미확인 돌파를 구분합니다. 적합도는 기하 조건 점수로 성공확률이 아닙니다. 약세는 가격<MA50<MA200 및 1M<0입니다. 120일·52주 조정 OHLC, 일봉 MA20/50/200, 거래량을 제공합니다.',picks,[('선별 종목',len(picks)),('기하 패턴 종류',5)],missing=['ADX14·±DI·ATR·MA4조건·12개 지표 합계를 추가했습니다. 원본의 미공개 패턴 판정·신뢰도·개별 임계 설정과 수치 동등성은 미검증입니다. 현재 후보의 향후 수익 성과를 의미하지 않습니다.'])

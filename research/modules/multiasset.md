@@ -5,10 +5,10 @@
 
 **부분 구현** · 가격 기준 2026-09-08. 자산 모니터 / 패턴 스캐너 / 자산배분.
 
-- 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py)
+- 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [allocation_model.py](../../pipeline/allocation_model.py) · [allocation_views.py](../../pipeline/allocation_views.py) · [technical_scan.py](../../pipeline/technical_scan.py) · [oecd_data.py](../../pipeline/oecd_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/multiasset.json)
-- 계산/자료 계약: 21자산 수익률·37자산 스캐너를 계산합니다. FX는 표시 환율의 변화율, 선물은 제공처 연속선물 가격입니다. 자산배분은 월 리밸런싱 역변동성 기준모형(63일, 편도 5bp)입니다.
-- 남은 범위: 원본의 ML 자산배분 모델·가중치가 없어 기준모형을 구분해 제공합니다.
+- 계산/자료 계약: 33개 대표 ETF·BTC의 USD 배분을 기존 자산·스캐너에 추가했습니다. 74개 팀 피처의 월별 Boruta, 3개 회귀 앙상블, 분류·Markov·LSTM 리스크온, 4개 경기국면을 독립 계산합니다. 성장=OECD 미국 선행지수의3개월 변화, 물가=CPI YoY의3개월 변화. 거시 입력·국면 학습은2개월 시차이며 최신 수정 빈티지입니다. 자산별 μ는 대표자산 예측×36개월 Beta(최소24개월); FXE/FXY도 달러 대표 ETF에 대한 실제 Beta로 부호를 정합니다. 비중은 역변동성×수축 틸트(0.5, λ1.1), Ledoit-Wolf 공분산·그룹/종목 상한·연10%변동성 타깃, 현금은BIL입니다. 최근96개 적용월(현재 월은 가격 기준일까지)의 배분을 비교합니다. 월말 정보로 다음 첫 거래일 종가에 리밸런싱하고 다음날부터 새 비중 수익률을 적용하며 총 절대 비중 변화에10bp를 차감합니다. BTC는 미국 종가 시점 이미 종료된 전날UTC봉입니다.
+- 남은 범위: 원본의 모든 하이퍼파라미터·74개 입력명·그룹별 상한은 공개되지 않아 팀 설정을 명시했습니다. 원본 수치와 동일하다는 주장이 아닙니다. / OECD 미국·한국·일본·중국 선행지수는 공식 API의 진폭 조정 지수(장기 평균100)입니다. OECD 전체 집계는 미확보입니다. Boruta 미확정/순위 대체와 Markov 추정 불가를 진단에 표시합니다. / 과거 발표·개정 빈티지를 복원한 PIT 성과가 아니며 사후 설계 OOS입니다. 두 모델의 방향 정합은 측정된 신뢰도·성공확률 증가를 의미하지 않습니다.
 
 연결된 하위 그룹: 자산 모니터, 패턴 스캐너, 자산배분.
 

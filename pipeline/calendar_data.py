@@ -9,6 +9,26 @@ from .events_data import save,read
 from .acquire import stamp,get_bytes
 
 RELEASES={'10':'BLS CPI','50':'BLS Employment','46':'BLS PPI','192':'BLS JOLTS','180':'DOL Claims','9':'Census Retail Sales','13':'Fed Industrial Production','27':'Census Housing'}
+FOMC_URL='https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm'
+
+
+def fomc_events(content,url=FOMC_URL):
+    soup=BeautifulSoup(content,'html.parser');out=[]
+    for panel in soup.select('.panel'):
+        heading=panel.select_one('.panel-heading');match=re.search(r'(20\d{2}) FOMC Meetings',heading.get_text(' ',strip=True)) if heading else None
+        if not match:continue
+        year=int(match[1])
+        for row in panel.select('.fomc-meeting'):
+            month=row.select_one('.fomc-meeting__month');day=row.select_one('.fomc-meeting__date')
+            if month is None or day is None:raise ValueError('FOMC schedule row changed')
+            label=day.get_text(' ',strip=True)
+            # Notation votes/unscheduled conference calls are not regular meetings.
+            if not re.fullmatch(r'\d{1,2}-\d{1,2}\*?',label):continue
+            final_day=int(re.findall(r'\d+',label)[-1]);final_month=month.get_text(' ',strip=True).split('/')[-1]
+            date=str(pd.Timestamp(f'{final_month} {final_day}, {year}').date())
+            out.append(dict(name='FOMC 정책회의 종료일'+(' · 경제전망(SEP)' if '*' in label else ''),date=date,at=None,source='Fed 공식 FOMC 일정 · 미국 현지 날짜',url=url,meeting_dates=month.get_text(' ',strip=True)+' '+label,time_status='원문 발표시각 미표기'))
+    if not out or len({(r['date'],r['name']) for r in out})!=len(out):raise ValueError('Invalid FOMC schedule')
+    return sorted(out,key=lambda r:r['date'])
 
 def fred_events(content,url):
     soup=BeautifulSoup(content,'html.parser');out=[];day=None;clock=None
@@ -59,6 +79,9 @@ def collect(base):
         probe=base/'bea_calendar_probe.json.gz';content=read(probe)['content'] if probe.exists() else get_bytes(url).decode('utf-8')
         rows=bea_events(content,url,now.year);items+=rows;sources.append(dict(name='BEA',status='ok',count=len(rows),url=url))
     except Exception as e:sources.append(dict(name='BEA',status='error',count=0,error_type=type(e).__name__,url=url))
+    try:
+        rows=fomc_events(get_bytes(FOMC_URL));items+=rows;sources.append(dict(name='FOMC',status='ok',count=sum(start<=r['date']<=end for r in rows),url=FOMC_URL))
+    except Exception as e:sources.append(dict(name='FOMC',status='error',count=0,error_type=type(e).__name__,url=FOMC_URL))
     items={ (r['date'],r['name']):r for r in items if start<=r['date']<=end }
     if sum(s['status']=='ok' for s in sources)<7:raise ValueError('Official calendar coverage incomplete; publication stopped')
     save(dest,dict(retrieved_at=stamp(),from_date=start,to_date=end,items=sorted(items.values(),key=lambda r:(r['date'],r['at'] or '',r['name'])),sources=sources))

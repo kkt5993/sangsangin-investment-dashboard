@@ -34,7 +34,32 @@ def section(s,cutoff,module):
             b=e['sensitivity']
             if b:assert b['observations']>=200 and b['start']<b['end']<=cutoff and (b['r2'] is None or 0<=b['r2']<=1)
     if kind=='table':assert all(len(r)==len(s['columns']) for r in s['rows']),s['title']
-    if kind=='heatmap':assert all(len(r['values'])==len(s['columns']) for r in s['rows']),s['title']
+    if kind=='discovery':
+        assert len(s['buckets'])==4 and len(s['items'])<=120
+        assert len({r['symbol'] for r in s['items']})==len(s['items'])
+        for r in s['items']:
+            assert r['bucket'] in [b['name'] for b in s['buckets']] and r['price_date']<=cutoff
+            assert all(r[k] is None or -3<=r[k]<=3 for k in ['score','tech','fund','smart'])
+            if r['market']=='KR':assert r['score']==r['tech']
+            elif r['fund'] is None or r['smart'] is None:assert r['score'] is None
+            else:assert abs(r['score']-(.45*r['tech']+.3*r['fund']+.25*r['smart']))<1e-5
+    if kind=='scanner':
+        assert len(s['items'])==37 and len({r['symbol'] for r in s['items']})==37
+        for r in s['items']:
+            assert r['date']<=cutoff and len(r['candles'])==90 and len(r['rules'])==12
+            assert r['score']==sum(a['value'] for a in r['rules'] if a['value'] is not None)
+            assert r['available']==sum(a['value'] is not None for a in r['rules'])
+            assert all(a['value'] in [-1,0,1,None] for a in r['rules'])
+            assert r['rsi'] is None or 0<=r['rsi']<=100
+            assert r['adx'] is None or 0<=r['adx']<=100
+            assert r['candles'][-1][0]<=cutoff
+            assert [a['name'] for a in r['lines']]==['MA20','MA60']
+            assert all(len(a['values'])==90 for a in r['lines'])
+    if kind=='allocation':
+        assert abs(sum(r['value'] for r in s['weights'])-100)<1e-3
+        assert all(0<=r['value']<=100 for r in s['weights'])
+        section(s['chart'],cutoff,module);section(s['performance'],cutoff,module)
+    if kind in ['heatmap','preference']:assert all(len(r['values'])==len(s['columns']) for r in s['rows']),s['title']
     if kind=='line':
         for line in s['series']:series(line,cutoff,s.get('forecast',False))
     if kind=='dynamics':

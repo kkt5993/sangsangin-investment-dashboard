@@ -93,26 +93,6 @@ def growth(d,rows,consensus,consensus_as_of):
     sections.append(heat('글로벌 실적·EPS 성장 (영업이익 추정과 구분)',['연간 영업이익 성장 %','FY1 EPS 성장 %','FY2 EPS 성장 %','YTD %','TTM 영업이익률 %'],[dict(name=a['name'],group=a['market'],values=[a['op_growth'],a['eps_growth1'],a['eps_growth2'],a['ytd'],a['margin']]) for a in rows]))
     return module('growth',d.as_of,'원본의 3D 축을 유지합니다: x=FY1/FY2 영업이익 성장, y=YTD, z=영업이익률. 국내는 KRX 대형주·KOSPI 200와 기존 로컬 컨센서스를 연결했습니다. FY1=2026, FY2=2027, 추정 빈티지는 '+str(consensus_as_of)+'. 시가총액 없는 종목은 같은 크기로 표시합니다.',sections,[('국내 대상',len(consensus)),('컨센서스 기준',consensus_as_of)],missing=['글로벌 100종목의 FY1/FY2 영업이익 컨센서스가 없어 해외 3D 점은 제외했습니다. 해외 EPS 성장률은 별도 표로 제공합니다.'])
 
-def discovery(d,rows,ranks):
-    allrank={a['symbol']:a['rs'] for market in ['KR','US'] for a in ranks[market]['rows']};work=[]
-    for a in rows:
-        rs=allrank.get(a['symbol']);tech=rs if rs is not None else number(np.clip(50+a['r3m'],0,100))
-        growth=a['eps_growth1'];earn=number(np.clip(50+(growth or 0),0,100)) if growth is not None else None
-        analyst=number((5-a['rating'])/4*100) if a['rating'] is not None else None
-        # Missing a component does not silently become a neutral score.
-        score=tech if a['market']=='KR' else number(.45*tech+.3*earn+.25*analyst) if earn is not None and analyst is not None else None
-        lens='관찰'
-        if growth is not None and growth>20 and a['r3m']<0:lens='실적↑ 가격↓'
-        elif a['rsi']<35:lens='과매도'
-        elif a['r3m']>20 and (growth is None or growth<0):lens='가격 선행'
-        elif growth is not None and growth>20 and a['r3m']>0:lens='성장 동행'
-        work.append(dict(a,score=score,rs=rs,lens=lens,tech=tech,earn=earn,analyst=analyst))
-    work.sort(key=lambda a:a['score'] if a['score'] is not None else -1,reverse=True)
-    sections=[table('통합 종목 랭킹',['종목','시장','렌즈','종합','기술','실적','애널리스트','3M %','FY1 EPS 성장 %'],[[a['name'],a['market'],a['lens'],a['score'],a['tech'],a['earn'],a['analyst'],a['r3m'],a['eps_growth1']] for a in work])]
-    for lens in sorted({a['lens'] for a in work}):
-        chosen=[a for a in work if a['lens']==lens][:8];sections.append(dict(table(lens,['종목','점수','RS','RSI','YTD %'],[[a['name'],a['score'],a['rs'],a['rsi'],a['ytd']] for a in chosen]),group=lens))
-    return module('discovery',d.as_of,'KR은 기술 100%, US는 기술 45%·실적 30%·애널리스트 25%의 공개 가중치로 재계산했습니다. 대형주 RS가 없는 글로벌 종목의 기술점수는 clip(50+3M%,0,100)입니다. 실적·애널리스트 누락 시 종합은 산출하지 않습니다. 렌즈는 명시된 수치 규칙이며 LLM 의견이 아닙니다.',sections,[('분석 종목',len(work)),('점수 산출',sum(a['score'] is not None for a in work))],missing=['원본의 내부 점수 정규화·서술형 리서치 엔진은 미공개로 수치 동등성은 미검증입니다.'])
-
 def strategies(d,rows):
     turn=[];surprise=[]
     for a in rows:

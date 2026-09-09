@@ -38,8 +38,10 @@ def valuation_views(d,obj):
     obj['source']+=' · BEA CP · ECOS501Y002'
     path=d.resource('release_calendar.json.gz')
     if path.exists():
+        obj['missing']=[m for m in obj['missing'] if '거시 지표의 미래 발표 달력' not in m]
+        obj['missing'].append('한국 거시 발표 일정과 과거 발표 당시 빈티지별 국면은 추가 연결 대상입니다.')
         raw=read(path);rows=[]
         for r in raw['items']:
             t=pd.Timestamp(r['at']) if r['at'] else None
             rows.append([r['date'],t.tz_convert('Asia/Seoul').strftime('%Y-%m-%d %H:%M KST') if t is not None else None,r['name'],r['source'],r['url']])
-        obj['sections'] += [dict(table('향후90일 거시 발표 · 한국시간',['발표처 날짜','한국시간','통계/발표','일정 출처','출처 링크'],rows),group='거시 발표 달력'),dict(table('발표 일정 수집 상태',['통계/기관','상태','항목 수'],[[r['name'],r['status'],r['count']] for r in raw['sources']]),group='거시 발표 달력'),dict(type='text',group='거시 발표 달력',title='일정·시간대의 기준',text='FRED의 BLS·DOL·Census·Fed 발표 일정과 BEA 공식 달력을 읽어 미국 Central/Eastern의 서머타임을 적용해 한국시간으로 변환합니다. 수집 '+raw['retrieved_at']+' · 일정은 변경될 수 있습니다. 시각이 제공되지 않은 발표에는 임의 시간을 붙이지 않습니다. 미국 주요 경제통계 범위이며 FOMC·한국 발표 일정은 아직 포함하지 않습니다.')]
+        obj['sections'] += [dict(table('향후90일 거시 발표 · 한국시간',['발표처 날짜','한국시간','통계/발표','일정 출처','출처 링크'],rows),group='거시 발표 달력'),dict(table('발표 일정 수집 상태',['통계/기관','상태','항목 수'],[[r['name'],r['status'],r['count']] for r in raw['sources']]),group='거시 발표 달력'),dict(type='text',group='거시 발표 달력',title='일정·시간대의 기준',text='FRED의 BLS·DOL·Census·Fed 발표 일정과 BEA 공식 달력을 읽어 미국 Central/Eastern의 서머타임을 적용해 한국시간으로 변환합니다. 수집 '+raw['retrieved_at']+' · 일정은 변경될 수 있습니다. 시각이 제공되지 않은 발표에는 임의 시간을 붙이지 않습니다. FOMC 정책회의는 공식 일정의 종료일·SEP 여부를 추가합니다. 시각 미표기 회의의 날짜는 미국 현지 날짜이며 한국시간은 비워 둡니다. 한국 발표 일정은 아직 포함하지 않습니다.')]

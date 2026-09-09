@@ -5,10 +5,10 @@
 
 **부분 구현** · 가격 기준 2026-09-08. KR · 상승 패턴 / KR · 약세 추세 / US · 상승 패턴 / US · 약세 추세.
 
-- 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [patterns.py](../../pipeline/patterns.py)
+- 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [patterns.py](../../pipeline/patterns.py) · [technical_scan.py](../../pipeline/technical_scan.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/watch.json)
 - 계산/자료 계약: 공식 대형주에서 W바닥·컵앤핸들·상승깃발·역헤드앤숄더·상승삼각형을 명시한 수치 규칙으로 선별합니다. 피벗은 좌우 3봉이 확보된 과거 종가로 확인하며 미확인 돌파를 구분합니다. 적합도는 기하 조건 점수로 성공확률이 아닙니다. 약세는 가격<MA50<MA200 및 1M<0입니다. 120일·52주 조정 OHLC, 일봉 MA20/50/200, 거래량을 제공합니다.
-- 남은 범위: 원본의 미공개 패턴 판정·신뢰도·ADX 합성 신호와 수치 동등성은 미검증입니다. 현재 후보의 향후 수익 성과를 의미하지 않습니다.
+- 남은 범위: ADX14·±DI·ATR·MA4조건·12개 지표 합계를 추가했습니다. 원본의 미공개 패턴 판정·신뢰도·개별 임계 설정과 수치 동등성은 미검증입니다. 현재 후보의 향후 수익 성과를 의미하지 않습니다.
 
 연결된 하위 그룹: KR · 상승 패턴, KR · 약세 추세, US · 상승 패턴, US · 약세 추세.
 

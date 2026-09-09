@@ -10,15 +10,17 @@ for(const file of ['charts','analysis-charts','network-views','decision-ledger',
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
 // Minimal event targets exercise the actual tab and scenario callbacks offline.
 function interactiveContainer(){
- const node=(value='',dataset={})=>({value,dataset,innerHTML:'',events:{},addEventListener(k,f){this.events[k]=f;},fire(k){this.events[k]?.({target:this});}});
+ const node=(value='',dataset={})=>({value,dataset,innerHTML:'',events:{},setAttribute(k,v){this[k]=v;},addEventListener(k,f){this.events[k]=f;},fire(k){this.events[k]?.({target:this});}});
  const c={html:'',buttons:[],boxes:[],select:node('all'),get innerHTML(){return this.html;},set innerHTML(h){
   this.html=h;this.select=node('all');this.buttons=[...h.matchAll(/data-subview="([^"]+)"/g)].map(m=>node('',{subview:m[1]}));
   this.boxes=[...h.matchAll(/data-scenario="(\d+)"/g)].map(m=>{const market=node('KR'),shock=node('-10'),output=node();return {dataset:{scenario:m[1]},market,shock,output,querySelector:s=>({'[data-scenario-market]':market,'[data-shock]':shock,'[data-scenario-output]':output}[s]||null),querySelectorAll:()=>[market,shock]};});
   this.holos=[...h.matchAll(/data-hologram="(\d+)"/g)].map(m=>{const yaw=node('60'),output=node();return {dataset:{hologram:m[1]},yaw,output,querySelector:s=>s==='[data-holo-yaw]'?yaw:output};});
   this.rebals=[...h.matchAll(/data-rebalancing="(\d+)"/g)].map(m=>{const shock=node('5'),output=node();return {dataset:{rebalancing:m[1]},shock,output,querySelector:s=>s==='[data-rebal-shock]'?shock:output};});
+  this.discoveries=[...h.matchAll(/data-discovery="(\d+)"/g)].map(m=>{const section=data.discovery.sections[+m[1]],markets=['all','US','KR'].map(v=>node('',{discoveryMarket:v})),buckets=section.buckets.map(b=>node('',{discoveryBucket:b.name})),counts=section.buckets.map(b=>node('',{bucketCount:b.name})),search=node(),all=node(),more=node(),output=node();return {dataset:{discovery:m[1]},markets,buckets,counts,search,all,more,output,querySelector:s=>({'[data-discovery-search]':search,'[data-discovery-all]':all,'[data-discovery-more]':more,'[data-discovery-output]':output}[s]),querySelectorAll:s=>({'[data-discovery-market]':markets,'[data-discovery-bucket]':buckets,'[data-bucket-count]':counts}[s]||[])};});
+  this.scanners=[...h.matchAll(/data-scanner="(\d+)"/g)].map(m=>{const pattern=node('all'),group=node('all'),count=node('9'),output=node();return {dataset:{scanner:m[1]},pattern,group,count,output,querySelector:s=>({'[data-scan-pattern]':pattern,'[data-scan-group]':group,'[data-scan-count]':count,'[data-scan-output]':output}[s]),querySelectorAll:s=>s==='select'?[pattern,group,count]:[]};});
   this.valuations=[...h.matchAll(/data-valuation="(\d+)"/g)].map(m=>{const months=node('180'),output=node();return {dataset:{valuation:m[1]},months,output,querySelector:s=>s==='[data-valuation-months]'?months:output};});
   this.industries=[...h.matchAll(/data-industries="(\d+)"/g)].map(m=>{const sector=node('all'),role=node('all'),cards=[...h.matchAll(/data-industry="([^"]+)" data-indicator-role="([^"]+)"/g)].map(a=>node('',{industry:a[1],indicatorRole:a[2]}));return {sector,role,cards,querySelector:s=>s==='[data-industry-filter]'?sector:role,querySelectorAll:s=>s==='select'?[sector,role]:cards};});
- },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-industries]'?this.industries:s==='[data-rebalancing]'?this.rebals:s==='[data-valuation]'?this.valuations:[];}};
+ },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-industries]'?this.industries:s==='[data-rebalancing]'?this.rebals:s==='[data-valuation]'?this.valuations:s==='[data-scanner]'?this.scanners:s==='[data-discovery]'?this.discoveries:[];}};
  return c;
 }
 (async()=>{
@@ -36,7 +38,19 @@ function interactiveContainer(){
  assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='KR').beta*-10+'"'));
  box.market.value='US';box.shock.value='-20';box.shock.fire('input');assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='US').beta*-20+'"'));
  interactive.select.value='all';interactive.select.fire('change');assert(interactive.innerHTML.includes('주목 종목')&&interactive.innerHTML.includes('data-scenario='),'all view survives repaint');
+ context.location.hash='#discovery';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='discovery'));
+ const db=interactive.discoveries[0],di=data.discovery.sections[0].items,shown=()=>[...db.output.innerHTML.matchAll(/data-discovery-symbol="([^"]+)"/g)].map(m=>m[1]);
+ assert.equal(shown().length,Math.min(30,di.filter(r=>r.market==='US').length));
+ db.markets[0].fire('click');db.more.fire('click');assert.equal(shown().length,Math.min(60,di.length));
+ for(const b of db.buckets){b.fire('click');const expected=di.filter(r=>r.bucket===b.dataset.discoveryBucket).slice(0,30).map(r=>r.symbol);assert.deepEqual(shown(),expected);}
+ db.all.fire('click');db.markets[2].fire('click');assert(shown().every(s=>di.find(r=>r.symbol===s).market==='KR'));
+ db.search.value='no matching stock 478291';db.search.fire('input');assert.equal(shown().length,0);assert(db.more.hidden);
+ db.search.value='';db.search.fire('input');assert(shown().length>0);assert.equal((db.output.innerHTML.match(/data-discovery-lens=/g)||[]).length,shown().length*3);
  const A=context.window.AnalysisCharts;
+ context.location.hash='#multiasset';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='multiasset'));interactive.buttons.find(b=>b.dataset.subview==='패턴 스캐너').fire('click');
+ const sb=interactive.scanners[0],scan=data.multiasset.sections.find(s=>s.type==='scanner');assert.equal((sb.output.innerHTML.match(/data-chart-type="scan-candles"/g)||[]).length,9);sb.count.value='all';sb.count.fire('change');assert.equal((sb.output.innerHTML.match(/data-chart-type="scan-candles"/g)||[]).length,37);sb.pattern.value=scan.items[0].pattern;sb.pattern.fire('change');assert.equal((sb.output.innerHTML.match(/data-chart-type="scan-candles"/g)||[]).length,scan.items.filter(r=>r.pattern===sb.pattern.value).length);
+ const scanSvg=A.scanCandles(scan.items[0]);assert.equal((scanSvg.match(/data-scan-candle=/g)||[]).length,90);assert(scanSvg.includes('data-price-axis="right"'));assert(scanSvg.includes('data-scan-ma="MA20"')&&scanSvg.includes('data-scan-ma="MA60"'));
+ const pref=context.window.ResearchDashboard.section({type:'preference',title:'test',columns:['up','down','flat','missing'],rows:[{name:'regime',values:[.3,-.3,.1,null]}]},0,{});assert(pref.includes('● 0.30')&&pref.includes('▽ -0.30')&&pref.includes('· 0.10'));
  context.location.hash='#risk';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='risk'));
  interactive.buttons.find(b=>b.dataset.subview==='비펀더멘탈 수급').fire('click');assert.equal(interactive.rebals.length,1);
  const rb=interactive.rebals[0],rc=data.risk.sections.find(s=>s.type==='rebalancing');rb.shock.value='-5';rb.shock.fire('input');

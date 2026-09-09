@@ -11,3 +11,8 @@ requests==2.33.1
 beautifulsoup4==4.14.3
 # Optional official KRX collection; import only after explicit account authorization.
 pykrx==1.2.7
+
+# Macro allocation models; this PC already has the CPU Torch runtime.
+lightgbm==4.7.0
+Boruta==0.4.3
+torch==2.11.0

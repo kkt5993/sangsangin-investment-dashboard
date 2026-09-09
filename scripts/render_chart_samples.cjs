@@ -20,5 +20,7 @@ samples.valuation_kr=A.valuation(data('regime').sections.find(s=>s.type==='valua
 samples.cftc=A.line(data('risk').sections.find(s=>s.group==='CFTC 포지션'&&s.type==='line'));
 samples.news_regions=G.sphere(data('geoecon').sections.find(s=>s.type==='globe'),data('coastlines').arcs);
 const entity=data('dragonglass').sections.find(s=>s.type==='entities').entities[0];samples.entity=A.line({title:entity.name+' · 3개월',left:'시작=100',date_format:'day',series:[{name:entity.name,axis:'left',points:entity.curve}]});
+samples.scanner=A.scanCandles(data('multiasset').sections.find(s=>s.type==='scanner').items[0]);
+samples.allocation=A.line(data('multiasset').sections.find(s=>s.type==='allocation').chart);
 samples.scenario=ctx.window.ResearchCharts.bars(data('dragonglass').sections.find(s=>s.type==='scenario').rows.filter(r=>r.market==='KR').map(r=>({name:r.name,value:r.beta*-10})),{unit:'%',title:'시장 −10% 가정 · Beta 민감도'});
 (async()=>{for(const [name,html] of Object.entries(samples)){let s=html.match(/<svg[\s\S]*<\/svg>/)?.[0];if(!s)throw Error(name+' empty');s=s.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" font-family="Malgun Gothic, sans-serif" ').replace(/(<svg[^>]*>)/,'$1'+styles);fs.writeFileSync(path.join(out,name+'.svg'),s);await sharp(Buffer.from(s)).resize({width:1100}).png().toFile(path.join(out,name+'.png'));}console.log('Rasterized',Object.keys(samples).length,'chart samples without a browser.');})().catch(e=>{console.error(e);process.exitCode=1;});

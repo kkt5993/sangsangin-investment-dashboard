@@ -10,7 +10,7 @@ CODE={
  'rs':'market_modules.py · build.py · analytics.py · universe.py','momentum':'build.py · analytics.py · universe.py',
  'etfmon':'market_modules.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
  'regime':'macro_modules.py','risk':'macro_modules.py · option_analytics.py','pm_weekend':'macro_modules.py','geoecon':'macro_modules.py',
- 'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'financial_modules.py','strategies':'financial_modules.py',
+ 'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'discovery.py · financial_modules.py','strategies':'financial_modules.py',
  'quant':'quant_modules.py','ml':'ml_models.py','maximus':'maximus_model.py · ml_models.py',
  'principium':'platform_modules.py','ask_digest':'platform_modules.py','iw':'platform_modules.py','aragorn':'platform_modules.py','dragonglass':'platform_modules.py','globe':'platform_modules.py',
 }
@@ -23,6 +23,8 @@ CODE['regime']+=' · valuation.py · calendar_data.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py'
 CODE['dragonglass']+=' · entities.py'
+CODE['multiasset']+=' · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
+CODE['watch']+=' · technical_scan.py'
 for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_data.py'
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
@@ -36,13 +38,13 @@ PARITY={
  'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이 빈도·주간 RSI와 가격·성장/물가 3년 패널','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
  'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약6·15위표','공식 상품 35페어·KR/US 종목 1W선별 1M막대·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
  'momentum':('32자산·24섹터, 기간 히트맵, 상위16×3M/6M=32곡선','동일 그룹 수·5기간·3M/6M 짝·0선·양음 영역','조선 5Y z 없음, 누적 비율/달력 월 계약은 팀 설정'),
- 'discovery':('종합 랭킹·5렌즈·기술/실적/애널리스트 점수','KR기술100%, US45/30/25%, 필터·수치표·렌즈별 후보','비공개 정규화/리서치 서술 엔진 대신 공개 팀 규칙'),
+ 'discovery':('4개 분류·3개 평가축·공식 유니버스 발굴','KR기술100%, US45/30/25%, 시장·분류·검색·더 보기·근거 상세','비공개 정규화/리서치 서술 엔진 대신 공개 팀 규칙'),
  'strategies':('전략별 후보·재무·OHLC·이벤트 결과','흑자전환, 실적 서프라이즈, 일/주봉과 거래량','PEAD 발표일 정렬·내부자·13F·공매도 이벤트 원장 미연결'),
  'earnings':('US/KR 상위 이익 성장·YTD·히트맵·3개년 그룹 막대','연간 NI실적·글로벌 EPS 추정·국내 2025/26/27 NI 막대','해외 FY1/FY2 순이익/영업이익 전체 금액 추정 없음'),
  'growth':('FY1/FY2 3D: x영업이익성장 yYTD z영업이익률, 시총 크기','국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표','해외 영업이익 컨센서스 부족으로 글로벌 3D 전체 범위 차이'),
- 'multiasset':('21자산 막대·열지도·37자산 스캐너·배분/성과','해당 자산군·기간·신호·역변동성 배분과 SPY 곡선','원본 ML 자산배분 대신 월간 63D inverse-vol 기준모형'),
+ 'multiasset':('21자산 막대·열지도·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),
  'risk':('옵션 GEX/스팟곡선·VIX/SKEW·CSD·포트폴리오 위험','3ETF 만기 제한 GEX·OI PCR, CSD·곡선·VaR/CVaR·스트레스','딜러 실제 포지션·전 만기·실제 팀 포트폴리오 없음'),
- 'watch':('KR/US 상승6·하락4, 일/주봉·MA·거래량·패턴 근거','5기하 패턴 후보·피벗 연결/저항선·120일/52주·MA20/50/200','미공개 판정/ADX 합성 점수 동등성 미검증, 적합도는 성공확률 아님'),
+ 'watch':('KR/US 상승6·하락4, 일/주봉·MA·거래량·패턴 근거','5기하 패턴·피벗·120일/52주·MA·ADX/DI/MA4조건·12지표 점수','미공개 판정/ADX 합성 점수 동등성 미검증, 적합도는 성공확률 아님'),
  'ml':('3지수×1M/3M, 실제 막대/예측선·68/90%·적중점·z/확률/가격·OOS','6그룹·만기 정렬 walk-forward·모델 평가·이중축·계수','Boruta/SHAP/LSTM·비공개 모델 선택과 PIT 빈티지 미복제'),
  'quant':('Stat Arb·8팩터·BAB·TSMOM·단기반전 5뷰','페어 z 0/±2·상관/Hurst/공적분/반감기·요인/비중·후보','현재 단면 스크리닝, 역사 구성·모든 전략 비용 후 OOS 필요'),
  'dynamics':('3지수+15주식, 8룩백×시간 변동성표면·β×τ·위험/가격·노출성과','18대상·표면 회전/시간·위상·0~100/65선·가격 우축·전일노출','21D/5D/expanding252는 명시적 팀 파라미터, 거래비용·차입금리 미반영'),

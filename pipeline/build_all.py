@@ -4,7 +4,8 @@ from datetime import datetime,timezone
 from .engine import *
 from .market_modules import rankings,etf_monitor,multiasset,dynamics,watch
 from .macro_modules import regimes,risk,weekend,geoecon
-from .financial_modules import financial_rows,local_growth,earnings,growth,discovery,strategies
+from .financial_modules import financial_rows,local_growth,earnings,growth,strategies
+from .discovery import build as discovery
 from .platform_modules import libraries,networks
 from .quant_modules import quant
 from .build import make_snapshots
@@ -25,7 +26,7 @@ def build(d):
     objects={a['module']:a for a in [f(d) for f in [etf_monitor,multiasset,dynamics,regimes,risk,weekend,geoecon]]}
     objects['watch']=watch(d,rank);objects['quant']=quant(d)
     financial=financial_rows(d);consensus,casof=local_growth(d)
-    for obj in [earnings(d,financial,consensus),growth(d,financial,consensus,casof),discovery(d,financial,rank),strategies(d,financial)]+libraries(d)+networks(d,financial,rank):objects[obj['module']]=obj
+    for obj in [earnings(d,financial,consensus),growth(d,financial,consensus,casof),discovery(d,financial),strategies(d,financial)]+libraries(d)+networks(d,financial,rank):objects[obj['module']]=obj
     for obj in extend(d,objects,rank).values():d.export(attach(obj))
     status={}
     for file in (ROOT/'docs/data').glob('*.json'):

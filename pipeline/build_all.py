@@ -28,6 +28,8 @@ def build(d):
     financial=financial_rows(d);consensus,casof=local_growth(d)
     for obj in [earnings(d,financial,consensus),growth(d,financial,consensus,casof),discovery(d,financial),strategies(d,financial)]+libraries(d)+networks(d,financial,rank):objects[obj['module']]=obj
     for obj in extend(d,objects,rank).values():d.export(attach(obj))
+    from .overview_state import build_overview
+    write_json(ROOT/'docs/data/overview_state.json',build_overview(d))
     status={}
     for file in (ROOT/'docs/data').glob('*.json'):
         a=read_json(file)

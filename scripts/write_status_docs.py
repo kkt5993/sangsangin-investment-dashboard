@@ -28,7 +28,7 @@ CODE['watch']+=' · technical_scan.py'
 for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_data.py'
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
- 'overview':('전체 탭 요약·카드·탐색','25탭 상태, 데이터 수, 바로가기','원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외'),
+ 'overview':('TESSERACT6축·CROWDING5축·36월3D·4시점 적층·주도주','6/5축 원단위와 z·36시점 궤적/회전·4층 레이더·시총50표본/주도주10·현황','원본 z 창/극단치 설정·세계 전체 시총50·역사 발표 빈티지 동등성 미확보'),
  'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Vercel·평일08/18시 갱신·512MiB 변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
  'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','2기본지수+Nasdaq·6매크로·종목 캐시·10전문가/ADF/SIS/게이트·68/95팬·R/I·원장','지수 이익앵커·SEC/KR수급·일부 입력·부분월/임의 티커 서버·PIT 미연결'),
  'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','39객체·근거·3D/전파·8시나리오·701Entity·원장 프리모템/상관','전체255객체/581관계·위성·선행/후행·구루/사건·팀DB 미연결'),
@@ -79,6 +79,7 @@ for m in modules:
           '- 계산/자료 계약: '+a['method_note'],
           '- 남은 범위: '+' / '.join(a.get('missing') or [gap]),'']
         if a.get('sections'):block += ['연결된 하위 그룹: '+', '.join(dict.fromkeys(s.get('group','공통') for s in a['sections']))+'.','']
+    elif key=='overview':block += ['- 계산: [overview_state.py](../../pipeline/overview_state.py) · [화면](../../docs/overview-views.js) · [결과](../../docs/data/overview_state.json)', '- [축·단위·발표 시차·표본 계산 계약](../OVERVIEW_CONTRACT.md)',f'- 남은 범위: {gap}','']
     else:block += [f'- 화면: [app.js](../../docs/app.js) · [전체 상태](../../docs/data/status.json)',f'- 남은 범위: {gap}','']
     block += ['[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)','',
        '아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.','<!-- implementation:end -->','']

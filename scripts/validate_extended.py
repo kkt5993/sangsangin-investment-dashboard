@@ -274,4 +274,23 @@ rankings=load(ROOT/'docs/data/rs.json')['stock_rankings']
 for r in rankings.values():assert r['expected']==r['available']+len(r['excluded']) and r['membership_as_of']<=meta['as_of']
 for s in load(ROOT/'docs/data/ml.json')['sections']:
     if s['type']=='ml':assert s['origin']<meta['as_of'] and s['latest']['target']>s['origin']
+ov=load(ROOT/'docs/data/overview_state.json');assert ov['as_of']==meta['as_of'] and ov['vintage']==meta['vintage']
+assert [p['id'] for p in ov['panels']]==['tesseract','crowding'] and [len(p['axes']) for p in ov['panels']]==[6,5]
+for p in ov['panels']:
+    assert len(p['rows'])==36 and [m['index'] for m in p['milestones']]==[11,23,29,35]
+    assert [r['date'] for r in p['rows']]==sorted(set(r['date'] for r in p['rows']))
+    for row in p['rows']:
+        assert row['date']<=ov['as_of'] and set(row['raw'])==set(row['z'])==set(a['key'] for a in p['axes'])
+        assert all(v is None or isinstance(v,(int,float)) and math.isfinite(v) for v in [*row['raw'].values(),*row['z'].values()])
+        for r in row['provenance'].values():
+            if r['available']:assert r['period']<=r['available']<=row['date']
+            if r.get('gdp_available'):assert r['gdp_period']<=r['gdp_available']<=row['date']
+            for c in r.get('components',[]):
+                if c['available']:assert c['period']<=c['available']<=row['date']
+    for m in p['milestones']:assert m['date']==p['rows'][m['index']]['date']
+for row in ov['panels'][0]['rows']:
+    if row['date']=='2025-11-30':assert row['provenance']['profits']['period']<'2025-09-30'
+    if row['date']=='2026-03-31':assert row['provenance']['profits']['period']<'2025-12-31'
+assert len(ov['leaders']['stocks'])<=10 and ov['leaders']['eligible']<=ov['leaders']['pool']<=50
+for r in ov['leaders']['stocks']:assert r['cap_usd_bn']>0 and r['price_date']<=ov['as_of'] and r['profit_period']<=ov['as_of'] and r['currency'] in ['USD','KRW']
 print('PASS:',count,'new modules; dated observations, forecast maturity, intervals, OHLC, official coverage, graph and table shapes.')

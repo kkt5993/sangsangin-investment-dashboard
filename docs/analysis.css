@@ -32,3 +32,14 @@
 [data-relation-view] li{overflow-wrap:anywhere;margin:8px 0}
 [data-relation-view] .analysis-controls{flex-wrap:wrap}
 @media(max-width:760px){.relation-columns{grid-template-columns:1fr}}
+.overview-holo-grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(230px,1fr);gap:16px;align-items:start}
+.overview-holo-grid.has-worm{grid-template-columns:minmax(0,1.6fr) minmax(240px,1fr) minmax(240px,1fr)}
+.overview-holo-grid figure{margin:10px 0;min-width:0}
+.overview-holo-grid svg{width:100%;height:auto;font-family:system-ui,"Malgun Gothic",sans-serif}
+.overview-holo-grid figcaption{font-size:.9rem;margin-bottom:8px}
+[data-state-holo]{touch-action:none;user-select:none;cursor:grab}
+[data-worm-symbol]{cursor:pointer}
+[data-worm-symbol]:focus circle,[data-worm-symbol]:hover circle{stroke:#c59b2f;stroke-width:3}
+.state-provenance{max-height:300px;overflow:auto;font-size:.75rem}
+@media(max-width:1100px){.overview-holo-grid.has-worm{grid-template-columns:repeat(2,minmax(0,1fr))}.overview-holo-grid.has-worm figure:first-child{grid-column:1/-1}}
+@media(max-width:650px){.overview-holo-grid,.overview-holo-grid.has-worm{grid-template-columns:1fr}}

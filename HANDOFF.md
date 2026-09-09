@@ -105,3 +105,8 @@ DRAGONGLASS 후속(2026-09-09): 관계39객체(기업22/테마13/관측2/가정2
 `relation-views.js`는공개8가정Python결과와정확일치. 최대3단계/최강경로/다중입력합/출처, 중심성·부호대조·상하8순위/도달범위,원장실행비중·최악가정·Long쌍별상관. 상대강도를수익률이나%NAV손익으로표시하지않음. 무입력/미연결/경로없음/0비중분리. 이전Beta/공식분류별도하위화면보존. 상관전체Entity701창252/min200 아래삼각Int16×10000+Uint8관측수·결측32767·자기상관분산검사. 원장스토리지변경없고가정확률/권장비중자동생성없음. 상세 research/RELATION_CONTRACT.md, source미확보범위 REFERENCE_PARITY.
 
 검사106Python·두검증기·3JS(새relation포함)/12구문·46SVG래스터통과,브라우저QA없음. 원자료/실행파일 82.60MiB/512,공개JSON 7.107MiB/8. 게시실행ID 20260909T143022Z, 빈티지 20260909T135843Z;실제공개완료는runtime/state.json확인. 다음전체목표계속: OverviewTESS/5축,위성실관측,Geoecon시간/사건자산경로,글로벌추정상세/SEC13F·P/KR거시달력,최종RS/모멘텀/ETF기간계약. 이묶음은진행이며전체완료아님.
+
+
+Overview 후속(2026-09-09): overview_state.py/overview-views.js로TESSERACT6축·CROWDING5축·36시점궤적/4시점적층·회전/드래그/프레임취소·주도주웜홀/선택/원단위표 연결. z최대120/최소60/ddof0, SPY/EEM50:50, Wilshire가격지수/GDP상대변화는실제시총/GDP아님. 시총50표본중가격/분기NI가용49에서상위10;전체글로벌시총상위아님. 단위/발표시차/셧다운보정은 research/OVERVIEW_CONTRACT.md. CPQ4+3개월, 2025Q3GDP/CP는2025-12-23, 2025Q4GDP2026-03-13/CP2026-04-09로확인된지연보정;최신수정치PIT아님.
+
+WTREGEN1거시/SPHB·SPLV·^W5000역사추가, ^FTW5000은37개관측으로긴창미사용. 원자료빈티지20260909T143552Z,가격1131/거시60/재무195. 원본사이트요청0;공식FRED/BEA/지수정의검증. 검사114Python·두검증기·3JS/13구문·51SVG래스터통과,새5이미지확인;브라우저QA없음. 로컬90.34MiB/512·공개JSON7.177MiB/8(게시패키지생성전). 실행ID20260909T145933Z,실제공개완료는runtime/state.json. 전체목표는진행이며다음은지정학상황/키워드기간변화/영향채널/공식GPR세부,위성/실적추정/SEC/KR달력과REFERENCE_PARITY의남은계약이다.

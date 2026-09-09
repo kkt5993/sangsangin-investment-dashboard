@@ -3,10 +3,11 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**계산·화면 연결** · 가격 기준 2026-09-08. 25탭 상태, 데이터 수, 바로가기.
+**계산·화면 연결** · 가격 기준 2026-09-08. 6/5축 원단위와 z·36시점 궤적/회전·4층 레이더·시총50표본/주도주10·현황.
 
-- 화면: [app.js](../../docs/app.js) · [전체 상태](../../docs/data/status.json)
-- 남은 범위: 원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외
+- 계산: [overview_state.py](../../pipeline/overview_state.py) · [화면](../../docs/overview-views.js) · [결과](../../docs/data/overview_state.json)
+- [축·단위·발표 시차·표본 계산 계약](../OVERVIEW_CONTRACT.md)
+- 남은 범위: 원본 z 창/극단치 설정·세계 전체 시총50·역사 발표 빈티지 동등성 미확보
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 

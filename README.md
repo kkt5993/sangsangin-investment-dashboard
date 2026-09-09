@@ -19,6 +19,8 @@ RS·모멘텀, ETF·멀티에셋, 국면·리스크·주말 매크로, 퀀트·�
 
 Vercel은 검증한 docs 결과를 게시하고, GitHub에는 코드·문서·작은 계산 결과를 보관합니다. 화면을 열 때 원본 사이트나 시세 API를 호출하지 않습니다. 자체 SVG 차트와 로컬 지도 데이터로 표시합니다.
 
+Overview는 TESSERACT6축·CROWDING5축의36시점 궤적, 4시점 적층 레이더와 시총 표본 내 주도주10개를 표시합니다. [축·정보 시차·표본 계약](research/OVERVIEW_CONTRACT.md)에 원본 구조와 팀 계산 설정의 차이를 기록했습니다.
+
 ```powershell
 python -m http.server 8769 --bind 127.0.0.1 --directory docs
 ```

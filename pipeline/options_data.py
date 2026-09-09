@@ -1,11 +1,12 @@
 """Bounded public option snapshots: three expiries per ETF, no orders."""
+from .store import data_base
 import argparse,gzip,json,time
 import yfinance as yf
 import pandas as pd
 from .store import DATA
 from .acquire import stamp,budget
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--as-of',default='2026-09-08');a=p.parse_args();base=DATA/'expanded'/a.as_of/'options';base.mkdir(exist_ok=True)
+    p=argparse.ArgumentParser();p.add_argument('--as-of',default='2026-09-08');a=p.parse_args();base=data_base(a.as_of)/'options';base.mkdir(exist_ok=True)
     for symbol in ['SPY','QQQ','IWM']:
         dest=base/(symbol+'.json.gz')
         if dest.exists():continue

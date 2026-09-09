@@ -43,21 +43,28 @@ def section(s,cutoff,module):
     if kind=='scatter3d':assert all(all(isinstance(p[k],(int,float)) and math.isfinite(p[k]) for k in ['x','y','z']) for p in s['points'])
     if kind=='globe':assert all(-180<=c['lon']<=180 and -90<=c['lat']<=90 and c['count']==len(c['companies']) for c in s['countries'])
     if kind=='etf':assert all(len(r['returns'])==4 and r['payments']>=0 and r['as_of']<=cutoff for r in s['rows'])
+    if kind=='wordcloud':assert all(w['count']>0 and isinstance(w['count'],int) and w['term'] for w in s['words'])
+    if kind=='scenario':assert all(math.isfinite(r['beta']) and 0<=r['r2']<=1 and r['observations']>=200 for r in s['rows'])
 
 count=0
 for file in (ROOT/'docs/data').glob('*.json'):
     d=load(file)
     if not isinstance(d,dict) or d.get('schema_version')!=2:continue
     assert d['module']==file.stem and d['method_note'] and d['source'] and d['sections']
+    groups={s.get('group','종합') for s in d['sections']}
+    for v in d['subviews']:
+        assert (v['status']=='connected')==(v['name'] in groups)
+        assert v['sections']==sum(s.get('group','종합')==v['name'] for s in d['sections'])
+        if v['status']=='pending':assert v['reason']
     for s in d['sections']:section(s,d['as_of'],d['module'])
     count+=1
 assert count==21,(count,'new schema modules expected')
-meta=load(ROOT/'docs/data/status.json');assert len(meta['modules'])==26 and meta['implemented']==23
-assert meta['universes']['KR']['expected']==100 and meta['universes']['US']['expected']==504
-assert meta['modules']['rosenbach']['status']=='blocked'
-quality=meta['price_quality'];assert re.fullmatch('[a-f0-9]{64}',quality['sha256']);assert quality['corrected']==101 and quality['quarantined']==181
+meta=load(ROOT/'docs/data/status.json');assert len(meta['modules'])==25 and meta['implemented']==23
+assert meta['universes']['KR']['expected']==100 and 450<=meta['universes']['US']['expected']<=550
+assert 'rosenbach' not in meta['modules']
+quality=meta['price_quality'];assert re.fullmatch('[a-f0-9]{64}',quality['sha256']);assert quality['corrected']>=0 and quality['quarantined']>=0
 rankings=load(ROOT/'docs/data/rs.json')['stock_rankings']
 for r in rankings.values():assert r['expected']==r['available']+len(r['excluded']) and r['membership_as_of']<=meta['as_of']
 for s in load(ROOT/'docs/data/ml.json')['sections']:
-    if s['type']=='ml':assert s['origin']=='2026-08-31'
+    if s['type']=='ml':assert s['origin']<meta['as_of'] and s['latest']['target']>s['origin']
 print('PASS:',count,'new modules; dated observations, forecast maturity, intervals, OHLC, official coverage, graph and table shapes.')

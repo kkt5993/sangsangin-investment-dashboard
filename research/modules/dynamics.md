@@ -1,9 +1,9 @@
 # 🌀 시장 속도·붕괴 취약성
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**계산·화면 연결** · 가격 기준 2026-09-08. 18대상·표면 회전/시간·위상·0~100/65선·가격 우축·전일노출.
+**계산·화면 연결** · 가격 기준 2026-09-08. S&P500 / KOSPI / NASDAQ / NVIDIA / Microsoft / Apple / Alphabet / Amazon / Meta / Broadcom / Tesla / Netflix / Palantir / 삼성전자 / SK하이닉스 / LG에너지솔루션 / 삼성바이오로직스 / 현대차.
 
 - 계산 코드: [market_modules.py](../../pipeline/market_modules.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/dynamics.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 가격의 추세 에너지·불안정성으로 방향이 아닌 보유 노출과 붕괴 취약성을 분석한다.

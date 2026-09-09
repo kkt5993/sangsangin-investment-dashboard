@@ -1,21 +1,22 @@
 # 멀티에셋 모니터링
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 해당 자산군·기간·신호·역변동성 배분과 SPY 곡선.
+**부분 구현** · 가격 기준 2026-09-08. 자산 모니터 / 패턴 스캐너 / 자산배분.
 
-- 계산 코드: [market_modules.py](../../pipeline/market_modules.py)
+- 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/multiasset.json)
 - 계산/자료 계약: 21자산 수익률·37자산 스캐너를 계산합니다. FX는 표시 환율의 변화율, 선물은 제공처 연속선물 가격입니다. 자산배분은 월 리밸런싱 역변동성 기준모형(63일, 편도 5bp)입니다.
 - 남은 범위: 원본의 ML 자산배분 모델·가중치가 없어 기준모형을 구분해 제공합니다.
 
-연결된 하위 그룹: 공통.
+연결된 하위 그룹: 자산 모니터, 패턴 스캐너, 자산배분.
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 21개 자산 모니터, ML 국면 배분, 기술적 시그널 스캐너를 결합한 화면.

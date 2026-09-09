@@ -11,7 +11,7 @@ def gamma(spot,strike,vol,t,rate):
 
 def option_sections(d):
     sections=[]
-    for path in (d.base/'options').glob('*.json.gz'):
+    for path in d.directory('options').glob('*.json.gz'):
         raw=json.loads(gzip.decompress(path.read_bytes()));symbol=raw['symbol'];price=d.price(symbol,False)
         if not len(price):continue
         spot=float(price.iloc[-1]);f=pd.DataFrame(raw['records']);now=pd.Timestamp(raw['retrieved_at']);rate=d.mac('DGS3MO').iloc[-1]/100 if len(d.mac('DGS3MO')) else 0

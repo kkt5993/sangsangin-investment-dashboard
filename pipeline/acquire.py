@@ -2,6 +2,7 @@
 
 Raw caches stay outside git. No original-site request, login, paid API or schedule.
 """
+from .store import data_base
 import argparse
 from datetime import date,datetime,timedelta,timezone
 import io,json,re,time,csv
@@ -16,7 +17,7 @@ from .catalog import MACRO,INDICES,DYNAMICS_STOCKS,extra_price_symbols,reference
 
 def budget(extra=0):
     n=sum(p.stat().st_size for p in DATA.rglob('*') if p.is_file())
-    if n+extra>32*1024*1024:raise RuntimeError('32 MiB local budget reached; ask user before expansion.')
+    if n+extra>512*1024*1024:raise RuntimeError('512 MiB local budget reached; ask user before expansion.')
 
 
 def stamp():return datetime.now(timezone.utc).isoformat()
@@ -145,13 +146,14 @@ def collect_fundamentals(base,limit=0):
                 except Exception as e:out[key]=None;out['errors'].append(key+':'+type(e).__name__)
             out['status']='ok'
         except Exception as e:out.update(status='error',error_type=type(e).__name__)
-        write_json(file,out);print(f'FUND {i+1}/{len(members)} {s} {out["status"]}',flush=True)
+        from .events_data import save
+        save(file.with_suffix('.json.gz'),out);print(f'FUND {i+1}/{len(members)} {s} {out["status"]}',flush=True)
 
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('kind',choices=['universes','core','stocks','macro','fundamentals']);p.add_argument('--as-of',default='2026-09-08');p.add_argument('--limit',type=int,default=0);args=p.parse_args()
-    if date.fromisoformat(args.as_of)>=date.today():p.error('Completed price date required')
-    base=DATA/'expanded'/args.as_of;base.mkdir(parents=True,exist_ok=True)
+    if date.fromisoformat(args.as_of)>date.today():p.error('Future price date is not allowed')
+    base=data_base(args.as_of);base.mkdir(parents=True,exist_ok=True)
     if args.kind=='universes':collect_official_us(base);collect_naver(base)
     elif args.kind in ['core','stocks']:collect_prices(base,args.as_of,args.kind)
     elif args.kind=='macro':collect_macro(base,args.as_of)

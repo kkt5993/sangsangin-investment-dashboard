@@ -1,0 +1,176 @@
+"""One-command collect -> stage -> validate -> commit -> Pages verification.
+
+Credentials remain in existing local config/Git Credential Manager. A lock
+prevents overlapping runs. Failed staging never replaces the published site.
+"""
+import argparse,contextlib,json,os,shutil,subprocess,sys,time
+from datetime import datetime,timedelta
+from pathlib import Path
+from zoneinfo import ZoneInfo
+from .store import ROOT,DATA,read_json,write_json,digest
+from .engine import Data
+from .acquire import stamp,budget
+
+RUNTIME=DATA/'runtime'
+def price_cutoff(now=None):
+    now=now or datetime.now(ZoneInfo('Asia/Seoul'))
+    if now.tzinfo is None:raise ValueError('Timezone-aware collection time required')
+    now=now.astimezone(ZoneInfo('Asia/Seoul'))
+    # The evening run may include today's completed Korean session. Each symbol
+    # retains its own last completed exchange date; US prices are the prior day.
+    day=now.date() if now.hour>=18 else now.date()-timedelta(days=1)
+    return day.isoformat()
+
+@contextlib.contextmanager
+def lock():
+    import msvcrt
+    RUNTIME.mkdir(parents=True,exist_ok=True);file=RUNTIME/'refresh.lock'
+    with file.open('a+b') as handle:
+        handle.seek(0);handle.write(b'0');handle.flush();handle.seek(0)
+        try:msvcrt.locking(handle.fileno(),msvcrt.LK_NBLCK,1)
+        except OSError:raise RuntimeError('Another refresh is running')
+        try:yield
+        finally:handle.seek(0);msvcrt.locking(handle.fileno(),msvcrt.LK_UNLCK,1)
+
+def command(args,cwd,env,log):
+    print('START',Path(args[0]).name,' '.join(args[1:3]),flush=True)
+    p=subprocess.run(args,cwd=cwd,env=env,capture_output=True,text=True,encoding='utf8',errors='replace')
+    # No command line or private config contents are written to the public site.
+    with log.open('a',encoding='utf8') as f:f.write(p.stdout+'\n'+p.stderr+'\n')
+    print('STEP',Path(args[0]).name,' '.join(args[1:3]),'exit',p.returncode,flush=True)
+    if p.returncode:raise RuntimeError('Pipeline step failed; inspect local run log')
+    return p.stdout.strip()
+
+def due(parent,name,days):
+    file=parent.resource(name)
+    return not file.exists() or time.time()-file.stat().st_mtime>days*86400
+
+def collect(parent,base,as_of,env,config,log):
+    from .incremental import prices
+    from .events_data import collect_news,collect_events
+    run=lambda *args:command([sys.executable,'-m',*args,'--as-of',as_of],ROOT,env,log)
+    if due(parent,'kr_largecap.json',7):
+        run('pipeline.acquire','universes')
+        if config.get('allow_krx_auth'):run('pipeline.krx_members','--allow-krx-auth')
+    members=Data(parent.as_of,base.name).members
+    summary=prices(parent,base,as_of,members)
+    run('pipeline.acquire','macro')
+    if config.get('ecos_key_file'):run('pipeline.ecos_data','--key-file',config['ecos_key_file'])
+    # Discard only this run's byte-identical generated copies, after hash check.
+    mf=base/'macro/manifest.json'
+    if mf.exists():
+        m=read_json(mf)
+        errors=sum(v.get('status')!='ok' for v in m['instruments'].values())
+        if errors>max(3,len(m['instruments'])*.3):raise RuntimeError('Macro provider failure exceeds 30%; publication stopped')
+        for key in list(m['instruments']):
+            child=base/'macro'/(key+'.csv');prior=parent.resource('macro/'+key+'.csv')
+            if child.exists() and prior.exists() and digest(child)==digest(prior):
+                child.unlink();del m['instruments'][key]
+        write_json(mf,m)
+    if due(parent,'fundamentals',7):run('pipeline.acquire','fundamentals')
+    if config.get('consensus_database') and due(parent,'local_consensus.json.gz',7):run('pipeline.local_consensus',config['consensus_database'])
+    current=Data(as_of,base.name);collect_news(current)
+    if due(parent,'events',3):collect_events(current,config.get('event_companies',60))
+    if due(parent,'cot.json.gz',7):run('pipeline.cot_data')
+    run('pipeline.options_data')
+    if config.get('allow_krx_auth'):run('pipeline.krx_reconcile','--allow-krx-auth')
+    current=Data(as_of,base.name)
+    if len(current.frames)<len(parent.frames)*.97:raise RuntimeError('Fresh price coverage dropped more than 3%')
+    return summary
+
+def stage_project(dest):
+    budget(sum(p.stat().st_size for name in ['docs','research','pipeline','scripts','tests','config'] for p in (ROOT/name).rglob('*') if p.is_file()))
+    for name in ['docs','research','pipeline','scripts','tests','config']:
+        shutil.copytree(ROOT/name,dest/name,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+    for name in ['AGENTS.md','README.md','HANDOFF.md','requirements.txt']:
+        shutil.copy2(ROOT/name,dest/name)
+
+def prune_staging(keep=2):
+    """Remove only old disposable code copies; immutable raw vintages remain."""
+    root=(RUNTIME/'staging').resolve()
+    if not root.exists():return
+    folders=sorted((p for p in root.iterdir() if p.is_dir()),key=lambda p:p.name,reverse=True)
+    for folder in folders[keep:]:
+        target=folder.resolve()
+        if target.parent!=root or folder.is_symlink():raise ValueError('Unexpected staging path')
+        shutil.rmtree(target)
+
+def validate(stage,env,log):
+    steps=[[sys.executable,'-m','unittest','discover','-s','tests'],[sys.executable,'scripts/validate.py'],[sys.executable,'scripts/validate_extended.py']]
+    steps += [['node','scripts/'+s] for s in ['test_charts.cjs','test_dashboard.cjs','test_extended.cjs']]
+    steps += [['node','--check',str(p)] for p in (stage/'docs').glob('*.js')]
+    for step in steps:command(step,stage,env,log)
+
+def publish(stage,env,log):
+    dirty=subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True)
+    if dirty.strip():raise RuntimeError('Working tree has changes; validated staging retained, publication stopped')
+    # Copy only generated public outputs. Code and user files are never committed
+    # by the recurring refresh. GitHub deploys the following commit atomically.
+    for p in (stage/'docs/data').glob('*.json'):shutil.copy2(p,ROOT/'docs/data'/p.name)
+    shutil.copy2(stage/'docs/status.js',ROOT/'docs/status.js')
+    generated=['research/IMPLEMENTATION_STATUS.md','research/CHART_PARITY.md','research/SUBVIEWS.md']
+    generated += [str(p.relative_to(stage)).replace('\\','/') for p in (stage/'research/modules').glob('*.md')]
+    for name in generated:shutil.copy2(stage/name,ROOT/name)
+    command(['git','add','--','docs/data','docs/status.js',*generated],ROOT,env,log)
+    if subprocess.run(['git','diff','--cached','--quiet'],cwd=ROOT).returncode==0:return None
+    command(['git','commit','-m','Refresh validated research snapshots'],ROOT,env,log)
+    head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    snapshot=read_json(stage/'docs/data/refresh.json')
+    pending=dict(commit=head,as_of=snapshot['as_of'],vintage=snapshot['vintage'],run_id=snapshot['run_id'])
+    write_json(RUNTIME/'pending_publish.json',pending)
+    return complete_publication(pending,env,log)
+
+def complete_publication(pending,env,log):
+    head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    if head!=pending['commit']:raise RuntimeError('Pending publication commit changed; review local state')
+    command(['git','-c','credential.interactive=never','push','origin','main'],ROOT,env,log)
+    import requests
+    url='https://kkt5993.github.io/sangsangin-investment-dashboard/data/refresh.json'
+    expected=(ROOT/'docs/data/refresh.json').read_bytes()
+    for _ in range(18):
+        try:
+            r=requests.get(url,params={'v':head},timeout=20)
+            if r.status_code==200 and r.content==expected:
+                write_json(RUNTIME/'state.json',pending)
+                (RUNTIME/'pending_publish.json').unlink(missing_ok=True)
+                return head
+        except requests.RequestException:pass
+        time.sleep(10)
+    raise RuntimeError('Git push succeeded; Pages verification pending')
+
+def main():
+    p=argparse.ArgumentParser();p.add_argument('--as-of');p.add_argument('--offline',action='store_true');p.add_argument('--publish',action='store_true');p.add_argument('--force-models',action='store_true');a=p.parse_args()
+    config_file=RUNTIME/'config.json';config=read_json(config_file) if config_file.exists() else {}
+    state_file=RUNTIME/'state.json';state=read_json(state_file) if state_file.exists() else read_json(ROOT/'docs/data/status.json')
+    parent_vintage=state.get('vintage') or state['as_of'];as_of=a.as_of or price_cutoff();run_id=datetime.now(ZoneInfo('UTC')).strftime('%Y%m%dT%H%M%SZ')
+    with lock():
+        log=RUNTIME/(run_id+'.log');report=dict(run_id=run_id,started_at=stamp(),as_of=as_of,status='running',mode='offline' if a.offline else 'online',schedule='평일 08:00·18:00 Asia/Seoul')
+        try:
+            if not a.offline and (as_of>price_cutoff() or as_of<state['as_of']):raise ValueError('Requested date is outside the completed refresh range')
+            if a.publish and subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip():raise RuntimeError('Working tree has changes')
+            if a.publish and (RUNTIME/'pending_publish.json').exists():
+                head=complete_publication(read_json(RUNTIME/'pending_publish.json'),os.environ.copy(),log)
+                print(json.dumps(dict(status='published',resumed=True,commit=head)),flush=True);return
+            prune_staging()
+            parent=Data(state['as_of'],parent_vintage)
+            if a.offline:vintage=parent_vintage;as_of=state['as_of'];report['as_of']=as_of
+            else:
+                vintage=run_id;base=DATA/'expanded'/vintage;base.mkdir(parents=True);write_json(base/'parent.json',dict(vintage=parent_vintage,as_of=as_of));budget()
+            env={**os.environ,'SANGSANGIN_DATA_DIR':str(DATA),'SANGSANGIN_VINTAGE':vintage,'PYTHONIOENCODING':'utf-8','GIT_TERMINAL_PROMPT':'0','GCM_INTERACTIVE':'never'}
+            if not a.offline:report['collection']=collect(parent,base,as_of,env,config,log)
+            # Keep recent reviewable staging copies; no site mutation on failure.
+            stage=RUNTIME/'staging'/run_id;stage.mkdir(parents=True);stage_project(stage)
+            run=lambda mod:command([sys.executable,'-m',mod,'--as-of',as_of],stage,env,log)
+            model=read_json(ROOT/'docs/data/ml.json');model_age=(datetime.fromisoformat(as_of)-datetime.fromisoformat(model['as_of'])).days
+            if a.force_models or model_age>=7 or as_of[:7]!=model['as_of'][:7]:run('pipeline.ml_models');run('pipeline.maximus_model')
+            run('pipeline.build_all');report.update(status='validated',vintage=vintage,completed_at=stamp())
+            write_json(stage/'docs/data/refresh.json',report)
+            command([sys.executable,'scripts/write_status_docs.py'],stage,env,log);validate(stage,env,log)
+            if a.publish:
+                report['commit']=publish(stage,env,log);report['status']='published';write_json(state_file,dict(as_of=as_of,vintage=vintage,commit=report['commit'],run_id=run_id))
+            write_json(RUNTIME/(run_id+'.json'),report)
+            print(json.dumps(dict(status=report['status'],run_id=run_id,as_of=as_of,vintage=vintage,commit=report.get('commit')),ensure_ascii=False),flush=True)
+        except Exception as e:
+            report.update(status='failed',error_type=type(e).__name__,reason=str(e),completed_at=stamp());write_json(RUNTIME/(run_id+'.json'),report)
+            print('REFRESH FAILED:',str(e),flush=True);raise SystemExit(1)
+if __name__=='__main__':main()

@@ -1,9 +1,9 @@
 # 💸 글로벌 ETF 큐레이션
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**계산·화면 연결** · 가격 기준 2026-09-08. 9그룹·TTM실제분배/현재종가·조정수익률·투자금 변경.
+**계산·화면 연결** · 가격 기준 2026-09-08. 월급형 (Monthly Paycheck) / 초고배당 커버드콜·YieldMax (⚠️ 양날의 검) / 배당성장 귀족 (Dividend Growth) / 채권·현금 인컴 사다리 (Fixed Income Ladder) / 자산군 벨웨더 (One per Asset Class) / 파괴적 혁신 테마 (Disruption) / 국가 원픽 (Country Single-Play) / 팩터·스마트베타 (Smart Beta) / 레버리지·인버스 (Turbo, ⚠️위험).
 
 - 계산 코드: [market_modules.py](../../pipeline/market_modules.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/etfmon.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 현금흐름 방식과 테마·자산군으로 ETF를 분류하고 총수익과 배당을 함께 비교한다.

@@ -1,9 +1,9 @@
 # 종목 발굴 (변곡·가속)
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. KR기술100%, US45/30/25%, 필터·수치표·렌즈별 후보.
+**부분 구현** · 가격 기준 2026-09-08. 종합 / 가격 선행 / 과매도 / 관찰 / 성장 동행 / 실적↑ 가격↓.
 
 - 계산 코드: [financial_modules.py](../../pipeline/financial_modules.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/discovery.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 종목의 현재 높은 수준보다 개선·변곡·가속을 포착해 리서치 후보로 묶는다.

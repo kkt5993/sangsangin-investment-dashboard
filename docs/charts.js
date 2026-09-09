@@ -43,7 +43,8 @@
   const rows=items.filter(r=>ok(r.value));if(!rows.length)return empty();
   const W=800,L=215,R=85,T=markers.length?34:16,rowH=33,H=T+rows.length*rowH+36;
   const extent=Math.max(1,...rows.map(r=>Math.abs(r.value)),...markers.map(Math.abs))*1.1;
-  const X=v=>L+(v+extent)/(2*extent)*(W-L-R),zero=X(0);
+  const labelGutter=70;
+  const X=v=>L+labelGutter+(v+extent)/(2*extent)*(W-L-R-labelGutter),zero=X(0);
   const refs=[...new Set([0,...markers])].map(v=>`<line data-bar-guide="${v}" x1="${X(v)}" x2="${X(v)}" y1="${T-6}" y2="${H-28}" class="reference-line" stroke-dasharray="${v?'3 4':'0'}"/>${v?`<text x="${X(v)}" y="${T-13}" text-anchor="middle" class="axis">${fmt(v,'',Math.abs(v)%1?2:0)}</text>`:''}`).join('');
   const body=rows.map((r,i)=>{const y=T+i*rowH,end=X(r.value);return `<g><title>${esc(r.name)}: ${fmt(r.value,unit,2)}</title><text x="${L-10}" y="${y+18}" text-anchor="end" class="bar-name">${esc(r.name)}</text><rect data-bar-value="${r.value}" x="${Math.min(zero,end)}" y="${y+3}" width="${Math.max(.8,Math.abs(end-zero))}" height="23" fill="${r.value>=0?'#288376':'#9a6da2'}"/><text x="${end+(r.value>=0?7:-7)}" y="${y+19}" text-anchor="${r.value>=0?'start':'end'}" class="bar-value">${fmt(r.value,unit)}</text></g>`;}).join('');
   return `<div class="bar-scroll"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)} · ${esc(unit)}"><title>${esc(title)}</title>${refs}${body}<text x="${zero}" y="${H-7}" text-anchor="middle" class="axis">0 ${esc(unit)}</text></svg></div>`;

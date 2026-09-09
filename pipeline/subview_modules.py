@@ -1,0 +1,163 @@
+"""Data-backed subviews. Estimates, observations and research rules stay distinct."""
+import re
+from collections import Counter
+import numpy as np
+import pandas as pd
+from .engine import *
+from .events_data import read
+from .financial_modules import frame
+from .macro_modules import regime_frame
+from .platform_modules import LIBRARY
+
+def event_data(d):
+    result={}
+    for base in d.bases:
+        for p in (base/'events').glob('*.json.gz'):
+            r=read(p);result[r['symbol']]=r
+    return result
+
+def event_returns(price,benchmark,timestamp):
+    """D0 is first regular close after release; drift starts at that close."""
+    t=pd.Timestamp(timestamp)
+    if t.tzinfo is None:return None
+    local=t.tz_convert('America/New_York');day=local.tz_localize(None).normalize()
+    eligible=price.index[price.index>day] if local.hour>=16 else price.index[price.index>=day]
+    if not len(eligible):return None
+    first=eligible[0];i=price.index.get_loc(first)
+    if i==0:return None
+    output=dict(first_session=str(first.date()),reaction=number((price.iloc[i]/price.iloc[i-1]-1)*100),drift=number((price.iloc[-1]/price.iloc[i]-1)*100),sessions=len(price)-i-1,curve=[])
+    for h in [5,20]:
+        output['d'+str(h)]=number((price.iloc[i+h]/price.iloc[i]-1)*100) if i+h<len(price) else None
+        target=price.index[i+h] if i+h<len(price) else None
+        output['excess'+str(h)]=number(output['d'+str(h)]-(benchmark.loc[target]/benchmark.loc[first]-1)*100) if target in benchmark.index and first in benchmark.index else None
+    if first in benchmark.index:
+        for j in range(i,min(len(price),i+21)):
+            date=price.index[j]
+            if date in benchmark.index:output['curve'].append(dict(x=j-i,y=number(((price.iloc[j]/price.iloc[i]-1)-(benchmark.loc[date]/benchmark.loc[first]-1))*100),name=str(date.date())))
+    return output
+
+def strategy_views(d,obj,events,quant):
+    buys=[];pead=[];calendar=[];cut=pd.Timestamp(d.as_of);bench=d.price('SPY')
+    for symbol,raw in events.items():
+        f=frame(raw.get('insider'));price=d.price(symbol)
+        if len(f):
+            for _,r in f.iterrows():
+                text=str(r.get('Text',''));date=pd.Timestamp(r.get('Start Date'))
+                if date.tzinfo is not None:date=date.tz_localize(None)
+                if pd.isna(date) or not cut-pd.Timedelta(days=90)<=date<=cut or not re.match(r'^Purchase\b',text,re.I):continue
+                value=number(r.get('Value'));shares=number(r.get('Shares'))
+                if value is None or value<=0 or shares is None or shares<=0:continue
+                buys.append([symbol,str(date.date()),str(r.get('Insider','')),str(r.get('Position','')),shares,value,raw['retrieved_at'][:10]])
+        f=frame(raw.get('earnings_dates'))
+        if not len(price) or not len(f):continue
+        for date,r in f.iterrows():
+            t=pd.Timestamp(date);actual=number(r.get('Reported EPS'));surprise=number(r.get('Surprise(%)'))
+            if t.tzinfo is None:continue
+            local=t.tz_convert('America/New_York')
+            if cut-pd.Timedelta(days=30)<=local.tz_localize(None)<=cut+pd.Timedelta(days=90):calendar.append([symbol,local.strftime('%Y-%m-%d %H:%M %Z'),number(r.get('EPS Estimate')),actual,surprise,'확정 실적' if actual is not None else '제공처 예정일'])
+            if actual is None or surprise is None or local.tz_localize(None)<cut-pd.Timedelta(days=180):continue
+            study=event_returns(price,bench,t)
+            if study:pead.append(dict(symbol=symbol,published_at=t.isoformat(),surprise=surprise,**study))
+    aggregate=[]
+    for symbol in sorted({r[0] for r in buys}):
+        r=[a for a in buys if a[0]==symbol];aggregate.append([symbol,len(set(a[2] for a in r)),len(r),sum(a[5] for a in r)/1e6,max(a[1] for a in r)])
+    aggregate.sort(key=lambda r:r[3],reverse=True)
+    obj['sections'] += [dict(table('90일 내부자 매수 클러스터',['종목','매수자 수','거래 수','금액 USD mn','최근 거래일'],aggregate),group='내부자 매수'),dict(table('매수 거래 원장',['종목','거래일','공시 내부자','직책','주식 수','USD 금액','수집일'],sorted(buys,key=lambda r:r[1],reverse=True)),group='내부자 매수')]
+    pead.sort(key=lambda r:r['published_at'],reverse=True)
+    obj['sections'].append(dict(table('발표 후 드리프트 · 최근 180일',['종목','발표 UTC','첫 반응 세션','서프라이즈 %','D0 반응 %','D+5 %','D+20 %','D+20 SPY 대비 %p','현재까지 %'],[[r['symbol'],r['published_at'],r['first_session'],r['surprise'],r['reaction'],r['d5'],r['d20'],r['excess20'],r['drift']] for r in pead]),group='PEAD'))
+    for r in [r for r in pead if r['surprise']>=5 and len(r['curve'])>1][:8]:obj['sections'].append(dict(type='scatter',title=r['symbol']+' · '+r['first_session']+' 이후 SPY 대비',group='PEAD',trajectory=True,x_label='D0 이후 거래 관측',y_label='누적 초과수익 %p',points=r['curve']))
+    obj['sections'] += [dict(s,group='스탯아브 페어') for s in quant['sections'] if s.get('group')=='Stat Arb']
+    obj['method_note']+=' 내부자 매수는 제공처 Text의 Purchase·양의 금액만 선별하며 주식보상·증여·매도는 제외합니다. SEC 원문 코드P를 직접 대조한 목록은 아닙니다. PEAD는 실제 발표 시각을 미국 동부시간으로 정렬해 첫 반응 세션(D0) 이후 5·20거래일 수익률과 SPY 대비를 계산합니다. 현재 관측 이벤트 연구이며 매매 백테스트가 아닙니다.'
+    obj['missing']=['내부자 거래의 SEC 원문 코드P·제출시점 교차검증과 전략별 거래비용 후 OOS는 남아 있습니다. 신규 수집 대상은 미국 60개 기업이며 전체 미국 시장을 의미하지 않습니다.']
+    return calendar
+
+def revision_views(d,obj,events):
+    rows=[];trends=[]
+    for s,raw in events.items():
+        f=frame(raw.get('eps_revisions'));t=frame(raw.get('eps_trend'))
+        for h in ['0y','+1y']:
+            if h in f.index:
+                a=f.loc[h];up=number(a.get('upLast30days'));down=number(a.get('downLast30days'))
+                rows.append([s,h,up,down,number(up-down) if up is not None and down is not None else None,raw['retrieved_at'][:10]])
+            if h in t.index:trends.append(dict(name=s+' '+h,group=h,values=[number(t.loc[h].get(k)) for k in ['90daysAgo','60daysAgo','30daysAgo','7daysAgo','current']]))
+    obj['sections'] += [dict(table('FY EPS 추정치 상향·하향',['종목','회계연도','30D 상향 수','30D 하향 수','순상향 수','수집일'],rows),group='추정치 변화'),dict(heat('EPS 추정 빈티지 · 원통화/주',['90일 전','60일 전','30일 전','7일 전','현재'],trends),group='추정치 변화')]
+
+REGIONS=[('미국',-98,39,r'\b(United States|U\.S\.|American|Federal Reserve|Trump)\b'),('유럽',15,50,r'\b(Europe|European|ECB|Germany|France|Ukraine|Russia)\b'),('중동',45,28,r'\b(Iran|Israel|Gaza|Hormuz|Middle East|Lebanon)\b'),('동아시아',123,34,r'\b(China|Taiwan|Korea|Japan|Chinese)\b'),('남아시아',78,22,r'\b(India|Pakistan|Bangladesh)\b')]
+KEYWORDS=['war','tariff','trade','inflation','rates','energy','oil','sanctions','conflict','debt','growth','China','Taiwan','Iran','Ukraine','Russia','Korea','peace','ceasefire']
+def news_views(d,obj):
+    path=d.resource('news.json.gz');raw=read(path) if path.exists() else dict(items=[],sources=[],retrieved_at=None)
+    now=pd.Timestamp(raw['retrieved_at']) if raw['retrieved_at'] else pd.Timestamp(d.as_of,tz='UTC')
+    items=[r for r in raw['items'] if now-pd.Timedelta(days=30)<=pd.Timestamp(r['published_at'])<=now]
+    classified=[]
+    for r in items:
+        terms=[k for k in KEYWORDS if re.search(r'\b'+k+r'\b',r['title'],re.I)];regions=[n for n,_,_,pat in REGIONS if re.search(pat,r['title'],re.I)]
+        classified.append(dict(r,keywords=terms,regions=regions,kind='공식 발표' if r['source'] not in ['BBC World','DW'] else '보도 헤드라인',date=r['published_at'][:10],core=r['title'],evidence=' · '.join(regions+terms) or '분류어 미검출'))
+    counts=Counter(k for r in classified for k in r['keywords']);countries=[]
+    for n,lon,lat,_ in REGIONS:
+        chosen=[r for r in classified if n in r['regions']]
+        if chosen:countries.append(dict(name=n,lon=lon,lat=lat,count=len(chosen),companies=[dict(name=r['title'],symbol=r['source'],sector='뉴스',ytd=None,margin=None) for r in chosen],news=[dict(title=r['title'],url=r['url'],date=r['date']) for r in chosen]))
+    for s in obj['sections']:s['group']='시장 지표'
+    obj['sections'] += [dict(type='library',title='최근 주목 상황',group='주목 상황',items=classified[:12]),dict(type='globe',title='기사 언급 지역 · 실제 위성 관측 아님',group='지역 모니터',countries=countries),dict(type='wordcloud',title='30일 헤드라인 키워드 · 기사별 1회 집계',group='키워드 트렌드',words=[dict(term=k,count=v) for k,v in counts.most_common()]),dict(bars('언급 빈도',counts.most_common(),'기사'),group='키워드 트렌드'),dict(type='library',title='뉴스 원장 · 발행일/출처/원문',group='뉴스 원장',items=classified),dict(table('RSS 수집 상태',['제공처','상태','수집 항목 수'],[[a['name'],a['status'],a.get('items',0)] for a in raw['sources']]),group='뉴스 원장')]
+    frame_=pd.concat(dict(epu=d.mac('USEPUINDXD'),vix=d.price('^VIX',False),credit=d.mac('BAMLH0A0HYM2')),axis=1).dropna()
+    z=pd.DataFrame({k:zscore(frame_[k],252) for k in frame_});mix=z.mean(axis=1,skipna=False)
+    obj['sections'].append(dict(curve('정책·시장 스트레스 · 동일가중 z',[('EPU/VIX/HY 평균 z',mix.tail(252),'left')],'z',guides=[-1,0,1,2]),group='복합지표'))
+    obj['method_note']+=' 뉴스는 RSS의 제목·발행일·원문 링크만 수집합니다. 지역·키워드는 제목의 명시적 단어 일치이며 국가 위험도나 감성/인과 판정이 아닙니다. 복합지표는 EPU·VIX·HY OAS의252일 z 동일가중 평균입니다.'
+    obj['missing']=['원본의 LLM 감성·인과 전파·위성 시설 관측은 연결되지 않았습니다. RSS 수집 범위와 실패 제공처를 표시합니다.']
+    obj['news_as_of']=raw['retrieved_at'];return classified
+
+def regime_views(d,obj,calendar):
+    for s in obj['sections']:
+        t=s['title'];s['group']='월별 국면' if '월별' in t else '국면 전이' if '국면 전이' in t else '미국 경제국면' if t.startswith('US') else '한국 시장국면' if t.startswith('KR') else '시장국면'
+    for market in ['US','KR']:
+        reg=regime_frame(d,market);labels=reg.regime.copy();labels.index=labels.index+pd.offsets.MonthEnd(0)
+        rows=[]
+        for symbol in ['SPY','QQQ','IWM','TLT','IEF','GLD','HYG','EEM']:
+            r=d.monthly(symbol).pct_change(fill_method=None)*100;f=pd.concat(dict(ret=r,regime=labels.reindex(r.index).shift(2)),axis=1).dropna()
+            for label,g in f.groupby('regime'):rows.append([market,label,symbol,len(g),number(g.ret.mean()),number((g.ret>0).mean()*100)])
+        obj['sections'].append(dict(table(market+' 국면별 다음 월 자산 성과 · 정보시차2개월',['국면 기준','국면','자산','월 수','평균 월수익 %','상승 월 %'],rows),group='국면별 성과'))
+    vals=[]
+    for symbol,raw in d.fund.items():
+        info=raw['info'];pe=number(info.get('trailingPE'));forward=number(info.get('forwardPE'))
+        if pe is not None and pe>0:vals.append([symbol,info.get('sector'),pe,forward,number(100/forward) if forward and forward>0 else None,raw['retrieved_at'][:10]])
+    obj['sections'] += [dict(table('종목별 밸류에이션 · 지수 P/E와 구분',['종목','섹터','TTM P/E','Forward P/E','Forward 이익수익률 %','수집일'],vals),group='밸류에이션'),dict(table('실적 발표 달력 · 시각은 미국 동부시간',['종목','발표/예정 시각','EPS 추정','발표 EPS','서프라이즈 %','상태'],sorted(calendar,key=lambda r:r[1])),group='실적 이벤트')]
+    obj['method_note']+=' 국면별 성과는 거시 관측월에2개월 시차를 적용한 월 수익률 조건부 평균입니다. 최신 수정 빈티지여서 실시간 PIT 성과로 해석하지 않습니다.'
+    obj['missing']=['지수 전체의 역사 이익·밸류에이션 3단 게이지, 원본 Soros 합성 엔진·거시 발표 달력은 남아 있습니다. 종목 P/E를 지수 P/E로 표시하지 않습니다.']
+
+def cot_views(d,obj):
+    path=d.resource('cot.json.gz')
+    if not path.exists():return
+    raw=read(path);f=pd.DataFrame(raw['rows']);f['date']=pd.to_datetime(f.report_date_as_yyyy_mm_dd);rows=[]
+    for name,g in f.groupby('contract_market_name'):
+        g=g.sort_values('date').set_index('date');num=lambda k:pd.to_numeric(g[k],errors='coerce');oi=num('open_interest_all')
+        lev=num('lev_money_positions_long')-num('lev_money_positions_short');asset=num('asset_mgr_positions_long')-num('asset_mgr_positions_short')
+        obj['sections'].append(dict(curve(name+' · CFTC 보고 순포지션',[('Leveraged funds',lev,'left'),('Asset managers',asset,'left')],'계약 수',guides=[0]),group='CFTC 포지션'))
+        rows.append([name,str(g.index[-1].date()),number(lev.iloc[-1]),number(asset.iloc[-1]),number(oi.iloc[-1]),number(lev.iloc[-1]/oi.iloc[-1]*100)])
+    obj['sections'].append(dict(table('CFTC TFF · Futures Only',['계약','포지션 기준일','레버리지펀드 순계약','자산운용 순계약','전체 OI','레버리지펀드 순/OI %'],rows),group='CFTC 포지션'))
+    obj['method_note']+=' CFTC TFF는 선물만의 주간 보고값이며 레버리지펀드는 CTA 전체와 같지 않습니다. 계약별 단위가 달라 계약 수를 자산 간 달러 익스포저처럼 합하지 않습니다.'
+
+def dragon_views(d,obj,ranks,news):
+    for s in obj['sections']:
+        if s['type']=='journal':s['group']='결정 원장'
+    leaders=[dict(a,market=m) for m in ['KR','US'] for a in ranks[m]['leaders']];scenarios=[];alerts=[]
+    for a in leaders:
+        p=d.price(a['symbol']);b=d.price('^KS11' if a['market']=='KR' else 'SPY');r=pd.concat(dict(stock=p.pct_change(),benchmark=b.pct_change()),axis=1).dropna().tail(252)
+        if len(r)>=200 and r.benchmark.var()>0:scenarios.append(dict(symbol=a['symbol'],name=a['name'],market=a['market'],beta=number(r.stock.cov(r.benchmark)/r.benchmark.var()),r2=number(r.stock.corr(r.benchmark)**2),observations=len(r)))
+        previous=rsi(p).iloc[-2];signal='RSI70 상향돌파' if previous<70<=a['rsi'] else 'RSI30 하향돌파' if previous>30>=a['rsi'] else '52주 고점 1% 이내' if a['high52']>=-1 else None
+        if signal:alerts.append([a['name'],a['symbol'],signal,a['rs'],a['rsi'],a['as_of']])
+    sources=[[k,m.get('name',k),m.get('source','FRED'),str(d.mac(k).index[-1].date()),m.get('unit'),m.get('retrieved_at','')[:10]] for k,m in d.macro_meta.items() if len(d.mac(k))]
+    obj['sections'] += [dict(table('주목 종목 · 시장별 RS 상위15',['종목','시장','업종','RS','1W %','1M %','52주 고점 대비 %'],[[a['name'],a['market'],a['sector'],a['rs'],a['r1w'],a['r1m'],a['high52']] for a in leaders]),group='지금 주목'),dict(type='scenario',title='시장 충격 민감도 · 역사 Beta 선형 추정',group='시나리오',rows=scenarios),dict(table('가격 트리거 · 현재 관측 조건',['종목','코드','조건','RS','RSI','가격일'],alerts),group='트리거·촉매'),dict(type='library',title='팀 방법론·최근 원문 링크',group='리서치',items=LIBRARY+news[:12]),dict(table('거시 데이터 원장',['계열','지표','제공처','관측일','단위','수집일'],sources),group='데이터 소스'),dict(table('가격 수집·보정 현황',['항목','값'],[['가격 시계열',len(d.frames)],['거시 시계열',len(d.macro)],['재무 캐시',len(d.fund)],['KRX 보정 관측',d.correction_meta['corrected']],['KRX 격리 관측',d.correction_meta['quarantined']]]),group='현황판'),dict(type='text',title='관계와 충격 추정의 정의',group='방법론',text='관계 지도는 공식 시장/업종 소속이다. 시나리오는 최근252개 공통 일 수익률 Beta×사용자가 가정한 시장 충격으로 계산하며 인과 전파나 확정 손익이 아니다. 가격 트리거는 관측 조건이고 외부 알림·자동 주문을 발생시키지 않는다.')]
+    obj['method_note']+=' 지금 주목·트리거·데이터 소스·현황판·방법론과 Beta 기반 선형 시나리오를 연결했습니다.'
+    obj['missing']=['위성 현장은 시설별 좌표·실관측 시계열이 없어 남아 있습니다. 시나리오는 원본의 공급망 인과 전파 엔진과 다릅니다. 결정 원장은 브라우저 로컬 저장입니다.']
+
+def extend(d,objects,ranks):
+    events=event_data(d);calendar=strategy_views(d,objects['strategies'],events,objects['quant'])
+    revision_views(d,objects['earnings'],events);news=news_views(d,objects['geoecon']);regime_views(d,objects['regime'],calendar)
+    dragon_views(d,objects['dragonglass'],ranks,news)
+    for s in objects['pm_weekend']['sections']:s['group']='매크로 브리프'
+    cot_views(d,objects['pm_weekend']);cot_views(d,objects['risk'])
+    for s in objects['risk']['sections']:
+        if s.get('group'):continue
+        t=s['title'];s['group']='파생·옵션' if any(k in t for k in ['GEX','감마','옵션','VIX','SKEW']) else '신호등 US·KR' if any(k in t for k in ['조기경보','변동성 · 시장']) else '쏠림·신용' if any(k in t for k in ['쏠림','신용']) else '리스크 콕핏'
+    for i,s in enumerate(objects['multiasset']['sections']):s['group']='자산 모니터' if i<2 else '패턴 스캐너' if i==2 else '자산배분'
+    objects['ask_digest']['sections'].insert(0,dict(type='library',title='최근 발표·보도 원문',group='최근 뉴스',items=news[:30]))
+    return objects

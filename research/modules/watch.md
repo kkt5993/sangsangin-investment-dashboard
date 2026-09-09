@@ -1,9 +1,9 @@
 # 워칭 차트 · 패턴 스캐너 (📈상승·📉하락)
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 5기하 패턴 후보·피벗 연결/저항선·120일/52주·MA20/50/200.
+**부분 구현** · 가격 기준 2026-09-08. KR · 상승 패턴 / KR · 약세 추세 / US · 상승 패턴 / US · 약세 추세.
 
 - 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [patterns.py](../../pipeline/patterns.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/watch.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 한국·미국 상승/하락 차트패턴 후보를 그림과 근거 문장으로 보여준다.

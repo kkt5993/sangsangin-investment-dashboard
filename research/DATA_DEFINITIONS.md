@@ -75,3 +75,15 @@ Stat Arb 반감기는 Δspread=a+b×spread(-1) 회귀의 φ=1+b에 대해 −ln(
 적합도는 W·역헤드앤숄더의 저점/어깨 차이, 삼각형의 고점 폭, 컵의 가장자리 차이, 깃발의 조정 폭에 대한 명시적 감점이다. 종가≥저항이면 돌파로 표시한다. 원본의 적합도100이나 내부 합성 약세 점수를 복제하지 않는다. 상승6·하락4를 KR/US 각각 표시하며 해당 후보가 없으면 빈 수를 가공해 채우지 않는다.
 
 멀티에셋의 월간 리밸런싱은 첫 거래일에 직전 종가로 계산한 비중을 사용한다. 월중 비중은 자산 수익률에 따라 변하며 매일 목표 비중으로 되돌리지 않는다. 최초 편입을 포함한 실제 비중 변화에 편도5bp를 부과한다. MDD는 최초 투자금1도 과거 고점에 포함한다.
+
+## 세부 화면의 추가 자료
+
+- [yfinance Ticker API](https://ranaroussi.github.io/yfinance/reference/api/yfinance.Ticker.html)의 earnings_dates는 발표 시각, insider_transactions는 제공처 거래 목록, eps_revisions/eps_trend는 추정 변화다. 확보된 미국 재무 기업 중 시총상위60개를 수집한다. 회계연도0y/+1y를 달력 연도라고 표시하지 않는다.
+- PEAD의 D0는 발표 뒤 첫 정규장 종가다. 미국 동부16시 이후 발표는 다음 거래 관측으로 넘긴다. 발표 반응(전일종가→D0)과 드리프트(D0→D+5/20)를 분리하고 만기가 오지 않은 결과는 비운다. SPY와 같은 날짜에서 초과수익을 계산한다. 발표 시각이 없는 기록은 사용하지 않는다.
+- 내부자 매수는90일간 제공처의 Purchase 설명과 양의 거래금액·주식 수가 있는 기록이다. 실제 매수자 수/거래 수/USD금액으로 묶는다. SEC 코드P와 제출 시점을 직접 검증한 전체 시장 원장이 아니다.
+- [연준 RSS 안내](https://www.federalreserve.gov/feeds/feeds.htm)와 각 기관/언론의 공개RSS에서 제목·발행시각·링크만 보존한다. 기사 본문을 재게시하지 않는다. 지역·키워드는 정규식 단어 일치이며 기사별1회, 최근30일 집계다. 기사 수는 국가 위험도가 아니다. 시장 복합지표는 EPU/VIX/HY OAS의252관측 z 동일가중이다.
+- [CFTC 설명](https://www.cftc.gov/MarketReports/CommitmentsofTraders/ExplanatoryNotes/index.htm), [공개 보고시스템 안내](https://publicreporting.cftc.gov/stories/s/User-s-Guide/p2fg-u73y/), [TFF Futures Only 자료](https://publicreporting.cftc.gov/resource/gpe5-46if.json)를 사용한다. 코드13874A(S&P500 E-mini),209742(Nasdaq mini),043602(미국채10년),042601(미국채2년)의 최근2년 자료다. 레버리지펀드/자산운용의 long−short와 순/OI를 표시한다. 포지션 기준일과 수집일을 보존하고, 공개 시차를 위해 계산 기준일−3일 이후 보고는 제외한다. 레버리지펀드는 CTA 전체가 아니며 계약 수를 상품 간 달러로 합산하지 않는다.
+- 국면별 성과는 수정 거시의 월 라벨에2개월 정보시차를 주고 해당 월의 자산 수익률을 집계한다. 조건부 평균·월 수·상승 월 비율이지 투자전략의 실시간 수익률이 아니다. 밸류에이션은 개별 종목의 TTM/Forward P/E이며 지수P/E로 대체하지 않는다.
+- 시나리오는 최근252개 공통 거래일의 종목 수익률과 KOSPI/ SPY 수익률로 산출한 Beta×사용자 충격이다. R²와 관측 수를 함께 표시한다. 선형 민감도 실험이며 인과 전파모델·실제 포트폴리오 손익이 아니다.
+
+정기 수집의 주기, 가격 완료 시점, 변경분 저장과 검증 기준은 [갱신 운영](UPDATE_PIPELINE.md)을 따른다.

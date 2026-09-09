@@ -84,42 +84,15 @@ def module(key,as_of,note,sections,cards=None,status='partial',missing=None):
         method_note=note,missing=missing or [],cards=cards or [],sections=sections)
 
 class Data:
-    def __init__(self,as_of):
-        self.as_of=as_of;self.base=DATA/'expanded'/as_of;self.frames={};self.macro={};self.quality={};self.members={};self.fund={}
-        for folder in [DATA/as_of,self.base/'stocks',self.base/'prices']:
-            mf=folder/'manifest.json'
-            if not mf.exists():continue
-            for s,m in read_json(mf)['instruments'].items():
-                if m.get('status')!='ok':continue
-                file=folder/m['file']
-                if file.parent.resolve()!=folder.resolve() or digest(file)!=m['sha256']:raise ValueError('Cache checksum: '+s)
-                f=pd.read_csv(file,index_col='date',parse_dates=['date']).loc[:as_of]
-                if len(f) and (pd.Timestamp(as_of)-f.index[-1]).days<=7:self.frames[s]=f;self.quality[s]=m
-        for key in ['kr_largecap','kospi200','us_largecap','kr_screen','kr_sectors']:
-            path=self.base/(key+'.json')
-            if path.exists():self.members[key]=read_json(path)
-        import gzip
-        correction_file=self.base/'price_corrections.json.gz';self.corrections=[];self.correction_meta={}
-        if correction_file.exists():
-            self.corrections=json.loads(gzip.decompress(correction_file.read_bytes()))['records']
-            self.correction_meta=dict(source='KRX official OHLC reconciliation',sha256=digest(correction_file),corrected=sum(r['status']=='corrected' for r in self.corrections),quarantined=sum(r['status']=='quarantined' for r in self.corrections))
-            for correction in self.corrections:
-                s=correction['symbol'];t=pd.Timestamp(correction['date'])
-                if s not in self.frames or t not in self.frames[s].index:continue
-                if correction['status']=='corrected':
-                    for key,value in correction['values'].items():self.frames[s].loc[t,key]=value
-                else:self.frames[s]=self.frames[s].drop(index=t)
-        mf=self.base/'macro/manifest.json'
-        if mf.exists():
-            for s,m in read_json(mf)['instruments'].items():
-                if m.get('status')!='ok':continue
-                file=mf.parent/(s+'.csv')
-                if digest(file)!=m['sha256']:raise ValueError('Macro checksum: '+s)
-                f=pd.read_csv(file,index_col=0,parse_dates=True);self.macro[s]=pd.to_numeric(f[s],errors='coerce').dropna().loc['2004-01-01':as_of]
-        import gzip
-        for path in list((self.base/'fundamentals').glob('*.json'))+list((self.base/'fundamentals').glob('*.json.gz')):
-            f=json.loads(gzip.decompress(path.read_bytes())) if path.suffix=='.gz' else read_json(path)
-            if f.get('status')=='ok':self.fund[f['symbol']]=f
+    def __init__(self,as_of,vintage=None):
+        import os
+        from .cache import load_into
+        self.as_of=as_of;self.frames={};self.macro={};self.quality={};self.members={};self.fund={}
+        load_into(self,DATA,vintage or os.environ.get('SANGSANGIN_VINTAGE') or as_of)
+    def resource(self,name):
+        return next((base/name for base in reversed(self.bases) if (base/name).exists()),self.base/name)
+    def directory(self,name):
+        return self.resource(name)
     def price(self,s,adjusted=True):
         f=self.frames.get(s)
         if f is None:return pd.Series(dtype=float)

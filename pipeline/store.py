@@ -40,3 +40,7 @@ def load_prices(vintage, as_of):
         field = 'adjusted_close' if symbol.endswith('.KS') else 'close'
         prices[symbol] = d[field].loc[:as_of]
     return prices, manifest
+
+
+def data_base(as_of):
+    return DATA / "expanded" / os.environ.get("SANGSANGIN_VINTAGE", as_of)

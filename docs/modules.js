@@ -22,7 +22,7 @@ const MODULES = [
     "build": [
       "glance.js의 PILLARS·CROSS·STACK·SCREENS·APIS·SCHED_CHIPS를 설명 콘텐츠로 옮긴다.",
       "SVG로 4단 투자 프로세스와 수집→Python builder→GitHub→Cloudflare Pages 운영 흐름을 그린다.",
-      "운영 일정은 원문의 macmini launchd 기준이다. Windows에서는 같은 의존성을 가진 작업 스케줄러나 수동 CLI로 구현할 수 있다. 이번 작업에서 스케줄은 등록하지 않았다.",
+      "팀 운영은 한국시간 평일08시·18시 PC 수집→검증→Pages 게시다. pipeline.refresh 명령과512MiB 변경분 캐시를 사용한다. PC와 Codex 앱이 실행 중이어야 한다.",
       "실제 메뉴는 app.js와 index.json에서 생성되므로 SCREENS를 그대로 메뉴 명세로 삼지 말고 실제 메뉴와 대조한다."
     ],
     "checks": [
@@ -124,24 +124,6 @@ const MODULES = [
     "gap": "요약 생성 프롬프트·서버 코드는 없다. 원문 PDF·숨김 PDF·방문자 기록은 수집하지 않았다.",
     "id": "principium",
     "title": "PRINCIPIUM",
-    "group": "special"
-  },
-  {
-    "purpose": "소유자 전용 진단·KSI·포트폴리오·운영 관리 화면. 공개 JavaScript에서 10개 세부 메뉴의 렌더링과 요청 계약을 확인할 수 있다.",
-    "build": [
-      "비밀번호 게이트→인증된 POST /rosenbach 응답→sub별 화면 생성 흐름을 재현한다. 학습 사본은 게이트까지 표시한다.",
-      "Druckenmiller List·투자위원회·KSI·주식/채권·위기인식·주도주 물리학·Fine Wine·Ontology·방문자·갱신 주기를 별도 컴포넌트로 나눈다.",
-      "일부 서브뷰는 정적 JSON 경로를 참조하지만 소유자 전용 메뉴 안에 있어 추가 수집하지 않았다. 공개 Summary에서도 사용되는 ontology.json은 확보했다.",
-      "Windows용 운영 일정 표시는 나중에 우리 작업 설정에서 자동 생성한다. 원본 launchd plist는 공개되어 있지 않다."
-    ],
-    "checks": [
-      "인증 실패 시 데이터·방문자 정보가 전달되지 않는지 검증",
-      "서브뷰별 데이터 유무·기준일 표시",
-      "재생성 요청과 조회를 분리"
-    ],
-    "gap": "접근 권한이 없어 내부 데이터·실제 화면·KSI 산식 전체는 확인하지 못했다. 로그인 또는 인증 우회는 수행하지 않았다.",
-    "id": "rosenbach",
-    "title": "ROSENBACH",
     "group": "special"
   },
   {

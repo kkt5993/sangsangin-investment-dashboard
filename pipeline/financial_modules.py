@@ -44,10 +44,10 @@ def last(s):return number(s.iloc[-1]) if len(s) else None
 
 def local_growth(d):
     import gzip,json
-    path=d.base/'local_consensus.json.gz'
+    path=d.resource('local_consensus.json.gz')
     if path.exists():raw=json.loads(gzip.decompress(path.read_bytes()))
     else:
-        path=d.base/'local_consensus.json'
+        path=d.resource('local_consensus.json')
         if not path.exists():return [],None
         raw=read_json(path)
     f=pd.DataFrame(raw['rows']);members={m['symbol']:m for k in ['kr_largecap','kospi200'] for m in d.members.get(k,{}).get('members',[])};result=[]

@@ -1,9 +1,9 @@
 # MAXIMUS
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 3지수·13종목·2거시, 전문가 가중치와 예측·확률·기여 차트.
+**부분 구현** · 가격 기준 2026-09-08. 지수 · S&P500 / 지수 · KOSPI / 지수 · NASDAQ / 종목 · NVIDIA / 종목 · Microsoft / 종목 · Apple / 종목 · Alphabet / 종목 · Amazon / 종목 · Meta / 종목 · Broadcom / 종목 · Tesla / 종목 · Netflix / 종목 · 삼성전자 / 종목 · SK하이닉스 / 종목 · 삼성바이오로직스 / 종목 · 현대차 / 매크로 · 미국 10Y 금리 변화 / 매크로 · CPI MoM.
 
 - 계산 코드: [maximus_model.py](../../pipeline/maximus_model.py) · [ml_models.py](../../pipeline/ml_models.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/maximus.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 지수·매크로·입력 종목의 1개월 예측을 수행하는 MoE 콘솔. 공개 캐시 결과와 실계산 서버가 분리되어 있다.

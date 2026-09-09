@@ -1,9 +1,9 @@
 # Quant Hedge (Multi Quant)
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 페어 z 0/±2·상관/Hurst/공적분/반감기·요인/비중·후보.
+**부분 구현** · 가격 기준 2026-09-08. Stat Arb / 멀티팩터 / BAB / 단기반전 / TSMOM.
 
 - 계산 코드: [quant_modules.py](../../pipeline/quant_modules.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/quant.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 StatArb·멀티팩터·BAB·TSMOM·단기 리버설 5개 퀀트 전략 후보를 제공한다.

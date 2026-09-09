@@ -1,9 +1,9 @@
 # 글로벌 성장주 모니터링
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표.
+**부분 구현** · 가격 기준 2026-09-08. FY1 / FY2 / 종합.
 
 - 계산 코드: [financial_modules.py](../../pipeline/financial_modules.py) · [local_consensus.py](../../pipeline/local_consensus.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/growth.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 여러 국가의 성장주를 FY1/FY2 영업이익 성장·YTD·영업이익률과 시가총액으로 비교한다.

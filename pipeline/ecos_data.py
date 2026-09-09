@@ -1,4 +1,5 @@
 """Read a small public ECOS series set; keep an optional existing API key local."""
+from .store import data_base
 import argparse,time
 import pandas as pd
 import requests
@@ -12,7 +13,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--key-file');p.add_argument('--as-of',default='2026-09-08');a=p.parse_args()
     from pathlib import Path
     key=read_json(Path(a.key_file)).get('ecos','sample') if a.key_file else 'sample'
-    base=DATA/'expanded'/a.as_of/'macro';base.mkdir(parents=True,exist_ok=True);mf=base/'manifest.json';m=read_json(mf) if mf.exists() else dict(as_of=a.as_of,instruments={})
+    base=data_base(a.as_of)/'macro';base.mkdir(parents=True,exist_ok=True);mf=base/'manifest.json';m=read_json(mf) if mf.exists() else dict(as_of=a.as_of,instruments={})
     for symbol,stat,freq,item,name in SERIES:
         file=base/(symbol+'.csv')
         if file.exists():continue

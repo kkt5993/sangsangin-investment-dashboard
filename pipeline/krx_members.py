@@ -1,4 +1,5 @@
 """Explicitly authorized authenticated read of public KRX classifications only."""
+from .store import data_base
 import argparse,contextlib,io,time
 from .store import DATA,write_json
 from .acquire import stamp,budget
@@ -6,7 +7,7 @@ from .acquire import stamp,budget
 def main():
     p=argparse.ArgumentParser();p.add_argument('--allow-krx-auth',action='store_true');p.add_argument('--as-of',default='2026-09-08');a=p.parse_args()
     if not a.allow_krx_auth:p.error('User authorization for existing KRX authentication is required.')
-    base=DATA/'expanded'/a.as_of;base.mkdir(parents=True,exist_ok=True)
+    base=data_base(a.as_of);base.mkdir(parents=True,exist_ok=True)
     import requests
     original=requests.sessions.Session.request
     def bounded(self,method,url,**kwargs):

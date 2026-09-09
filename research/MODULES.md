@@ -7,7 +7,6 @@
 - [ARAGORN MAP](modules/aragorn.md) — 주간 시장의 개념 지식그래프를 3D로 보고 하단에서 자산군 연간 수익률 퀼트를 비교한다.
 - [GLOBAL UNIVERSE](modules/globe.md) — 섹터별 기업과 밸류체인, 국가별 수출·물류 흐름을 지구본으로 탐색한다.
 - [PRINCIPIUM](modules/principium.md) — 논문(article)·기관보고서(report)·프라이머(primer)의 공개 요약 아카이브. 관리자 쓰기 기능은 인증이 필요하다.
-- [ROSENBACH](modules/rosenbach.md) — 소유자 전용 진단·KSI·포트폴리오·운영 관리 화면. 공개 JavaScript에서 10개 세부 메뉴의 렌더링과 요청 계약을 확인할 수 있다.
 - [경제·시장 국면 (미국·한국)](modules/regime.md) — 미국·한국 경제 및 시장 국면, 월별 이력, 산업별 지표와 소로스 재귀성 엔진을 함께 보는 모듈.
 - [주간 상대강도 (RS)](modules/rs.md) — 국내·미국 페어의 3개월 수익률 차이를 공통 5년 분포에서 z-score로 비교한다.
 - [모멘텀 (섹터·절대·초과수익)](modules/momentum.md) — 국가·섹터·팩터의 절대 수익률과 벤치마크 초과수익으로 로테이션을 확인한다.

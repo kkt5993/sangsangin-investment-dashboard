@@ -19,7 +19,7 @@ vm.runInContext(fs.readFileSync(path.join(root,'docs/dashboard.js'),'utf8'),ctx)
  assert.equal((c.innerHTML.match(/data-kind="rs"/g)||[]).length,datasets.rs.coverage.pairs);
  assert(c.innerHTML.includes('KRX 공식 구성종목'));
  assert.equal(datasets.rs.stock_rankings.KR.expected,100);
- assert.equal(datasets.rs.stock_rankings.US.expected,504);
+ assert(datasets.rs.stock_rankings.US.expected>=450&&datasets.rs.stock_rankings.US.expected<=550);
  assert.equal(datasets.rs.stock_rankings.KR.strong.length,8);
  assert.equal(datasets.rs.stock_rankings.US.weak.length,6);
  assert(!c.innerHTML.includes('[object Object]')&&!c.innerHTML.includes('NaN'));

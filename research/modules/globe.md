@@ -1,9 +1,9 @@
 # GLOBAL UNIVERSE
 
 <!-- implementation:start -->
-## 현재 팀 구현 · 2026-09-09
+## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 로컬 지도 경계·정사영 회전·국가/기업 선택·수치표.
+**부분 구현** · 가격 기준 2026-09-08. 종합.
 
 - 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/globe.json)
@@ -16,6 +16,7 @@
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
 
 
 섹터별 기업과 밸류체인, 국가별 수출·물류 흐름을 지구본으로 탐색한다.

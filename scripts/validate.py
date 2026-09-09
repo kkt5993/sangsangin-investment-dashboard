@@ -17,8 +17,8 @@ class Links(HTMLParser):
 Links().feed((ROOT/'docs/index.html').read_text(encoding='utf-8'))
 payload=(ROOT/'docs/modules.js').read_text(encoding='utf-8')
 mods=json.loads(payload.removeprefix('const MODULES = ').rstrip().removesuffix(';'))
-assert len(mods)==26
-assert len({m['id'] for m in mods})==26
+assert len(mods)==25
+assert len({m['id'] for m in mods})==25
 for m in mods:
     assert m['purpose'] and m['build'] and m['checks'] and m['gap']
     assert (ROOT/'research/modules'/f"{m['id']}.md").is_file()
@@ -73,4 +73,4 @@ for d in [rs,momentum]:
     assert all(re.fullmatch('[a-f0-9]{64}',q['sha256']) for q in d['quality'] if q['status']=='ok')
 assert sum(p.stat().st_size for p in data_dir.iterdir() if p.is_file()) < 5*1024*1024,'Public snapshot budget exceeded'
 if errors:raise SystemExit('\n'.join(errors))
-print('PASS: 26 guides, links, public content, strict JSON, coverage, date alignment, curve anchors, hashes and size; offline.')
+print('PASS: 25 guides, links, public content, strict JSON, coverage, date alignment, curve anchors, hashes and size; offline.')

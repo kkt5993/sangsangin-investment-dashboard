@@ -60,6 +60,8 @@ python -m pipeline.build_all --as-of 2026-09-08
 
 ## 검증
 
+브라우저 저장 트랜잭션 검사에는 `package.json`의 개발 의존성 `fake-indexeddb`가 필요합니다. 일반 환경은 `npm install`로 준비합니다. 이 PC의 정기 실행은 저장소 밖 테스트 도구 디렉터리의 같은 버전을 사용합니다. 웹 화면에는 이 테스트 라이브러리를 배포하지 않습니다.
+
 ```powershell
 python -m unittest discover -s tests
 python scripts/validate.py
@@ -70,6 +72,8 @@ node scripts/test_extended.cjs
 ```
 
 날짜, 학습 타깃 만기, OHLC, 행렬·그래프 무결성과 SVG 구조를 검사합니다. 대표 SVG는 브라우저 없이 래스터화해 확인합니다. 전체 브라우저 동작·픽셀 동일성 검사를 완료했다는 의미는 아닙니다.
+
+PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하며 백업 JSON으로 이동합니다. 저장 범위·이전 메모 가져오기·한도는 [로컬 리서치 가이드](research/LOCAL_RESEARCH.md)를 참조하세요.
 
 ## 학습 출처
 

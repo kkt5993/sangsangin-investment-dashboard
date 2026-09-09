@@ -15,14 +15,14 @@ LIBRARY=[dict(kind='primer',title='공식 유니버스로 상대강도를 비교
  core='과거 손익분포에서 계산한 VaR는 정해진 기간과 포트폴리오 비중을 전제로 한다. 국면 진단 점수를 폭락 확률이라고 해석할 수 없으며, 시나리오의 가정된 충격은 예측과 구분해야 한다.',evidence='포트폴리오 비중, 월간 관측 수, 신뢰수준을 콕핏에 표시한다.')]
 
 def libraries(d):
-    lib=module('principium',d.as_of,'논문·리포트·프라이머 분류, 제목·키워드 검색과 팀 메모를 구현했습니다. 초기 콘텐츠는 이번 구현 과정에서 작성한 팀 노트입니다. 원본의 외부 기관 보고서 본문·요약을 재게시하지 않습니다.',
-        [dict(type='library',title=kind,group=kind,items=[a for a in LIBRARY if a['kind']==kind]) for kind in ['primer','article','report']]+[dict(type='journal',title='검토 기록')],missing=['관리자 인증·PDF 업로드·팀 공용 저장 서버는 GitHub Pages에서 제공되지 않습니다.'])
+    lib=module('principium',d.as_of,'논문·리포트·프라이머를 제목/메타·핵심·아이디어·근거·시사점의5단으로 열람하고 등록·수정합니다. 제목 노드의 공유 키워드 관계와 빈도 구체를 문서에서 계산합니다. 초기 공개 콘텐츠는 팀 구현 노트이며 새 글·첨부는 이 브라우저의 로컬 자료입니다.',
+        [dict(type='notebook',title='리서치 아카이브',group='리서치 아카이브',mode='principium',items=LIBRARY)],missing=['원본 기관 보고서·개인 아카이브는 복제하지 않습니다. 현재 첨부는 PDF/래스터 이미지 보관·다운로드이며 자동 추출·LLM 요약은 미연결입니다.','이 브라우저의 IndexedDB에 저장합니다. 팀 공용 DB·서버 인증/공개 배포·서버 조회 통계는 추가 구현 대상입니다.'])
     digest=[]
     for s,n in [('SPY','S&P500 ETF'),('^KS11','KOSPI'),('TLT','미국 장기국채 ETF'),('GLD','금 ETF')]:
         a=d.stats(s)
         if a:digest.append(dict(kind='market',title=n+' 시장 메모',source='로컬 가격 계산',date=d.as_of,keywords=['시장','모멘텀'],core=f"1M {a['r1m']:.2f}%, 3M {a['r3m']:.2f}%, YTD {a['ytd']:.2f}%. RSI14 {a['rsi']:.1f}.",evidence=f"가격 관측일 {a['as_of']} · {s} · 배당 조정종가"))
-    ask=module('ask_digest',d.as_of,'카드 검색·유형 필터·근거 표시·개인 기록을 연결했습니다. 초기 다이제스트는 팀이 수집한 수치로 만든 시장 메모입니다.',[dict(type='library',title='시장 다이제스트',group='시장',items=digest),dict(type='library',title='방법론',group='방법론',items=LIBRARY),dict(type='journal',title='추가 질문')],missing=['원본의 ASK 토론·외부 리서치 요약 아카이브와 연동되는 수집 서버는 별도 데이터 원장이 필요합니다.'])
-    iw=module('iw',d.as_of,'관측 수치와 사람의 해석을 분리하는 기록 화면입니다. 기본 시장 요약은 계산 결과이며 판단 기록은 이 브라우저에만 저장·수정·삭제됩니다. JSON 가져오기/내보내기로 이동할 수 있습니다.',[dict(type='library',title='이번 주 관측',items=digest),dict(type='journal',title='판단 원장')],missing=['원본 작성자의 주간 논평·과거 개인 기록은 제공되지 않습니다. 팀 동시 편집은 별도 서버가 필요합니다.'])
+    ask=module('ask_digest',d.as_of,'시장 수치·근거 원문과 질문/답변 메모를 구분합니다. 질문·내 해석·참조 근거·추가 확인을 기록하고 PDF·이미지를 첨부할 수 있습니다. 기록은 이 브라우저에만 보관하며 자동 AI 답변으로 표시하지 않습니다.',[dict(type='library',title='시장 다이제스트',group='시장',items=digest),dict(type='library',title='방법론',group='방법론',items=LIBRARY),dict(type='notebook',title='질문·근거 기록',group='질문·근거 기록',mode='ask_digest',items=[])],missing=['원본 brief/기간별 추세·테마·종목·모듈별 위험 집계는 추가 구현 대상입니다. 외부 ASK 토론·원본 자동 AI 질의 서버와 연결하지 않았습니다.','기록·첨부는 브라우저 로컬이며 팀 공용 저장·자동 LLM 요약은 미연결입니다.'])
+    iw=module('iw',d.as_of,'관측·판단·근거·대응을 구분하고 방향·기간·확신도·무효화·재검토 날짜를 기록합니다. PDF·이미지 첨부, 수정/휴지통/복원/백업을 제공하며 기본 시장 요약은 계산된 수치입니다. 새 기록은 이 브라우저에 보관합니다.',[dict(type='library',title='이번 주 관측',group='관측 요약',items=digest),dict(type='notebook',title='주간 판단 원장',group='주간 판단 원장',mode='iw',items=[])],missing=['원본 작성자의 주간 논평·과거 개인 기록을 복제하지 않습니다. 원본29판단 항목·두차트의 팀 계산 대응은 추가 구현 대상입니다.','팀 공용 DB·동시 편집 서버는 미연결입니다. 로컬 백업 JSON은 첨부 파일을 포함합니다.'])
     return [lib,ask,iw]
 
 def network_data(d,financial,ranks):

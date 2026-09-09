@@ -73,3 +73,11 @@ CPI는YoY의다음%p변화이고관측월M→정보월M+1. DGS10은상대금리�
 raw빈티지20260909T114624Z(부모105501Z), KODEX레버리지122630.KS4041봉추가·총가격1127/거시59, catalog에TQQQ/122630/069500반영. 로컬약58.4MiB,공개JSON약5.57MiB. MODEL_SPEC1추가시정기갱신도재학습판정한다. legacy `maximus_model.baseline_build`는이전3전문가연구용이고현재build에서호출하지않는다. 검사84unittest·두검증기·3JS·9JS구문·33SVG래스터,팬/네트워크배치확인. 브라우저QA와원본요청없음. 새실행/게시ID는public refresh.json과private runtime/state.json확인.
 
 다음은콘텐츠기능: 보존principium.js에article/report/primer별문서보드·5단상세·키워드구체/공동출현그래프·등록/수정/첨부구조가있다. 자체콘텐츠로구현하며원본관리자/비밀번호/저자기록을복제하지않는다. IW원본은29판단행과2차트, ASK digest는brief/기간별trends·테마10·주식16·21crossasset·위험양/음·4차트·모듈요약schema다. 이들현재기본메모만으로완료처리하지말것. 이후관계전파/위성/추정상세등은REFERENCE_PARITY지속확장.
+
+로컬 리서치 후속(2026-09-09): `research-store.js` IndexedDB(meta+files)·500건/UTF8메타2MiB/첨부64MiB·파일8MiB/기록12개·SHA256동일파일공유. 같은트랜잭션에메타/Blob저장·고아파일삭제, 중간quota실패롤백·revision및기록history충돌방지. 가져오기90MiB·첨부hash/크기/형식검사·동일건중복건너뛰기·충돌사본. 이전localStorage키보존/명시적가져오기·내용hash기반ID. 영구삭제는휴지통만, 다른글이참조한첨부유지. PDF다운로드·래스터이미지만Blob미리보기, 네트워크전송없음. 실제브라우저저장소를도구로열거나사용자자료를추가하지않았다.
+
+`research-notes.js` PRINCIPIUM3유형/5단상세·문서제목노드/공유키워드선·첫100문서/상위30단어구체·회전/드래그/글이동, IW4판단필드·방향/기간/확신/무효화/재검토, ASK질문/해석/근거/추가확인. 공개팀노트는사본으로편집; 로컬입력·백업은운영서버에올리지않는다. `platform_modules.libraries`에notebook섹션추가. root `package.json`은검사전용 fake-indexeddb6.2.5. 이PC는tools/test-dependencies에52,568byte tarball을원격1회받아설치했고stage검사는SANGSANGIN_DATA_DIR의형제tools를해석한다. 런타임·토큰·사용자파일은공개하지않는다.
+
+`test_research_store.cjs` 실제IndexedDB API를메모리어댑터로검사하고 `test_research_notes.cjs`는기존test_dom_stub의실제양식콜백을호출한다. test_extended가두검사를순서대로await하여quota실패주입이겹치지않는다. 기존84Python·두검증기·3JS(새2개포함)·11JS구문·35SVG래스터통과. 긴한국어제목의관계도잘림을래스터검사에서수정했다. 문서키워드가겹치지않는공개4노트에는선0개가정상이며공유키워드양성fixture도검사한다. 브라우저QA없음.
+
+실제공개기준은runtime/state.json. 원자료/실행파일64.2MiB·공개JSON5.573MiB(배포패키지생성전). 다음은원본IW29판단행/두차트·ASKbrief/기간별추세/테마/종목/위험모듈집계,관계근거/전파/위성/추정상세다. PDF자동추출/LLM요약·팀공용DB/로그인·서버방문통계는아직미연결이며이번로컬저장을그기능완료로세지않는다. 자세한계약은LOCAL_RESEARCH.md.

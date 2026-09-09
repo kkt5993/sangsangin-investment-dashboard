@@ -1,0 +1,6 @@
+{
+  "name": "sangsangin-investment-dashboard-tests",
+  "private": true,
+  "scripts": {"test:research-store": "node scripts/test_research_store.cjs"},
+  "devDependencies": {"fake-indexeddb": "6.2.5"}
+}

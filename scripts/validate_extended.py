@@ -13,6 +13,12 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='notebook':
+        assert s['mode']==module and module in ['principium','iw','ask_digest']
+        assert isinstance(s['items'],list)
+        for r in s['items']:
+            assert isinstance(r['title'],str) and isinstance(r['core'],str)
+            assert isinstance(r.get('keywords',[]),list) and all(isinstance(k,str) for k in r.get('keywords',[]))
     if kind=='moe':
         assert s['cards']
         for c in s['cards']:

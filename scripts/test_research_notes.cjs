@@ -1,0 +1,30 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict'),{webcrypto}=require('node:crypto'),{parse}=require('./test_dom_stub.cjs');
+const root=path.resolve(__dirname,'..'),data=process.env.SANGSANGIN_DATA_DIR||path.resolve(root,'../sangsangin-investment-data');let IDB;try{IDB=require('fake-indexeddb');}catch{IDB=require(path.resolve(data,'../sangsangin-investment-tools/test-dependencies/fake-indexeddb'));}
+const memory=new Map(),downloads=[],c=vm.createContext({console,crypto:webcrypto,indexedDB:IDB.indexedDB,structuredClone,TextEncoder,TextDecoder,URL,Blob,atob,btoa,setTimeout,clearTimeout,confirm:()=>true,localStorage:{getItem:k=>memory.get(k)??null},document:{createElement:()=>({click(){downloads.push(this.download);}})}});
+for(const file of ['research-store','research-notes'])vm.runInContext(fs.readFileSync(path.join(root,'docs',file+'.js'),'utf8'),c);
+const S=c.ResearchStore,N=c.ResearchNotes;
+module.exports=(async()=>{
+ const seed={mode:'principium',items:[{kind:'primer',title:'공통 금리',date:'2026-09-08',core:'단위',keywords:['금리','RS']},{kind:'primer',title:'두번째 문서',date:'2026-09-07',core:'관측',keywords:['금리','검증']}]};
+ const topic=N.topics(N.seeds(seed));assert.equal(topic.nodes.length,2);assert.equal(topic.links.length,1);assert.equal(topic.links[0].weight,1);assert.equal(topic.words.find(w=>w.name==='금리').count,2);
+ assert(N.graph(topic).includes('data-topic-link="0-1"'));assert.notEqual(N.cloud(topic,0),N.cloud(topic,1));
+ const injected=N.view({mode:'principium',items:[{title:'<img src=x onerror=alert(1)>',core:'<script>alert(1)</script>',date:'2026-09-09',url:'javascript:alert(1)',keywords:[]}]},0);assert(!injected.includes('<script>'));assert(!injected.includes('href="javascript:'));assert(injected.includes('&lt;script&gt;'));
+ const repo=await S.open(IDB.indexedDB,'notes-ui'),second=await S.open(IDB.indexedDB,'notes-ui'),el=parse(N.view(seed,0));await N.mount(el,seed,{repo});
+ const q=s=>el.querySelector(s),click=key=>q('[data-nb-'+key+']').fire('click'),field=k=>q('[data-nb-field="'+k+'"]');
+ assert.equal(el.querySelectorAll('[data-note-id]').length,2);assert(q('[data-nb-message]').textContent.includes('읽었습니다'));
+ const cloudBefore=q('[data-nb-cloud]').innerHTML;q('[data-nb-yaw]').value='100';q('[data-nb-yaw]').oninput();assert.notEqual(q('[data-nb-cloud]').innerHTML,cloudBefore);
+ field('title').value='주간 금리 연구';field('core').value='관측과 판단을 분리';field('kind').value='primer';await field('kind').fire('change');assert.equal(q('[data-nb-caption="core"]').textContent,'본질·핵심 정의');field('keywords').value='금리, 데이터';field('direction').value='중립';field('confidence').value='3';
+ const file=new Blob(['%PDF-1.7\nfixture\n%%EOF']);file.name='local.pdf';q('[data-nb-upload]').files=[file];await click('save');q('[data-nb-upload]').files=[];
+ let book=await repo.read();assert.equal(book.entries.length,1);const id=book.entries[0].id;assert.equal(book.entries[0].attachments.length,1);assert.equal(field('title').value,'');assert.equal(el.querySelectorAll('[data-note-id]').length,3);
+ await q('[data-nb-edit="'+id+'"]').fire('click');field('core').value='내 편집 입력';let other=await second.read();const r=other.entries[0];other=await second.commit(other.revision,b=>S.edit(b,{...r,core:'다른 창 수정'}));
+ await click('save');assert(q('[data-nb-message]').textContent.includes('다른 창'));assert.equal(field('core').value,'내 편집 입력');await click('reload');await click('save');assert(q('[data-nb-message]').textContent.includes('편집을 시작한 뒤'));assert.equal((await repo.read()).entries[0].core,'다른 창 수정');
+ await click('copy-draft');book=await repo.read();assert.equal(book.entries.length,2);assert(book.entries.some(r=>r.core==='내 편집 입력'));assert.equal(book.files.length,1,'same content shared without duplicating blob');
+ q('[data-nb-search]').value='absent';await q('[data-nb-search]').fire('input');assert.equal(el.querySelectorAll('[data-note-id]').length,0);q('[data-nb-search]').value='';await q('[data-nb-search]').fire('input');
+ const node=q('[data-topic-node]');await node.fire('click');assert(el.querySelectorAll('[data-note-id]').some(r=>r.open));
+ await q('[data-nb-trash="'+id+'"]').fire('click');q('[data-nb-filter]').value='trash';await q('[data-nb-filter]').fire('change');assert.equal(el.querySelectorAll('[data-note-id]').length,1);await q('[data-nb-restore="'+id+'"]').fire('click');assert.equal(el.querySelectorAll('[data-note-id]').length,0);
+ q('[data-nb-filter]').value='mine';await q('[data-nb-filter]').fire('change');await q('[data-nb-trash="'+id+'"]').fire('click');q('[data-nb-filter]').value='trash';await q('[data-nb-filter]').fire('change');await q('[data-nb-purge="'+id+'"]').fire('click');assert.equal((await repo.read()).entries.length,1);assert.equal((await repo.read()).files.length,1,'another note retains attachment');
+ const old='[{"title":"옛 메모","body":"원문 보존","date":"2026-09-01T00:00:00Z"}]',key='sangsangin-journal-v1-principium';memory.set(key,old);await click('legacy');const count=(await repo.read()).entries.length;await click('legacy');assert.equal((await repo.read()).entries.length,count);assert.equal(memory.get(key),old);
+ await click('export');assert.equal(downloads.at(-1),'principium-research-backup.json');
+ const iw=parse(N.view({mode:'iw',items:[]},0)),iwRepo=await S.open(IDB.indexedDB,'iw-ui');await N.mount(iw,{mode:'iw',items:[]},{repo:iwRepo});assert.equal(iw.querySelector('[data-nb-caption="core"]').textContent,'관측');
+ N.dispose();repo.close();second.close();iwRepo.close();console.log('PASS: actual notebook fields, attachment save, stale edit preservation/copy, search, graph navigation, trash lifecycle, legacy import, backup and weekly labels; offline fixture.');
+})().catch(e=>{console.error(e);process.exitCode=1;});

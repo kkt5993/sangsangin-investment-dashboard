@@ -20,6 +20,7 @@ for key in ['strategies','earnings','geoecon']:CODE[key]+=' · events_data.py'
 for key in ['risk','pm_weekend']:CODE[key]+=' · cot_data.py'
 CODE['regime']+=' · reflexivity.py · industry_details.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
+CODE['risk']+=' · wagdog.py'
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
  'overview':('전체 탭 요약·카드·탐색','25탭 상태, 데이터 수, 바로가기','원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외'),

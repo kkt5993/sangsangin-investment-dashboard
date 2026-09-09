@@ -28,7 +28,7 @@
 | 리스크 / 미국 옵션 | SPY/QQQ/IWM 제한만기 OI·IV·GEX | 전 만기·Skew·만기 집중·헤지 충격 원장 |
 | 리스크 / 국내 숏감마 | 미연결 | KOSPI200 행사가·만기별 OI·IV·계약단위 |
 | 리스크 / 비펀더멘털 수급 | CFTC·쏠림 일부 | flows.market/stocks/kr/kr_etf/rebal 전체 패널 |
-| 리스크 / Wag-the-Dog | 미연결 | 옵션·ETF 리밸런싱 조건별 합성·전파·민감도 |
+| 리스크 / Wag-the-Dog | 3ETF 감마·가격대·OI 상하 분포·5개 변동성군·규칙 진단 | 전체 만기·실제 딜러 보유 원장은 관측 불가, 종목/ETF 리밸런싱은 별도 수급 화면 |
 | 실적 / US·KR | 발표 NI·글로벌 EPS·국내 3년 NI | 해외 전체 NI 추정 금액·분기/연간 모드 |
 | 실적 / 추정 변화 | EPS 상향/하향·현재/과거 추정 | estimate_verify·us_consensus 세부 차트 |
 | 성장 / FY1·FY2 | 국내 영업이익 성장×YTD×이익률3D | 해외 영업이익 컨센서스; EPS로 대체하지 않음 |

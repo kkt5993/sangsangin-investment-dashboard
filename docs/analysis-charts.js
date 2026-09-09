@@ -105,5 +105,17 @@
   const indices=[24,12,6,0].map(n=>Math.max(0,c.rows.length-1-n));indices.forEach((ix,j)=>{const r=c.rows[ix],valid=c.axes.every(a=>finite(r.z[a.key]));if(valid)b+=`<polygon data-radar-date="${r.date}" points="${c.axes.map((a,i)=>xy(i,rr(r.z[a.key])).join(',')).join(' ')}" fill="${colors[j]}" fill-opacity=".06" stroke="${colors[j]}" stroke-width="${j===3?2.5:1.5}"/>`;b+=`<text x="30" y="${373+j*18}" fill="${colors[j]}" class="axis">${r.date}${valid?'':' · 일부 축 미수집으로 오각형 생략'}</text>`;});
   return svg(b,c.title+' · 4시점 5축 레이더',W,H,'data-chart-type="radar"');
  }
- root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,n,empty};
+ function optionProfile(c){
+  const rows=c.profile;if(!rows?.length)return empty();const W=1000,H=c.mode==='oi'?330:410,L=75,R=32,T=57,B=63,xmin=Math.min(...rows.map(r=>r.strike)),xmax=Math.max(...rows.map(r=>r.strike)),X=k=>L+(k-xmin)/Math.max(1,xmax-xmin)*(W-L-R),max=c.mode==='oi'?Math.max(1,...rows.flatMap(r=>[r.call_oi,r.put_oi])):Math.max(.001,...rows.map(r=>finite(r.gex)?Math.abs(r.gex):0)),mid=T+(H-T-B)/2,scale=(H-T-B)*.43/max,Y=v=>mid-v*scale,bw=Math.max(.8,Math.min(12,(W-L-R)/rows.length*.65));
+  let b='';if(c.em_low!==null&&c.em_high!==null&&c.mode==='gamma'){const lo=Math.max(xmin,c.em_low),hi=Math.min(xmax,c.em_high);if(hi>lo)b+=`<rect data-expected-band="1" x="${X(lo)}" y="${T}" width="${X(hi)-X(lo)}" height="${H-T-B}" fill="#e5cb84" opacity=".22"/>`;}
+  for(const q of [-1,-.5,0,.5,1]){const v=q*max;b+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="grid-line"/><text x="${L-8}" y="${Y(v)+4}" text-anchor="end" class="axis">${n(c.mode==='oi'?Math.abs(v):v)}</text>`;}
+  b+=`<line x1="${L}" x2="${W-R}" y1="${mid}" y2="${mid}" class="reference-line"/>`;
+  rows.forEach(r=>{const values=c.mode==='oi'?[[r.call_oi,'call','#287c96'],[-r.put_oi,'put','#ba6879']]:[[r.gex,'gamma',r.gex>=0?'#287c96':'#ba6879']];values.forEach(([v,side,color])=>{if(!finite(v))return;b+=`<rect data-option-bar="${side}" x="${X(r.strike)-bw/2}" y="${Math.min(mid,Y(v))}" width="${bw}" height="${Math.abs(Y(v)-mid)}" fill="${color}"><title>행사가 ${r.strike} · ${side} ${n(c.mode==='oi'?Math.abs(v):v)}${c.mode==='oi'?' 계약':' USD bn/1%'}</title></rect>`;});});
+  const markers=c.mode==='oi'?[[c.spot,'현물','#ad8628'],[c.call_wall,'콜 OI 최대','#287c96'],[c.put_wall,'풋 OI 최대','#ba6879']]:[[c.spot,'현물','#ad8628'],[c.flip,'감마플립','#7768a9']];
+  markers.forEach(([k,label,color],i)=>{if(!finite(k)||k<xmin||k>xmax)return;b+=`<line data-option-marker="${label}" x1="${X(k)}" x2="${X(k)}" y1="${T}" y2="${H-B}" stroke="${color}" stroke-dasharray="4 3"/><text x="${X(k)}" y="${18+i*16}" text-anchor="middle" class="axis">${label} ${n(k)}</text>`;});
+  for(let i=0;i<7;i++){const k=xmin+(xmax-xmin)*i/6;b+=`<text x="${X(k)}" y="${H-B+24}" text-anchor="middle" class="axis">${n(k)}</text>`;}
+  b+=`<text x="${L}" y="${H-16}" class="axis">행사가 USD → · ${c.mode==='oi'?'콜 위 / 풋 아래 · 계약 수(방향 의미 없음)':'GEX USD bn / 현물 1% · 음영=ATM IV 기반30D 기대폭'}</text>`;
+  return svg(b,c.title,W,H,'data-chart-type="optionprofile"');
+ }
+ root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,n,empty};
 })(typeof window==='undefined'?globalThis:window);

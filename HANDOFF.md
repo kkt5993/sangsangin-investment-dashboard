@@ -36,3 +36,7 @@ Vercel 프로젝트: sangsangin-investment-dashboard. 운영 도메인 https://s
 새 코드: pm_details.py, industry_details.py, reflexivity.py, gpr_data.py. 국내 GDP는 ECOS200Y104/1400(Q 계절조정 실질), 기초화학 수출물량403Y003/3051AA, 수출액의 ECOS 단위 '천불'→USD bn은1e6으로 나눈다. 시총 확보 범위에서 현재 공식 US70/KR60 표본을 고르므로 과거 구성종목 주장이 아니다. AR1은 창 내부 n−1쌍, 회귀 t는 OLS. 홀로그램 표시 z는36개월 분포이며 예측 입력으로 사용하지 않는다.
 
 원본 대비 아직 여러 세부 기능이 남는다: PM 실적종목 ATM 내재변동폭, 국면 지수 밸류에이션·거시 발표달력, 리스크 flows/Wag-the-Dog와 KOSPI 옵션, DRAGONGLASS 관계·위성·원장 필드·전파, ML/MAXIMUS/배분 모델, 실적/성장 추정 상세, 발굴 버킷·기타 콘텐츠 동작. 각 화면 missing과 REFERENCE_PARITY.md를 갱신하면서 이어간다. 정기 갱신은 활성 heartbeat automation ID automation 하나만 유지한다.
+
+후속 추가: 리스크 Wag-the-Dog 연결. option_analytics.py와 wagdog.py는 동일 packets를 사용한다. 기존 가로 막대 GEX를 원본과 같은 행사가 가로축/수직 감마 막대로 교체했고 현물·플립·30D IV 기대폭을 표시한다. SPY OI는 콜 위/풋 아래이며 방향 의미가 없다. OI는 IV 결측도 포함하고 GEX만 IV 필터한다. 플립은±20% 탐색의 교차, 교차 없음 또는 감마 전부0은 None. 기대폭은 ATM IV의30D 정규 근사로 옵션이 예측한 확정 범위가 아니다. VVIX를 추가했다. 실제배포기준/빈티지는 runtime/state.json을 확인한다. 다음 우선: flows 주식·ETF AUM/공매도·KR 투자자 수급과 PM 개별 실적 ATM 스트래들.
+
+옵션 공급처 수정: Yahoo의936/829/450계약 중 양의 OI가16/30/19개뿐이고 현물 부근은 대부분0으로 전달되는 문제가 실제 차트검사에서 발견됐다. 이를 0의 실제 포지션으로 해석하지 않는다. options_data.py를 Cboe 공개 지연호가 JSON으로 교체했다(ETF당1요청). OCC심볼을 파싱해 일반계약·7~45일중첫3만기만 로컬 저장하고 ±10% ATM범위 양의 OI20계약 이상·콜풋양쪽 존재를 검사한다. 시세와 옵션 현물의1.5%초과불일치도 게시 중단. Cboe timestamp는 타임존미표기 그대로 보존하고 실제 수집UTC와 구분한다. 과거Yahoo원자료는 변경하지 않았다.

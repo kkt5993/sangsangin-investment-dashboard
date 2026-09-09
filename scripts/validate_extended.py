@@ -60,6 +60,14 @@ def section(s,cutoff,module):
         for row in s['rows']:
             assert row['date']<=cutoff and set(row['raw'])==set(a['key'] for a in s['axes'])
             assert all(v is None or math.isfinite(v) for v in [*row['raw'].values(),*row['z'].values()])
+    if kind=='optionprofile':
+        assert s['price_date']<=cutoff and s['spot']>0 and s['valid_gamma']<=s['valid_oi']<=s['contracts']
+        ks=[p['strike'] for p in s['profile']];assert ks==sorted(set(ks))
+        for r in s['profile']:
+            assert r['call_oi']>=0 and r['put_oi']>=0
+            assert r['gamma_available']==(r['gex'] is not None)
+        if s['flip'] is not None:assert .8*s['spot']<=s['flip']<=1.2*s['spot']
+        if s['em'] is not None:assert s['em_low']<s['spot']<s['em_high']
 
 count=0
 for file in (ROOT/'docs/data').glob('*.json'):

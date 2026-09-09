@@ -41,6 +41,8 @@ function interactiveContainer(){
  const ibox=interactive.industries[0];ibox.sector.value='반도체·IT';ibox.sector.fire('change');assert.equal(ibox.cards.filter(c=>!c.hidden).length,3);
  ibox.role.value='Q';ibox.role.fire('change');assert.equal(ibox.cards.filter(c=>!c.hidden).length,1);
  const holos=data.regime.sections.filter(s=>s.type==='hologram');assert.equal(holos.length,3);
+ const opt=data.risk.sections.filter(s=>s.type==='optionprofile');assert.equal(opt.length,7);
+ for(const s of opt){const h=A.optionProfile(s);assert(h.includes('data-option-marker="현물"'));assert(h.includes('data-option-bar="'+(s.mode==='oi'?'put':'gamma')+'"'));if(s.mode==='gamma'&&s.em!==null)assert(h.includes('data-expected-band'));}
  for(const h of holos){assert.equal(h.rows.length,36);assert(A.hologram(h).includes('data-holo-trajectory'));assert(A.radar(h).includes('data-radar-date'));assert.notEqual(A.hologram(h,0),A.hologram(h,1));}
  assert.equal(data.regime.sections.find(s=>s.type==='industry').items.length,39);
  for(const g of ['PM 키 게이지','금리·성장','크로스에셋 속보','CTA 시스템 트렌드','매크로 z-score','다이버전스·실적'])assert(data.pm_weekend.sections.some(s=>s.group===g),g);

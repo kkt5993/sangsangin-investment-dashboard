@@ -15,8 +15,9 @@ function interactiveContainer(){
   this.boxes=[...h.matchAll(/data-scenario="(\d+)"/g)].map(m=>{const market=node('KR'),shock=node('-10'),output=node();return {dataset:{scenario:m[1]},market,shock,output,querySelector:s=>({'[data-scenario-market]':market,'[data-shock]':shock,'[data-scenario-output]':output}[s]||null),querySelectorAll:()=>[market,shock]};});
   this.holos=[...h.matchAll(/data-hologram="(\d+)"/g)].map(m=>{const yaw=node('60'),output=node();return {dataset:{hologram:m[1]},yaw,output,querySelector:s=>s==='[data-holo-yaw]'?yaw:output};});
   this.rebals=[...h.matchAll(/data-rebalancing="(\d+)"/g)].map(m=>{const shock=node('5'),output=node();return {dataset:{rebalancing:m[1]},shock,output,querySelector:s=>s==='[data-rebal-shock]'?shock:output};});
+  this.valuations=[...h.matchAll(/data-valuation="(\d+)"/g)].map(m=>{const months=node('180'),output=node();return {dataset:{valuation:m[1]},months,output,querySelector:s=>s==='[data-valuation-months]'?months:output};});
   this.industries=[...h.matchAll(/data-industries="(\d+)"/g)].map(m=>{const sector=node('all'),role=node('all'),cards=[...h.matchAll(/data-industry="([^"]+)" data-indicator-role="([^"]+)"/g)].map(a=>node('',{industry:a[1],indicatorRole:a[2]}));return {sector,role,cards,querySelector:s=>s==='[data-industry-filter]'?sector:role,querySelectorAll:s=>s==='select'?[sector,role]:cards};});
- },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-industries]'?this.industries:s==='[data-rebalancing]'?this.rebals:[];}};
+ },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-industries]'?this.industries:s==='[data-rebalancing]'?this.rebals:s==='[data-valuation]'?this.valuations:[];}};
  return c;
 }
 (async()=>{
@@ -41,6 +42,9 @@ function interactiveContainer(){
  assert(rb.output.innerHTML.includes('data-flow-value="'+rc.stocks[0].coefficient*-.05/1e6+'"'));assert(rb.output.innerHTML.includes('data-adv-value='));
  rb.shock.value='0';rb.shock.fire('input');assert(rb.output.innerHTML.includes('data-flow-value="0"'));assert(!/NaN|Infinity/.test(rb.output.innerHTML));
  context.location.hash='#regime';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='regime'));
+ interactive.buttons.find(b=>b.dataset.subview==='밸류에이션').fire('click');assert.equal(interactive.valuations.length,1);
+ const vb=interactive.valuations[0];vb.months.value='60';vb.months.fire('change');assert.equal((vb.output.innerHTML.match(/data-valuation-panel=/g)||[]).length,9);
+ assert(vb.output.innerHTML.includes('data-scale="log"'));const firstVal=vb.output.innerHTML;vb.months.value='180';vb.months.fire('change');assert.notEqual(firstVal,vb.output.innerHTML);
  interactive.buttons.find(b=>b.dataset.subview==='Soros 재귀성').fire('click');assert.equal(interactive.holos.length,3);
  const hbox=interactive.holos[0];hbox.yaw.value='100';hbox.yaw.fire('input');assert(hbox.output.innerHTML.includes('data-holo-quadrant'));
  interactive.buttons.find(b=>b.dataset.subview==='산업별 핵심지표').fire('click');assert.equal(interactive.industries.length,1);

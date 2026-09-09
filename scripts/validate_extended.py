@@ -13,6 +13,14 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='valuation':
+        assert len(s['panels'])==3
+        for p in s['panels']:
+            assert len(p['rows'])==180
+            for r in p['rows']:
+                assert r['date']<=cutoff and r['profit_period']<=r['date']
+                assert r['price']>0 and r['earnings']>0 and abs(r['price']/r['earnings']-r['ratio'])<1e-5
+                assert r['carry']==(r['date']>p['last_profit_period'])
     if kind=='rebalancing':
         assert s['stocks'] and len(s['indices'])==3
         for r in s['stocks']+s['indices']:

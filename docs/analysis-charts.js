@@ -127,5 +127,26 @@
   b+=`<text x="${L}" y="20" class="axis">■ 일일 리밸런싱 USD mn</text><text x="${W-R}" y="20" text-anchor="end" class="axis">◆ % ADV</text><text x="${W/2}" y="${H-10}" text-anchor="middle" class="axis">기초자산 ${shock}% 가정 · 수집된 ETF 표본 합계</text>`;
   return '<div class="bar-scroll">'+svg(b,c.title,W,H,`data-chart-type="rebalancing" style="min-width:${W}px"`)+'</div>';
  }
- root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,n,empty};
+ function valuation(c,months=180){
+  const rows=c.rows.slice(-months);if(!rows.length)return empty();const W=780,H=655,L=65,R=78,T=35,ih=140,step=211;
+  const t0=Date.parse(rows[0].date),t1=Date.parse(rows.at(-1).date),X=d=>L+(Date.parse(d)-t0)/Math.max(1,t1-t0)*(W-L-R);
+  const scale=(vals,panel,log=false,zero=false)=>{const [lo,hi]=range(vals.filter(finite).map(v=>log?Math.log(v):v),zero);return {lo,hi,Y:v=>panel*step+T+ih-( (log?Math.log(v):v)-lo)/(hi-lo)*ih};};
+  const price=scale(rows.map(r=>r.price),0,true),earn=scale(rows.map(r=>r.earnings),0,true),ratio=scale(rows.map(r=>r.ratio),1),macro=scale(rows.flatMap(r=>[r.inflation,r.rate]),2,false,true);
+  const path=(key,Y,include=()=>true)=>{let d='',on=false;rows.forEach((r,i)=>{if(!finite(r[key])||!include(r,i)){on=false;return;}d+=(on?'L':'M')+X(r.date).toFixed(2)+' '+Y(r[key]).toFixed(2)+' ';on=true;});return d;};
+  let b='';const axis=(s,panel,side,log=false)=>{let out='';for(let i=0;i<4;i++){const raw=s.lo+(s.hi-s.lo)*i/3,v=log?Math.exp(raw):raw,y=s.Y(v);out+=`<text x="${side==='right'?W-R+8:L-8}" y="${y+4}" text-anchor="${side==='right'?'start':'end'}" class="axis">${n(v)}</text>`;if(side==='left')out+=`<line class="grid-line" x1="${L}" x2="${W-R}" y1="${y}" y2="${y}"/>`;}return `<g data-valuation-axis="${side}" data-scale="${log?'log':'linear'}">${out}</g>`;};
+  b+=`<g data-valuation-panel="1">${axis(price,0,'left',true)}${axis(earn,0,'right',true)}`;
+  b+=`<path d="${path('price',price.Y)}" fill="none" stroke="#287b9f" stroke-width="2" data-valuation-line="price"/><path d="${path('earnings',earn.Y,r=>!r.carry)}" fill="none" stroke="#328c75" stroke-width="2" data-valuation-line="profit"/>`;
+  const lastReal=rows.findLastIndex(r=>!r.carry);b+=`<path d="${path('earnings',earn.Y,(r,i)=>r.carry||i===lastReal)}" fill="none" stroke="#328c75" stroke-width="2" stroke-dasharray="5 4" data-valuation-line="carry"/>`;
+  b+=`<text x="${L}" y="17" fill="#287b9f" font-size="13">① ${E(c.name)} 지수 pt · 좌 로그축</text><text x="${W-R}" y="17" text-anchor="end" fill="#328c75" font-size="13">이익 ${E(c.profit_unit)} · 우 로그축</text><text x="${L}" y="195" class="axis">이익 관측기간 말 ${E(c.last_profit_period)} · 점선: 최근 실적 유지</text></g>`;
+  const values=rows.map(r=>r.ratio).sort((a,z)=>a-z),q=p=>values[Math.floor((values.length-1)*p)],top=step+T,bottom=top+ih;
+  b+=`<g data-valuation-panel="2"><rect data-valuation-zone="upper" x="${L}" y="${top}" width="${W-L-R}" height="${ratio.Y(q(.75))-top}" fill="#f5e8e7"/><rect data-valuation-zone="lower" x="${L}" y="${ratio.Y(q(.25))}" width="${W-L-R}" height="${bottom-ratio.Y(q(.25))}" fill="#e4f1eb"/>${axis(ratio,1,'left')}`;
+  for(const p of [.25,.5,.75])b+=`<line data-valuation-quantile="${p}" x1="${L}" x2="${W-R}" y1="${ratio.Y(q(p))}" y2="${ratio.Y(q(p))}" stroke="#8198a5" stroke-dasharray="4 4"/>`;
+  const latest=rows.at(-1),rank=values.filter(v=>v<=latest.ratio).length/values.length*100;
+  b+=`<path d="${path('ratio',ratio.Y)}" fill="none" stroke="#b78c34" stroke-width="2"/><circle cx="${X(latest.date)}" cy="${ratio.Y(latest.ratio)}" r="4" fill="#b78c34"/><text x="${L}" y="${step+17}" class="axis">② 지수/이익 · pt / ${E(c.profit_unit)}</text><text x="${W-R}" y="${step+17}" text-anchor="end" class="axis">현재 ${n(latest.ratio)} · 백분위 ${n(rank)}</text><text x="${L}" y="${step+195}" class="axis">선택기간25/50/75분위 · 지수 P/E와 다른 수치비</text></g>`;
+  b+=`<g data-valuation-panel="3">${axis(macro,2,'left')}<path d="${path('inflation',macro.Y)}" fill="none" stroke="#be715e" stroke-width="2" data-valuation-line="inflation"/><path d="${path('rate',macro.Y)}" fill="none" stroke="#758da4" stroke-width="2" data-valuation-line="policy"/><line x1="${L}" x2="${W-R}" y1="${macro.Y(0)}" y2="${macro.Y(0)}" class="reference-line"/><text x="${L}" y="${step*2+17}" fill="#be715e" font-size="13">③ CPI YoY %</text><text x="${W-R}" y="${step*2+17}" text-anchor="end" fill="#758da4" font-size="13">${c.region==='KR'?'한국은행 기준금리':'월평균 Fed funds'} %</text>`;
+  for(let i=0;i<5;i++){const row=rows[Math.round((rows.length-1)*i/4)];b+=`<text x="${X(row.date)}" y="${H-28}" text-anchor="middle" class="axis">${row.date.slice(0,7)}</text>`;}
+  b+=`</g><text x="${L}" y="${H-5}" class="axis">${E(c.profit_name)} · ${rows[0].date} ~ ${latest.date}</text>`;
+  return svg(b,c.name+' 3단 비교',W,H,'data-chart-type="valuation"');
+ }
+ root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,n,empty};
 })(typeof window==='undefined'?globalThis:window);

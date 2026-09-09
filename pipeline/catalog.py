@@ -32,6 +32,7 @@ MACRO={
  'USREC':('미국 침체 더미','0/1','M'), 'CBOEPUTCALL':('풋콜 비율','ratio','D'),
 }
 MACRO.update({
+ 'CP':('미국 기업 세후이익 (IVA·CCAdj 미적용)','USD bn SAAR','Q'),
  'BAMLC0A0CM':('미국 투자등급 OAS','%','D'), 'RRPONTSYD':('연준 익일 역레포','USD bn','D'),
  'IPG3344S':('반도체·전자부품 산업생산','2017=100','M'),
  'PCU334413334413':('반도체 제조업 PPI','1998-12=100','M'),

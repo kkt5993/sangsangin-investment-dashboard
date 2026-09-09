@@ -75,6 +75,7 @@ def collect(parent,base,as_of,env,config,log):
     current=Data(as_of,base.name);collect_news(current)
     if due(parent,'events',3):collect_events(current,config.get('event_companies',60))
     if due(parent,'cot.json.gz',7):run('pipeline.cot_data')
+    if due(parent,'release_calendar.json.gz',7):run('pipeline.calendar_data')
     run('pipeline.options_data')
     run('pipeline.flows_data','--market','US')
     if config.get('allow_krx_auth'):run('pipeline.flows_data','--market','KR','--allow-krx-auth')

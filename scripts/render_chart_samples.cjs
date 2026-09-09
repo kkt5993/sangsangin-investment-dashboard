@@ -15,6 +15,8 @@ samples.gamma_profile=A.optionProfile(data('risk').sections.find(s=>s.type==='op
 samples.oi_profile=A.optionProfile(data('risk').sections.find(s=>s.type==='optionprofile'&&s.mode==='oi'));
 samples.rebalancing=A.rebalancing(data('risk').sections.find(s=>s.type==='rebalancing'));
 samples.rebalancing_down=A.rebalancing(data('risk').sections.find(s=>s.type==='rebalancing'),-5);
+samples.valuation_us=A.valuation(data('regime').sections.find(s=>s.type==='valuation').panels[0]);
+samples.valuation_kr=A.valuation(data('regime').sections.find(s=>s.type==='valuation').panels[2],60);
 samples.cftc=A.line(data('risk').sections.find(s=>s.group==='CFTC 포지션'&&s.type==='line'));
 samples.news_regions=G.sphere(data('geoecon').sections.find(s=>s.type==='globe'),data('coastlines').arcs);
 samples.scenario=ctx.window.ResearchCharts.bars(data('dragonglass').sections.find(s=>s.type==='scenario').rows.filter(r=>r.market==='KR').map(r=>({name:r.name,value:r.beta*-10})),{unit:'%',title:'시장 −10% 가정 · Beta 민감도'});

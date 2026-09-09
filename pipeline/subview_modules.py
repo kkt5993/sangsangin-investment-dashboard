@@ -158,6 +158,8 @@ def extend(d,objects,ranks):
     from .reflexivity import reflex_views
     extend_pm(d,objects['pm_weekend'],calendar)
     reflex_views(d,objects['regime']);industry_views(d,objects['regime'])
+    from .valuation import valuation_views
+    valuation_views(d,objects['regime'])
     cot_views(d,objects['pm_weekend']);cot_views(d,objects['risk'])
     from .wagdog import wagdog_views
     wagdog_views(d,objects['risk'])

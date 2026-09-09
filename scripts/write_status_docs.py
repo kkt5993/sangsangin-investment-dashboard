@@ -19,6 +19,7 @@ for key in ['regime','risk','pm_weekend','geoecon','strategies','earnings','drag
 for key in ['strategies','earnings','geoecon']:CODE[key]+=' · events_data.py'
 for key in ['risk','pm_weekend']:CODE[key]+=' · cot_data.py'
 CODE['regime']+=' · reflexivity.py · industry_details.py'
+CODE['regime']+=' · valuation.py · calendar_data.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py'
 for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_data.py'

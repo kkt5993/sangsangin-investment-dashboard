@@ -13,6 +13,11 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='rebalancing':
+        assert s['stocks'] and len(s['indices'])==3
+        for r in s['stocks']+s['indices']:
+            assert r['coefficient']>0 and r['aum']>0 and len(r['funds'])>0
+            if r['adv'] is not None:assert r['adv']>0 and r['price_date']<=cutoff
     if kind=='table':assert all(len(r)==len(s['columns']) for r in s['rows']),s['title']
     if kind=='heatmap':assert all(len(r['values'])==len(s['columns']) for r in s['rows']),s['title']
     if kind=='line':

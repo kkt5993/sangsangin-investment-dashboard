@@ -52,6 +52,7 @@ def packets(d):
     for p in files.values():
         raw=read(p);price=d.price(raw['symbol'],False)
         if not len(price):continue
+        if raw.get('provider_timestamp') and str(raw['provider_timestamp'])[:10]<str(price.index[-1].date()):raise ValueError('Option provider quote predates completed price session')
         packet=profile(raw,float(price.iloc[-1]),(rate or 0)/100)
         if raw.get('underlying_price') and abs(raw['underlying_price']/float(price.iloc[-1])-1)>.015:raise ValueError('Option and completed underlying prices differ more than 1.5%')
         if packet:packet['price_date']=str(price.index[-1].date());result.append(packet)

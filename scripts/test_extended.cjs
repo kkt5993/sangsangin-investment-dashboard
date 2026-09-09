@@ -14,8 +14,9 @@ function interactiveContainer(){
   this.html=h;this.select=node('all');this.buttons=[...h.matchAll(/data-subview="([^"]+)"/g)].map(m=>node('',{subview:m[1]}));
   this.boxes=[...h.matchAll(/data-scenario="(\d+)"/g)].map(m=>{const market=node('KR'),shock=node('-10'),output=node();return {dataset:{scenario:m[1]},market,shock,output,querySelector:s=>({'[data-scenario-market]':market,'[data-shock]':shock,'[data-scenario-output]':output}[s]||null),querySelectorAll:()=>[market,shock]};});
   this.holos=[...h.matchAll(/data-hologram="(\d+)"/g)].map(m=>{const yaw=node('60'),output=node();return {dataset:{hologram:m[1]},yaw,output,querySelector:s=>s==='[data-holo-yaw]'?yaw:output};});
+  this.rebals=[...h.matchAll(/data-rebalancing="(\d+)"/g)].map(m=>{const shock=node('5'),output=node();return {dataset:{rebalancing:m[1]},shock,output,querySelector:s=>s==='[data-rebal-shock]'?shock:output};});
   this.industries=[...h.matchAll(/data-industries="(\d+)"/g)].map(m=>{const sector=node('all'),role=node('all'),cards=[...h.matchAll(/data-industry="([^"]+)" data-indicator-role="([^"]+)"/g)].map(a=>node('',{industry:a[1],indicatorRole:a[2]}));return {sector,role,cards,querySelector:s=>s==='[data-industry-filter]'?sector:role,querySelectorAll:s=>s==='select'?[sector,role]:cards};});
- },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-industries]'?this.industries:[];}};
+ },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-industries]'?this.industries:s==='[data-rebalancing]'?this.rebals:[];}};
  return c;
 }
 (async()=>{
@@ -34,6 +35,11 @@ function interactiveContainer(){
  box.market.value='US';box.shock.value='-20';box.shock.fire('input');assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='US').beta*-20+'"'));
  interactive.select.value='all';interactive.select.fire('change');assert(interactive.innerHTML.includes('주목 종목')&&interactive.innerHTML.includes('data-scenario='),'all view survives repaint');
  const A=context.window.AnalysisCharts;
+ context.location.hash='#risk';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='risk'));
+ interactive.buttons.find(b=>b.dataset.subview==='비펀더멘탈 수급').fire('click');assert.equal(interactive.rebals.length,1);
+ const rb=interactive.rebals[0],rc=data.risk.sections.find(s=>s.type==='rebalancing');rb.shock.value='-5';rb.shock.fire('input');
+ assert(rb.output.innerHTML.includes('data-flow-value="'+rc.stocks[0].coefficient*-.05/1e6+'"'));assert(rb.output.innerHTML.includes('data-adv-value='));
+ rb.shock.value='0';rb.shock.fire('input');assert(rb.output.innerHTML.includes('data-flow-value="0"'));assert(!/NaN|Infinity/.test(rb.output.innerHTML));
  context.location.hash='#regime';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='regime'));
  interactive.buttons.find(b=>b.dataset.subview==='Soros 재귀성').fire('click');assert.equal(interactive.holos.length,3);
  const hbox=interactive.holos[0];hbox.yaw.value='100';hbox.yaw.fire('input');assert(hbox.output.innerHTML.includes('data-holo-quadrant'));

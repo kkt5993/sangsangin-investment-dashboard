@@ -5,17 +5,19 @@ from .store import data_base
 from .acquire import get_bytes
 from .events_data import save,read
 
-def normalize(raw,symbol,now=None):
-    now=now or pd.Timestamp.now(tz='UTC');data=raw['data'];spot=float(data['current_price'])
-    if raw.get('symbol')!=symbol or spot<=0:raise ValueError('Unexpected option underlying')
+def parse_contracts(raw,symbol):
+    if raw.get('symbol')!=symbol or float(raw['data']['current_price'])<=0:raise ValueError('Unexpected option underlying')
     parsed=[]
-    for r in data['options']:
+    for r in raw['data']['options']:
         m=re.fullmatch(re.escape(symbol)+r'(\d{6})([CP])(\d{8})',r['option'])
         if not m:continue
         expiry=pd.to_datetime(m[1],format='%y%m%d').strftime('%Y-%m-%d')
-        t=(pd.Timestamp(expiry+' 16:00',tz='America/New_York')-now).total_seconds()/86400
-        if not 7<=t<=45:continue
         parsed.append(dict(contractSymbol=r['option'],strike=int(m[3])/1000,side='call' if m[2]=='C' else 'put',expiry=expiry,bid=r.get('bid'),ask=r.get('ask'),impliedVolatility=r.get('iv'),openInterest=r.get('open_interest'),volume=r.get('volume'),lastTradeDate=r.get('last_trade_time'),contractSize='REGULAR'))
+    return parsed
+
+def normalize(raw,symbol,now=None):
+    now=now or pd.Timestamp.now(tz='UTC');data=raw['data'];spot=float(data['current_price'])
+    parsed=[r for r in parse_contracts(raw,symbol) if 7<=(pd.Timestamp(r['expiry']+' 16:00',tz='America/New_York')-now).total_seconds()/86400<=45]
     expiries=sorted({r['expiry'] for r in parsed})[:3];records=[r for r in parsed if r['expiry'] in expiries]
     near=[r for r in records if .9*spot<=r['strike']<=1.1*spot]
     positive=[r for r in near if (r.get('openInterest') or 0)>0]

@@ -161,6 +161,9 @@ def extend(d,objects,ranks):
     cot_views(d,objects['pm_weekend']);cot_views(d,objects['risk'])
     from .wagdog import wagdog_views
     wagdog_views(d,objects['risk'])
+    from .flows import flow_views,earnings_views
+    flow_inputs=flow_views(d,objects['risk'])
+    if flow_inputs:earnings_views(d,objects['pm_weekend'],objects['earnings'],flow_inputs)
     for s in objects['risk']['sections']:
         if s.get('group'):continue
         t=s['title'];s['group']='파생·옵션' if any(k in t for k in ['GEX','감마','옵션','VIX','SKEW']) else '신호등 US·KR' if any(k in t for k in ['조기경보','변동성 · 시장']) else '쏠림·신용' if any(k in t for k in ['쏠림','신용']) else '리스크 콕핏'

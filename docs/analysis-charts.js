@@ -117,5 +117,15 @@
   b+=`<text x="${L}" y="${H-16}" class="axis">행사가 USD → · ${c.mode==='oi'?'콜 위 / 풋 아래 · 계약 수(방향 의미 없음)':'GEX USD bn / 현물 1% · 음영=ATM IV 기반30D 기대폭'}</text>`;
   return svg(b,c.title,W,H,'data-chart-type="optionprofile"');
  }
- root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,n,empty};
+ function rebalancing(c,shock=5){
+  const rows=c.stocks;if(!rows.length)return empty();shock=Math.max(-20,Math.min(20,Number(shock)||0));
+  const W=Math.max(900,rows.length*66+125),H=380,L=70,R=68,T=39,B=63;
+  const flows=rows.map(r=>r.coefficient*shock/100/1e6),advs=rows.map((r,i)=>r.adv?flows[i]*1e6/r.adv*100:null),maxF=Math.max(1,...flows.map(Math.abs))*1.15,maxP=Math.max(1,...advs.filter(finite).map(Math.abs))*1.22;
+  const Y=(v,max)=>shock<0?T+(-v)/max*(H-T-B):H-B-v/max*(H-T-B),X=i=>L+(i+.5)*(W-L-R)/rows.length,y0=Y(0,maxF),bw=Math.min(39,(W-L-R)/rows.length*.55);let b='';
+  for(let i=0;i<=4;i++){const f=maxF*i/4*(shock<0?-1:1),p=maxP*i/4*(shock<0?-1:1),y=Y(f,maxF);b+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" class="grid-line"/><text x="${L-8}" y="${y+4}" text-anchor="end" class="axis">${n(f)}</text><text x="${W-R+8}" y="${y+4}" class="axis">${n(p)}%</text>`;}
+  rows.forEach((r,i)=>{const x=X(i),y=Y(flows[i],maxF),p=advs[i],py=p===null?0:Y(p,maxP);b+=`<rect data-flow-value="${flows[i]}" x="${x-bw/2}" y="${Math.min(y,y0)}" width="${bw}" height="${Math.abs(y0-y)}" fill="#6fabc1"><title>${E(r.name)} · ${n(flows[i])} USD mn</title></rect><text x="${x}" y="${H-B+24}" text-anchor="middle" class="axis">${E(r.name)}</text>`;if(p!==null)b+=`<path data-adv-value="${p}" d="M ${x} ${py-6} l 6 6 -6 6 -6 -6 Z" fill="#b96d65" stroke="white"><title>${E(r.name)} · ${n(p)}% ADV</title></path>`;});
+  b+=`<text x="${L}" y="20" class="axis">■ 일일 리밸런싱 USD mn</text><text x="${W-R}" y="20" text-anchor="end" class="axis">◆ % ADV</text><text x="${W/2}" y="${H-10}" text-anchor="middle" class="axis">기초자산 ${shock}% 가정 · 수집된 ETF 표본 합계</text>`;
+  return '<div class="bar-scroll">'+svg(b,c.title,W,H,`data-chart-type="rebalancing" style="min-width:${W}px"`)+'</div>';
+ }
+ root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,n,empty};
 })(typeof window==='undefined'?globalThis:window);

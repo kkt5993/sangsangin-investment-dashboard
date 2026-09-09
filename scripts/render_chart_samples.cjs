@@ -13,6 +13,8 @@ samples.pm_rates=A.line(data('pm_weekend').sections.find(s=>s.title==='미국 �
 samples.pm_cta=A.line(data('pm_weekend').sections.find(s=>s.title==='CTA 시스템 추세 · 누적 자산배수'));
 samples.gamma_profile=A.optionProfile(data('risk').sections.find(s=>s.type==='optionprofile'&&s.mode==='gamma'));
 samples.oi_profile=A.optionProfile(data('risk').sections.find(s=>s.type==='optionprofile'&&s.mode==='oi'));
+samples.rebalancing=A.rebalancing(data('risk').sections.find(s=>s.type==='rebalancing'));
+samples.rebalancing_down=A.rebalancing(data('risk').sections.find(s=>s.type==='rebalancing'),-5);
 samples.cftc=A.line(data('risk').sections.find(s=>s.group==='CFTC 포지션'&&s.type==='line'));
 samples.news_regions=G.sphere(data('geoecon').sections.find(s=>s.type==='globe'),data('coastlines').arcs);
 samples.scenario=ctx.window.ResearchCharts.bars(data('dragonglass').sections.find(s=>s.type==='scenario').rows.filter(r=>r.market==='KR').map(r=>({name:r.name,value:r.beta*-10})),{unit:'%',title:'시장 −10% 가정 · Beta 민감도'});

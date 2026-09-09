@@ -76,6 +76,8 @@ def collect(parent,base,as_of,env,config,log):
     if due(parent,'events',3):collect_events(current,config.get('event_companies',60))
     if due(parent,'cot.json.gz',7):run('pipeline.cot_data')
     run('pipeline.options_data')
+    run('pipeline.flows_data','--market','US')
+    if config.get('allow_krx_auth'):run('pipeline.flows_data','--market','KR','--allow-krx-auth')
     if config.get('allow_krx_auth'):run('pipeline.krx_reconcile','--allow-krx-auth')
     current=Data(as_of,base.name)
     if len(current.frames)<len(parent.frames)*.97:raise RuntimeError('Fresh price coverage dropped more than 3%')

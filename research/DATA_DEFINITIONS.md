@@ -95,3 +95,7 @@ Stat Arb 반감기는 Δspread=a+b×spread(-1) 회귀의 φ=1+b에 대해 −ln(
 - Wag-the-Dog: 일반 미국 옵션의 계약승수100, GEX=Γ×OI×100×S²×0.01, 콜+/풋− 가정, 화면단위USD bn/현물1%. 행사가/현물은USD. 합산 OI는IV 없는 계약도 포함한다. 만료·비표준 계약은 제외한다. 감마플립은±20% 가격그리드의0교차를 보간하며 교차없음을0달러로 표시하지 않는다. 30D 기대폭은 근접만기 ATM IV 평균×√(30/365.25)로서 명시적인 근사이다. VVIX는 [Cboe가 정의한 VIX 변동성 지수](https://cdn.cboe.com/resources/futures/VIX_fact_sheet_2019.pdf)이며 VIX 수준과 다른 지표이다.
 
 - 옵션 공급처는 [Cboe 공개 지연호가](https://www.cboe.com/delayed_quotes/spy/quote_table)입니다. 수집 UTC와 공급처 타임존 미표기 시각을 구분하고 현물 ±10% 범위 양의 OI20계약 이상 및 콜/풋 양쪽을 검증합니다. Yahoo의 대량 OI 결측은 실제 포지션0으로 처리하지 않습니다.
+
+- 수급 정의: [Direxion 단일주식](https://www.direxion.com/single-stock-etfs), [GraniteShares](https://graniteshares.com/etfs/leveraged/), [T-REX](https://www.rexshares.com/t-rex-leveraged-etfs/), [Defiance SMCX](https://www.defianceetfs.com/smcx/)의 기초자산/일간 배율을 확인하여 flow_catalog.py에 고정했다. SOXL/SOXS의 현재 벤치마크는 NYSE Semiconductor이며 과거 PHLX SOX와 혼동하지 않는다. ETF AUM은 Yahoo 수집값이고 기준일이 제공되지 않는다. 가정 리밸런싱 Σ(L²−L)×AUM×충격률, 주식 ADV는21완료세션 종가×거래량 평균. 감마·옵션명목은 제한3만기이므로 전시장 총량이 아니다. 종합점수는4요인 모두 확보할 때의 단면z평균이다.
+- 한국 수급: KRX 대형주 현재 시총상위8개의 최근5거래일 외국인/기관 순매수 주식수÷동일기간 총거래량. ETF 테마는 상품명규칙12개이며 공식 업종분류가 아니다. KRX 순자산총액을 우선하고 없을 때 NAV×좌수, NAV1M변화는 분배·분할 미조정. 서로 겹치는 테마는 첫일치로 배정하고 레버리지/인버스는 별도표시한다. 설정/환매 순유입이라고 해석하지 않는다.
+- 실적 내재변동폭: 향후21일의 이벤트를 최대8종목까지 확인하고 발표시각 이후 첫 만기의 동일ATM행사가 콜·풋 중간호가를 합산/현물. 양의bid·OI, ask≥bid, 상대스프레드≤50%, 현물±3%를 요구한다. 확률구간이나 순수 발표일 변동성은 아니며 제공처 예정일과 수집UTC를 함께 표시한다.

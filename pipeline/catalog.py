@@ -43,6 +43,8 @@ MACRO.update({
 })
 # Explicit support instruments, never an implicit all-market expansion.
 DETAIL_PRICES=['USO','^MOVE','^VVIX','GC=F','^SOX','IYT','BDRY','KBE','JETS','IBB','ZC=F','ZW=F','ZS=F','LBR=F','RB=F','HO=F']
+from .flow_catalog import US_STOCKS
+DETAIL_PRICES=sorted(set(DETAIL_PRICES)|set(US_STOCKS))
 
 
 def etfs():

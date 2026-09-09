@@ -117,3 +117,10 @@ WTREGEN1거시/SPHB·SPLV·^W5000역사추가, ^FTW5000은37개관측으로긴�
 GPR Stata1요청764625bytes/gzip334921을private빈티지보존, GPR/GPRT/GPRA272개월/상세120개월. SHAREH8은3신문기사%,국가GPRC8은10신문기사%,3최근지수1985–2019=100과가산금지. refresh는gpr_details7일기준으로정기갱신. 기존ASK네번째핵심도3복합중VIX/HY참조로정렬;과거3입력EPU/VIX/HY와차이문서화. 상세research/GEOECON_CONTRACT.md,코드/검사에공개. 새가격/원본사이트요청0.
 
 검사121Python·두검증기·3JS(geo추가)/14구문·59SVG래스터통과,8신규이미지확인,브라우저QA없음. 원자료/실행파일98.18MiB/512·공개JSON7.405MiB/8. 게시실행ID20260909T152214Z/raw빈티지20260909T150119Z,실제공개상태는runtime/state.json. 전체목표는진행;다음estimate_verify/us_consensus분기/연간세부·위성실관측·SEC13F/P·KR달력/옵션·RS기간계약등REFERENCE_PARITY의미완료를계속구현한다.
+
+
+실적 후속(2026-09-10): earnings_details.py/earnings-views.js로global NI표본Top20 굵은FY1/얇은FY2/실제tick,한국2기업 OP/지배NI(과거3A/다음2E),미국10기업 NI근사/직접매출(1A/2E),197기업 검색·연간4/분기8 NI/OP/매출3패널 연결. 손실0축왼쪽·누락대시·가격/재무/추정일분리·원천링크. 원본글로벌/US의미래NI는EPS성장연결근사였으며직접NI컨센서스아님을명시. 세계전체표본아닌198연구기업중환산196가용의실제NI상위20이다. AAPL/BRK-B를명시적연구목록에추가해앞으로주간갱신.
+
+Yahoo이미받은earningsTrend의period/endDate만추가보존(추가요청없음),이번22기업재조회와FX5개수집. FY연속8일허용·통화일치·전년매출/FY2기준EPS5%이상차이차단·양의이전NI/EPS요구. NVIDIA의SEC FY2026실제말일1/25와제공처1/31구분,MSFT6월결산확인. BRK매출정의/TSMADREPS통화/SoftBank·Toyota전년기준불일치는NI근사미산출;원본의임의보수적보정복제없음. KR는QuantiWiseE121500/E122710/E121000 최신as_of≤가격기준,억원÷10000조원;현재2026-08-07추정날짜유지,2024/25AS를실제라고가장하지않음. FX는현재환율(최대7일경과)환산이며평균환율아님. 상세research/EARNINGS_CONTRACT.md.
+
+검사129Python·두검증기·3JS(earnings추가)/15구문·64SVG래스터통과,새5이미지확인,브라우저QA없음. 데이터가격1136/거시62/재무연결197,개발raw빈티지20260909T152436Z. 로컬106.33MiB/512·공개JSON7.609MiB/8(배포패키지생성전). 게시실행ID 20260909T224449Z 실제공개완료는runtime/state.json. 전체목표는계속진행;한국증권사별원문/해외직접NI·OP/PIT,위성실관측,SEC코드P/13F,KR거시일정/옵션,RS/모멘텀/ETF기간계약등REFERENCE_PARITY 미완료를계속한다.

@@ -1174,5 +1174,17 @@
     "name": "Recruit",
     "market": "JP",
     "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "BRK-B",
+    "name": "Berkshire Hathaway",
+    "market": "US",
+    "sector": null
+  },
+  {
+    "symbol": "AAPL",
+    "name": "Apple",
+    "market": "US",
+    "sector": "Technology"
   }
 ]

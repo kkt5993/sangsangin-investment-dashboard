@@ -23,6 +23,7 @@ CODE['regime']+=' · valuation.py · calendar_data.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py'
 CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
+CODE['earnings']+=' · earnings_details.py'
 CODE['dragonglass']+=' · entities.py · relation_model.py · relation_views.py'
 CODE['multiasset']+=' · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
 CODE['watch']+=' · technical_scan.py'
@@ -41,7 +42,7 @@ PARITY={
  'momentum':('32자산·24섹터, 기간 히트맵, 상위16×3M/6M=32곡선','동일 그룹 수·5기간·3M/6M 짝·0선·양음 영역','조선 5Y z 없음, 누적 비율/달력 월 계약은 팀 설정'),
  'discovery':('4개 분류·3개 평가축·공식 유니버스 발굴','KR기술100%, US45/30/25%, 시장·분류·검색·더 보기·근거 상세','비공개 정규화/리서치 서술 엔진 대신 공개 팀 규칙'),
  'strategies':('전략별 후보·재무·OHLC·이벤트 결과','흑자전환, 실적 서프라이즈, 일/주봉과 거래량','PEAD 발표일 정렬·내부자·13F·공매도 이벤트 원장 미연결'),
- 'earnings':('US/KR 상위 이익 성장·YTD·히트맵·3개년 그룹 막대','연간 NI실적·글로벌 EPS 추정·국내 2025/26/27 NI 막대','해외 FY1/FY2 순이익/영업이익 전체 금액 추정 없음'),
+ 'earnings':('US/KR 이익성장·글로벌 Top20 겹침막대·한국2/미국10 추정 상세·연간/분기 선택','보고 NI/OP/매출·국내 QuantiWise OP/지배NI·미국 EPS 연결 NI 근사/직접 매출·회계기간/통화 검사','해외 직접 NI/OP 컨센서스·역사 PIT·한국 증권사별 원문 미확보'),
  'growth':('FY1/FY2 3D: x영업이익성장 yYTD z영업이익률, 시총 크기','국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표','해외 영업이익 컨센서스 부족으로 글로벌 3D 전체 범위 차이'),
  'multiasset':('21자산 막대·열지도·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),
  'risk':('옵션 GEX/스팟곡선·VIX/SKEW·CSD·포트폴리오 위험','3ETF 만기 제한 GEX·OI PCR, CSD·곡선·VaR/CVaR·스트레스','딜러 실제 포지션·전 만기·실제 팀 포트폴리오 없음'),

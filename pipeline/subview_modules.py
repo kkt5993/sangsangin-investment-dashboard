@@ -138,6 +138,8 @@ def dragon_views(d,obj,ranks,news,events):
     obj['missing']=['위성 현장은 시설별 좌표·실관측 시계열이 없어 남아 있습니다. 시나리오는 원본의 공급망 인과 전파 엔진과 다릅니다. 결정 원장은 구조화된 브라우저 로컬 기록이며 팀 공용 DB가 아닙니다. 원본의 관계 기반 프리모템·군집 진단은 후속 대상입니다.']
 
 def extend(d,objects,ranks):
+    from .earnings_details import earnings_detail_views
+    earnings_detail_views(d,objects['earnings'])
     events=event_data(d);calendar=strategy_views(d,objects['strategies'],events,objects['quant'])
     revision_views(d,objects['earnings'],events);news=news_views(d,objects['geoecon']);regime_views(d,objects['regime'],calendar)
     dragon_views(d,objects['dragonglass'],ranks,news,events)

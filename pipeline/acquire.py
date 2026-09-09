@@ -128,10 +128,10 @@ def collect_macro(base,as_of,keys=None):
         write_json(mf,manifest);time.sleep(1)
 
 
-def collect_fundamentals(base,limit=0):
+def collect_fundamentals(base,limit=0,symbols=None):
     folder=base/'fundamentals';folder.mkdir(exist_ok=True)
     # Research universe is explicit; analyst retrieval is bounded, not all 500 stocks.
-    members=reference_stocks();members=members[:limit] if limit else members
+    members=[dict(symbol=s) for s in symbols] if symbols is not None else reference_stocks();members=members[:limit] if limit else members
     for i,m in enumerate(members):
         s=m['symbol'];file=folder/(re.sub(r'[^A-Za-z0-9.-]','_',s)+'.json')
         if file.exists() or file.with_suffix('.json.gz').exists():continue
@@ -140,12 +140,16 @@ def collect_fundamentals(base,limit=0):
         try:
             t=yf.Ticker(s)
             info=t.get_info()
-            keys=['shortName','longName','sector','industry','country','marketCap','currency','financialCurrency','currentPrice','regularMarketPrice','trailingPE','forwardPE','profitMargins','operatingMargins','revenueGrowth','earningsGrowth','targetMeanPrice','recommendationMean','numberOfAnalystOpinions','totalRevenue','netIncomeToCommon','sharesOutstanding']
+            keys=['shortName','longName','sector','industry','country','marketCap','currency','financialCurrency','currentPrice','regularMarketPrice','trailingPE','forwardPE','profitMargins','operatingMargins','revenueGrowth','earningsGrowth','targetMeanPrice','recommendationMean','numberOfAnalystOpinions','totalRevenue','netIncomeToCommon','sharesOutstanding','lastFiscalYearEnd','nextFiscalYearEnd','mostRecentQuarter']
             out['info']={k:info.get(k) for k in keys}
             for key,func in [('annual_income',lambda:t.get_income_stmt(freq='yearly')),('quarterly_income',lambda:t.get_income_stmt(freq='quarterly')),('earnings_estimate',t.get_earnings_estimate),('revenue_estimate',t.get_revenue_estimate),('earnings_history',t.get_earnings_history)]:
                 try:
                     f=func();out[key]=json.loads(f.to_json(orient='split',date_format='iso')) if f is not None and not f.empty else None
                 except Exception as e:out[key]=None;out['errors'].append(key+':'+type(e).__name__)
+            # yfinance drops endDate from its public estimate DataFrame. Preserve
+            # only the period labels already fetched for those two tables.
+            trend=getattr(getattr(t,'_analysis',None),'_earnings_trend',None) or []
+            out['estimate_periods']=[{k:r.get(k) for k in ['period','endDate']} for r in trend if r.get('period') in ['0q','+1q','0y','+1y']]
             out['status']='ok'
         except Exception as e:out.update(status='error',error_type=type(e).__name__)
         from .events_data import save

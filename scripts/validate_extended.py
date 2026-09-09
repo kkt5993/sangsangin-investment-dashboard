@@ -13,6 +13,24 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='earningsglobal':
+        assert len(s['rows'])<=20 and s['available']<=s['expected']
+        assert [r['values'][0] for r in s['rows']]==sorted([r['values'][0] for r in s['rows']],reverse=True)
+        for r in s['rows']:
+            assert len(r['values'])==3 and len(r['forecast_periods'])==2 and r['actual_period']<=cutoff and r['fx']['date']<=cutoff
+    if kind=='earningsestimates':
+        assert len(s['cards'])==(2 if s['market']=='KR' else 10)
+        for c in s['cards']:
+            assert len(c['metrics'])==2 and c['source'].startswith('https://')
+            for m in c['metrics']:
+                assert all(r['kind'] in ['actual','estimate'] for r in m['rows'])
+                assert all(r['period']<=cutoff for r in m['rows'] if r['kind']=='actual')
+                assert all(r['value'] is None or isinstance(r['value'],(int,float)) for r in m['rows'])
+    if kind=='earningsactual':
+        assert len({r['symbol'] for r in s['cards']})==len(s['cards'])
+        for c in s['cards']:
+            for key,maximum in [('annual',4),('quarterly',8)]:
+                dates=[r['period'] for r in c[key]];assert dates==sorted(set(dates)) and len(dates)<=maximum and all(t<=cutoff for t in dates)
     if kind in ['geosituations','geokeywords','geochannels']:
         ids={r['id'] for r in s['news']};assert len(ids)==len(s['news'])
         for r in s['news']:assert r['date']<=cutoff and r['direction'] in [-1,0,1] and r['url'].startswith('https://') and r['first_seen']

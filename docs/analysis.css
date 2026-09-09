@@ -45,3 +45,7 @@
 @media(max-width:650px){.overview-holo-grid,.overview-holo-grid.has-worm{grid-template-columns:1fr}}
 .geo-card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:18px 0}.geo-composite-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.geo-value{font-size:28px;font-weight:700}.geo-value small{font-size:14px}.geo-article{border-top:1px solid #dce5ec;padding:12px 0;overflow-wrap:anywhere}.geo-article small{display:block;margin-top:5px;color:#5d7486}.geo-sentiment{display:flex;height:15px;border-radius:6px;overflow:hidden}.geo-cloud{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:22px}.geo-cloud button{background:transparent;border:1px solid #d5dfe7;border-radius:7px;padding:6px}.geo-cloud small{font-size:12px}.geo-topic code{white-space:pre-wrap;overflow-wrap:anywhere}.geo-card-grid progress{width:100%}
 @media(max-width:1250px){.geo-composite-grid{grid-template-columns:1fr}.geo-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.geo-card-grid{grid-template-columns:1fr}}
+
+.earnings-card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.earnings-card{min-width:0}.earnings-scroll{overflow-x:auto}.earnings-scroll svg{display:block;width:100%;min-width:480px}.earnings-card p{overflow-wrap:anywhere}.earnings-card details{margin-top:14px}@media(max-width:900px){.earnings-card-grid{grid-template-columns:1fr}}
+
+.earnings-global svg{min-width:980px}

@@ -31,6 +31,18 @@ MACRO={
  'RSAFS':('소매판매','USD mn','M'), 'HOUST':('주택착공','thousands SAAR','M'),
  'USREC':('미국 침체 더미','0/1','M'), 'CBOEPUTCALL':('풋콜 비율','ratio','D'),
 }
+MACRO.update({
+ 'BAMLC0A0CM':('미국 투자등급 OAS','%','D'), 'RRPONTSYD':('연준 익일 역레포','USD bn','D'),
+ 'IPG3344S':('반도체·전자부품 산업생산','2017=100','M'),
+ 'PCU334413334413':('반도체 제조업 PPI','1998-12=100','M'),
+ 'WPU101':('철강 PPI','1982=100','M'), 'TSIFRGHT':('화물운송 물동량','2000=100','M'),
+ 'TOTALSA':('미국 자동차 판매','million SAAR','M'), 'IPG3361T3S':('자동차·부품 산업생산','2017=100','M'),
+ 'PERMIT':('건축허가','thousand SAAR','M'), 'MORTGAGE30US':('30년 고정 모기지','%','W'),
+ 'UMCSENT':('미시간 소비자심리','1966Q1=100','M'),
+ 'AMTMNO':('제조업 신규수주','USD mn','M'), 'DGORDER':('내구재 신규수주','USD mn','M'),
+})
+# Explicit support instruments, never an implicit all-market expansion.
+DETAIL_PRICES=['USO','^MOVE','GC=F','^SOX','IYT','BDRY','KBE','JETS','IBB','ZC=F','ZW=F','ZS=F','LBR=F','RB=F','HO=F']
 
 
 def etfs():
@@ -46,4 +58,4 @@ def extra_price_symbols():
     return sorted({r['symbol'] for c in etfs() for r in c['items']} |
                   {s for s,n,g in MULTI+SCAN_EXTRA} | {s for _,s,_ in INDICES} |
                   {s for s,n in DYNAMICS_STOCKS} |
-                  set(symbols()) | {'LQD','ACWI','SOXX','FXE','FXY','BIL','^VIX','^VIX3M','^SKEW','^TNX'})
+                  set(symbols()) | set(DETAIL_PRICES) | {'LQD','ACWI','SOXX','FXE','FXY','BIL','^VIX','^VIX3M','^SKEW','^TNX'})

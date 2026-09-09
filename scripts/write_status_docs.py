@@ -18,6 +18,8 @@ for key in ['regime','risk','pm_weekend','geoecon','strategies','earnings','drag
     CODE[key]+=' · subview_modules.py'
 for key in ['strategies','earnings','geoecon']:CODE[key]+=' · events_data.py'
 for key in ['risk','pm_weekend']:CODE[key]+=' · cot_data.py'
+CODE['regime']+=' · reflexivity.py · industry_details.py'
+CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
  'overview':('전체 탭 요약·카드·탐색','25탭 상태, 데이터 수, 바로가기','원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외'),
@@ -87,6 +89,6 @@ for m in modules:
     for v in meta['modules'][m['id']].get('subviews',[]):
         connected+=v['status']=='connected';pending+=v['status']=='pending'
         views.append(f"| {m['title']} | {v['name']} | {'연결' if v['status']=='connected' else '미연결'} | {v['sections']} | {v['reason'] if v['status']=='pending' else ''} |")
-views[2]+=f' 현재 목록: 연결 {connected}개, 미연결 {pending}개. RS/모멘텀의 별도 기존 탐색 그룹은 이 집계에서 제외합니다.'
+views[2]+=f' 현재 화면 그룹 목록: 연결 {connected}개, 미연결 {pending}개. 이 숫자는 완성된 원본 세부 기능 수가 아닙니다. RS/모멘텀과 원본의 중첩 화면·그룹 내부 기능은 별도 대조가 필요하며 [원본 기능 대조](REFERENCE_PARITY.md)에서 관리합니다.'
 (ROOT/'research/SUBVIEWS.md').write_text('\n'.join(views)+'\n',encoding='utf8')
 print('Updated 25 module guides, implementation status and chart parity.')

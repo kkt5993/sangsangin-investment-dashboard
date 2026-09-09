@@ -3,19 +3,21 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 매크로 브리프 / CFTC 포지션.
+**부분 구현** · 가격 기준 2026-09-08. PM 키 게이지 / 금리·성장 / 크로스에셋 속보 / CTA 시스템 트렌드 / 매크로 z-score / 다이버전스·실적 / 기초 매크로 시계열 / CFTC 포지션.
 
-- 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [cot_data.py](../../pipeline/cot_data.py)
+- 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [cot_data.py](../../pipeline/cot_data.py) · [pm_details.py](../../pipeline/pm_details.py) · [gpr_data.py](../../pipeline/gpr_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/pm_weekend.json)
-- 계산/자료 계약: 5년 시계열 14개 패널. 월간 YoY는 월간 관측치의 12개월 변화율이며, 주간·일간 데이터를 12개 관측치 변화율로 잘못 계산하지 않습니다. 모든 차트에 서로 다른 단위·축을 표시합니다. CFTC TFF는 선물만의 주간 보고값이며 레버리지펀드는 CTA 전체와 같지 않습니다. 계약별 단위가 달라 계약 수를 자산 간 달러 익스포저처럼 합하지 않습니다.
-- 남은 범위: 원본의 CTA 추정 포지션·매매자금 예측은 실제 포지션 데이터가 없어 제외했습니다.
+- 계산/자료 계약: PM 6개 세부 화면: 임계 게이지·금리/성장·7계열 위험선호·10자산 CTA·z 분포·다이버전스/실적. 금리·GDP는 관측기간을 맞추며 한국 명목성장은 실질 GDP YoY+CPI 근사입니다. 게이지는 관찰 규칙이며 침체 확률이나 수익 보장이 아닙니다. CTA는 21/63/126/252일 수익 부호 평균, 63일 변동성에 자산별10% 타깃·레버리지2배 상한·동일 평균을 적용하고 하루 지연한 비중과 5bp 회전비용을 사용합니다. ETF 조정가격·USD 수익률 기준이며 현금 이자·차입/펀딩 비용은 미반영입니다. CFTC TFF는 선물만의 주간 보고값이며 레버리지펀드는 CTA 전체와 같지 않습니다. 계약별 단위가 달라 계약 수를 자산 간 달러 익스포저처럼 합하지 않습니다.
+- 남은 범위: 원본이 공개하지 않은 CTA 변동성 창·비용·레버리지 및 z 준비 기간은 위 팀 설정으로 고정했습니다. 과거 실시간 거시 빈티지와 실제 CTA 계좌 포지션은 아닙니다. / 실적 발표 종목별 ATM 스트래들 내재 변동폭은 개별주 옵션 연결 후 추가합니다.
 
-연결된 하위 그룹: 매크로 브리프, CFTC 포지션.
+연결된 하위 그룹: PM 키 게이지, 금리·성장, 크로스에셋 속보, CTA 시스템 트렌드, 매크로 z-score, 다이버전스·실적, 기초 매크로 시계열, CFTC 포지션.
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
+
+
 
 
 

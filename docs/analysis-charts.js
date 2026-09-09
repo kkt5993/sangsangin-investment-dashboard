@@ -81,5 +81,29 @@
   b+=`<polyline data-prediction="1" points="${rows.map((r,i)=>`${X(i)},${Y(r.prediction)}`).join(' ')}" fill="none" stroke="#287c96" stroke-width="2"/><line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" class="reference-line"/><text x="${L}" y="18" class="axis">실제 수익률 막대 · 예측 선 · 68%/90% 구간 · 점=방향 적중/실패</text>`;
   return svg(b,c.title+' 예측',W,H,'data-chart-type="forecast"');
  }
- root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,n,empty};
+ function spark(points,title){
+  const a=points.filter(p=>finite(p[1]));if(!a.length)return empty();const W=310,H=115,[lo,hi]=range(a.map(p=>p[1])),t0=Date.parse(a[0][0]),t1=Date.parse(a.at(-1)[0]),X=p=>10+(Date.parse(p[0])-t0)/Math.max(1,t1-t0)*290,Y=p=>14+(hi-p[1])/(hi-lo)*72;
+  return svg(`<polyline points="${a.map(p=>`${X(p)},${Y(p)}`).join(' ')}" fill="none" stroke="#287c96" stroke-width="2"/><text x="10" y="108" class="axis">${a[0][0].slice(0,7)}</text><text x="300" y="108" text-anchor="end" class="axis">${a.at(-1)[0].slice(0,7)}</text>`,title,W,H,'data-chart-type="spark"');
+ }
+ function hologram(c,yaw=.6){
+  const rows=c.rows.filter(r=>['cognition','acceleration','fragility'].every(k=>finite(r.z[k])));if(!rows.length)return empty();
+  const clamp=v=>Math.max(-3,Math.min(3,v)),P=r=>project3d(clamp(r.z.cognition)/6,clamp(r.z.acceleration)/6,(clamp(r.z.fragility)+3)/6,yaw);
+  const corners=[[-.5,-.5,0],[.5,-.5,0],[.5,.5,0],[-.5,.5,0]].map(p=>project3d(...p,yaw));
+  let b=`<polygon points="${corners.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="#eef3f7" stroke="#aab8c4"/>`;
+  [[0,0,'자기강화 가속','#e9d5d7'],[0,-.5,'건전 추세','#d8e8dd'],[-.5,0,'관성 과열','#efe3cd'],[-.5,-.5,'균형·잠복','#d9e3ee']].forEach(([x,z,label,color])=>{const q=[[x,z,0],[x+.5,z,0],[x+.5,z+.5,0],[x,z+.5,0]].map(p=>project3d(...p,yaw)),at=project3d(x+.25,z+.25,0,yaw);b+=`<polygon data-holo-quadrant="${label}" points="${q.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="${color}" stroke="#c0cbd2"/><text x="${at[0]}" y="${at[1]}" text-anchor="middle" class="axis">${label}</text>`;});
+  const origin=project3d(0,0,0,yaw);[[.5,0,0],[0,.5,0],[0,0,1]].forEach((p,i)=>{const end=project3d(...p,yaw);b+=`<line x1="${origin[0]}" y1="${origin[1]}" x2="${end[0]}" y2="${end[1]}" stroke="#718597"/><text x="${end[0]}" y="${end[1]-15}" text-anchor="middle" class="axis">${['X 인지 게인','깊이 Z 초지수성','높이 Y 취약성'][i]}</text>`;});
+  b+=`<polyline data-holo-trajectory="1" points="${rows.map(r=>P(r).slice(0,2).join(',')).join(' ')}" fill="none" stroke="#7295a9" stroke-width="1.5"/>`;
+  const latest=rows.at(-1),top=P(latest),foot=project3d(clamp(latest.z.cognition)/6,clamp(latest.z.acceleration)/6,0,yaw);b+=`<line x1="${top[0]}" y1="${top[1]}" x2="${foot[0]}" y2="${foot[1]}" stroke="#b28325" stroke-dasharray="4 4"/>`;
+  rows.forEach((r,i)=>{const p=P(r),v=r.z.volatility,color=finite(r.z.herding)?`hsl(${210-(clamp(r.z.herding)+3)*30} 58% 46%)`:'#9ea5ab',radius=finite(v)?3+(clamp(v)+3):3;b+=`<circle data-holo-date="${r.date}" cx="${p[0]}" cy="${p[1]}" r="${i===rows.length-1?10:radius}" fill="${i===rows.length-1?'#b28325':color}" opacity="${.3+.7*i/Math.max(1,rows.length-1)}"><title>${r.date} · ${c.axes.map(a=>a.name+' '+n(r.raw[a.key])+' '+a.unit).join(' · ')}</title></circle>`;});
+  b+=`<text x="35" y="406" class="axis">좌표=36개월 z · 색=허딩(회색: 자료 부족) · 크기=60일 변동성</text><text x="35" y="430" class="axis">각 축 표시 범위 −3~+3z · 밝기=최근 · 황색=현재</text>`;
+  return svg(b,c.title+' · 3D 궤적',900,450,'data-chart-type="hologram"');
+ }
+ function radar(c){
+  const W=500,H=450,cx=250,cy=208,rad=140,xy=(i,r)=>[cx+Math.sin(i*Math.PI*2/5)*r,cy-Math.cos(i*Math.PI*2/5)*r],rr=z=>(Math.max(-3,Math.min(3,z))+3)/6*rad;
+  let b='';[0,.5,1].forEach((v,j)=>{const pts=c.axes.map((a,i)=>xy(i,rad*v));b+=`<polygon points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#ccd7df"/><text x="${cx+5}" y="${cy-rad*v}" class="axis">${[-3,0,3][j]}z</text>`;});
+  c.axes.forEach((a,i)=>{const p=xy(i,rad+24),end=xy(i,rad);b+=`<line x1="${cx}" y1="${cy}" x2="${end[0]}" y2="${end[1]}" stroke="#c9d3db"/><text x="${p[0]}" y="${p[1]}" text-anchor="middle" class="axis">${E(a.name)}</text>`;});
+  const indices=[24,12,6,0].map(n=>Math.max(0,c.rows.length-1-n));indices.forEach((ix,j)=>{const r=c.rows[ix],valid=c.axes.every(a=>finite(r.z[a.key]));if(valid)b+=`<polygon data-radar-date="${r.date}" points="${c.axes.map((a,i)=>xy(i,rr(r.z[a.key])).join(',')).join(' ')}" fill="${colors[j]}" fill-opacity=".06" stroke="${colors[j]}" stroke-width="${j===3?2.5:1.5}"/>`;b+=`<text x="30" y="${373+j*18}" fill="${colors[j]}" class="axis">${r.date}${valid?'':' · 일부 축 미수집으로 오각형 생략'}</text>`;});
+  return svg(b,c.title+' · 4시점 5축 레이더',W,H,'data-chart-type="radar"');
+ }
+ root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,n,empty};
 })(typeof window==='undefined'?globalThis:window);

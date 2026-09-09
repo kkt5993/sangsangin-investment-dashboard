@@ -47,7 +47,8 @@ def prices(parent,base,as_of,members=None,now=None):
     dest=base/'price_delta.json.gz';out=read(dest) if dest.exists() else dict(as_of=as_of,instruments={},attempts={})
     logging.getLogger('yfinance').setLevel(logging.CRITICAL)
     now=now or datetime.now(ZoneInfo('UTC'))
-    wanted=universe_symbols(members or parent.members)
+    from .catalog import DETAIL_PRICES
+    wanted=universe_symbols(members or parent.members)|set(DETAIL_PRICES)
     # Newly disclosed constituents get one bounded 3-year history. Subsequent
     # runs add only changed bars. Unavailable tickers remain explicit coverage gaps.
     additions=sorted(wanted-set(parent.frames))[:25]

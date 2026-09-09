@@ -13,7 +13,9 @@ function interactiveContainer(){
  const c={html:'',buttons:[],boxes:[],select:node('all'),get innerHTML(){return this.html;},set innerHTML(h){
   this.html=h;this.select=node('all');this.buttons=[...h.matchAll(/data-subview="([^"]+)"/g)].map(m=>node('',{subview:m[1]}));
   this.boxes=[...h.matchAll(/data-scenario="(\d+)"/g)].map(m=>{const market=node('KR'),shock=node('-10'),output=node();return {dataset:{scenario:m[1]},market,shock,output,querySelector:s=>({'[data-scenario-market]':market,'[data-shock]':shock,'[data-scenario-output]':output}[s]||null),querySelectorAll:()=>[market,shock]};});
- },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:[];}};
+  this.holos=[...h.matchAll(/data-hologram="(\d+)"/g)].map(m=>{const yaw=node('60'),output=node();return {dataset:{hologram:m[1]},yaw,output,querySelector:s=>s==='[data-holo-yaw]'?yaw:output};});
+  this.industries=[...h.matchAll(/data-industries="(\d+)"/g)].map(m=>{const sector=node('all'),role=node('all'),cards=[...h.matchAll(/data-industry="([^"]+)" data-indicator-role="([^"]+)"/g)].map(a=>node('',{industry:a[1],indicatorRole:a[2]}));return {sector,role,cards,querySelector:s=>s==='[data-industry-filter]'?sector:role,querySelectorAll:s=>s==='select'?[sector,role]:cards};});
+ },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-industries]'?this.industries:[];}};
  return c;
 }
 (async()=>{
@@ -32,6 +34,16 @@ function interactiveContainer(){
  box.market.value='US';box.shock.value='-20';box.shock.fire('input');assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='US').beta*-20+'"'));
  interactive.select.value='all';interactive.select.fire('change');assert(interactive.innerHTML.includes('주목 종목')&&interactive.innerHTML.includes('data-scenario='),'all view survives repaint');
  const A=context.window.AnalysisCharts;
+ context.location.hash='#regime';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='regime'));
+ interactive.buttons.find(b=>b.dataset.subview==='Soros 재귀성').fire('click');assert.equal(interactive.holos.length,3);
+ const hbox=interactive.holos[0];hbox.yaw.value='100';hbox.yaw.fire('input');assert(hbox.output.innerHTML.includes('data-holo-quadrant'));
+ interactive.buttons.find(b=>b.dataset.subview==='산업별 핵심지표').fire('click');assert.equal(interactive.industries.length,1);
+ const ibox=interactive.industries[0];ibox.sector.value='반도체·IT';ibox.sector.fire('change');assert.equal(ibox.cards.filter(c=>!c.hidden).length,3);
+ ibox.role.value='Q';ibox.role.fire('change');assert.equal(ibox.cards.filter(c=>!c.hidden).length,1);
+ const holos=data.regime.sections.filter(s=>s.type==='hologram');assert.equal(holos.length,3);
+ for(const h of holos){assert.equal(h.rows.length,36);assert(A.hologram(h).includes('data-holo-trajectory'));assert(A.radar(h).includes('data-radar-date'));assert.notEqual(A.hologram(h,0),A.hologram(h,1));}
+ assert.equal(data.regime.sections.find(s=>s.type==='industry').items.length,39);
+ for(const g of ['PM 키 게이지','금리·성장','크로스에셋 속보','CTA 시스템 트렌드','매크로 z-score','다이버전스·실적'])assert(data.pm_weekend.sections.some(s=>s.group===g),g);
  const dyn=data.dynamics.sections[0];assert.equal(dyn.surface.windows.length,8);assert.equal(dyn.phase.length,60);assert(A.surface(dyn.surface).includes('data-chart-type="surface"'));
  const watch=data.watch.sections[0];assert.equal(watch.candles.length,120);assert.equal(watch.weekly.length,52);assert.equal((A.candles(watch).match(/data-volume="1"/g)||[]).length,120);
  assert(data.watch.sections.some(s=>s.pattern&&A.candles(s).includes('data-pattern="1"')),'geometric candidates have overlays');

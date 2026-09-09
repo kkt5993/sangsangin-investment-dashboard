@@ -153,7 +153,11 @@ def extend(d,objects,ranks):
     events=event_data(d);calendar=strategy_views(d,objects['strategies'],events,objects['quant'])
     revision_views(d,objects['earnings'],events);news=news_views(d,objects['geoecon']);regime_views(d,objects['regime'],calendar)
     dragon_views(d,objects['dragonglass'],ranks,news)
-    for s in objects['pm_weekend']['sections']:s['group']='매크로 브리프'
+    from .pm_details import extend_pm
+    from .industry_details import industry_views
+    from .reflexivity import reflex_views
+    extend_pm(d,objects['pm_weekend'],calendar)
+    reflex_views(d,objects['regime']);industry_views(d,objects['regime'])
     cot_views(d,objects['pm_weekend']);cot_views(d,objects['risk'])
     for s in objects['risk']['sections']:
         if s.get('group'):continue

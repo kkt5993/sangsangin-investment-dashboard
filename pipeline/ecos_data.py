@@ -8,7 +8,12 @@ from .acquire import stamp,budget
 SERIES=[('KR_CPI','901Y009','M','0','한국 CPI'),('KR_LEAD','901Y067','M','I16E','한국 선행 순환변동치'),
  ('KR_COIN','901Y067','M','I16D','한국 동행 순환변동치'),('KR_BASE','722Y001','D','0101000','한국 기준금리'),
  ('KR_3Y','817Y002','D','010200000','국고채 3년'),('KR_10Y','817Y002','D','010210000','국고채 10년'),
- ('KR_AA','817Y002','D','010300000','회사채 AA- 3년'),('KR_EXPORT','901Y118','M','T002','통관 수출금액')]
+ ('KR_AA','817Y002','D','010300000','회사채 AA- 3년'),('KR_EXPORT','901Y118','M','T002','통관 수출금액'),
+ ('KR_REAL_GDP','200Y104','Q','1400','한국 실질 GDP 계절조정'),
+ ('KR_CHEM_EXPORT','403Y003','M','3051AA','기초화학물질 수출물량지수')]
+
+def period_date(value,freq):
+    return pd.Period(value,freq='Q').start_time if freq=='Q' else pd.to_datetime(value,format='%Y%m' if freq=='M' else '%Y%m%d')
 def main():
     p=argparse.ArgumentParser();p.add_argument('--key-file');p.add_argument('--as-of',default='2026-09-08');a=p.parse_args()
     from pathlib import Path
@@ -17,12 +22,13 @@ def main():
     for symbol,stat,freq,item,name in SERIES:
         file=base/(symbol+'.csv')
         if file.exists():continue
-        start='200401' if freq=='M' else '20040101';end=a.as_of.replace('-','')[:6 if freq=='M' else 8]
+        start='2004Q1' if freq=='Q' else '200401' if freq=='M' else '20040101'
+        end=str(pd.Period(a.as_of,freq='Q')) if freq=='Q' else a.as_of.replace('-','')[:6 if freq=='M' else 8]
         try:
             r=requests.get(f'https://ecos.bok.or.kr/api/StatisticSearch/{key}/json/kr/1/10000/{stat}/{freq}/{start}/{end}/{item}',timeout=25)
             j=r.json().get('StatisticSearch',{});rows=j.get('row',[])
             if not rows:raise ValueError('No ECOS observations')
-            f=pd.DataFrame(rows);dates=pd.to_datetime(f.TIME,format='%Y%m' if freq=='M' else '%Y%m%d')
+            f=pd.DataFrame(rows);dates=f.TIME.map(lambda v:period_date(v,freq))
             out=pd.DataFrame({'observation_date':dates,symbol:pd.to_numeric(f.DATA_VALUE,errors='coerce')}).dropna().sort_values('observation_date')
             budget(len(out)*40);out.to_csv(file,index=False)
             m['instruments'][symbol]=dict(status='ok',source='https://ecos.bok.or.kr/',name=name,unit=f.UNIT_NAME.iloc[0],frequency=freq,stat_code=stat,item_code=item,sha256=digest(file),retrieved_at=stamp())

@@ -68,7 +68,7 @@ def collect_naver(base):
     print('KR market cap screen',len(members),flush=True)
 
 
-def collect_prices(base,as_of,selection):
+def collect_prices(base,as_of,selection,symbols_override=None):
     folder=base/('stocks' if selection=='stocks' else 'prices');folder.mkdir(exist_ok=True)
     mf=folder/'manifest.json';manifest=read_json(mf) if mf.exists() else dict(provider='Yahoo Finance via yfinance',retrieved_at=stamp(),as_of=as_of,instruments={})
     long_symbols={s for _,s,_ in INDICES}|{s for s,n in DYNAMICS_STOCKS}
@@ -79,6 +79,7 @@ def collect_prices(base,as_of,selection):
     if selection=='core':symbols=extra_price_symbols()
     elif selection=='stocks':symbols=sorted(({m['symbol'] for m in members}|{m['symbol'] for m in reference_stocks()})-set(extra_price_symbols()))
     else:symbols=sorted(set(extra_price_symbols())|{m['symbol'] for m in members}|{m['symbol'] for m in reference_stocks()})
+    if symbols_override is not None:symbols=sorted(set(symbols_override))
     start_short=str(pd.Timestamp(as_of)-pd.DateOffset(years=3))[:10]
     core_symbols=set(extra_price_symbols())
     previous_manifest=read_json(DATA/as_of/'manifest.json') if (DATA/as_of/'manifest.json').exists() else {'instruments':{}}
@@ -110,10 +111,11 @@ def collect_prices(base,as_of,selection):
         manifest['instruments'][symbol]=item;write_json(mf,manifest)
 
 
-def collect_macro(base,as_of):
+def collect_macro(base,as_of,keys=None):
     folder=base/'macro';folder.mkdir(exist_ok=True);mf=folder/'manifest.json'
     manifest=read_json(mf) if mf.exists() else dict(provider='FRED',as_of=as_of,instruments={})
     for key,(name,unit,freq) in MACRO.items():
+        if keys is not None and key not in keys:continue
         file=folder/(key+'.csv')
         if file.exists() and manifest['instruments'].get(key,{}).get('status')=='ok':continue
         try:

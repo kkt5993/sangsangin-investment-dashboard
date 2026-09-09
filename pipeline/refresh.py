@@ -55,6 +55,9 @@ def collect(parent,base,as_of,env,config,log):
     members=Data(parent.as_of,base.name).members
     summary=prices(parent,base,as_of,members)
     run('pipeline.acquire','macro')
+    if due(parent,'macro/GPR.csv',7):
+        from .gpr_data import collect as collect_gpr
+        collect_gpr(base,as_of)
     if config.get('ecos_key_file'):run('pipeline.ecos_data','--key-file',config['ecos_key_file'])
     # Discard only this run's byte-identical generated copies, after hash check.
     mf=base/'macro/manifest.json'

@@ -45,6 +45,21 @@ def section(s,cutoff,module):
     if kind=='etf':assert all(len(r['returns'])==4 and r['payments']>=0 and r['as_of']<=cutoff for r in s['rows'])
     if kind=='wordcloud':assert all(w['count']>0 and isinstance(w['count'],int) and w['term'] for w in s['words'])
     if kind=='scenario':assert all(math.isfinite(r['beta']) and 0<=r['r2']<=1 and r['observations']>=200 for r in s['rows'])
+    if kind=='gauges':
+        for a in s['items']:
+            assert a['min']<a['max'] and a['cuts']==sorted(a['cuts'])
+            if a['value'] is not None:assert math.isfinite(a['value']) and a['date']<=cutoff
+    if kind=='industry':
+        assert len(s['items'])==39 and len({a['sector'] for a in s['items']})==13
+        for a in s['items']:
+            assert a['value'] is not None and a['date']<=cutoff
+            series(dict(name=a['name'],points=a['spark']),cutoff)
+    if kind=='hologram':
+        assert len(s['axes'])==5 and len(s['rows'])==36
+        assert [r['date'] for r in s['rows']]==sorted(set(r['date'] for r in s['rows']))
+        for row in s['rows']:
+            assert row['date']<=cutoff and set(row['raw'])==set(a['key'] for a in s['axes'])
+            assert all(v is None or math.isfinite(v) for v in [*row['raw'].values(),*row['z'].values()])
 
 count=0
 for file in (ROOT/'docs/data').glob('*.json'):

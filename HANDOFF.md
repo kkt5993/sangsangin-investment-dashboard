@@ -30,3 +30,9 @@
 승인된 정기 갱신은 한국시간 평일08시·18시. PC+Codex 앱에서 pipeline.refresh --publish를 실행한다. runtime/config.json의 기존 로컬 ECOS 설정·QW DB·KRX 허용을 사용한다. 값이나 절대 경로를 공개하지 않는다. 가격 변경분은 parent.json 체인·SHA256으로 검증한다. 실패한 staging은 게시하지 않으며, pending_publish.json은 동일 커밋으로 재시도한다. 자세한 절차는 research/UPDATE_PIPELINE.md.
 
 Vercel 프로젝트: sangsangin-investment-dashboard. 운영 도메인 https://sangsangin-investment-dashboard.vercel.app. 사용자 직접 인증한 CLI를 이용하며 .vercel과 .env.local을 Git/정적 패키지에서 제외한다. Vercel GitHub OAuth 연결은 필요하지 않다.
+
+2026-09-09 목표 확장: 사용자가 `/goal`로 모든 세부 탭 구현을 요청했다. 큰 탭/버튼 연결만으로 완료 판단하지 않는다. research/REFERENCE_PARITY.md의 중첩 화면·내부 기능도 작업 대상이다. PM6개 하위 화면·14핵심 차트, 13산업39지표, 재귀성5기둥/3시장36개월홀로그램/4시점5축레이더를 추가했다. Soros 핵심 산식은 공개 app.js 2053행 이후와 _RX_CFG에 존재했다; 미공개라고 일괄 분류한 이전 기록을 따르지 않는다. 현재 macro51·price1124이며 이전 35/1084는 초기 기준이다.
+
+새 코드: pm_details.py, industry_details.py, reflexivity.py, gpr_data.py. 국내 GDP는 ECOS200Y104/1400(Q 계절조정 실질), 기초화학 수출물량403Y003/3051AA, 수출액의 ECOS 단위 '천불'→USD bn은1e6으로 나눈다. 시총 확보 범위에서 현재 공식 US70/KR60 표본을 고르므로 과거 구성종목 주장이 아니다. AR1은 창 내부 n−1쌍, 회귀 t는 OLS. 홀로그램 표시 z는36개월 분포이며 예측 입력으로 사용하지 않는다.
+
+원본 대비 아직 여러 세부 기능이 남는다: PM 실적종목 ATM 내재변동폭, 국면 지수 밸류에이션·거시 발표달력, 리스크 flows/Wag-the-Dog와 KOSPI 옵션, DRAGONGLASS 관계·위성·원장 필드·전파, ML/MAXIMUS/배분 모델, 실적/성장 추정 상세, 발굴 버킷·기타 콘텐츠 동작. 각 화면 missing과 REFERENCE_PARITY.md를 갱신하면서 이어간다. 정기 갱신은 활성 heartbeat automation ID automation 하나만 유지한다.

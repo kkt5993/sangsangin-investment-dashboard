@@ -182,4 +182,6 @@ def extend(d,objects,ranks):
     objects['ask_digest']['sections'].insert(0,dict(type='library',title='최근 발표·보도 원문',group='최근 뉴스',items=news[:30]))
     from .iw_review import iw_views
     iw_views(d,objects)
+    from .digest import digest_views
+    digest_views(d,objects,ranks,news)
     return objects

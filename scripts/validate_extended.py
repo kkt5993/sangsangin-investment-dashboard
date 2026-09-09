@@ -13,6 +13,41 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='digestbrief':assert len(s['horizons'])==3 and s['headline'] and s['note']
+    if kind=='digesttrends':
+        assert [p['id'] for p in s['panels']]==['short','mid','long']
+        for p in s['panels']:
+            assert p['available']==len(p['rows'])<=p['expected']==21
+            values=[r['value'] for r in p['rows']];assert values==sorted(values,reverse=True)
+            assert all(r['date']<=cutoff and math.isfinite(r['value']) for r in p['rows'])
+    if kind=='digestthemes':
+        assert len(s['items'])==10 and len({r['id'] for r in s['items']})==10
+        for r in s['items']:
+            assert r['available']<=r['expected']==len(r['members']) and r['expected']>0
+            assert r['heat'] is None or 0<=r['heat']<=100
+            for m in r['members']:assert m['source'].startswith('https://') and (m['date'] is None or m['date']<=cutoff)
+            for key,value in r['returns'].items():
+                if all(m[key] is not None for m in r['members']):assert abs(value-sum(m[key] for m in r['members'])/len(r['members']))<1e-5
+                else:assert value is None
+    if kind=='digeststocks':
+        assert len(s['items'])==16 and len({r['symbol'] for r in s['items']})==16
+        assert all(sum(r['market']==m for r in s['items'])==8 for m in ['US','KR'])
+        for r in s['items']:
+            assert r['date']<=cutoff and r['membership_as_of']<=cutoff and 1<=r['rs']<=99
+            assert r['news_count']>=len(r['news']) and r['guru'] is None
+            assert all(n['date']<=cutoff for n in r['news'])
+    if kind=='digestrisk':
+        assert len(s['items'])==9
+        for r in s['items']:assert r['direction'] in [-1,0,1] and (r['date'] is None or r['date']<=cutoff)
+    if kind=='digestcharts':
+        assert len(s['items'])==4
+        for r in s['items']:section(r['chart'],cutoff,module)
+        assert s['items'][-1]['change_unit']=='z 차이'
+    if kind=='digestmodules':
+        assert len(s['items'])==20 and len({r['module'] for r in s['items']})==20
+        for r in s['items']:
+            assert r['as_of']<=cutoff and r['module'] not in ['ask_digest','iw','principium']
+            for t in r['observations']:section(dict(t,type='table'),r['as_of'],module)
     if kind=='statetimeline':
         assert len(s['panels'])==3 and [len(p['labels']) for p in s['panels']]==[4,4,3]
         rows=s['rows'];assert len(rows)==36 and [r[0] for r in rows]==sorted(set(r[0] for r in rows))

@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-09-09",
+  "scope": "공개 사업 설명으로 편집한 소규모 관찰 목록. KRX/GICS 공식 산업분류·전체 테마 지수·매출 순도 가중치가 아님.",
+  "themes": [
+    {"id":"ai_datacenter","name":"AI 데이터센터","members":[{"symbol":"NVDA","name":"NVIDIA","role":"데이터센터 가속 컴퓨팅","source":"https://www.nvidia.com/en-us/data-center/"},{"symbol":"VRT","name":"Vertiv","role":"데이터센터 전력·냉각","source":"https://www.vertiv.com/en-us/solutions/ai-hub/"}]},
+    {"id":"equipment","name":"첨단 반도체 장비","members":[{"symbol":"AMAT","name":"Applied Materials","role":"반도체 제조 장비","source":"https://www.appliedmaterials.com/us/en/semiconductor/products.html"},{"symbol":"KLAC","name":"KLA","role":"공정 제어·검사·계측","source":"https://ir.kla.com/company-information"}]},
+    {"id":"robotics","name":"로보틱스·피지컬 AI","members":[{"symbol":"NVDA","name":"NVIDIA","role":"로봇 학습·시뮬레이션 플랫폼","source":"https://www.nvidia.com/en-us/industries/robotics/"},{"symbol":"ISRG","name":"Intuitive Surgical","role":"로봇 보조 수술 시스템","source":"https://www.intuitive.com/"}]},
+    {"id":"foundry","name":"파운드리·선단공정","members":[{"symbol":"TSM","name":"TSMC ADR","role":"파운드리·첨단 제조","source":"https://investor.tsmc.com/sites/ir/annual-report/2025/2025%20Annual%20Report_E.pdf"}]},
+    {"id":"hbm","name":"HBM·AI 메모리","members":[{"symbol":"MU","name":"Micron","role":"HBM 제품","source":"https://www.micron.com/products/memory/hbm"}]},
+    {"id":"networking","name":"광통신·AI 네트워킹","members":[{"symbol":"MRVL","name":"Marvell","role":"광 인터커넥트·DSP","source":"https://www.marvell.com/solutions/data-center/optical-dsp.html"},{"symbol":"NVDA","name":"NVIDIA","role":"데이터센터 네트워킹","source":"https://www.nvidia.com/en-us/data-center/"}]},
+    {"id":"power_cooling","name":"전력·냉각 인프라","members":[{"symbol":"VRT","name":"Vertiv","role":"전력·냉각 인프라","source":"https://www.vertiv.com/en-us/solutions/ai-hub/"},{"symbol":"ETN","name":"Eaton","role":"AI 데이터센터 전력·냉각","source":"https://www.eaton.com/us/en-us/markets/data-centers/impact-of-ai-data-center-infrastructure/beam-rubin-dsx.html"}]},
+    {"id":"on_device","name":"온디바이스 AI","members":[{"symbol":"QCOM","name":"Qualcomm","role":"Snapdragon 온디바이스 AI","source":"https://www.qualcomm.com/snapdragon/smartphones/ai"}]},
+    {"id":"packaging","name":"첨단 패키징(CoWoS·HBM)","members":[{"symbol":"TSM","name":"TSMC ADR","role":"CoWoS·3DFabric 패키징","source":"https://www.tsmc.com/english/dedicatedFoundry/services/advanced-packaging"},{"symbol":"KLAC","name":"KLA","role":"첨단 패키징 공정 검사","source":"https://ir.kla.com/news-events/press-releases/detail/485/kla-unveils-comprehensive-ic-substrate-portfolio-for-a-new"}]},
+    {"id":"lng","name":"에너지 안보·LNG","members":[{"symbol":"CVX","name":"Chevron","role":"LNG 생산·운송·판매","source":"https://www.chevron.com/what-we-do/energy/oil-and-natural-gas/liquefied-natural-gas-lng"}]}
+  ]
+}

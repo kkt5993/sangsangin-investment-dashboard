@@ -78,3 +78,5 @@ PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하�
 ## 학습 출처
 
 설계 학습의 출발점은 [ARAGORN-INVESTIUM](https://aragorn-investium.pages.dev/#glance)입니다. 원본 HTML/JS/차트/리서치 보존본은 별도 로컬 연구 폴더에 있으며 재게시하지 않습니다. 이번 확장 중 원본 사이트 요청은 하지 않았습니다. [지도 데이터 라이선스](research/MAP_LICENSE.md)를 별도로 표시합니다.
+
+IW는15개월 복기와14주 연대기·보존 차트를 제공합니다. ASK는3기간 추세·사업 근거10테마·RS16종목·21자산·9위험관측·4차트·20모듈 요약을 정기 재생성합니다. [IW 날짜/보존 계약](research/IW_REVIEW_CONTRACT.md)과 [ASK 계산/출처 계약](research/DIGEST_CONTRACT.md)을 참조하세요.

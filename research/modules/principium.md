@@ -1,5 +1,23 @@
 # PRINCIPIUM
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**부분 구현** · 가격 기준 2026-09-08. 팀 작성 primer/article/report·키워드 검색·기록.
+
+- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/principium.json)
+- 계산/자료 계약: 논문·리포트·프라이머 분류, 제목·키워드 검색과 팀 메모를 구현했습니다. 초기 콘텐츠는 이번 구현 과정에서 작성한 팀 노트입니다. 원본의 외부 기관 보고서 본문·요약을 재게시하지 않습니다.
+- 남은 범위: 관리자 인증·PDF 업로드·팀 공용 저장 서버는 GitHub Pages에서 제공되지 않습니다.
+
+연결된 하위 그룹: primer, article, report, 공통.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 논문(article)·기관보고서(report)·프라이머(primer)의 공개 요약 아카이브. 관리자 쓰기 기능은 인증이 필요하다.
 
 ## 구현 순서

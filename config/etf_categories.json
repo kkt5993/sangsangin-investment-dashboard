@@ -1,0 +1,421 @@
+[
+  {
+    "id": "monthly",
+    "name": "월급형 (Monthly Paycheck)",
+    "items": [
+      {
+        "symbol": "JEPI",
+        "name": "JPM 프리미엄인컴",
+        "category": "monthly"
+      },
+      {
+        "symbol": "JEPQ",
+        "name": "JPM 나스닥인컴",
+        "category": "monthly"
+      },
+      {
+        "symbol": "QYLD",
+        "name": "나스닥100 커버드콜",
+        "category": "monthly"
+      },
+      {
+        "symbol": "RYLD",
+        "name": "러셀2000 커버드콜",
+        "category": "monthly"
+      },
+      {
+        "symbol": "DIVO",
+        "name": "엔한스드 배당인컴",
+        "category": "monthly"
+      },
+      {
+        "symbol": "SPHD",
+        "name": "S&P 고배당저변동",
+        "category": "monthly"
+      },
+      {
+        "symbol": "O",
+        "name": "리얼티인컴(리츠)",
+        "category": "monthly"
+      },
+      {
+        "symbol": "SGOV",
+        "name": "0-3M 미국채",
+        "category": "monthly"
+      },
+      {
+        "symbol": "PFF",
+        "name": "미국 우선주",
+        "category": "monthly"
+      }
+    ]
+  },
+  {
+    "id": "yieldmax",
+    "name": "초고배당 커버드콜·YieldMax (⚠️ 양날의 검)",
+    "items": [
+      {
+        "symbol": "QYLD",
+        "name": "나스닥100 커버드콜",
+        "category": "yieldmax"
+      },
+      {
+        "symbol": "RYLD",
+        "name": "러셀2000 커버드콜",
+        "category": "yieldmax"
+      },
+      {
+        "symbol": "NVDY",
+        "name": "엔비디아 커버드콜",
+        "category": "yieldmax"
+      },
+      {
+        "symbol": "TSLY",
+        "name": "테슬라 커버드콜",
+        "category": "yieldmax"
+      },
+      {
+        "symbol": "MSTY",
+        "name": "마이크로스트래티지 CC",
+        "category": "yieldmax"
+      },
+      {
+        "symbol": "CONY",
+        "name": "코인베이스 커버드콜",
+        "category": "yieldmax"
+      },
+      {
+        "symbol": "ULTY",
+        "name": "YieldMax 얼티밋",
+        "category": "yieldmax"
+      }
+    ]
+  },
+  {
+    "id": "aristocrat",
+    "name": "배당성장 귀족 (Dividend Growth)",
+    "items": [
+      {
+        "symbol": "SCHD",
+        "name": "슈왑 미국배당",
+        "category": "aristocrat"
+      },
+      {
+        "symbol": "NOBL",
+        "name": "S&P 배당귀족",
+        "category": "aristocrat"
+      },
+      {
+        "symbol": "VIG",
+        "name": "뱅가드 배당성장",
+        "category": "aristocrat"
+      },
+      {
+        "symbol": "DGRO",
+        "name": "iShares 배당성장",
+        "category": "aristocrat"
+      },
+      {
+        "symbol": "SDY",
+        "name": "SPDR 배당귀족",
+        "category": "aristocrat"
+      },
+      {
+        "symbol": "DVY",
+        "name": "iShares 고배당",
+        "category": "aristocrat"
+      }
+    ]
+  },
+  {
+    "id": "bondladder",
+    "name": "채권·현금 인컴 사다리 (Fixed Income Ladder)",
+    "items": [
+      {
+        "symbol": "SGOV",
+        "name": "0-3M 미국채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "BIL",
+        "name": "1-3M T-bill",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "SHY",
+        "name": "1-3Y 미국채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "IEF",
+        "name": "7-10Y 미국채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "TLT",
+        "name": "20Y+ 미국채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "LQD",
+        "name": "투자등급 회사채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "HYG",
+        "name": "하이일드 회사채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "EMB",
+        "name": "신흥국 국채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "TIP",
+        "name": "물가연동국채",
+        "category": "bondladder"
+      },
+      {
+        "symbol": "MUB",
+        "name": "미국 지방채",
+        "category": "bondladder"
+      }
+    ]
+  },
+  {
+    "id": "bellwether",
+    "name": "자산군 벨웨더 (One per Asset Class)",
+    "items": [
+      {
+        "symbol": "SPY",
+        "name": "미국주식 S&P500",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "EFA",
+        "name": "선진국주식(미국외)",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "EEM",
+        "name": "신흥국주식",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "AGG",
+        "name": "미국 종합채권",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "TLT",
+        "name": "미국 장기국채",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "GLD",
+        "name": "금",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "DBC",
+        "name": "원자재 종합",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "VNQ",
+        "name": "미국 리츠",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "IBIT",
+        "name": "비트코인 현물",
+        "category": "bellwether"
+      },
+      {
+        "symbol": "UUP",
+        "name": "미국 달러",
+        "category": "bellwether"
+      }
+    ]
+  },
+  {
+    "id": "disruption",
+    "name": "파괴적 혁신 테마 (Disruption)",
+    "items": [
+      {
+        "symbol": "SMH",
+        "name": "반도체",
+        "category": "disruption"
+      },
+      {
+        "symbol": "BOTZ",
+        "name": "AI·로보틱스",
+        "category": "disruption"
+      },
+      {
+        "symbol": "URA",
+        "name": "우라늄·원전",
+        "category": "disruption"
+      },
+      {
+        "symbol": "LIT",
+        "name": "리튬·2차전지",
+        "category": "disruption"
+      },
+      {
+        "symbol": "ICLN",
+        "name": "청정에너지",
+        "category": "disruption"
+      },
+      {
+        "symbol": "XBI",
+        "name": "바이오텍",
+        "category": "disruption"
+      },
+      {
+        "symbol": "ITA",
+        "name": "항공·방산",
+        "category": "disruption"
+      },
+      {
+        "symbol": "COPX",
+        "name": "구리광산",
+        "category": "disruption"
+      },
+      {
+        "symbol": "BLOK",
+        "name": "블록체인",
+        "category": "disruption"
+      },
+      {
+        "symbol": "ARKK",
+        "name": "ARK 혁신",
+        "category": "disruption"
+      }
+    ]
+  },
+  {
+    "id": "country",
+    "name": "국가 원픽 (Country Single-Play)",
+    "items": [
+      {
+        "symbol": "EWY",
+        "name": "한국",
+        "category": "country"
+      },
+      {
+        "symbol": "EWJ",
+        "name": "일본",
+        "category": "country"
+      },
+      {
+        "symbol": "INDA",
+        "name": "인도",
+        "category": "country"
+      },
+      {
+        "symbol": "MCHI",
+        "name": "중국",
+        "category": "country"
+      },
+      {
+        "symbol": "EWZ",
+        "name": "브라질",
+        "category": "country"
+      },
+      {
+        "symbol": "VGK",
+        "name": "유럽 전체",
+        "category": "country"
+      },
+      {
+        "symbol": "EWG",
+        "name": "독일",
+        "category": "country"
+      },
+      {
+        "symbol": "EWW",
+        "name": "멕시코",
+        "category": "country"
+      }
+    ]
+  },
+  {
+    "id": "factor",
+    "name": "팩터·스마트베타 (Smart Beta)",
+    "items": [
+      {
+        "symbol": "MTUM",
+        "name": "모멘텀",
+        "category": "factor"
+      },
+      {
+        "symbol": "QUAL",
+        "name": "퀄리티",
+        "category": "factor"
+      },
+      {
+        "symbol": "VLUE",
+        "name": "가치",
+        "category": "factor"
+      },
+      {
+        "symbol": "USMV",
+        "name": "저변동",
+        "category": "factor"
+      },
+      {
+        "symbol": "SIZE",
+        "name": "소형주 팩터",
+        "category": "factor"
+      },
+      {
+        "symbol": "IWF",
+        "name": "성장주(러셀1000G)",
+        "category": "factor"
+      },
+      {
+        "symbol": "IWD",
+        "name": "가치주(러셀1000V)",
+        "category": "factor"
+      }
+    ]
+  },
+  {
+    "id": "leverage",
+    "name": "레버리지·인버스 (Turbo, ⚠️위험)",
+    "items": [
+      {
+        "symbol": "TQQQ",
+        "name": "나스닥100 3배",
+        "category": "leverage"
+      },
+      {
+        "symbol": "SQQQ",
+        "name": "나스닥100 -3배",
+        "category": "leverage"
+      },
+      {
+        "symbol": "SOXL",
+        "name": "반도체 3배",
+        "category": "leverage"
+      },
+      {
+        "symbol": "SOXS",
+        "name": "반도체 -3배",
+        "category": "leverage"
+      },
+      {
+        "symbol": "UPRO",
+        "name": "S&P500 3배",
+        "category": "leverage"
+      },
+      {
+        "symbol": "SPXU",
+        "name": "S&P500 -3배",
+        "category": "leverage"
+      }
+    ]
+  }
+]

@@ -1,5 +1,23 @@
 # 🌍 geo-economics
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**부분 구현** · 가격 기준 2026-09-08. EPU/VIX·DXY/WTI·금리/크레딧 이중축.
+
+- 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/geoecon.json)
+- 계산/자료 계약: 정책 불확실성과 시장 반응을 분리해 비교합니다. 원본의 EPU·VIX, DXY·원유, 금리·신용 3개 이중축 구조입니다.
+- 남은 범위: 지정학 뉴스 NLP·이벤트별 인과 판정은 텍스트 수집과 검증을 별도로 연결해야 합니다. EPU는 뉴스 감성이나 전쟁 확률이 아닙니다.
+
+연결된 하위 그룹: 공통.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 뉴스 키워드·감성·정책불확실성·유가·달러로 지경학 변화와 근거 뉴스를 연결한다.
 
 ## 구현 순서

@@ -1,5 +1,23 @@
 # GLOBAL UNIVERSE
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**부분 구현** · 가격 기준 2026-09-08. 로컬 지도 경계·정사영 회전·국가/기업 선택·수치표.
+
+- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/globe.json)
+- 계산/자료 계약: 정사영 지구본을 회전하며 국가와 기업을 탐색합니다. 기업 소재국은 수집된 공급자 메타데이터, 업종은 공개 카탈로그·공식 시장분류입니다. 지도 점은 국가 집계 위치이며 본사 좌표가 아닙니다.
+- 남은 범위: UN Comtrade 품목·교역량·물류 경로를 수집하지 않아 무역선이나 금액을 생성하지 않았습니다.
+
+연결된 하위 그룹: 공통.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 섹터별 기업과 밸류체인, 국가별 수출·물류 흐름을 지구본으로 탐색한다.
 
 ## 구현 순서

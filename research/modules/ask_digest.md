@@ -1,5 +1,23 @@
 # ask_digest
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**부분 구현** · 가격 기준 2026-09-08. 자체 시장 다이제스트·유형 필터·검색·질문 기록.
+
+- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/ask_digest.json)
+- 계산/자료 계약: 카드 검색·유형 필터·근거 표시·개인 기록을 연결했습니다. 초기 다이제스트는 팀이 수집한 수치로 만든 시장 메모입니다.
+- 남은 범위: 원본의 ASK 토론·외부 리서치 요약 아카이브와 연동되는 수집 서버는 별도 데이터 원장이 필요합니다.
+
+연결된 하위 그룹: 시장, 방법론, 공통.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 ASK ARAGORN이 참고할 사이트 데이터 요약. 현재 index.json에 포함되어 ETC 탭에도 노출된다.
 
 ## 구현 순서

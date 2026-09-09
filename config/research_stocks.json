@@ -1,0 +1,1178 @@
+[
+  {
+    "symbol": "008930.KS",
+    "name": "한미사이언스",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "HOOD",
+    "name": "Robinhood Markets",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "CRM",
+    "name": "Salesforce",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "PLTR",
+    "name": "Palantir Technologies",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "CVNA",
+    "name": "Carvana",
+    "market": "US",
+    "sector": "Consumer Cyclical"
+  },
+  {
+    "symbol": "NEM",
+    "name": "Newmont",
+    "market": "US",
+    "sector": "Basic Materials"
+  },
+  {
+    "symbol": "COP",
+    "name": "ConocoPhillips",
+    "market": "US",
+    "sector": "Energy"
+  },
+  {
+    "symbol": "BLK",
+    "name": "BlackRock",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "VEEV",
+    "name": "Veeva Systems",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "EXPE",
+    "name": "Expedia Group",
+    "market": "US",
+    "sector": "Consumer Cyclical"
+  },
+  {
+    "symbol": "ZBRA",
+    "name": "Zebra Technologies",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "241710.KQ",
+    "name": "코스메카코리아",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "192820.KS",
+    "name": "코스맥스",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "COF",
+    "name": "Capital One",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "DG",
+    "name": "Dollar General",
+    "market": "US",
+    "sector": "Consumer Defensive"
+  },
+  {
+    "symbol": "161890.KS",
+    "name": "한국콜마",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "EL",
+    "name": "Estée Lauder Companies (The)",
+    "market": "US",
+    "sector": "Consumer Defensive"
+  },
+  {
+    "symbol": "SJM",
+    "name": "J.M. Smucker Company (The)",
+    "market": "US",
+    "sector": "Consumer Defensive"
+  },
+  {
+    "symbol": "GILD",
+    "name": "Gilead Sciences",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "TYL",
+    "name": "Tyler Technologies",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "096770.KS",
+    "name": "SK이노베이션",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "SCHW",
+    "name": "Charles Schwab Corporation",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "APA",
+    "name": "APA Corporation",
+    "market": "US",
+    "sector": "Energy"
+  },
+  {
+    "symbol": "TRMB",
+    "name": "Trimble Inc.",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "ULTA",
+    "name": "Ulta Beauty",
+    "market": "US",
+    "sector": "Consumer Cyclical"
+  },
+  {
+    "symbol": "MA",
+    "name": "Mastercard",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "089860.KS",
+    "name": "롯데렌탈",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "MPC",
+    "name": "Marathon Petroleum",
+    "market": "US",
+    "sector": "Energy"
+  },
+  {
+    "symbol": "REGN",
+    "name": "Regeneron Pharmaceuticals",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "GPN",
+    "name": "Global Payments",
+    "market": "US",
+    "sector": "Industrials"
+  },
+  {
+    "symbol": "257720.KQ",
+    "name": "실리콘투",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "VLO",
+    "name": "Valero Energy",
+    "market": "US",
+    "sector": "Energy"
+  },
+  {
+    "symbol": "GDDY",
+    "name": "GoDaddy",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "PSX",
+    "name": "Phillips 66",
+    "market": "US",
+    "sector": "Energy"
+  },
+  {
+    "symbol": "CMG",
+    "name": "Chipotle Mexican Grill",
+    "market": "US",
+    "sector": "Consumer Cyclical"
+  },
+  {
+    "symbol": "IQV",
+    "name": "IQVIA",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "MSI",
+    "name": "Motorola Solutions",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "TMO",
+    "name": "Thermo Fisher Scientific",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "078930.KS",
+    "name": "GS",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "CTVA",
+    "name": "Corteva",
+    "market": "US",
+    "sector": "Basic Materials"
+  },
+  {
+    "symbol": "LH",
+    "name": "Labcorp",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "RJF",
+    "name": "Raymond James Financial",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "CPRT",
+    "name": "Copart",
+    "market": "US",
+    "sector": "Industrials"
+  },
+  {
+    "symbol": "010950.KS",
+    "name": "S-Oil",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "JKHY",
+    "name": "Jack Henry & Associates",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "PFE",
+    "name": "Pfizer",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "V",
+    "name": "Visa Inc.",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "CEG",
+    "name": "Constellation Energy",
+    "market": "US",
+    "sector": "Utilities"
+  },
+  {
+    "symbol": "MRK",
+    "name": "Merck & Co.",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "005830.KS",
+    "name": "DB손해보험",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "181710.KS",
+    "name": "NHN",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "TGT",
+    "name": "Target Corporation",
+    "market": "US",
+    "sector": "Consumer Defensive"
+  },
+  {
+    "symbol": "073240.KS",
+    "name": "금호타이어",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "052690.KS",
+    "name": "한전기술",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "AMP",
+    "name": "Ameriprise Financial",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "AMCR",
+    "name": "Amcor",
+    "market": "US",
+    "sector": "Consumer Cyclical"
+  },
+  {
+    "symbol": "WFC",
+    "name": "Wells Fargo",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "003490.KS",
+    "name": "대한항공",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "BDX",
+    "name": "Becton Dickinson",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "267250.KS",
+    "name": "HD현대",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "006360.KS",
+    "name": "GS건설",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "INTU",
+    "name": "Intuit",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "028670.KS",
+    "name": "팬오션",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "018670.KS",
+    "name": "SK가스",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "AMGN",
+    "name": "Amgen",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "XYZ",
+    "name": "Block, Inc.",
+    "market": "US",
+    "sector": "Technology"
+  },
+  {
+    "symbol": "090430.KS",
+    "name": "아모레퍼시픽",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "VRTX",
+    "name": "Vertex Pharmaceuticals",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "GPC",
+    "name": "Genuine Parts Company",
+    "market": "US",
+    "sector": "Consumer Cyclical"
+  },
+  {
+    "symbol": "001450.KS",
+    "name": "현대해상",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "CRL",
+    "name": "Charles River Laboratories",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "WTW",
+    "name": "Willis Towers Watson",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "CF",
+    "name": "CF Industries",
+    "market": "US",
+    "sector": "Basic Materials"
+  },
+  {
+    "symbol": "180640.KS",
+    "name": "한진칼",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "011200.KS",
+    "name": "HMM",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "DE",
+    "name": "Deere & Company",
+    "market": "US",
+    "sector": "Industrials"
+  },
+  {
+    "symbol": "140860.KQ",
+    "name": "파크시스템스",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "086790.KS",
+    "name": "하나금융지주",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "175330.KS",
+    "name": "JB금융지주",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "003230.KS",
+    "name": "삼양식품",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "051900.KS",
+    "name": "LG생활건강",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "RVTY",
+    "name": "Revvity",
+    "market": "US",
+    "sector": "Healthcare"
+  },
+  {
+    "symbol": "316140.KS",
+    "name": "우리금융지주",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "088350.KS",
+    "name": "한화생명",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "294870.KS",
+    "name": "IPARK현대산업개발",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "282330.KS",
+    "name": "BGF리테일",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "000880.KS",
+    "name": "한화",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "112610.KS",
+    "name": "씨에스윈드",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "105560.KS",
+    "name": "KB금융",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "139130.KS",
+    "name": "iM금융지주",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "041510.KQ",
+    "name": "에스엠",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "002380.KS",
+    "name": "KCC",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "055550.KS",
+    "name": "신한지주",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "204270.KQ",
+    "name": "제이앤티씨",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "361610.KS",
+    "name": "SK아이이테크놀로지",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "377300.KS",
+    "name": "카카오페이",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "062040.KS",
+    "name": "산일전기",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "375500.KS",
+    "name": "DL이앤씨",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "103140.KS",
+    "name": "풍산",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "006400.KS",
+    "name": "삼성SDI",
+    "market": "KR",
+    "sector": null
+  },
+  {
+    "symbol": "EG",
+    "name": "Everest Group",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "AWK",
+    "name": "American Water Works",
+    "market": "US",
+    "sector": "Utilities"
+  },
+  {
+    "symbol": "ABNB",
+    "name": "Airbnb",
+    "market": "US",
+    "sector": "Consumer Cyclical"
+  },
+  {
+    "symbol": "IFF",
+    "name": "International Flavors & Fragrances",
+    "market": "US",
+    "sector": "Basic Materials"
+  },
+  {
+    "symbol": "COIN",
+    "name": "Coinbase",
+    "market": "US",
+    "sector": "Financial Services"
+  },
+  {
+    "symbol": "NVDA",
+    "name": "NVIDIA",
+    "market": "US",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "AVGO",
+    "name": "Broadcom",
+    "market": "US",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "AMD",
+    "name": "AMD",
+    "market": "US",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "MU",
+    "name": "Micron",
+    "market": "US",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "QCOM",
+    "name": "Qualcomm",
+    "market": "US",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "TSM",
+    "name": "TSMC",
+    "market": "TW",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "2317.TW",
+    "name": "Hon Hai(폭스콘)",
+    "market": "TW",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "2454.TW",
+    "name": "MediaTek",
+    "market": "TW",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "005930.KS",
+    "name": "삼성전자",
+    "market": "KR",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "000660.KS",
+    "name": "SK하이닉스",
+    "market": "KR",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "8035.T",
+    "name": "Tokyo Electron",
+    "market": "JP",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "6857.T",
+    "name": "Advantest",
+    "market": "JP",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "ARM",
+    "name": "Arm",
+    "market": "GB",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "IFX.DE",
+    "name": "Infineon",
+    "market": "DE",
+    "sector": "반도체·AI"
+  },
+  {
+    "symbol": "MSFT",
+    "name": "Microsoft",
+    "market": "US",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "ORCL",
+    "name": "Oracle",
+    "market": "US",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "NOW",
+    "name": "ServiceNow",
+    "market": "US",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "CRWD",
+    "name": "CrowdStrike",
+    "market": "US",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "PANW",
+    "name": "Palo Alto",
+    "market": "US",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "SAP",
+    "name": "SAP",
+    "market": "DE",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "SHOP",
+    "name": "Shopify",
+    "market": "CA",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "CSU.TO",
+    "name": "Constellation SW",
+    "market": "CA",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "035420.KS",
+    "name": "NAVER",
+    "market": "KR",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "4689.T",
+    "name": "LY(라인야후)",
+    "market": "JP",
+    "sector": "소프트웨어"
+  },
+  {
+    "symbol": "AMZN",
+    "name": "Amazon",
+    "market": "US",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "GOOGL",
+    "name": "Alphabet",
+    "market": "US",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "META",
+    "name": "Meta",
+    "market": "US",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "NFLX",
+    "name": "Netflix",
+    "market": "US",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "BABA",
+    "name": "Alibaba",
+    "market": "CN",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "PDD",
+    "name": "PDD(테무)",
+    "market": "CN",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "TCEHY",
+    "name": "Tencent",
+    "market": "CN",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "JD",
+    "name": "JD.com",
+    "market": "CN",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "BIDU",
+    "name": "Baidu",
+    "market": "CN",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "035720.KS",
+    "name": "카카오",
+    "market": "KR",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "9984.T",
+    "name": "SoftBank G",
+    "market": "JP",
+    "sector": "인터넷·플랫폼"
+  },
+  {
+    "symbol": "LLY",
+    "name": "Eli Lilly",
+    "market": "US",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "ISRG",
+    "name": "Intuitive",
+    "market": "US",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "AZN",
+    "name": "AstraZeneca",
+    "market": "GB",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "GSK",
+    "name": "GSK",
+    "market": "GB",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "SNY",
+    "name": "Sanofi",
+    "market": "FR",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "NVS",
+    "name": "Novartis",
+    "market": "DE",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "068270.KS",
+    "name": "셀트리온",
+    "market": "KR",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "207940.KS",
+    "name": "삼성바이오",
+    "market": "KR",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "4568.T",
+    "name": "Daiichi Sankyo",
+    "market": "JP",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "RDY",
+    "name": "Dr.Reddy's",
+    "market": "IN",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "SUNPHARMA.NS",
+    "name": "Sun Pharma",
+    "market": "IN",
+    "sector": "헬스케어"
+  },
+  {
+    "symbol": "JPM",
+    "name": "JPMorgan",
+    "market": "US",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "HSBC",
+    "name": "HSBC",
+    "market": "GB",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "HDB",
+    "name": "HDFC Bank",
+    "market": "IN",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "IBN",
+    "name": "ICICI Bank",
+    "market": "IN",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "RY",
+    "name": "Royal Bank CA",
+    "market": "CA",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "8306.T",
+    "name": "MUFG",
+    "market": "JP",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "BNP.PA",
+    "name": "BNP Paribas",
+    "market": "FR",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "DBK.DE",
+    "name": "Deutsche Bank",
+    "market": "DE",
+    "sector": "금융·핀테크"
+  },
+  {
+    "symbol": "GE",
+    "name": "GE Aerospace",
+    "market": "US",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "RTX",
+    "name": "RTX",
+    "market": "US",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "ETN",
+    "name": "Eaton",
+    "market": "US",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "VRT",
+    "name": "Vertiv",
+    "market": "US",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "RHM.DE",
+    "name": "Rheinmetall",
+    "market": "DE",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "SIE.DE",
+    "name": "Siemens",
+    "market": "DE",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "SAF.PA",
+    "name": "Safran",
+    "market": "FR",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "AIR.PA",
+    "name": "Airbus",
+    "market": "FR",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "RR.L",
+    "name": "Rolls-Royce",
+    "market": "GB",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "BA.L",
+    "name": "BAE Systems",
+    "market": "GB",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "7011.T",
+    "name": "Mitsubishi Heavy",
+    "market": "JP",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "6501.T",
+    "name": "Hitachi",
+    "market": "JP",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "012450.KS",
+    "name": "한화에어로",
+    "market": "KR",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "042660.KS",
+    "name": "한화오션",
+    "market": "KR",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "LT.NS",
+    "name": "Larsen&Toubro",
+    "market": "IN",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "CP",
+    "name": "CP Rail",
+    "market": "CA",
+    "sector": "산업·방산"
+  },
+  {
+    "symbol": "COST",
+    "name": "Costco",
+    "market": "US",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "TSLA",
+    "name": "Tesla",
+    "market": "US",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "MC.PA",
+    "name": "LVMH",
+    "market": "FR",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "RMS.PA",
+    "name": "Hermès",
+    "market": "FR",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "7203.T",
+    "name": "Toyota",
+    "market": "JP",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "7974.T",
+    "name": "Nintendo",
+    "market": "JP",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "005380.KS",
+    "name": "현대차",
+    "market": "KR",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "BYDDY",
+    "name": "BYD",
+    "market": "CN",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "MELI",
+    "name": "MercadoLibre",
+    "market": "US",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "LULU",
+    "name": "Lululemon",
+    "market": "CA",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "TATAMOTORS.NS",
+    "name": "Tata Motors",
+    "market": "IN",
+    "sector": "소비·럭셔리"
+  },
+  {
+    "symbol": "VST",
+    "name": "Vistra",
+    "market": "US",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "FSLR",
+    "name": "First Solar",
+    "market": "US",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "SHEL",
+    "name": "Shell",
+    "market": "GB",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "TTE",
+    "name": "TotalEnergies",
+    "market": "FR",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "CNQ",
+    "name": "Canadian Natural",
+    "market": "CA",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "RELIANCE.NS",
+    "name": "Reliance",
+    "market": "IN",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "373220.KS",
+    "name": "LG에너지솔루션",
+    "market": "KR",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "051910.KS",
+    "name": "LG화학",
+    "market": "KR",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "3993.HK",
+    "name": "CMOC(낙양몰리브덴)",
+    "market": "CN",
+    "sector": "에너지·소재"
+  },
+  {
+    "symbol": "6098.T",
+    "name": "Recruit",
+    "market": "JP",
+    "sector": "소비·럭셔리"
+  }
+]

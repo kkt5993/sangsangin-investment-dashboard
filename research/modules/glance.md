@@ -1,5 +1,19 @@
 # At a Glance
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**계산·화면 연결** · 가격 기준 2026-09-08. 현재 PC 수집→Python→JSON→Pages 흐름·소스·품질.
+
+- 화면: [app.js](../../docs/app.js) · [전체 상태](../../docs/data/status.json)
+- 남은 범위: 원본 Mac 서버 운영 일정은 팀 일정으로 등록하지 않음
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 설계 철학, 모듈 설명, 자동 운영, 데이터 소스, 학술적 배경을 한곳에 정리한 안내 화면.
 
 ## 구현 순서

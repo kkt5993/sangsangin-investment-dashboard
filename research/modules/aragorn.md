@@ -1,5 +1,23 @@
 # ARAGORN MAP
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**부분 구현** · 가격 기준 2026-09-08. 회전·객체 선택·11자산 2016~현재 연간 순위.
+
+- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/aragorn.json)
+- 계산/자료 계약: 회전·선택 가능한 3D 관계 지도와 연간 수익률 퀼트를 구현했습니다. 관계는 KRX·미국 GICS 시장/업종 소속이라는 확인 가능한 사실만 연결합니다. 퀼트는 전년 말 대비 배당 조정종가이며 마지막 연도는 YTD입니다.
+- 남은 범위: 원본의 매크로 인과 그래프 생성기가 없어 소속 관계를 인과관계로 표시하지 않습니다.
+
+연결된 하위 그룹: 공통.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 주간 시장의 개념 지식그래프를 3D로 보고 하단에서 자산군 연간 수익률 퀼트를 비교한다.
 
 ## 구현 순서

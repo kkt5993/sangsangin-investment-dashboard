@@ -1,5 +1,23 @@
 # 🌀 시장 속도·붕괴 취약성
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**계산·화면 연결** · 가격 기준 2026-09-08. 18대상·표면 회전/시간·위상·0~100/65선·가격 우축·전일노출.
+
+- 계산 코드: [market_modules.py](../../pipeline/market_modules.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/dynamics.json)
+- 계산/자료 계약: 공개된 β·α·τ·취약성·노출 공식을 구현했습니다. 21일·5일·expanding 252일, 모집단 표준편차를 사용합니다. 표면은 8개 기간의 연환산 변동성, 위상공간은 β×τ입니다. 백테스트는 전일 노출을 적용하며 비용·차입금리는 0입니다. 취약성은 통계적 점수이며 붕괴 확률이 아닙니다.
+- 남은 범위: 21D/5D/expanding252는 명시적 팀 파라미터, 거래비용·차입금리 미반영
+
+연결된 하위 그룹: S&P500, KOSPI, NASDAQ, NVIDIA, Microsoft, Apple, Alphabet, Amazon, Meta, Broadcom, Tesla, Netflix, Palantir, 삼성전자, SK하이닉스, LG에너지솔루션, 삼성바이오로직스, 현대차.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 가격의 추세 에너지·불안정성으로 방향이 아닌 보유 노출과 붕괴 취약성을 분석한다.
 
 ## 구현 순서

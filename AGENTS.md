@@ -9,5 +9,6 @@
 - GitHub Pages serves `docs/` from `main`. All asset links must work beneath the repository subpath.
 - Prefer plain HTML/CSS/JavaScript for the current reading/navigation workflow; introduce dependencies only when needed.
 - Before publishing, run `python -m unittest discover -s tests`, `python scripts/validate.py`, `node scripts/test_charts.cjs`, `node scripts/test_dashboard.cjs`, and syntax checks for changed JavaScript.
+- Extended modules also require `python scripts/validate_extended.py` and `node scripts/test_extended.cjs`. Update generated module documentation with `python scripts/write_status_docs.py` after building snapshots.
 - Future quantitative modules must preserve units, benchmark definitions, availability dates, and historical data versions. Do not present unvalidated model claims as verified results.
 - Do not add schedules, external messages, trading or paid API usage without explicit authorization.

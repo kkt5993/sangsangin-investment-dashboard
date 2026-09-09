@@ -1,5 +1,23 @@
 # ML·DL 지수예측 (KOSPI·NASDAQ·S&P)
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**부분 구현** · 가격 기준 2026-09-08. 6그룹·만기 정렬 walk-forward·모델 평가·이중축·계수.
+
+- 계산 코드: [ml_models.py](../../pipeline/ml_models.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/ml.json)
+- 계산/자료 계약: Ridge·BayesianRidge·ExtraTrees의 동일가중 기준모형입니다. 월말 가격·거시 13개 내외 변수, 최소 60개월 학습, 매월 재학습, 1M·3M 타깃 만기 이후만 학습합니다. 과거 OOS 잔차 24개 이상으로 경험적 68%·90% 구간과 상승확률을 계산합니다. 1M 방향전략은 편도 5bp입니다.
+- 남은 범위: 원본의 Boruta·SHAP·LSTM·모델 선택 규칙을 복제한 모델이 아닙니다. 최종 모델의 표준화 Ridge 계수를 별도로 표시합니다. / 거시 데이터는 최신 수정 빈티지에 2개월 시차를 적용했습니다. 발표일·개정치를 복원한 point-in-time 실시간 성과는 아닙니다.
+
+연결된 하위 그룹: S&P500 · 1M, S&P500 · 3M, KOSPI · 1M, KOSPI · 3M, NASDAQ · 1M, NASDAQ · 3M, 공통.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 KOSPI·NASDAQ·S&P500의 1M/3M 수익률 예측 및 6타깃 컴포짓을 주기적으로 발행한다.
 
 ## 구현 순서

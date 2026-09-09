@@ -17,7 +17,11 @@ vm.runInContext(fs.readFileSync(path.join(root,'docs/dashboard.js'),'utf8'),ctx)
  const c=container(),D=ctx.window.PriceDashboard;
  await D.render(c,modules.find(m=>m.id==='rs'));
  assert.equal((c.innerHTML.match(/data-kind="rs"/g)||[]).length,datasets.rs.coverage.pairs);
- assert(c.innerHTML.includes('유니버스 확인 필요'));
+ assert(c.innerHTML.includes('KRX 공식 구성종목'));
+ assert.equal(datasets.rs.stock_rankings.KR.expected,100);
+ assert.equal(datasets.rs.stock_rankings.US.expected,504);
+ assert.equal(datasets.rs.stock_rankings.KR.strong.length,8);
+ assert.equal(datasets.rs.stock_rankings.US.weak.length,6);
  assert(!c.innerHTML.includes('[object Object]')&&!c.innerHTML.includes('NaN'));
  c.querySelectorAll('[data-filter]').find(b=>b.dataset.filter==='US').click();
  assert.equal((c.innerHTML.match(/data-kind="rs"/g)||[]).length,17);

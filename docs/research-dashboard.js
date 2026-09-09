@@ -1,0 +1,69 @@
+/* Schema 2 tab renderer. All analysis comes from versioned local JSON snapshots. */
+(function(root){
+ 'use strict';const C=root.ResearchCharts,A=root.AnalysisCharts,E=C.esc;let request=0;const cache=new Map(),state={};
+ const num=v=>typeof v==='number'?A.n(v):E(v??'—');
+ const heading=t=>`<h2 class="analysis-heading">${E(t)}</h2>`;
+ function table(c){return `<div class="table-scroll"><table class="data-table sortable"><caption>${E(c.title)}</caption><thead><tr>${c.columns.map((n,i)=>`<th><button data-sort="${i}" type="button">${E(n)} ↕</button></th>`).join('')}</tr></thead><tbody>${c.rows.map(row=>`<tr>${row.map(v=>`<td data-value="${E(v??'')}">${num(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>${c.rows.length?'':'<p class="quiet">현재 조건에 해당하는 종목이 없습니다.</p>'}</div>`;}
+ const figure=(title,body,note='')=>`<figure class="data-chart"><figcaption>${E(title)}</figcaption>${body}${note?`<p class="chart-note">${E(note)}</p>`:''}</figure>`;
+ function projection(c,i,kind){return `<div class="projection" data-projection="${i}" data-projection-kind="${kind}"><div class="projection-controls"><label>회전 <input data-yaw type="range" min="-314" max="314" value="-80"></label>${kind==='surface'?`<label>시점 <input data-time type="range" min="2" max="${c.dates.length}" value="${c.dates.length}"></label>`:'<label>확대 <input data-zoom type="range" min="50" max="140" value="100"></label>'}</div><div data-projection-canvas>${kind==='surface'?A.surface(c):A.scatter3d(c)}</div></div>`;}
+ function section(s,i,st){
+  if(s.type==='table')return table(s);
+  if(s.type==='line')return figure(s.title,A.line(s));
+  if(s.type==='bars')return figure(s.title,C.bars(s.rows,{unit:s.unit,title:s.title}));
+  if(s.type==='heatmap')return C.heatmap(s.rows,s.columns,s.title);
+  if(s.type==='scatter')return figure(s.title,A.scatter(s));
+  if(s.type==='groupedbars')return figure(s.title,A.grouped(s));
+  if(s.type==='scatter3d')return figure(s.title,projection(s,i,'scatter3d'));
+  if(s.type==='candles')return figure(s.title,`<div class="candle-grid">${A.candles(s)}${A.candles(s,true)}</div>`,s.annotation||'');
+  if(s.type==='etf'){
+   const amount=st.amount??10000000;
+   return heading(s.title)+figure('연간 분배율 (TTM)',C.bars(s.rows.map(r=>({name:r.symbol,value:r.yield_pct})),{unit:'%',title:s.title}))+
+    C.heatmap(s.rows.map(r=>({name:r.symbol+' · '+r.name,group:s.title,values:r.returns})),['1M %','3M %','YTD %','1Y %'],'분배금 조정 수익률')+
+    table({title:'분배금 · 세전 단순 월평균',columns:['ETF','TTM 분배율 %','12M 지급 횟수','월평균 원','연평균 원','가격 기준일'],rows:s.rows.map(r=>[r.symbol,r.yield_pct,r.payments,r.yield_pct*amount/1200,r.yield_pct*amount/100,r.as_of])});
+  }
+  if(s.type==='dynamics'){
+   const k=s.current;return heading(s.title+' · '+s.date)+`<div class="kpi-grid">${[['취약성 /100',k.risk],['β',k.beta],['α',k.alpha],['τ',k.tau],['노출 %',k.exposure*100]].map(([l,v])=>`<article class="kpi"><small>${l}</small><strong>${num(v)}</strong></article>`).join('')}</div>`+
+    figure('시장 표면 · 기간 × 시간 × 변동성',projection(s.surface,i,'surface'))+
+    `<div class="chart-grid">${figure('위상공간 · β × τ',A.scatter({title:s.title+' 위상공간',points:s.phase,x_label:'β 추세 에너지',y_label:'τ 불안정성',trajectory:true}))}${figure(s.charts[0].title,A.line(s.charts[0]))}</div>`+figure(s.charts[1].title,A.line(s.charts[1]))+
+    table({title:'노출 조절 백테스트',columns:['전략','CAGR %','변동성 %','Sharpe rf=0','MDD %'],rows:s.stats.map(a=>[a.name,a.cagr,a.vol,a.sharpe,a.mdd])});
+  }
+  if(s.type==='ml')return heading(s.title)+`<p class="scope-note">예측 원점 ${E(s.origin)} · 타깃 ${E(s.latest.target)} · 예측 ${num(s.latest.prediction)}% · 상승확률 ${num(s.latest.probability)}%</p>`+figure('월 수익률 예측 · 68%/90% 구간',A.forecast(s))+s.charts.map(c=>figure(c.title,A.line(c))).join('')+
+   table({title:'최근 24개 예측 · 원점과 타깃',columns:['예측 원점','타깃 월말','예측 %','실제 %','P상승 %','마지막 학습 타깃'],rows:s.records.slice(-24).map(r=>[r.origin,r.target,r.prediction,r.actual,r.probability,r.train_target_end])})+
+   figure('표준화 Ridge 계수 (SHAP 아님)',C.bars([...s.importance].sort((a,b)=>Math.abs(b.value)-Math.abs(a.value)),{title:'표준화 계수',unit:''}));
+  if(s.type==='library')return `<div class="reading-grid">${s.items.map(a=>`<article class="panel reading-card" data-keywords="${E((a.keywords||[]).join(' '))}"><small>${E(a.kind)} · ${E(a.date)} · ${E(a.source)}</small><h3>${E(a.title)}</h3><p>${E(a.core)}</p>${a.evidence?`<p class="quiet">${E(a.evidence)}</p>`:''}<div class="tags">${(a.keywords||[]).map(k=>`<span>${E(k)}</span>`).join('')}</div>${a.url?`<a href="${E(a.url)}" target="_blank" rel="noopener noreferrer">출처 ↗</a>`:''}</article>`).join('')}</div>`;
+  if(s.type==='journal')return `<div class="journal-form"><h2>팀 판단 기록</h2><p class="quiet">이 브라우저에만 저장됩니다. 다른 PC와 공유하려면 JSON으로 내보내세요.</p><label>제목 <input id="journal-title" maxlength="160"></label><label>근거·판단·확인할 조건 <textarea id="journal-body" rows="6" maxlength="12000"></textarea></label><div class="note-actions"><button id="save-note">기록 저장</button><button id="export-notes">JSON 내보내기</button><label class="import-label">JSON 가져오기 <input id="import-notes" type="file" accept="application/json,.json"></label></div><output id="note-status" role="status"></output><div id="journal-list"></div></div>`;
+  if(s.type==='graph'||s.type==='globe'||s.type==='quilt')return root.NetworkViews?root.NetworkViews.render(s,i):A.empty();
+  if(s.type==='text')return `<section class="panel"><h2>${E(s.title)}</h2><p>${E(s.text)}</p></section>`;
+  return A.empty();
+ }
+ function paint(container,m,d){
+  const st=state[m.id]||(state[m.id]={group:'all',q:''});let groups=[...new Set(d.sections.map(s=>s.group).filter(Boolean))];
+  if((m.id==='dynamics'||m.id==='ml'||m.id==='maximus')&&st.group==='all'&&groups.length)st.group=groups[0];
+  const label={operational:'계산·화면 연결',partial:'부분 구현 · 실데이터',blocked:'추가 데이터 필요'}[d.status]||d.status;
+  container.innerHTML=`<p class="eyebrow">SANGSANGIN / ${E(m.id.toUpperCase())}</p><div class="title-row"><div><h1>${E(m.title)}</h1><p class="lead">${E(m.purpose)}</p></div><span class="count-badge">${E(label)}</span></div><div class="data-meta"><span>가격 기준 <b>${E(d.as_of)}</b></span><a href="data/${E(m.id)}.json" download>계산 결과 JSON ↓</a></div><p class="scope-note">${E(d.method_note)}</p>`+
+   (d.missing.length?`<details class="method-details"><summary>이 탭의 구현 범위와 남은 항목 (${d.missing.length})</summary><ul>${d.missing.map(t=>`<li>${E(t)}</li>`).join('')}</ul></details>`:'')+
+   `<div class="kpi-grid">${(d.cards||[]).map(([label,value])=>`<article class="kpi"><small>${E(label)}</small><strong>${num(value)}</strong></article>`).join('')}</div>`+
+   `<div class="analysis-controls">${groups.length?`<label>화면 <select id="analysis-group"><option value="all">전체</option>${groups.map(g=>`<option value="${E(g)}" ${st.group===g?'selected':''}>${E(g)}</option>`).join('')}</select></label>`:''}<label>데이터 검색 <input id="analysis-search" type="search" placeholder="종목명·업종·지표" value="${E(st.q)}"></label>${m.id==='etfmon'?`<label>ETF별 가정 투자금 (원) <input id="income-amount" type="number" min="0" max="1000000000000" step="100000" value="${st.amount??10000000}"></label>`:''}</div>`+
+   `<div class="analysis-sections">${d.sections.map((s,i)=>st.group==='all'||!s.group||s.group===st.group?`<section class="analysis-section" data-section="${i}">${section(s,i,st)}</section>`:'').join('')}</div>`+
+   `<details class="method-details"><summary>구현 가이드 · 출처와 계산 코드</summary><p>${E(d.source)}</p><a href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/modules/${E(m.id)}.md">탭별 Markdown 문서 ↗</a> · <a href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/DATA_DEFINITIONS.md">공식 유니버스·단위·날짜 기준 ↗</a></details>`;
+  container.querySelector('#analysis-group')?.addEventListener('change',e=>{st.group=e.target.value;paint(container,m,d);});
+  container.querySelector('#income-amount')?.addEventListener('change',e=>{st.amount=Math.max(0,Math.min(1e12,Number(e.target.value)||0));paint(container,m,d);});
+  const filter=()=>{const q=st.q.toLocaleLowerCase();container.querySelectorAll('tbody tr:not(.table-group),.reading-card').forEach(row=>{row.hidden=q&&!row.textContent.toLocaleLowerCase().includes(q);});};
+  container.querySelector('#analysis-search')?.addEventListener('input',e=>{st.q=e.target.value;filter();});filter();
+  container.querySelectorAll('[data-sort]').forEach(b=>b.addEventListener('click',()=>{const table=b.closest('table'),body=table.querySelector('tbody'),idx=+b.dataset.sort;const dir=b.dataset.direction==='desc'?1:-1;b.dataset.direction=dir===1?'asc':'desc';[...body.rows].sort((a,z)=>{const av=a.cells[idx]?.dataset.value||'',zv=z.cells[idx]?.dataset.value||'';if(av===''||zv==='')return av===''?1:-1;return dir*(Number.isFinite(Number(av))&&Number.isFinite(Number(zv))?Number(av)-Number(zv):av.localeCompare(zv,'ko'));}).forEach(r=>body.appendChild(r));}));
+  container.querySelectorAll('[data-projection]').forEach(box=>{const s=d.sections[+box.dataset.projection],kind=box.dataset.projectionKind,data=kind==='surface'?s.surface:s;const update=()=>{const yaw=+box.querySelector('[data-yaw]').value/100;box.querySelector('[data-projection-canvas]').innerHTML=kind==='surface'?A.surface(data,yaw,+box.querySelector('[data-time]').value):A.scatter3d(data,yaw,+box.querySelector('[data-zoom]').value/100);};box.querySelectorAll('input').forEach(el=>el.addEventListener('input',update));});
+  root.NetworkViews?.bind(container,d);
+  if(container.querySelector('#journal-list'))bindJournal(container,m.id);
+ }
+ function bindJournal(container,id){
+  const key='sangsangin-journal-v1-'+id;let entries=[];try{const a=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(a))entries=a;}catch{}
+  const status=msg=>container.querySelector('#note-status').textContent=msg;
+  const save=()=>{try{localStorage.setItem(key,JSON.stringify(entries));return true;}catch{status('브라우저 저장 공간에 쓸 수 없습니다. JSON으로 내보내세요.');return false;}};
+  const show=()=>{container.querySelector('#journal-list').innerHTML=entries.map((a,i)=>`<article class="panel"><small>${E(a.date)}</small><h3>${E(a.title)}</h3><p class="note-body">${E(a.body)}</p><button data-edit-note="${i}">수정</button> <button data-delete-note="${i}">삭제</button></article>`).join('');container.querySelectorAll('[data-delete-note]').forEach(b=>b.addEventListener('click',()=>{entries.splice(+b.dataset.deleteNote,1);save();show();}));container.querySelectorAll('[data-edit-note]').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.editNote,a=entries[i];container.querySelector('#journal-title').value=a.title;container.querySelector('#journal-body').value=a.body;container.querySelector('#save-note').dataset.edit=String(i);}));};
+  container.querySelector('#save-note').addEventListener('click',e=>{const title=container.querySelector('#journal-title').value.trim(),body=container.querySelector('#journal-body').value.trim();if(!title||!body){status('제목과 근거를 입력하세요.');return;}const entry={title,body,date:new Date().toISOString()};if(e.target.dataset.edit!==undefined){entries[+e.target.dataset.edit]=entry;delete e.target.dataset.edit;}else entries.unshift(entry);if(save())status('이 브라우저에 저장했습니다.');container.querySelector('#journal-title').value='';container.querySelector('#journal-body').value='';show();});
+  container.querySelector('#export-notes').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(entries,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=id+'-journal.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
+  container.querySelector('#import-notes').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;if(file.size>1e6){status('1 MB 이하 JSON만 가져올 수 있습니다.');return;}try{const data=JSON.parse(await file.text());if(!Array.isArray(data)||data.length>500||data.some(a=>!a||typeof a.title!=='string'||typeof a.body!=='string'||a.title.length>160||a.body.length>12000))throw Error();entries=data.map(a=>({title:a.title,body:a.body,date:typeof a.date==='string'?a.date:new Date().toISOString()})).concat(entries);save();show();status('기존 기록에 가져온 기록을 추가했습니다.');}catch{status('기록 JSON 형식이 올바르지 않습니다.');}});show();
+ }
+ async function render(container,m){const token=++request;container.innerHTML=`<h1>${E(m.title)}</h1><p role="status">PC에서 계산한 스냅샷을 불러옵니다…</p>`;try{if(!cache.has(m.id)){const r=await fetch(`data/${m.id}.json`);if(!r.ok)throw Error();const d=await r.json();if(d.schema_version!==2||d.module!==m.id)throw Error();cache.set(m.id,d);}if(token!==request||location.hash.slice(1)!==m.id)return;paint(container,m,cache.get(m.id));}catch{if(token!==request)return;container.innerHTML=`<h1>${E(m.title)}</h1><p role="alert">데이터를 불러오지 못했습니다. 잠시 후 다시 시도하세요.</p><button id="retry-research">다시 불러오기</button>`;container.querySelector('#retry-research')?.addEventListener('click',()=>render(container,m));}}
+ root.ResearchDashboard={render,cancel:()=>{request++;},section};
+})(typeof window==='undefined'?globalThis:window);

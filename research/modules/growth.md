@@ -1,5 +1,23 @@
 # 글로벌 성장주 모니터링
 
+<!-- implementation:start -->
+## 현재 팀 구현 · 2026-09-09
+
+**부분 구현** · 가격 기준 2026-09-08. 국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표.
+
+- 계산 코드: [financial_modules.py](../../pipeline/financial_modules.py) · [local_consensus.py](../../pipeline/local_consensus.py)
+- 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/growth.json)
+- 계산/자료 계약: 원본의 3D 축을 유지합니다: x=FY1/FY2 영업이익 성장, y=YTD, z=영업이익률. 국내는 KRX 대형주·KOSPI 200와 기존 로컬 컨센서스를 연결했습니다. FY1=2026, FY2=2027, 추정 빈티지는 2026-08-07. 시가총액 없는 종목은 같은 크기로 표시합니다.
+- 남은 범위: 글로벌 100종목의 FY1/FY2 영업이익 컨센서스가 없어 해외 3D 점은 제외했습니다. 해외 EPS 성장률은 별도 표로 제공합니다.
+
+연결된 하위 그룹: FY1, FY2, 공통.
+
+[공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
+
+아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
+<!-- implementation:end -->
+
+
 여러 국가의 성장주를 FY1/FY2 영업이익 성장·YTD·영업이익률과 시가총액으로 비교한다.
 
 ## 구현 순서

@@ -11,17 +11,26 @@ flowchart LR
   C --> F[계산·모델 검증]
 ```
 
-현재는 RS·모멘텀 실제 데이터 화면과 전체 탭의 구현 가이드가 공개되어 있습니다. 원형은 단일 HTML에 일반 JavaScript가 탭을 만들고 공개 JSON을 읽는 구조입니다. 팀 버전은 독립 Python 계산과 가벼운 SVG 렌더러를 사용합니다.
+현재는 23개 분석·콘텐츠 탭의 실자료 계산·탐색 화면과 전체26개 탭의 구현 가이드를 제공합니다. 부분 구현 범위는 탭마다 표시합니다. 원형은 단일 HTML에 일반 JavaScript가 탭을 만들고 공개 JSON을 읽는 구조입니다. 팀 버전은 독립 Python 계산과 가벼운 SVG 렌더러를 사용합니다.
 
 ```text
 pipeline/universe.py   종목·페어·미확인 항목
 pipeline/collect.py    수동·직렬 수집, 날짜별 로컬 압축 CSV
 pipeline/store.py      수집 버전·SHA256·가격 필드 선택
 pipeline/analytics.py  수익률·RS·누적 초과수익, 오프라인
-pipeline/build.py      공개 가능한 작은 JSON 생성
+pipeline/build.py      초기 RS/모멘텀 JSON 구성
+pipeline/acquire.py    확장 가격·공식 IVV·재무·FRED 직렬 수집
+pipeline/krx_members.py / krx_reconcile.py   승인된 KRX 조회·품질 보정
+pipeline/ecos_data.py / local_consensus.py  ECOS·읽기 전용 국내 추정
+pipeline/engine.py     캐시 검증·단위·관측일·공통 계산
+pipeline/*_modules.py  가격·거시·실적·퀀트·관계 탭
+pipeline/ml_models.py / maximus_model.py   시간순 월별 기준모형
+pipeline/build_all.py  전체 파생 JSON·26탭 상태 생성
 docs/data/*.json       계산 결과·시계열·기준일·범위
 docs/charts.js         독립 SVG 선·막대·히트맵
 docs/dashboard.js      RS·모멘텀 카드·필터·표·차트
+docs/analysis-charts.js / network-views.js  다중축·캔들·3D·지도 SVG
+docs/research-dashboard.js  21개 신규 데이터 탭·정렬·검색·로컬 기록
 docs/app.js            홈·가이드·경로 선택
 ```
 

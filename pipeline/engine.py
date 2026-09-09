@@ -12,6 +12,7 @@ def number(x):
 def clean_json(obj):
     if isinstance(obj,dict):return {str(k):clean_json(v) for k,v in obj.items()}
     if isinstance(obj,(list,tuple,np.ndarray)):return [clean_json(v) for v in obj]
+    if isinstance(obj,np.bool_):return bool(obj)
     if isinstance(obj,(float,np.floating)):return number(obj)
     if isinstance(obj,np.integer):return int(obj)
     if isinstance(obj,(pd.Timestamp,datetime)):return obj.isoformat()[:10]

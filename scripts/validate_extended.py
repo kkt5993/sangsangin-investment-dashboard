@@ -13,6 +13,25 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='moe':
+        assert s['cards']
+        for c in s['cards']:
+            assert c['origin']<c['target'] and c['origin']<=cutoff
+            assert len(c['experts'])==10 and len({r['name'] for r in c['experts']})==10
+            assert abs(sum(r['weight'] for r in c['experts'])-100)<1e-3
+            assert all(0<=r['weight']<=100 for r in c['experts'])
+            assert c['probability'] is None or 0<=c['probability']<=100
+            assert len(c['history'])==36 and c['history'][-1][0]<=cutoff
+            if c['bands']:
+                lo,hi=c['bands']['1.96'];a,b=c['bands']['1']
+                assert lo<=a<=c['forecast']<=b<=hi
+                assert c['calibration_observations']>=24
+            e=c['explanation']
+            assert abs(e['base']+e['rational']+e['irrational']+e['interaction']-e['prediction'])<1e-4
+            for table_key in ['ledger','diagnostics']:section(c[table_key],cutoff,module)
+            assert all(r[2]<r[0]<r[1] for r in c['ledger']['rows'])
+            if c.get('strategy_chart'):section(c['strategy_chart'],cutoff,module)
+            if c['symbol'] in ['DGS10','CPIAUCSL']:assert 'strategy' not in c
     if kind=='valuation':
         assert len(s['panels'])==3
         for p in s['panels']:

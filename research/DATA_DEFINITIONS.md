@@ -52,7 +52,7 @@ Yahoo의 실제 연간·분기 재무제표와 애널리스트 EPS 추정을 구
 
 - Dynamics: β=21D 평균/표준편차×√252, α=β−β(-5), τ=21D std(|Δr|)/mean(|r|). 위험=100×logistic(zexpanding τ−0.5zβ−0.5zα), expanding 최소252·ddof0. 노출=clip(15%/21D 연환산 vol,0,1.5)×(1−0.6risk/100), 다음 거래일 적용. 비용·차입금리는 미반영이다.
 - ML: Lasso·ElasticNet·BayesianRidge·KNN·RandomForest·ExtraTrees·XGBoost·LightGBM·MLP·LSTM·Transformer와 평균/중앙값 앙상블. 142후보에서 과거 학습창으로만 Shadow12회 상위22+가용 강제변수를 선택한다. 일반모형6개월·시퀀스모형12개월 재적합, 최소96개월 라벨, 과거 만기 종료120개 이내로 당시 모델을 선택한다. 1M/3M 만기를 기다리며 현재 수정 거시에2개월 시차를 둔다. 68/90%는 과거 OOS 잔차 분위, 확률은 정규 CDF이며 PIT 실시간 성과가 아니다. 전체 설정·검증·미확보 입력은 [ML 계약](ML_MODEL_CONTRACT.md).
-- MAXIMUS: 3-expert의 만기 종료 최근24개 OOS 역 MSE 75%+동일가중25%. 원본 10-expert·로지스틱 게이트·SIS와 구분한다.
+- MAXIMUS: 10전문가·훈련창 ADF/SIS·1개월 추가 엠바고·6개월 재학습. 만기 종료 최근48개 OOS로 로지스틱25%와 역MSE/균등 프라이어75%를 결합한다. 현재 수정 자료의 완료월 예측이며, 가격223/CPI201후보·6매크로·지수·종목별 팬/원장/검정을 연결했다. CPI는 YoY의 다음 변화 %p, 금리는 상대 수준 변화와 bp이며 채권 수익률이 아니다. 이익추정 앵커 대신 과거 레벨 중앙값을 사용하고 변수 영향은 고정 게이트 occlusion이다. [전체 계약](MAXIMUS_MODEL_CONTRACT.md)의 입력·PIT·부분월 한계를 유지한다.
 - 퀀트: 팩터 12-1M20%·3M10%·6M효율15%·52주고점10%·5D반전10%·저변동15%·월간안정15%·거래량5%, z는 ±2.5 제한. 변동성>90%, MAX일간>15%, 12-1M>300%, 1M<-25% 제외. BAB beta는 KOSPI 1Y, TSMOM은 12M/3M 일치·vol10% 목표·2배 제한. Stat Arb는 거래대금 상위160 중 상관0.5~0.95·Hurst<0.5·Engle–Granger p<0.05로 선별한다. p는 다중검정 보정 전이다.
 - 옵션: SPY/QQQ/IWM, 7~45일 내 첫3개 만기, REGULAR100주·양의 OI·유효 IV. Black–Scholes gamma×OI×100×S²×1%에 콜+·풋− 부호를 가정한다. 제한된 만기 표본의 분석이며 실제 딜러 감마가 아니다.
 - 그래프는 시장/업종 소속, degree는 연결 수다. 지구본은 국가 집계 위치다. 인과·교역량·시설·위성 값을 생성하지 않는다.

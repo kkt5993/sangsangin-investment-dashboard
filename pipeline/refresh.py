@@ -184,7 +184,7 @@ def main():
             model=read_json(ROOT/'docs/data/ml.json');model_age=(datetime.fromisoformat(as_of)-datetime.fromisoformat(model['as_of'])).days
             model_due=a.force_models or model_age>=7 or as_of[:7]!=model['as_of'][:7]
             if model_due or model.get('model_spec')!=2:run('pipeline.ml_models')
-            if model_due:run('pipeline.maximus_model')
+            if model_due or read_json(ROOT/'docs/data/maximus.json').get('model_spec')!=1:run('pipeline.maximus_model')
             from .events_data import read as read_gzip
             from .allocation_model import MODEL_SPEC
             current=Data(as_of,vintage=vintage);allocation=current.resource('allocation_model.json.gz')

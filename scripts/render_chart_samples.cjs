@@ -29,5 +29,6 @@ samples.ml_lag=A.lagCorrelation(ml.sections.find(s=>s.type==='lagcorrelation'));
 samples.ml_models=A.modelLeaderboard({panels:[ml.sections.find(s=>s.type==='modelleaderboard').panels[0]]});
 samples.ml_features=A.featureSelection(ml.sections.find(s=>s.type==='featureselection').panels[1]);
 samples.ml_shap=A.shap(ml.sections.find(s=>s.type==='shap'));
+const maxGroup=data('maximus').sections.find(s=>s.type==='moe'&&s.group==='지수');samples.maximus_fan=A.moeFan(maxGroup.cards[0]);samples.maximus_topology=A.moeTopology(maxGroup.cards);
 samples.scenario=ctx.window.ResearchCharts.bars(data('dragonglass').sections.find(s=>s.type==='scenario').rows.filter(r=>r.market==='KR').map(r=>({name:r.name,value:r.beta*-10})),{unit:'%',title:'시장 −10% 가정 · Beta 민감도'});
 (async()=>{for(const [name,html] of Object.entries(samples)){let s=html.match(/<svg[\s\S]*<\/svg>/)?.[0];if(!s)throw Error(name+' empty');s=s.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" font-family="Malgun Gothic, sans-serif" ').replace(/(<svg[^>]*>)/,'$1'+styles);fs.writeFileSync(path.join(out,name+'.svg'),s);await sharp(Buffer.from(s)).resize({width:1100}).png().toFile(path.join(out,name+'.png'));}console.log('Rasterized',Object.keys(samples).length,'chart samples without a browser.');})().catch(e=>{console.error(e);process.exitCode=1;});

@@ -11,7 +11,7 @@ CODE={
  'etfmon':'market_modules.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
  'regime':'macro_modules.py','risk':'macro_modules.py · option_analytics.py','pm_weekend':'macro_modules.py','geoecon':'macro_modules.py',
  'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'discovery.py · financial_modules.py','strategies':'financial_modules.py',
- 'quant':'quant_modules.py','ml':'ml_models.py · ml_features.py · ml_ensemble.py · ml_transformer.py · ml_views.py','maximus':'maximus_model.py · ml_models.py',
+ 'quant':'quant_modules.py','ml':'ml_models.py · ml_features.py · ml_ensemble.py · ml_transformer.py · ml_views.py','maximus':'maximus_model.py · maximus_features.py · maximus_moe.py · maximus_views.py',
  'principium':'platform_modules.py','ask_digest':'platform_modules.py','iw':'platform_modules.py','aragorn':'platform_modules.py','dragonglass':'platform_modules.py','globe':'platform_modules.py',
 }
 for key in ['regime','risk','pm_weekend','geoecon','strategies','earnings','dragonglass','ask_digest','multiasset']:
@@ -30,7 +30,7 @@ for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_da
 PARITY={
  'overview':('전체 탭 요약·카드·탐색','25탭 상태, 데이터 수, 바로가기','원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외'),
  'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Vercel·평일08/18시 갱신·512MiB 변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
- 'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','3지수·13종목·2거시, 전문가 가중치와 예측·확률·기여 차트','원본 10전문가/로지스틱 게이트/SIS 대신 명시적 3모델 기준모형'),
+ 'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','2기본지수+Nasdaq·6매크로·종목 캐시·10전문가/ADF/SIS/게이트·68/95팬·R/I·원장','지수 이익앵커·SEC/KR수급·일부 입력·부분월/임의 티커 서버·PIT 미연결'),
  'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','3D 관계·Entity 360·로컬 원장 3개 화면','시설·위성·물류·전파모델 8개 화면은 데이터/설정 미연결'),
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),
  'globe':('지구본·국가/기업 탐색·교역 관계','로컬 지도 경계·정사영 회전·국가/기업 선택·수치표','본사 좌표·교역 경로/품목/금액은 미연결'),

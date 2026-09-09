@@ -15,7 +15,7 @@ def gated(records):
         out.append(dict(r,weights=clean_json(w),gated=number(sum(w[n]*r['models'][n] for n in names)),gate_samples=len(mature)))
     return out
 
-def build(d):
+def baseline_build(d):
     sections=[];targets=[('지수',s,n,None,'%') for _,s,n in INDICES]
     targets += [('종목',s,n,None,'%') for s,n in DYNAMICS_STOCKS]
     targets += [('매크로','SPY','미국 10Y 금리 변화','DGS10','bp'),('매크로','SPY','CPI MoM','CPIAUCSL','%')]
@@ -37,6 +37,11 @@ def build(d):
         print('MAXIMUS',group,len(records),flush=True)
     return module('maximus',d.as_of,'지수·매크로·15개 입력 후보 종목의 캐시 예측 콘솔입니다. 3개 전문가(Ridge·BayesianRidge·ExtraTrees), 만기가 끝난 최근 24개 OOS 오류의 역 MSE 75%와 동일가중 25%로 게이트를 계산합니다. 전문가별 가중치와 실제 결과를 표시합니다. 미관측 타깃은 비워 둡니다.',sections,
         missing=['원본 10-expert MoE·SIS·ADF 파이프라인과 다른 명시적 기준모형입니다. 원본 모델을 실행했다고 표시하지 않습니다.','GitHub Pages에서 Python 재학습·임의 종목 서버 요청은 실행하지 않습니다. 로컬 명령으로 캐시를 갱신합니다.'])
+
+def build(d):
+    from .maximus_moe import build as train
+    from .maximus_views import build_view
+    return build_view(d,train(d))
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--as-of',default='2026-09-08');a=p.parse_args();d=Data(a.as_of);d.export(build(d))

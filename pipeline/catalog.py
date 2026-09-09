@@ -43,7 +43,7 @@ MACRO.update({
  'AMTMNO':('제조업 신규수주','USD mn','M'), 'DGORDER':('내구재 신규수주','USD mn','M'),
 })
 # Explicit support instruments, never an implicit all-market expansion.
-DETAIL_PRICES=['USO','^MOVE','^VVIX','GC=F','^SOX','IYT','BDRY','KBE','JETS','IBB','ZC=F','ZW=F','ZS=F','LBR=F','RB=F','HO=F']
+DETAIL_PRICES=['USO','^MOVE','^VVIX','GC=F','^SOX','IYT','BDRY','KBE','JETS','IBB','ZC=F','ZW=F','ZS=F','LBR=F','RB=F','HO=F','TQQQ','122630.KS','069500.KS']
 from .flow_catalog import US_STOCKS
 DETAIL_PRICES=sorted(set(DETAIL_PRICES)|set(US_STOCKS))
 

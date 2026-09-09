@@ -1,0 +1,35 @@
+{
+  "version":1,
+  "reviewed_at":"2026-09-09",
+  "sources":{
+    "nvda_fy2026":{"title":"NVIDIA FY2026 Form 10-K · Manufacturing and Competition","url":"https://www.sec.gov/Archives/edgar/data/1045810/000104581026000021/nvda-20260125.htm","period_end":"2026-01-25"},
+    "vertiv_ai":{"title":"Vertiv AI Hub · NVIDIA/Intel collaboration","url":"https://www.vertiv.com/en-us/solutions/ai-hub/"},
+    "lilly_product":{"title":"Lilly · Mounjaro/Zepbound product information","url":"https://tirzepatide.lilly.com/"},
+    "constellation":{"title":"Constellation · 2024 sustainability report, generation portfolio","url":"https://www.constellationenergy.com/content/dam/constellationenergy/pdfs/Constellation-2024-Sustainability-Report.pdf"},
+    "lockheed":{"title":"Lockheed Martin · Business Areas","url":"https://www.lockheedmartin.com/en-us/who-we-are/business-areas.html"}
+  },
+  "companies":[
+    {"symbol":"TSM","name":"TSMC ADR"},{"symbol":"005930.KS","name":"삼성전자"},
+    {"symbol":"000660.KS","name":"SK하이닉스"},{"symbol":"MU","name":"Micron"},
+    {"symbol":"NVDA","name":"NVIDIA"},{"symbol":"AMD","name":"AMD"},
+    {"symbol":"INTC","name":"Intel"},{"symbol":"GOOGL","name":"Alphabet"},
+    {"symbol":"AMZN","name":"Amazon"},{"symbol":"MSFT","name":"Microsoft"},
+    {"symbol":"VRT","name":"Vertiv"},{"symbol":"LLY","name":"Eli Lilly"},
+    {"symbol":"CEG","name":"Constellation Energy"},{"symbol":"LMT","name":"Lockheed Martin"},{"symbol":"JPM","name":"JPMorgan Chase"}
+  ],
+  "links":[
+    {"id":"tsm_nvda","source":"TSM","target":"NVDA","relation":"supplies","source_id":"nvda_fy2026","basis":"공시의 웨이퍼 제조 공급처","weight":1},
+    {"id":"samsung_nvda","source":"005930.KS","target":"NVDA","relation":"supplies","source_id":"nvda_fy2026","basis":"공시의 웨이퍼·메모리 공급처","weight":1},
+    {"id":"hynix_nvda","source":"000660.KS","target":"NVDA","relation":"supplies","source_id":"nvda_fy2026","basis":"공시의 메모리 공급처","weight":1},
+    {"id":"micron_nvda","source":"MU","target":"NVDA","relation":"supplies","source_id":"nvda_fy2026","basis":"공시의 메모리 공급처","weight":1},
+    {"id":"amd_nvda","source":"AMD","target":"NVDA","relation":"competes","source_id":"nvda_fy2026","basis":"공시상 가속 컴퓨팅 경쟁","weight":1},
+    {"id":"intel_nvda","source":"INTC","target":"NVDA","relation":"competes","source_id":"nvda_fy2026","basis":"공시상 가속 컴퓨팅 경쟁","weight":1},
+    {"id":"alphabet_nvda","source":"GOOGL","target":"NVDA","relation":"competes","source_id":"nvda_fy2026","basis":"공시상 자체 AI 컴퓨팅 경쟁 · 회사 전체의 단일 관계를 뜻하지 않음","weight":1},
+    {"id":"amazon_nvda","source":"AMZN","target":"NVDA","relation":"competes","source_id":"nvda_fy2026","basis":"공시상 자체 AI 컴퓨팅 경쟁 · 회사 전체의 단일 관계를 뜻하지 않음","weight":1},
+    {"id":"microsoft_nvda","source":"MSFT","target":"NVDA","relation":"competes","source_id":"nvda_fy2026","basis":"공시상 자체 AI 컴퓨팅 경쟁 · 회사 전체의 단일 관계를 뜻하지 않음","weight":1},
+    {"id":"vertiv_nvda","source":"VRT","target":"NVDA","relation":"collaborates","source_id":"vertiv_ai","basis":"전력·냉각 기술 협업 · 전력 판매 계약으로 분류하지 않음","weight":1},
+    {"id":"vertiv_intel","source":"VRT","target":"INTC","relation":"collaborates","source_id":"vertiv_ai","basis":"Gaudi3 냉각 기술 협업 · 전력 판매 계약으로 분류하지 않음","weight":1}
+  ],
+  "extra_themes":[{"id":"glp1","name":"GLP-1·GIP 치료제","members":[{"symbol":"LLY","source_id":"lilly_product","role":"tirzepatide 제품"}]},{"id":"nuclear","name":"원자력 발전","members":[{"symbol":"CEG","source_id":"constellation","role":"원자력 발전 자산"}]},{"id":"defense","name":"항공우주·방위","members":[{"symbol":"LMT","source_id":"lockheed","role":"항공우주·방위 사업"}]}],
+  "scope":"존재가 확인된 관계와 모형 전달계수는 별개다. weight=1은 미공개 거래 규모를 대신한 명시적 모형 설정이며 매출 비중·실측 충격계수가 아니다. 사업 연관은 digest_themes.json의 공개 근거를 재사용한다."
+}

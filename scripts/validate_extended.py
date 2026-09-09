@@ -1,6 +1,6 @@
 """Financial/date/shape invariants for every new public snapshot, offline."""
 from pathlib import Path
-import json,math,re
+import json,math,re,base64,struct
 from datetime import date
 ROOT=Path(__file__).resolve().parents[1]
 def load(p):return json.loads(p.read_text(encoding='utf8'),parse_constant=lambda v:(_ for _ in ()).throw(ValueError(v)))
@@ -13,6 +13,32 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='relationlab':
+        nodes={r['id']:r for r in s['nodes']};edges={r['id']:r for r in s['links']}
+        assert len(nodes)==len(s['nodes']) and len(edges)==len(s['links'])
+        for n in nodes.values():
+            assert len(n['position'])==3 and all(math.isfinite(v) for v in n['position'])
+            assert not n.get('date') or n['date']<=cutoff
+        for e in edges.values():
+            assert e['source'] in nodes and e['target'] in nodes and e['source']!=e['target'] and 1<=e['weight']<=3
+            assert e['relation'] in s['parameters']['transfer'] and e['basis'] and e['evidence']
+            if e['relation']=='correlated':assert e['observations']>=200 and e['start']<e['end']<=cutoff and -1<=e['corr']<=1
+            else:assert e['url'].startswith('https://')
+        assert len(s['scenarios'])==8 and len({r['id'] for r in s['scenarios']})==8
+        for scenario in s['scenarios']:
+            seeds={r['id'] for r in scenario['seeds']};assert seeds<=nodes.keys()
+            for id,r in scenario['impacts'].items():
+                assert id in nodes and r['seed']==(id in seeds)
+                assert abs(r['value']-sum(c['value'] for c in r['contributions']))<1e-5
+                for c in r['contributions']:
+                    assert c['source'] in seeds and c['path'][0]==c['source'] and c['path'][-1]==id
+                    assert c['hop']==len(c['edges'])==len(c['path'])-1<=3 and len(c['path'])==len(set(c['path']))
+                    for a,b,key in zip(c['path'],c['path'][1:],c['edges']):assert {a,b}=={edges[key]['source'],edges[key]['target']}
+        p=s['portfolio_correlations'];count=len(p['ids']);length=count*(count-1)//2
+        raw=base64.b64decode(p['correlations'],validate=True);obs=base64.b64decode(p['counts'],validate=True)
+        assert len(set(p['ids']))==count and len(raw)==length*2 and len(obs)==length and len(p['diagonal_valid'])==count
+        assert p['window']<=252 and p['minimum']==200 and (p['end'] is None or p['end']<=cutoff)
+        for (value,),n in zip(struct.iter_unpack('<h',raw),obs):assert value==32767 or -10000<=value<=10000 and 200<=n<=252
     if kind=='digestbrief':assert len(s['horizons'])==3 and s['headline'] and s['note']
     if kind=='digesttrends':
         assert [p['id'] for p in s['panels']]==['short','mid','long']

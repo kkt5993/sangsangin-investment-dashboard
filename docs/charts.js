@@ -39,14 +39,14 @@
   registry.set(id,{pts,X,Y,L,R,W,H});
   return `<div class="line-wrap"><svg data-series="${id}" data-kind="${kind}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)} · ${esc(label)} · ${pts[0][0]} ~ ${pts.at(-1)[0]} · 마지막 ${fmt(pts.at(-1)[1])}" tabindex="0"><title>${esc(title)}</title>${area}${axes}${guides}<polyline data-price-series="1" points="${coordinates}" fill="none" stroke="#246a91" stroke-width="1.8" stroke-linejoin="round"/><text transform="translate(16 ${H/2}) rotate(-90)" text-anchor="middle" class="axis">${esc(label)}</text><line class="crosshair" x1="0" x2="0" y1="${T}" y2="${H-B}" hidden/><circle class="crosspoint" r="4" hidden/></svg><output class="chart-tooltip" aria-live="off">${pts.at(-1)[0]} · ${fmt(pts.at(-1)[1],kind==='rs'?'σ':'%')}</output></div>`;
  }
- function bars(items,{unit='',markers=[],title=''}={}){
+ function bars(items,{unit='',markers=[],title='',digits=1,valueUnit=unit}={}){
   const rows=items.filter(r=>ok(r.value));if(!rows.length)return empty();
   const W=800,L=215,R=85,T=markers.length?34:16,rowH=33,H=T+rows.length*rowH+36;
   const extent=Math.max(1,...rows.map(r=>Math.abs(r.value)),...markers.map(Math.abs))*1.1;
   const labelGutter=70;
   const X=v=>L+labelGutter+(v+extent)/(2*extent)*(W-L-R-labelGutter),zero=X(0);
   const refs=[...new Set([0,...markers])].map(v=>`<line data-bar-guide="${v}" x1="${X(v)}" x2="${X(v)}" y1="${T-6}" y2="${H-28}" class="reference-line" stroke-dasharray="${v?'3 4':'0'}"/>${v?`<text x="${X(v)}" y="${T-13}" text-anchor="middle" class="axis">${fmt(v,'',Math.abs(v)%1?2:0)}</text>`:''}`).join('');
-  const body=rows.map((r,i)=>{const y=T+i*rowH,end=X(r.value);return `<g><title>${esc(r.name)}: ${fmt(r.value,unit,2)}</title><text x="${L-10}" y="${y+18}" text-anchor="end" class="bar-name">${esc(r.name)}</text><rect data-bar-value="${r.value}" x="${Math.min(zero,end)}" y="${y+3}" width="${Math.max(.8,Math.abs(end-zero))}" height="23" fill="${r.value>=0?'#288376':'#9a6da2'}"/><text x="${end+(r.value>=0?7:-7)}" y="${y+19}" text-anchor="${r.value>=0?'start':'end'}" class="bar-value">${fmt(r.value,unit)}</text></g>`;}).join('');
+  const body=rows.map((r,i)=>{const y=T+i*rowH,end=X(r.value);return `<g><title>${esc(r.name)}: ${fmt(r.value,unit,2)}</title><text x="${L-10}" y="${y+18}" text-anchor="end" class="bar-name">${esc(r.name)}</text><rect data-bar-value="${r.value}" x="${Math.min(zero,end)}" y="${y+3}" width="${Math.max(.8,Math.abs(end-zero))}" height="23" fill="${r.value>=0?'#288376':'#9a6da2'}"/><text x="${end+(r.value>=0?7:-7)}" y="${y+19}" text-anchor="${r.value>=0?'start':'end'}" class="bar-value">${fmt(r.value,valueUnit,digits)}</text></g>`;}).join('');
   return `<div class="bar-scroll"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)} · ${esc(unit)}"><title>${esc(title)}</title>${refs}${body}<text x="${zero}" y="${H-7}" text-anchor="middle" class="axis">0 ${esc(unit)}</text></svg></div>`;
  }
  function heatmap(rows,cols,title){

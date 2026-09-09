@@ -14,12 +14,20 @@ def sensitivity(price, benchmark):
                 start=str(r.index[0].date()), end=str(r.index[-1].date()))
 
 
-def entity_view(d, ranks, financial, events):
+def entity_view(d, ranks, financial, events, extra=None):
     # The KR large-cap RS takes precedence where KOSPI200 membership overlaps.
     chosen = {}
     for universe in ['KR', 'US', 'KOSPI200']:
         for a in ranks[universe]['rows']:
             chosen.setdefault(a['symbol'], dict(a, market='US' if universe == 'US' else 'KR', rs_universe=universe))
+    additions=[]
+    for raw in extra or []:
+        symbol=raw['symbol']
+        if symbol in chosen:continue
+        stats=d.stats(symbol)
+        if not stats:continue
+        chosen[symbol]=dict(stats,name=raw['name'],sector='공식 업종 미확보',market='KR' if symbol.endswith(('.KS','.KQ')) else 'US',rs_universe='추가 사업 관찰',rs=None)
+        additions.append(symbol)
     statements = {a['symbol']: a for a in financial}
     entities = []
     for symbol, a in chosen.items():
@@ -43,5 +51,5 @@ def entity_view(d, ranks, financial, events):
             entity['financial'] = {k: f[k] for k in ['financial_currency', 'financial_as_of', 'report_date',
                                                      'margin', 'net_income', 'eps1', 'eps2', 'estimate_currency']}
         entities.append(entity)
-    return dict(type='entities', title='Entity 360 · 공식 유니버스 종목 탐색', group='Entity 360', entities=entities,
+    return dict(type='entities', title='Entity 360 · 공식 유니버스와 추가 사업 관찰', group='Entity 360', entities=entities,extra_symbols=additions,
                 coverage={k: dict(available=v['available'], expected=v['expected'], membership_as_of=v['membership_as_of']) for k,v in ranks.items()})

@@ -138,8 +138,9 @@ def cot_views(d,obj):
 def dragon_views(d,obj,ranks,news,events):
     from .entities import entity_view, sensitivity
     from .financial_modules import financial_rows
+    from .relation_views import companies
     obj["sections"]=[s for s in obj["sections"] if s.get("group")!="Entity 360" and s["type"]!="journal"]
-    obj["sections"] += [entity_view(d,ranks,financial_rows(d),events),dict(type="decisions",title="결정 원장",group="결정 원장")]
+    obj["sections"] += [entity_view(d,ranks,financial_rows(d),events,extra=companies()),dict(type="decisions",title="결정 원장",group="결정 원장")]
     for s in obj['sections']:
         if s['type']=='journal':s['group']='결정 원장'
     leaders=[dict(a,market=m) for m in ['KR','US'] for a in ranks[m]['leaders']];scenarios=[];alerts=[]
@@ -183,5 +184,7 @@ def extend(d,objects,ranks):
     from .iw_review import iw_views
     iw_views(d,objects)
     from .digest import digest_views
+    from .relation_views import relation_views
+    relation_views(d,objects['dragonglass'])
     digest_views(d,objects,ranks,news)
     return objects

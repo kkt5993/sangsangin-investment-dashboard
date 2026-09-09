@@ -91,3 +91,17 @@ ASK 후속(2026-09-09): `digest.py`와config/digest_themes.json으로10세부화
 ASK 핵심비율은HG/GC·SPY/TLT·XLY/XLP 비조정공통종가180관측/63관측변화,4번째EPU/VIX/HY252D z는차이(퍼센트아님). 9위험임계값과정확한동일값별도,뉴스제목단어일치(TER가interest와일치금지)/KST기준일이후제외. 20모듈은현재build객체+동일날짜RS/momentum+별도기준ML/MAXIMUS에서읽는다. 원본내부18개라는것과구분. 상세 research/DIGEST_CONTRACT.md.
 
 개발raw빈티지20260909T133557Z(부모131712Z),새시세/원본사이트요청0·기업공식자료웹검증은수행. 로컬약76.27MiB/512MiB,공개JSON6.059MiB로자체공개한도8MiB조정. 검사96Python·두검증기·3JS/11구문·43SVG래스터통과,2Y암호자산달력회귀검사추가. 브라우저QA없음. 게시실행ID 20260909T135520Z 실제완료는runtime/state.json. 다음은DRAGONGLASS관계/근거/8시나리오전파·원장프리모템/군집,위성좌표/NDVI,실적/컨센서스세부,Overview TESS/5축,마지막RS/모멘텀/ETF기간계약등REFERENCE_PARITY에따라계속.
+
+
+다음 묶음 착수: DRAGONGLASS 관계/전파. 개발빈티지20260909T135843Z(부모133557Z),아직공개build안함. `relation_model.py`와7fixture검사통과:최대3hop·방향별계수·한seed최강절대경로/다중seed합·루프배제·경로근거·중심성·실현상관370달력일내252/min200. 원본공개전달계수11종을설정으로독립구현,협업만팀0.35추가;실제수익률/확률아님. 상관은기본전파제외,선택시실측음수부호를보존(원본은correlated항상양의계수). 이엔진은아직화면에연결안됨.
+
+`config/relation_evidence.json` SEC NVIDIA FY2026 10-K 제조/경쟁(원문링크포함)기반4공급·5경쟁,Vertiv AI hub2기술협업(전력판매계약아님),Lilly tirzepatide제품확인. ASK의digest_themes.json 사업근거도재사용가능. 현재실제기업노드+테마를만들고예측가중치와사실관계를구분해야함. 원본8시나리오:금리재상승/AI CapEx둔화/TSMC공급차질/전력병목/HBM가속/지정학/GLP1/위험선호후퇴. 원본SCN shock0.2~0.7은정규화가정,실제%수익률아님. 공급순방향.28/역.72,경쟁−.5,partof.42/.55 등은TRANSFER. multiseed0.12이상종목breadth/0.06이상상하8행,단일전파.03이상/중심성.05이상. scenario/Entity/decision영향표·원장최악경로/상관군집UI와연결하는것이다음.
+
+원본 `_decisionIntel`은확신도에서확률/상방/권장비중을기계적으로만들지만,우리화면의기존EV는사용자입력만사용하므로이를실측확률처럼넣지말것. 준비도·최악시나리오·노출누락/상관coverage를연결한다. 원본코드는형제study/source/assets/dragonglass.js 773~820,1074~1154,1191~1282에서확인했고원본사이트요청0. 현재최종공개64530e7,run135520Z,42/42바이트검증완료. 신규relation파일/이인계는미커밋이며다음묶음완료시게시.
+
+
+DRAGONGLASS 후속(2026-09-09): 관계39객체(기업22/테마13/관측2/가정2), 공식 사업/공급/경쟁/협업30+실현상관6, 원본255/581전체 검증 아님. `relation_views.py`가`extend`에서Entity추가후호출되어정기갱신에포함. Entity700공식+TSM ADR1(공식업종미확보/RS없음), 모든기업가격을관계확신도처럼사용하지않음. 가격추가요청0,원본요청0. 기업공식/SEC자료만근거확인했으며 config/relation_evidence와digest_themes에URL/역할보관. 노드좌표3Dspring seed832/k1.2, SVG라벨겹침회피·드래그/휠/핀치/선택/필터/자동회전·탭이동시프레임취소. 초기과밀레이아웃을래스터에서발견해수정.
+
+`relation-views.js`는공개8가정Python결과와정확일치. 최대3단계/최강경로/다중입력합/출처, 중심성·부호대조·상하8순위/도달범위,원장실행비중·최악가정·Long쌍별상관. 상대강도를수익률이나%NAV손익으로표시하지않음. 무입력/미연결/경로없음/0비중분리. 이전Beta/공식분류별도하위화면보존. 상관전체Entity701창252/min200 아래삼각Int16×10000+Uint8관측수·결측32767·자기상관분산검사. 원장스토리지변경없고가정확률/권장비중자동생성없음. 상세 research/RELATION_CONTRACT.md, source미확보범위 REFERENCE_PARITY.
+
+검사106Python·두검증기·3JS(새relation포함)/12구문·46SVG래스터통과,브라우저QA없음. 원자료/실행파일 82.60MiB/512,공개JSON 7.107MiB/8. 게시실행ID 20260909T143022Z, 빈티지 20260909T135843Z;실제공개완료는runtime/state.json확인. 다음전체목표계속: OverviewTESS/5축,위성실관측,Geoecon시간/사건자산경로,글로벌추정상세/SEC13F·P/KR거시달력,최종RS/모멘텀/ETF기간계약. 이묶음은진행이며전체완료아님.

@@ -22,7 +22,7 @@ CODE['regime']+=' · reflexivity.py · industry_details.py'
 CODE['regime']+=' · valuation.py · calendar_data.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py'
-CODE['dragonglass']+=' · entities.py'
+CODE['dragonglass']+=' · entities.py · relation_model.py · relation_views.py'
 CODE['multiasset']+=' · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
 CODE['watch']+=' · technical_scan.py'
 for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_data.py'
@@ -31,7 +31,7 @@ PARITY={
  'overview':('전체 탭 요약·카드·탐색','25탭 상태, 데이터 수, 바로가기','원본의 개인 서술·Tesseract·crowding 보조 엔진은 제외'),
  'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Vercel·평일08/18시 갱신·512MiB 변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
  'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','2기본지수+Nasdaq·6매크로·종목 캐시·10전문가/ADF/SIS/게이트·68/95팬·R/I·원장','지수 이익앵커·SEC/KR수급·일부 입력·부분월/임의 티커 서버·PIT 미연결'),
- 'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','3D 관계·Entity 360·로컬 원장 3개 화면','시설·위성·물류·전파모델 8개 화면은 데이터/설정 미연결'),
+ 'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','39객체·근거·3D/전파·8시나리오·701Entity·원장 프리모템/상관','전체255객체/581관계·위성·선행/후행·구루/사건·팀DB 미연결'),
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),
  'globe':('지구본·국가/기업 탐색·교역 관계','로컬 지도 경계·정사영 회전·국가/기업 선택·수치표','본사 좌표·교역 경로/품목/금액은 미연결'),
  'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF/이미지·휴지통/백업','자동 추출/LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),

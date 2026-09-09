@@ -2,12 +2,13 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 require('./test_decisions.cjs');
+const relationChecks=require('./test_relations.cjs');
 const researchChecks=Promise.resolve().then(()=>require('./test_research_store.cjs')).then(()=>require('./test_research_notes.cjs'));
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','decision-ledger','research-store','research-notes','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','relation-views','decision-ledger','research-store','research-notes','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
 // Minimal event targets exercise the actual tab and scenario callbacks offline.
 function interactiveContainer(){
@@ -29,7 +30,7 @@ function interactiveContainer(){
  return c;
 }
 (async()=>{
- await researchChecks;
+ await relationChecks;await researchChecks;
  let count=0;
  for(const m of modules){const d=data[m.id];if(d?.schema_version!==2)continue;const c=container();context.location.hash='#'+m.id;await context.window.ResearchDashboard.render(c,m);
   assert(c.innerHTML.includes('<h1>'),m.id);assert(!c.innerHTML.includes('role="alert"'),m.id);assert(!/\b(NaN|Infinity|undefined)\b|\[object Object\]/.test(c.innerHTML),m.id+' invalid rendering');assert(c.innerHTML.includes('data/'+m.id+'.json'),m.id);
@@ -39,7 +40,7 @@ function interactiveContainer(){
  }
  assert.equal(requests,count,'one local request per module across repeated navigation');
  const interactive=interactiveContainer();context.location.hash='#dragonglass';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='dragonglass'));
- interactive.buttons.find(b=>b.dataset.subview==='시나리오').fire('click');assert.equal(interactive.boxes.length,1);
+ interactive.buttons.find(b=>b.dataset.subview==='시장 Beta 민감도').fire('click');assert.equal(interactive.boxes.length,1);
  const box=interactive.boxes[0],scenario=data.dragonglass.sections.find(s=>s.type==='scenario');
  assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='KR').beta*-10+'"'));
  box.market.value='US';box.shock.value='-20';box.shock.fire('input');assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='US').beta*-20+'"'));

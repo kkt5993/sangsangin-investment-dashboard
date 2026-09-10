@@ -184,3 +184,12 @@ PDF 본문 후속(2026-09-10): pdf-text.js/notebook-pdf.js를 PRINCIPIUM/IW/ASK�
 research-store DB/schema2,기존같은DB의meta/files보존·oldversion연결닫기·v1백업/본문/Blob보존. 기존2MiB메타/64MiB첨부한도유지하고전체추출본문은메타한도에포함;초과시atomic실패/입력유지. 원문첨부없거나페이지/문자/부분범위모순은거부. 첨부제거시해당글의추출본문도제거. 파일당25MiB확대는사용자선택로컬첨부이며PC raw512MiB정책과별개.
 
 181Python·2검증기·3JSsuite(실제PDF파서/신규저장UI검사포함)·23JS/MJS구문통과. 합성PDF4(혼합한글영문+스캔·암호·손상·302쪽),3페이지래스터중영문/한글육안확인. CUA localhost에서선택→실제worker→한글2쪽/라벨ii→원문근거→저장→새로고침→본문에만있는숫자검색→페이지전환·화면검사. 테스트자료만사용,localhost의 [QA] PDF 추출 검증 기록은공개사이트개인DB와별개. 전체25탭브라우저QA라는뜻아님. pdf-browser-qa.json과pdf-fixtures,검사로그는private runtime. 새price/원본사이트요청0,raw빈티지20260910T011831Z동일,원자료추가없음(의존성archive/합성fixtures만추가). run 20260910T021913Z,게시최종상태는runtime/state.json/file-verification. 목표여전히진행:OCR·분류/번역/LLM요약/팀공유DB·로그인과REFERENCE_PARITY의세계위성배경·KR옵션·SEC13F/연속수집·직접NI/OP/PIT·본사/교역·원본기간등.
+
+
+국내 숏감마 후속(2026-09-10): 보존 risk.json은 옵션 GEX가 아닌 ETF 리밸런싱·가격 진단8행이었다. 이전 OI/IV 필요 판정을 정정. kr_shortgamma_data.py/kr_shortgamma.py로 KRX 지수1028 실제OHLC728·공식기초지수/배율19ETF·보고순자산·월간옵션실제최종거래일을 연결했다. 현물/선물지수 분리·업종형/해외/KOSDAQ/커버드콜/ETN제외. ±1%1881.7479억원·1σ5869.2748억원(2026-09-08 기준),실제딜러보유/주문/설정환매/영향예측아님. RV21표본단순수익률49.513459%,비율1.073815·고저15%극단7/20·D-2(9/10)이다.
+
+원본 미공개 점수는252일장중고점90~100%gate와RV252z/21일가속/RSI14/63일속도40/25/20/15팀규칙.0~100축/45·70선·252거래일곡선, RV5/21두계열·25/40선,60거래일최대/펼침원장,8행표줄바꿈·19ETF표·기초별양음금액. 새2차트는팀추가이며원본의별도옵션차트라고주장하지않는다. 현재정의조회9/10 vs가격/AUM9/8분리·PIT구성이력아님. 원자료 +215447bytes, 빈티지20260910T023239Z(부모20260910T011831Z). 일반가격/미국옵션등기존모듈수치는변경없고 risk/ASK요약·상태/Overview빈티지만부모상속동일가격기준으로갱신.
+
+refresh의기존allow_krx_auth 경로에연결·index10달력일겹침의신규/정정행만추가·정의/만기7일주기·실패이전파일보존. 실제수집시코드조회3파트(index2구간)외추가원본요청0. 승인계정로그전체억제,필요한공식기초정보만로컬보존. collector모의실패/증분1검사포함190Python·2검증기·3JS·23JS/MJS구문통과. CUA localhost에서8지표·252일두SVG육안·계산원장접힘/펼침·122630검색/초기화검증. 테스트증거runtime/kr-shortgamma-browser-qa.json,최종검사로그kr-shortgamma-final-validation.log. PC약306.4MiB/512,공개JSON약7.925MiB/8(배포패키지전). 게시run 20260910T025609Z;실제최종성공은runtime/state.json 및 file-verification을확인.
+
+전체목표는여전히진행: 모든공통그룹에콘텐츠가연결됐다는사실은전체원본동등성완료가아니다. REFERENCE_PARITY의세계위성배경·관계망확대/본사/교역·SEC13F/연속수집·직접글로벌NI/OP/PIT·원본미공개기간/모델·OCR/LLM/공유DB등을계속한다. 참조제작자이름/출처사이트링크의배포제외검사를항상유지한다.

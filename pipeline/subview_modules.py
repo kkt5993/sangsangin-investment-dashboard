@@ -159,6 +159,8 @@ def extend(d,objects,ranks):
     wagdog_views(d,objects['risk'])
     from .flows import flow_views,earnings_views
     flow_inputs=flow_views(d,objects['risk'])
+    from .kr_shortgamma import views as kr_shortgamma_views
+    kr_shortgamma_views(d,objects['risk'])
     if flow_inputs:earnings_views(d,objects['pm_weekend'],objects['earnings'],flow_inputs)
     for s in objects['risk']['sections']:
         if s.get('group'):continue

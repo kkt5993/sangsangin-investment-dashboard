@@ -377,6 +377,26 @@ for file in (ROOT/'docs/data').glob('*.json'):
         assert v['sections']==sum(s.get('group','종합')==v['name'] for s in d['sections'])
         if v['status']=='pending':assert v['reason']
     for s in d['sections']:section(s,d['as_of'],d['module'])
+    if d['module']=='risk':
+        p=d['kr_shortgamma'];assert p['as_of']==d['as_of'] and p['index_code']=='1028'
+        assert p['fund_count']==len(p['funds']) and p['covered_funds']==sum(r['coefficient'] is not None for r in p['funds'])
+        assert p['complete']==(bool(p['funds']) and p['covered_funds']==p['fund_count'])
+        assert len({r['code'] for r in p['funds']})==p['fund_count']
+        assert len(next(s for s in d['sections'] if s['title']=='KOSPI 숏감마 · 8개 관측')['rows'])==8
+        for date_value in [p['price_date'],p['aum_date']]:
+            if date_value:assert date_value<=d['as_of']
+        for r in p['funds']:
+            assert r['benchmark'].replace(' ','') in ['코스피200','코스피200선물지수']
+            if r['coefficient'] is None:assert r['reason']
+            else:
+                assert r['aum_krw']>0 and r['leverage'] in [-3,-2,-1,2,3]
+                assert math.isclose(r['coefficient'],r['aum_krw']*(r['leverage']**2-r['leverage']),abs_tol=.001)
+                assert math.isclose(r['per_1pct_krw'],r['coefficient']*.01,abs_tol=.001)
+        if p['covered_funds']:
+            assert math.isclose(p['per_1pct_krw'],sum(r['per_1pct_krw'] for r in p['funds'] if r['coefficient'] is not None),abs_tol=.001)
+            if p['latest'].get('rv21') is not None:assert math.isclose(p['daily_sigma_krw'],p['per_1pct_krw']*p['latest']['rv21']/math.sqrt(252),rel_tol=1e-6,abs_tol=.01)
+        if p['next_expiry']:assert p['days_to_expiry']==(date.fromisoformat(p['next_expiry'])-date.fromisoformat(d['as_of'])).days>=0
+        if p['latest'].get('score') is not None:assert 0<=p['latest']['score']<=100 and 0<=p['latest']['gate']<=1
     count+=1
 assert count==21,(count,'new schema modules expected')
 meta=load(ROOT/'docs/data/status.json');assert len(meta['modules'])==25 and meta['implemented']==23

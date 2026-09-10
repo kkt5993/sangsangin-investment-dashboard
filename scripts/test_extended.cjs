@@ -76,6 +76,14 @@ function interactiveContainer(){
  const scanSvg=A.scanCandles(scan.items[0]);assert.equal((scanSvg.match(/data-scan-candle=/g)||[]).length,90);assert(scanSvg.includes('data-price-axis="right"'));assert(scanSvg.includes('data-scan-ma="MA20"')&&scanSvg.includes('data-scan-ma="MA60"'));
  const pref=context.window.ResearchDashboard.section({type:'preference',title:'test',columns:['up','down','flat','missing'],rows:[{name:'regime',values:[.3,-.3,.1,null]}]},0,{});assert(pref.includes('● 0.30')&&pref.includes('▽ -0.30')&&pref.includes('· 0.10'));
  context.location.hash='#risk';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='risk'));
+ interactive.buttons.find(b=>b.dataset.subview==='KOSPI 숏감마').fire('click');
+ const kr=data.risk.sections.filter(s=>s.group==='KOSPI 숏감마');
+ assert.equal(kr.find(s=>s.title==='KOSPI 숏감마 · 8개 관측').rows.length,8);
+ assert(interactive.innerHTML.includes('KOSPI 숏감마 · 8개 관측')&&interactive.innerHTML.includes('공식 ETF 대상'));
+ assert(!interactive.innerHTML.includes('자료 연결 준비 중'));assert(!/NaN|Infinity|undefined/.test(interactive.innerHTML));
+ const krLines=kr.filter(s=>s.type==='line');assert(krLines.length<=2);
+ for(const s of krLines){const svg=context.window.AnalysisCharts.line(s);assert(svg.includes('<svg'));assert(!/NaN|Infinity|undefined/.test(svg));}
+ if(krLines.length){assert.deepEqual(krLines[0].limits,[0,100]);assert.deepEqual(krLines[0].guides,[45,70]);assert.equal(krLines[1].series.length,2);}
  interactive.buttons.find(b=>b.dataset.subview==='비펀더멘탈 수급').fire('click');assert.equal(interactive.rebals.length,1);
  const rb=interactive.rebals[0],rc=data.risk.sections.find(s=>s.type==='rebalancing');rb.shock.value='-5';rb.shock.fire('input');
  assert(rb.output.innerHTML.includes('data-flow-value="'+rc.stocks[0].coefficient*-.05/1e6+'"'));assert(rb.output.innerHTML.includes('data-adv-value='));

@@ -56,12 +56,19 @@
   b+=`<line x1="${X(0)}" x2="${X(0)}" y1="${T}" y2="${H-10}" class="reference-line"/><text x="${W-R}" y="${H-5}" text-anchor="end" class="axis">${E(c.unit)}</text>`;
   return svg(b,c.title,W,H,'data-chart-type="groupedbars"');
  }
- function project3d(x,y,z,yaw,tilt=.48,zoom=1){const rx=x*Math.cos(yaw)-y*Math.sin(yaw),ry=x*Math.sin(yaw)+y*Math.cos(yaw);return [450+rx*480*zoom,212.5+ry*125*Math.sin(tilt)/Math.sin(.48)*zoom-(z-.5)*175*Math.cos(tilt)/Math.cos(.48)*zoom,ry*Math.cos(tilt)+z*Math.sin(tilt)];}
+ function project3d(x,y,z,yaw,tilt=.48,zoom=1){const rx=x*Math.cos(yaw)-y*Math.sin(yaw),ry=x*Math.sin(yaw)+y*Math.cos(yaw);const depth=ry*Math.cos(tilt)+(z-.5)*Math.sin(tilt),perspective=2.8/(2.8-depth);return [450+rx*440*zoom*perspective,230+(ry*210*Math.sin(tilt)-(z-.5)*250*Math.cos(tilt))*zoom*perspective,depth];}
+ function spatialFrame(P){
+  const face=points=>points.map(v=>P(...v).slice(0,2).join(',')).join(' ');
+  let b=`<g class="spatial-frame" aria-hidden="true"><polygon points="${face([[-.5,-.5,0],[.5,-.5,0],[.5,.5,0],[-.5,.5,0]])}" fill="#dce8f2" fill-opacity=".65"/><polygon points="${face([[-.5,.5,0],[.5,.5,0],[.5,.5,1],[-.5,.5,1]])}" fill="#e3edf9" fill-opacity=".25"/>`;
+  for(let i=0;i<=4;i++){const t=i/4;for(const pair of [[[t-.5,-.5,0],[t-.5,.5,0]],[[-.5,t-.5,0],[.5,t-.5,0]],[[-.5,.5,t],[.5,.5,t]],[[-.5,-.5,t],[-.5,.5,t]]]){const [a,z]=pair.map(v=>P(...v));b+=`<line x1="${a[0]}" y1="${a[1]}" x2="${z[0]}" y2="${z[1]}" stroke="#8fa9c0" stroke-opacity=".38" stroke-width=".8"/>`;}}
+  for(const x of [-.5,.5])for(const y of [-.5,.5]){const a=P(x,y,0),z=P(x,y,1);b+=`<line x1="${a[0]}" y1="${a[1]}" x2="${z[0]}" y2="${z[1]}" stroke="#8fa9c0" stroke-opacity=".4" stroke-dasharray="3 5"/>`;}
+  return b+'</g>';
+ }
  function surface(c,yaw=-.65,count=null,zoom=1,tilt=.48){
   const surf=c.values.slice(0,count||c.values.length),nt=surf.length,nw=c.windows.length;if(nt<2)return empty();
   const vals=surf.flat().filter(finite),lo=Math.max(0,Math.min(...vals)),hi=Math.max(lo+.1,...vals),P=(i,t,z)=>project3d(i/(nw-1)-.5,t/(nt-1)-.5,(z-lo)/(hi-lo),yaw,tilt,zoom);
   let quads=[];for(let t=0;t<nt-1;t++)for(let k=0;k<nw-1;k++){const z=[surf[t][k],surf[t][k+1],surf[t+1][k+1],surf[t+1][k]];if(!z.every(finite))continue;const p=[P(k,t,z[0]),P(k+1,t,z[1]),P(k+1,t+1,z[2]),P(k,t+1,z[3])];quads.push({p,t,k,z:z.reduce((a,b)=>a+b)/4,depth:p.reduce((a,b)=>a+b[2],0)});}
-  quads.sort((a,b)=>a.depth-b.depth);let b=quads.map(q=>`<polygon data-surface-cell="${q.t}:${q.k}" points="${q.p.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="hsl(${220-(q.z-lo)/(hi-lo)*185} 48% 55%)" stroke="#ffffff55" stroke-width=".5"><title>${E(c.dates[q.t])} → ${E(c.dates[q.t+1])} · ${c.windows[q.k]}D~${c.windows[q.k+1]}D · 네 꼭짓점 평균 변동성 ${n(q.z)}%</title></polygon>`).join('');
+  quads.sort((a,b)=>a.depth-b.depth);let b=spatialFrame((x,y,z)=>project3d(x,y,z,yaw,tilt,zoom))+quads.map(q=>`<polygon data-surface-cell="${q.t}:${q.k}" points="${q.p.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="hsl(${220-(q.z-lo)/(hi-lo)*185} 48% 55%)" stroke="#ffffff55" stroke-width=".5"><title>${E(c.dates[q.t])} → ${E(c.dates[q.t+1])} · ${c.windows[q.k]}D~${c.windows[q.k+1]}D · 네 꼭짓점 평균 변동성 ${n(q.z)}%</title></polygon>`).join('');
   c.windows.forEach((w,i)=>{let p=P(i,0,lo);b+=`<text x="${p[0]}" y="${p[1]+21}" text-anchor="middle" class="axis">${w}D</text>`;});
   const current=P(nw-1,nt-1,surf[nt-1][nw-1]),floor=P(nw-1,nt-1,lo);b+=`<line x1="${floor[0]}" y1="${floor[1]}" x2="${current[0]}" y2="${current[1]}" stroke="#ba812d" stroke-width="2"/><circle cx="${current[0]}" cy="${current[1]}" r="5" fill="#c08a32"/><text x="${current[0]+10}" y="${current[1]-8}" class="axis">현재</text>`;
   b+=`<text x="30" y="30" class="axis">Z: 변동성 ${n(lo)} ~ ${n(hi)}%</text><text x="30" y="425" class="axis">X: 룩백 기간 · Y: ${c.dates[0]} → ${c.dates[nt-1]}</text>`;
@@ -72,15 +79,15 @@
   const project=p=>project3d((p.x-ranges[0][0])/(ranges[0][1]-ranges[0][0])-.5,(p.y-ranges[1][0])/(ranges[1][1]-ranges[1][0])-.5,(p.z-ranges[2][0])/(ranges[2][1]-ranges[2][0]),yaw,tilt,zoom);
   const max=Math.max(1,...pts.map(p=>p.size||0));const group=[...new Set(pts.map(p=>p.country||p.group))];
   const P=(x,y,z)=>project3d(x,y,z,yaw,tilt,zoom),paint=orbPaint(colors,c.title);
-  let b=paint.defs;
+  let b=paint.defs+spatialFrame(P);
   for(let j=0;j<5;j++){const t=j/4;for(const pair of [[[t-.5,-.5,0],[t-.5,.5,0]],[[-.5,t-.5,0],[.5,t-.5,0]]]){const [a,z]=pair.map(v=>P(...v));b+=`<line x1="${a[0]}" y1="${a[1]}" x2="${z[0]}" y2="${z[1]}" class="grid-line"/>`;}}
   const origin=P(-.5,-.5,0);[[.5,-.5,0],[-.5,.5,0],[-.5,-.5,1]].forEach((v,i)=>{const end=P(...v);b+=`<line x1="${origin[0]}" y1="${origin[1]}" x2="${end[0]}" y2="${end[1]}" stroke="#71889b"/><text x="${end[0]}" y="${end[1]+(i===1?38:-22)}" text-anchor="middle" class="axis">${E([c.x_label,c.y_label,c.z_label][i])}</text>`;
    for(let j=0;j<3;j++){const t=j/2,q=[-.5,-.5,0];q[i]+=t;const p=P(...q);b+=`<text data-3d-tick="${i}" x="${p[0]+(i===2?-9:j===0?(i===0?28:-28):0)}" y="${p[1]+(i===2?4:j===0&&i===0?32:16)}" text-anchor="${i===2?'end':'middle'}" class="axis">${n(ranges[i][0]+t*(ranges[i][1]-ranges[i][0]))}</text>`;}
   });
   b+=group.map((g,i)=>`<text x="${25+i%5*170}" y="${24+Math.floor(i/5)*20}" fill="${colors[i%colors.length]}" class="chart-legend">● ${E(g||'미분류')}</text>`).join('');
   pts.map(p=>({p,xy:project(p)})).sort((a,b)=>a.xy[2]-b.xy[2]).forEach(({p,xy})=>{const radius=p.size?4+15*Math.sqrt(p.size/max):4;b+=`<circle data-point="${E(p.name)}" cx="${xy[0]}" cy="${xy[1]}" r="${radius}" fill="${paint.fills[group.indexOf(p.country||p.group)%colors.length]}" opacity="${Math.max(.55,Math.min(.95,.55+(xy[2]+.71)/1.42*.4))}" stroke="#fff"><title>${E(p.name)} · x ${n(p.x)} · y ${n(p.y)} · z ${n(p.z)} · 시총 ${n(p.size)}</title></circle>`;});
-  b+=`<text x="25" y="450" class="axis">${ranges.map((r,i)=>`${['X','Y','Z'][i]} ${n(r[0])} ~ ${n(r[1])}`).join(' · ')} · 원 크기=시총, 없는 경우 동일 크기</text>`;
-  return svg(b,c.title,900,480,'data-chart-type="scatter3d"');
+  b+=`<text x="25" y="510" class="axis">${ranges.map((r,i)=>`${['X','Y','Z'][i]} ${n(r[0])} ~ ${n(r[1])}`).join(' · ')} · 원 크기=시총, 없는 경우 동일 크기</text>`;
+  return svg(b,c.title,900,535,'data-chart-type="scatter3d"');
  }
  function forecast(c){
   const rows=c.records.filter(r=>finite(r.prediction));if(!rows.length)return empty();const W=1000,H=410,L=60,R=25,T=30,B=42,values=rows.flatMap(r=>[r.prediction,r.actual,...Object.values(r.interval)]).filter(finite),[lo,hi]=range(values,true),X=i=>L+(i+.5)/rows.length*(W-L-R),Y=v=>T+(hi-v)/(hi-lo)*(H-T-B),width=(W-L-R)/rows.length*.65;
@@ -100,7 +107,7 @@
   const clamp=v=>Math.max(-3,Math.min(3,v)),P=r=>project(clamp(r.z.cognition)/6,clamp(r.z.acceleration)/6,(clamp(r.z.fragility)+3)/6,yaw);
   const corners=[[-.5,-.5,0],[.5,-.5,0],[.5,.5,0],[-.5,.5,0]].map(p=>project(...p,yaw));
   const paint=orbPaint(rows.map((r,i)=>i===rows.length-1?'#b28325':finite(r.z.herding)?`hsl(${210-(clamp(r.z.herding)+3)*30} 58% 46%)`:'#9ea5ab'),c.title+'-holo');
-  let b=paint.defs+`<polygon points="${corners.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="#eef3f7" stroke="#aab8c4"/>`;
+  let b=paint.defs+spatialFrame(project)+`<polygon points="${corners.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="#eef3f7" stroke="#aab8c4"/>`;
   [[0,0,'자기강화 가속','#e9d5d7'],[0,-.5,'건전 추세','#d8e8dd'],[-.5,0,'관성 과열','#efe3cd'],[-.5,-.5,'균형·잠복','#d9e3ee']].forEach(([x,z,label,color])=>{const q=[[x,z,0],[x+.5,z,0],[x+.5,z+.5,0],[x,z+.5,0]].map(p=>project(...p,yaw)),at=project(x+.25,z+.25,0,yaw);b+=`<polygon data-holo-quadrant="${label}" points="${q.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="${color}" stroke="#c0cbd2"/><text x="${at[0]}" y="${at[1]}" text-anchor="middle" class="axis">${label}</text>`;});
   const origin=project(0,0,0,yaw);[[.5,0,0],[0,.5,0],[0,0,1]].forEach((p,i)=>{const end=project(...p,yaw);b+=`<line x1="${origin[0]}" y1="${origin[1]}" x2="${end[0]}" y2="${end[1]}" stroke="#718597"/><text x="${end[0]}" y="${end[1]-15}" text-anchor="middle" class="axis">${['X 인지 게인','깊이 Z 초지수성','높이 Y 취약성'][i]}</text>`;});
   b+=`<polyline data-holo-trajectory="1" points="${rows.map(r=>P(r).slice(0,2).join(',')).join(' ')}" fill="none" stroke="#7295a9" stroke-width="1.5"/>`;
@@ -205,26 +212,35 @@
  // Shared camera input for existing spatial renderers; no data transformation.
  function bindCamera(canvas,options){
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),wrap=v=>((v+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
-  let pending=null,disposed=false,moved=false,free=!!options.free;const contacts=new Map();let pinch=null;
-  const draw=()=>{pending=null;if(!disposed&&canvas.isConnected!==false)options.draw();};
+  let pending=null,disposed=false,moved=false,free=!!options.free;const contacts=new Map();let pinch=null;let mode="rotate",panX=0,panY=0,observer=null;
+  const applyPan=()=>{const el=canvas.querySelector?.("svg");if(!el)return;const base=el.getAttribute("data-camera-box")||el.getAttribute("viewBox");if(!base)return;el.setAttribute("data-camera-box",base);const a=base.split(/\s+/).map(Number);el.setAttribute("viewBox",`${a[0]-panX} ${a[1]-panY} ${a[2]} ${a[3]}`);};
+  const draw=()=>{pending=null;if(!disposed&&canvas.isConnected!==false){options.draw();applyPan();}};
   const schedule=()=>{if(pending===null)pending=root.requestAnimationFrame?root.requestAnimationFrame(draw):(draw(),null);};
   const update=patch=>{const next={...options.read(),...patch};next.yaw=wrap(next.yaw);next.pitch=clamp(next.pitch,options.minPitch??-.9,options.maxPitch??1.15);next.zoom=clamp(next.zoom,options.minZoom??.5,options.maxZoom??1.4);options.write(next);schedule();};
-  const reset=()=>{if(pending!==null)root.cancelAnimationFrame?.(pending);pending=null;contacts.clear();pinch=null;options.start?.();options.reset();canvas.scrollLeft=0;};
+  const reset=()=>{if(pending!==null)root.cancelAnimationFrame?.(pending);pending=null;contacts.clear();pinch=null;options.start?.();panX=panY=0;options.reset();applyPan();canvas.scrollLeft=0;};
   const distance=()=>{const [a,b]=contacts.values();return a&&b?Math.hypot(a.x-b.x,a.y-b.y):null;};
   canvas.setAttribute('tabindex','0');canvas.setAttribute('role','group');canvas.setAttribute('aria-label',options.label||'3D 차트 · 방향키 회전, +/− 확대, Home 초기화');if(canvas.style)canvas.style.touchAction=free?'none':'pan-y';
-  canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&e.button!==0)return;options.start?.();contacts.set(e.pointerId??0,{x:e.clientX,y:e.clientY||0,startX:e.clientX,startY:e.clientY||0});moved=false;pinch=distance();});
+  canvas.addEventListener('pointerdown',e=>{if(e.button!==undefined&&![0,1,2].includes(e.button))return;options.start?.();contacts.set(e.pointerId??0,{x:e.clientX,y:e.clientY||0,startX:e.clientX,startY:e.clientY||0,pan:mode==="pan"||e.shiftKey||e.button===1||e.button===2});moved=false;pinch=distance();});
   canvas.addEventListener('pointermove',e=>{const id=e.pointerId??0,previous=contacts.get(id);if(!previous)return;const x=e.clientX,y=e.clientY||0;contacts.set(id,{...previous,x,y});const dist=distance(),state=options.read();
    if(dist&&pinch&&free){moved=true;canvas.setPointerCapture?.(id);update({zoom:state.zoom*dist/pinch});pinch=dist;return;}
-   if(Math.hypot(x-previous.startX,y-previous.startY)<4&&!moved)return;moved=true;canvas.setPointerCapture?.(id);update({yaw:state.yaw+(x-previous.x)*.008,pitch:state.pitch+(e.pointerType==='touch'&&!free?0:(y-previous.y)*.006)});
+   if(Math.hypot(x-previous.startX,y-previous.startY)<4&&!moved)return;moved=true;canvas.setPointerCapture?.(id);if(previous.pan){const el=canvas.querySelector?.("svg"),box=el?.getAttribute("data-camera-box")?.split(/\s+/).map(Number);const scale=box?box[2]/Math.max(1,canvas.clientWidth):1;panX+=(x-previous.x)*scale;panY+=(y-previous.y)*scale;applyPan();return;}update({yaw:state.yaw+(x-previous.x)*.008,pitch:state.pitch+(e.pointerType==='touch'&&!free?0:(y-previous.y)*.006)});
   });
   const end=e=>{contacts.delete(e.pointerId??0);pinch=distance();};
   for(const event of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(event,end);
+  canvas.addEventListener('contextmenu',e=>e.preventDefault());
   canvas.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopImmediatePropagation();}},{capture:true});
   canvas.addEventListener('wheel',e=>{if(options.wheelRequiresCtrl!==false&&!e.ctrlKey)return;e.preventDefault();options.start?.();update({zoom:options.read().zoom*Math.exp(-e.deltaY*.001)});},{passive:false});
   canvas.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','+','=','-','Home'].includes(e.key))return;if(e.target!==canvas&&e.key!=='Home')return;e.preventDefault();options.start?.();const v=options.read();if(e.key==='Home')reset();else if(['+','=','-'].includes(e.key))update({zoom:v.zoom+(e.key==='-'?-.05:.05)});else update({yaw:v.yaw+(e.key==='ArrowLeft'?-.1:e.key==='ArrowRight'?.1:0),pitch:v.pitch+(e.key==='ArrowDown'?-.08:e.key==='ArrowUp'?.08:0)});});
   if(canvas.ownerDocument){
-   const doc=canvas.ownerDocument,wrapper=doc.createElement('div'),toolbar=doc.createElement('div');wrapper.className='scene-view';toolbar.className='scene-toolbar';canvas.classList.add('scene-fit');toolbar.innerHTML='<button type="button" data-scene-full>크게 보기 ⛶</button><button type="button" data-scene-touch aria-pressed="false">터치 3D 조작</button><button type="button" data-scene-fit aria-pressed="true">전체 맞춤</button><button type="button" data-scene-pan="-1" aria-label="차트 왼쪽 보기">←</button><button type="button" data-scene-pan="1" aria-label="차트 오른쪽 보기">→</button><span class="scene-input-hint">드래그 · 방향키 · +/− · Home 초기화</span>';
+   const doc=canvas.ownerDocument,wrapper=doc.createElement('div'),toolbar=doc.createElement('div');wrapper.className='scene-view';toolbar.className='scene-toolbar';canvas.classList.add('scene-fit');toolbar.innerHTML='<button type="button" data-scene-full>크게 보기 ⛶</button><button type="button" data-scene-touch aria-pressed="false">터치 3D 조작</button><button type="button" data-scene-fit aria-pressed="true">전체 맞춤</button><button type="button" data-scene-pan="-1" aria-label="차트 왼쪽 보기">←</button><button type="button" data-scene-pan="1" aria-label="차트 오른쪽 보기">→</button><span class="scene-input-hint">드래그 회전 · Shift/우클릭 드래그 이동 · Ctrl+휠 확대</span>';
    canvas.parentNode.insertBefore(wrapper,canvas);wrapper.append(toolbar,canvas);
+   const controls=doc.createElement('div');controls.className='scene-navigation';controls.innerHTML='<div class="scene-mode" aria-label="드래그 모드"><button type="button" data-camera-mode="rotate" aria-pressed="true">⟳ 회전</button><button type="button" data-camera-mode="pan" aria-pressed="false">✥ 이동</button></div><div class="scene-presets" aria-label="카메라 시점"><button type="button" data-camera-preset="iso">입체</button><button type="button" data-camera-preset="front">정면</button><button type="button" data-camera-preset="top">위에서</button><button type="button" data-camera-preset="side">측면</button></div><div class="scene-zoom"><button type="button" data-camera-zoom="-1" aria-label="축소">−</button><button type="button" data-camera-reset>시점 복원</button><button type="button" data-camera-zoom="1" aria-label="확대">＋</button></div>';
+   wrapper.insertBefore(controls,canvas);
+   controls.querySelectorAll('[data-camera-mode]').forEach(b=>b.addEventListener('click',()=>{mode=b.dataset.cameraMode;canvas.style.cursor=mode==='pan'?'move':'grab';controls.querySelectorAll('[data-camera-mode]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}));
+   controls.querySelectorAll('[data-camera-preset]').forEach(b=>b.addEventListener('click',()=>{options.start?.();panX=panY=0;const views={iso:[-.65,.65],front:[0,0],top:[0,1.1],side:[Math.PI/2,.15]};const [yaw,pitch]=views[b.dataset.cameraPreset];update({yaw,pitch,zoom:1});}));
+   controls.querySelectorAll('[data-camera-zoom]').forEach(b=>b.addEventListener('click',()=>{options.start?.();update({zoom:options.read().zoom+Number(b.dataset.cameraZoom)*.12});}));
+   controls.querySelector('[data-camera-reset]').addEventListener('click',reset);
+   canvas.style.cursor='grab';observer=new MutationObserver(applyPan);observer.observe(canvas,{childList:true,subtree:true});applyPan();
    const full=toolbar.querySelector('[data-scene-full]'),touch=toolbar.querySelector('[data-scene-touch]');
    const fit=toolbar.querySelector('[data-scene-fit]');fit.addEventListener('click',()=>{const fitted=canvas.classList.toggle('scene-fit');fit.setAttribute('aria-pressed',String(fitted));fit.textContent='전체 맞춤';if(!fitted)canvas.scrollLeft=(canvas.scrollWidth-canvas.clientWidth)/2;});toolbar.querySelectorAll('[data-scene-pan]').forEach(button=>button.addEventListener('click',()=>{canvas.classList.remove('scene-fit');fit.setAttribute('aria-pressed','false');fit.textContent='전체 맞춤';canvas.scrollLeft+=Number(button.dataset.scenePan)*canvas.clientWidth*.6;}));
    touch.setAttribute('aria-pressed',String(free));if(free)touch.textContent='터치 3D 조작 종료';
@@ -233,7 +249,7 @@
    wrapper.addEventListener('fullscreenchange',()=>{full.textContent=doc.fullscreenElement===wrapper?'크게 보기 닫기 ⛶':'크게 보기 ⛶';});
    touch.addEventListener('click',()=>{free=!free;touch.setAttribute('aria-pressed',String(free));touch.textContent=free?'터치 3D 조작 종료':'터치 3D 조작';canvas.style.touchAction=free?'none':'pan-y';toolbar.querySelector('.scene-input-hint').textContent=free?'한 손가락 자유 회전 · 두 손가락 확대':'가로 드래그 회전 · 세로 페이지 이동';contacts.clear();pinch=null;});
   }
-  return {reset,update,dispose(){disposed=true;if(pending!==null)root.cancelAnimationFrame?.(pending);contacts.clear();}};
+  return {reset,update,dispose(){disposed=true;observer?.disconnect();if(pending!==null)root.cancelAnimationFrame?.(pending);contacts.clear();}};
  }
  function orbPaint(palette,key){let hash=0;for(const c of String(key))hash=(Math.imul(hash,31)+c.charCodeAt(0))>>>0;const ids=palette.map((_,i)=>'orb-'+hash+'-'+i);return {fills:ids.map(id=>'url(#'+id+')'),defs:'<defs>'+palette.map((c,i)=>`<radialGradient id="${ids[i]}" cx="30%" cy="25%" r="78%"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset=".28" stop-color="${E(c)}" stop-opacity=".8"/><stop offset="1" stop-color="${E(c)}"/></radialGradient>`).join('')+'</defs>'};}
  function bindLines(container){container.querySelectorAll('.analysis-line-wrap').forEach(wrap=>{

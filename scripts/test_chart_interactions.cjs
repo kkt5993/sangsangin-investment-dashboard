@@ -20,6 +20,17 @@ fs.mkdirSync(out,{recursive:true});
   await page.route('**/*',route=>new URL(route.request().url()).origin===new URL(url).origin?route.continue():route.abort());
   for(const tab of ['growth','rs','dynamics','geoecon','regime','overview','aragorn','globe','dragonglass']){
    await page.goto(url+'?chart-qa='+tab+'#'+tab);await page.waitForLoadState('networkidle');
+   assert.equal(await page.locator('.brand').count(),0,'removed sidebar logo');
+   if(tab==='growth'){
+    const scene=page.locator('.scene-view').first(),plot=scene.locator('[data-projection-canvas]'),svg=plot.locator('svg');
+    const original=await svg.getAttribute('viewBox');await scene.locator('[data-camera-mode="pan"]').click();
+    await plot.scrollIntoViewIfNeeded();const box=await plot.boundingBox();await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.5+45,box.y+box.height*.5+25,{steps:6});await page.mouse.up();
+    assert.notEqual(await svg.getAttribute('viewBox'),original,'camera translates in two dimensions');
+    const shifted=await svg.getAttribute('viewBox');await scene.locator('[data-camera-zoom="1"]').click();await page.waitForTimeout(80);assert.equal(await svg.getAttribute('viewBox'),shifted,'translation persists after render');
+    await scene.locator('[data-camera-reset]').click();await page.waitForTimeout(80);assert.equal(await svg.getAttribute('viewBox'),original,'reset clears translation');
+    for(const preset of ['front','top','side','iso']){await scene.locator('[data-camera-preset="'+preset+'"]').click();await page.waitForTimeout(60);assert.ok(!(await svg.innerHTML()).includes('NaN'),'finite preset projection');}
+    await scene.locator('[data-camera-reset]').click();await scene.locator('[data-camera-mode="rotate"]').click();
+   }
    if(tab==='geoecon')await page.locator('[data-subview="시장 지표"]').click();
    if(tab==='regime')await page.locator('[data-subview="Soros 재귀성"]').click();
    if(tab==='dragonglass')await page.locator('[data-subview="관계 지도"]').click();

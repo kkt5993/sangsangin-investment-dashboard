@@ -9,7 +9,7 @@
  }
  function hologram(p,yaw=.6,zoom=1,pitch=.38){
   const W=750,H=450,roles=Object.fromEntries(p.axes.map(a=>[a.role,a.key]));
-  const P=(x,z,y)=>{const rx=x*Math.cos(yaw)-z*Math.sin(yaw),rz=x*Math.sin(yaw)+z*Math.cos(yaw);return [W/2+rx*178*zoom,H*.51+rz*71*Math.sin(pitch)/Math.sin(.38)*zoom-y*104*Math.cos(pitch)/Math.cos(.38)*zoom];};
+  const P=(x,z,y)=>{const rx=x*Math.cos(yaw)-z*Math.sin(yaw),rz=x*Math.sin(yaw)+z*Math.cos(yaw);const depth=rz*Math.cos(pitch)+y*Math.sin(pitch),perspective=5/(5-depth);return [W/2+rx*165*zoom*perspective,H*.51+(rz*71*Math.sin(pitch)/Math.sin(.38)-y*104*Math.cos(pitch)/Math.cos(.38))*zoom*perspective];};
   const point=r=>[roles.x,roles.z,roles.y].every(k=>valid(r.z[k]))?P(...[roles.x,roles.z,roles.y].map(k=>clip(r.z[k]/2,-1.1,1.1))):null;
   const qnames=p.id==='tesseract'?['과열','회복','스태그','둔화']:['과열·집중','광범위 강세','소수 주도','분산·냉각'];
   const paint=root.AnalysisCharts.orbPaint(p.rows.map(row=>color(row.z[roles.color])),'overview-'+p.id);let b=paint.defs;[[0,0],[0,-1],[-1,0],[-1,-1]].forEach(([x,z],i)=>{const corners=[[x,z],[x+1,z],[x+1,z+1],[x,z+1]].map(([a,c])=>P(a,c,0)),label=P(x+.5,z+.5,0);b+=`<polygon data-state-quadrant="${i}" points="${corners.map(a=>a.join(',')).join(' ')}" fill="${['#f1dddd','#dceae1','#f0e7d7','#dce5f0'][i]}" stroke="#c3cfda"/><text x="${label[0]}" y="${label[1]}" fill="#61778a" text-anchor="middle" font-size="16">${qnames[i]}</text>`;});

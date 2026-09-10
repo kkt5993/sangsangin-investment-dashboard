@@ -6,6 +6,7 @@ from .chain_geo import COUNTRIES
 from .events_data import read
 from .store import ROOT,read_json
 from .acquire import stamp
+from . import chain_evidence
 
 GROUP='밸류체인 유니버스'
 
@@ -37,9 +38,13 @@ def build(d,obj):
                     evidence=evidence['sources'][r['source_id']])
                for r in evidence['links'] if r['relation']=='supplies' and r['source'] in available and r['target'] in available]
     trade=next((s for s in obj['sections'] if s['type']=='tradeglobe'),{})
+    reviewed=chain_evidence.settings()
+    p=d.resource(chain_evidence.MANIFEST);checks=read(p).get('sources',{}) if p.exists() else {}
+    companies=chain_evidence.enrich(companies,reviewed)
     return dict(type='chainuniverse',group=GROUP,title='밸류체인 유니버스 · 업종별 기업 탐색',
         groups=c['groups'],sectors=c['sectors'],companies=companies,relations=relations,
-        company_areas=[dict(id='TW',name='대만',lon=121,lat=24)],
+        company_routes=reviewed['routes'],evidence_sources=reviewed['sources'],source_checks=checks,
+        company_areas=[dict(id='TW',name='대만',lon=121,lat=24)]+[dict(id='CH',name='스위스',lon=a['lon'],lat=a['lat']) for a in trade.get('areas',[]) if a['id']=='CH'],
         trade_areas=trade.get('areas',[]),trade_year=trade.get('year'),geo_source=geo.get('source',{}),geo_error=geo.get('error_type'),
         scope=c['scope'],collection=report.get('companies',[]))
 
@@ -49,5 +54,5 @@ def views(d,obj):
     obj['sections'].insert(0,build(d,obj));obj['generated_at']=stamp()
     if 'GeoNames' not in obj['source']:obj['source']+=' · GeoNames · SEC 공시 공급관계'
     obj['missing']=[m for m in obj['missing'] if not m.startswith('밸류체인 유니버스의')]
-    obj['missing'].append('밸류체인 유니버스의53개 업종·151기업 탐색을 연결했습니다. 소재지는 공급자 프로필, 지도 점은 도시 대표 좌표입니다. 기업별 전체 공급·물류 및 경쟁우위 근거는 추가 수집 대상이며 소재국 총수출은 기업 수출이 아닙니다.')
+    obj['missing'].append('밸류체인 유니버스의53개 업종·151기업 탐색에 공식 주소와 기업별 사업·생산·운송 근거를 추가했습니다. 지도 점은 도시·행정구역 대표 좌표이며 본사 건물이나 선박 항적이 아닙니다. 전체 기업의 공식 본사·공급·물류·경쟁우위 근거는 계속 수집하며 소재국 총수출은 별도 국가 맥락입니다.')
     return obj

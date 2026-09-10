@@ -6,16 +6,18 @@
  const num=v=>v==null?'미확보':Number(v).toLocaleString('ko-KR',{maximumFractionDigits:0});
  const time=v=>v?new Date(v*1000).toISOString().replace('T',' ').replace('.000Z',' UTC'):'미확보';
  const link=(url,label)=>url&&/^https?:\/\//.test(url)?`<a href="${E(url)}" target="_blank" rel="noopener noreferrer">${E(label)} ↗</a>`:E(label);
+ function evidence(s,ids){return (ids||[]).map(id=>{const a=s.evidence_sources?.[id],check=s.source_checks?.[id];if(!a)return '근거 미확보';return `${link(a.url,a.title)} · ${a.published_on?'발표 '+E(a.published_on)+' · ':''}내용 검토 ${E(a.reviewed_at.slice(0,10))}${check?.checked_at?' · 문서 확인 '+E(check.checked_at.slice(0,10)):''}${check?.error_type?' · 자동 문서 확인 실패':''}${check?.changed_since_review?' · 문서 변경: 내용 재검토 필요':''}`;}).join('<br>');}
  function cities(s){const found=new Map();for(const c of s.companies){if(!c.location)continue;const id=c.location.id;if(!found.has(id))found.set(id,{...c.location,companies:[]});found.get(id).companies.push(c);}return [...found.values()];}
  function routes(s,st){
   const c=s.companies.find(c=>c.symbol===st.symbol);if(!c)return [];
   const company=symbol=>s.companies.find(c=>c.symbol===symbol),area=code=>s.trade_areas.find(a=>a.id===code),companyArea=code=>(s.company_areas||[]).find(a=>a.id===code)||area(code);
-  const out=s.relations.filter(r=>r.source===c.symbol||r.target===c.symbol).map(r=>({...r,
+  const out=s.relations.filter(r=>r.source===c.symbol||r.target===c.symbol).map(r=>({...r,directed:true,
    from:companyArea(company(r.source)?.country_code),to:companyArea(company(r.target)?.country_code),
    label:company(r.source)?.name+' → '+company(r.target)?.name+' · '+r.label}));
+  out.push(...(s.company_routes||[]).filter(r=>r.owner===c.symbol).map(r=>({...r,from:companyArea(r.from_country),to:companyArea(r.to_country)})));
   const home=area(c.country_code);
   if(home)out.push(...[...home.exports].sort((a,b)=>Number(b[1])-Number(a[1])).slice(0,5).map((r,i)=>({
-   id:'trade-'+i,kind:'export',from:home,to:area(r[0]),usd:r[1],label:'소재국 상품 총수출 · '+s.trade_year+'년',
+   id:'trade-'+i,kind:'national',directed:true,from:home,to:area(r[0]),usd:r[1],label:'소재국 상품 총수출 · '+s.trade_year+'년',
    evidence:{title:'UN Comtrade 국가 총수출',url:'https://comtradeapi.un.org/public/v1/preview/C/A/HS?period='+s.trade_year+'&reporterCode='+home.code+'&partnerCode='+area(r[0])?.code+'&cmdCode=TOTAL&flowCode=X&partner2Code=0&customsCode=C00&motCode=0&maxRecords=500'}})));
   return out;
  }
@@ -30,9 +32,10 @@
   for(let f=-80;f<=80;f+=10)out+=`<path d="${path(Array.from({length:181},(_,i)=>[-180+i*2,f]))}" fill="none" stroke="#d1e1e5" stroke-width=".6"/>`;
   for(let l=-180;l<180;l+=10)out+=`<path d="${path(Array.from({length:91},(_,i)=>[l,-90+i*2]))}" fill="none" stroke="#d1e1e5" stroke-width=".6"/>`;
   out+=coasts.map(c=>`<path d="${path(c)}" fill="none" stroke="#789690" stroke-width=".8"/>`).join('');
-  const colors={valuechain:'#905825',export:'#147587',logistics:'#7061a3'},endpoints=new Map();
+  const colors={valuechain:'#905825',export:'#147587',logistics:'#7061a3',national:'#77858d'},endpoints=new Map();
   for(const r of routes(s,st)){if(!st.kinds[r.kind]||!r.from||!r.to||r.from.id===r.to.id)continue;
-   const points=root.TradeViews.greatCircle(r.from,r.to);out+=`<path data-chain-arc="${E(r.kind)}" d="${path(points)}" fill="none" stroke="${colors[r.kind]}" stroke-opacity=".8" stroke-width="${r.kind==='export'?root.TradeViews.width(r.usd):1.8}"><title>${E(r.label)}</title></path>`;
+   const points=root.TradeViews.greatCircle(r.from,r.to);out+=`<path data-chain-arc="${E(r.kind)}" d="${path(points)}" fill="none" stroke="${colors[r.kind]}" stroke-opacity=".8" stroke-dasharray="${r.kind==='national'?'2 4':r.directed?'none':'6 3'}" stroke-width="${r.usd!=null?root.TradeViews.width(r.usd):1.8}"><title>${E(r.label)}</title></path>`;
+   if(r.directed&&points.length>2){const mid=Math.floor(points.length*.55),a=project(points[mid]),b=project(points[mid+1]);if(a[2]>=0&&b[2]>=0){const [x,y]=screen(a),[xx,yy]=screen(b),angle=Math.atan2(yy-y,xx-x)/RAD;out+=`<path data-chain-arrow="${E(r.kind)}" d="M 5 0 L -5 -3.5 L -5 3.5 Z" transform="translate(${x},${y}) rotate(${angle})" fill="${colors[r.kind]}"/>`;}}
    endpoints.set(r.from.id,r.from);endpoints.set(r.to.id,r.to);
   }
   for(const a of endpoints.values()){const p=project([a.lon,a.lat]);if(p[2]<0)continue;const [x,y]=screen(p);out+=`<circle cx="${x}" cy="${y}" r="3" fill="#b27a1e"/><text x="${x+7}" y="${y-7}" font-size="11" fill="#324b57">${E(a.name)}</text>`;}
@@ -42,26 +45,29 @@
   return `<svg viewBox="0 0 640 520" role="img" aria-label="기업 도시 및 국가 관계 정사영 지구본">${out}</svg>`;
  }
  function detail(s,st){const c=s.companies.find(c=>c.symbol===st.symbol);if(!c)return '<p>기업을 선택하면 소재지·시가총액·사업 분류와 관계 근거를 확인할 수 있습니다.</p>';
-  const all=routes(s,st),location=c.location;
+  const all=routes(s,st),location=c.location,a=c.official_address,b=c.business_evidence;
   return `<h3>${E(c.name)} <small>${E(c.symbol)}</small></h3>${c.previous_symbol?'<p>'+link(c.symbol_source,c.previous_symbol+' → '+c.symbol+' 종목코드 변경')+'</p>':''}<p>프로필 소재지: ${E(c.city||'도시 미확보')} · ${E(c.country||'국가 미확보')}${location?' · '+link(location.source,'도시 대표 좌표'):' · 좌표 미확인'}</p>
+   ${a?`<div class="chain-official-address"><strong>공식 ${E(a.role)} · ${E(a.city)}</strong><p>${E(a.address)}<br>${E(a.note)}${!c.address_profile_match?' · 현재 프로필 소재지가 달라 지도 보정을 적용하지 않았습니다.':''}</p><p>${evidence(s,a.source_ids)}</p><small>좌표 범위: ${E(location?.scope||'프로필 도시 대표점')} · 건물 좌표 아님</small></div>`:''}
    <p>시가총액: <b>${num(c.market_cap)} ${E(c.cap_currency||'')}</b>${c.cap_unit_pending?' · 통화 단위 확인 필요':''}<br>시장 시각 ${time(c.quote_time)} · 프로필 확인 ${E(c.checked_at||'미확보')}${c.stale?' · 7일 이상 경과':''}</p>
    <p>공급자 사업 분류: ${E([c.sector,c.industry].filter(Boolean).join(' / ')||'미확보')}<br>${link('https://finance.yahoo.com/quote/'+encodeURIComponent(c.symbol)+'/profile/','Yahoo 기업 프로필')} · ${link(c.website,'회사 웹사이트')}</p>
-   ${['valuechain','export','logistics'].map(kind=>{const rows=all.filter(r=>r.kind===kind),title={valuechain:'공급 관계 근거',export:'소재국 교역 맥락',logistics:'물류·공급 경로 근거'}[kind];return `<section class="chain-route-section"><h4>${title}</h4>${kind==='export'?'<p class="quiet">소재국의 상위5개 상대 지역 총수출입니다. 선택 기업의 수출액·상품별 무역·실제 운송 경로를 뜻하지 않습니다.</p>':''}${rows.length?`<ul>${rows.map(r=>`<li>${E(r.label)}${r.usd?' · '+E(r.from.name)+' → '+E(r.to?.name||'미확인')+' · '+num(r.usd)+' USD':''}<br>${link(r.evidence?.url,r.evidence?.title||'근거 미확보')}${r.from&&r.to&&r.from.id===r.to.id?' · 동일 국가 소재 기업 관계':''}</li>`).join('')}</ul>`:'<p class="quiet">확인된 관계 근거가 아직 없습니다.</p>'}</section>`;}).join('')}
+   ${b?`<section class="chain-route-section"><h4>공식 자료의 사업 근거</h4><p>${E(b.summary)}</p><p>${evidence(s,b.source_ids)}</p></section>`:''}
+   ${['valuechain','export','logistics','national'].map(kind=>{const rows=all.filter(r=>r.kind===kind),title={valuechain:'공급·생산·서비스 관계',export:'기업 수출·시장 공급',logistics:'기업 물류 경로',national:'소재국 교역 맥락 · 별도 참고'}[kind];return `<section class="chain-route-section" data-chain-ledger="${kind}"><h4>${title}</h4>${kind==='national'?'<p class="quiet">소재국의 상위5개 상대 지역 총수출입니다. 선택 기업의 수출액·상품별 무역·실제 운송 경로를 뜻하지 않습니다. 지도는 별도 참고 스위치로 켭니다.</p>':''}${rows.length?`<ul>${rows.map(r=>`<li><strong>${E(r.label)}</strong><br>${E(r.from?.name||'국가 미확인')} ${r.directed?'→':'↔'} ${E(r.to?.name||'국가 미확인')}${r.subtype?' · '+E(r.subtype):''}${r.quantity?' · '+num(r.quantity.value)+' '+E(r.quantity.unit):''}${r.usd?' · '+num(r.usd)+' USD':''}${r.observed_on?' · '+(r.date_basis==='publication'?'발표일':r.date_basis==='event'?'사건일':'관측/발표')+' '+E(r.observed_on):''}<br>${r.source_ids?evidence(s,r.source_ids):link(r.evidence?.url,r.evidence?.title||'근거 미확보')}${r.note?'<p>'+E(r.note)+'</p>':''}${r.from&&r.to&&r.from.id===r.to.id?' · 동일 국가 소재 기업 관계':''}</li>`).join('')}</ul>`:'<p class="quiet">확인된 관계 근거가 아직 없습니다.</p>'}</section>`;}).join('')}
    <p class="scope-note">사업 분류는 경쟁우위 평가가 아닙니다. 회사 소재지와 공장 위치·실제 공급 경로는 다를 수 있으며, 회사 웹사이트 링크 자체를 공급 계약의 근거로 사용하지 않습니다.</p>`;
  }
  function tables(s){const bySymbol=new Map(s.companies.map(c=>[c.symbol,c]));return s.groups.map(g=>`<section class="chain-sector-group"><h3>${E(g.name)}</h3>${s.sectors.filter(a=>a.group===g.id).map(a=>`<section id="chain-${E(a.id)}" class="chain-sector"><h4 tabindex="-1">${E(a.name)}</h4><div class="table-scroll"><table class="data-table" aria-label="${E(a.name)} 기업"><thead><tr><th>번호</th><th>기업</th><th>프로필 소재지</th><th>시가총액·표시 통화</th><th>사업 분류·참조</th></tr></thead><tbody>${a.symbols.map((symbol,i)=>{const c=bySymbol.get(symbol);return `<tr><td>${i+1}</td><td><button type="button" data-chain-company="${E(symbol)}">${E(c.name)}</button><small>${E(symbol)}</small></td><td>${E(c.country||'미확보')}<br>${E(c.city||'도시 미확보')}</td><td title="확인 ${E(c.checked_at||'미확보')}">${num(c.market_cap)} ${E(c.cap_currency||'')}<small>${c.cap_unit_pending?'단위 확인 필요':c.stale?'7일 이상 경과':c.checked_at?.slice(0,10)||''}</small></td><td>${E(c.industry||'분류 미확보')}<br>${link(c.website,'회사 웹사이트')}</td></tr>`;}).join('')}</tbody></table></div></section>`).join('')}</section>`).join('');}
  function render(s,i){const count=cities(s),mapped=s.companies.filter(c=>c.location).length;return `<div class="chain-view" data-chain="${i}"><h2>${E(s.title)}</h2>
   <div class="chain-kpis"><p><strong>${s.sectors.length}</strong> 세부 업종</p><p><strong>${s.companies.length}</strong> 기업 · ${s.sectors.reduce((n,a)=>n+a.symbols.length,0)}개 배치</p><p><strong>${count.length}</strong> 확인된 도시 · ${mapped}/${s.companies.length}기업 좌표</p></div>
+  <p class="quiet">공식 주소 근거 ${s.companies.filter(c=>c.official_address).length}기업 · 추가 기업 관계/운송 기록 ${(s.company_routes||[]).length}건. 같은 사건을 시장 공급과 물류에서 함께 표시할 수 있으며 수량을 합산하지 않습니다.</p>
   <p class="scope-note">${E(s.scope)}. 업종 내 번호는 탐색 순서입니다. 프로필 소재지와 도시 대표 좌표를 연결하며 본사 건물 위치·생산시설 위치와 구분합니다.</p>
   <div class="chain-layout"><div><label class="chain-picker">기업 선택 <select data-chain-select><option value="">전체 도시 탐색</option>${s.companies.map(c=>`<option value="${E(c.symbol)}">${E(c.name)} (${E(c.symbol)})</option>`).join('')}</select></label>
    <label class="chain-picker">도시 선택 <select data-chain-city-select><option value="">지도에서 도시 선택</option>${count.sort((a,b)=>a.name.localeCompare(b.name)).map(a=>`<option value="${E(a.id)}">${E(a.name)} · ${E(a.country)} (${a.companies.length})</option>`).join('')}</select></label>
    <div class="chain-map" data-chain-map tabindex="0" aria-label="기업 지구본. 방향키 회전, 더하기와 빼기 확대, Home 초기화"></div>
    <div class="chain-controls"><button type="button" data-chain-spin aria-pressed="false">자동 회전</button><button type="button" data-chain-zoom=".2" aria-label="기업 지구본 확대">＋</button><button type="button" data-chain-zoom="-.2" aria-label="기업 지구본 축소">−</button><button type="button" data-chain-reset>초기화</button><button type="button" data-chain-clear>선택 해제</button></div>
-   <div class="chain-controls">${[['valuechain','공급 관계'],['export','소재국 총수출'],['logistics','물류·공급']].map(([k,n])=>`<label><input type="checkbox" data-chain-kind="${k}" checked> ${n}</label>`).join('')}</div>
-   <p class="quiet" data-chain-map-note>도시를 누르면 해당 기업들을 선택할 수 있습니다. 관계선의 끝점은 국가 대표점이며 실제 운송 경로가 아닙니다.</p><div data-chain-city-options></div>
+   <div class="chain-controls">${[['valuechain','공급·사업 관계'],['export','기업 수출·시장 공급'],['logistics','기업 물류'],['national','참고: 소재국 총수출']].map(([k,n])=>`<label><input type="checkbox" data-chain-kind="${k}" ${k==='national'?'':'checked'}> ${n}</label>`).join('')}</div>
+   <p class="quiet" data-chain-map-note>점선은 사업·조직 관계, 화살표는 공급·운송·시장 인도 방향입니다. 선의 끝점은 국가 대표점이며 선박 항적이 아닙니다. 도시를 누르면 기업을 선택할 수 있습니다.</p><div data-chain-city-options></div>
    <div class="chain-detail" data-chain-detail aria-live="polite"></div></div>
    <nav class="chain-index" aria-label="세부 업종 바로가기">${s.groups.map(g=>`<div><h3>${E(g.name)}</h3>${s.sectors.filter(a=>a.group===g.id).map(a=>`<button type="button" data-chain-sector="${E(a.id)}">${E(a.name)}</button>`).join('')}</div>`).join('')}</nav></div>
-  <p class="quiet">좌표: ${link('https://www.geonames.org/','GeoNames')} · ${link('https://creativecommons.org/licenses/by/4.0/','CC BY 4.0')} · 지명 데이터 ${E(s.geo_source.retrieved_at?.slice(0,10)||'미확보')} · 국가 경계 Natural Earth. 프로필은 PC에서24시간마다 확인합니다.</p>${tables(s)}</div>`;}
+  <p class="quiet">좌표: ${link('https://www.geonames.org/','GeoNames')} · ${link('https://creativecommons.org/licenses/by/4.0/','CC BY 4.0')} · 지명 데이터 ${E(s.geo_source.retrieved_at?.slice(0,10)||'미확보')} · 국가 경계 Natural Earth. 프로필은 PC에서24시간마다, 근거 문서의 변경은30일마다 확인합니다. 문서 확인일과 내용 검토일은 구분합니다.${s.geo_error?' · 지명 갱신 실패: 이전 확인 좌표 사용':''}</p>${tables(s)}</div>`;}
  function dispose(){while(disposers.length)disposers.pop()();}
  function bind(container,data,state={}){container.querySelectorAll('[data-chain]').forEach(box=>{
   const s=data.sections[+box.dataset.chain],q=sel=>box.querySelector(sel),canvas=q('[data-chain-map]');

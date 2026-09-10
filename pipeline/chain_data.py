@@ -144,6 +144,9 @@ def main():
     print('CHAIN requested',sum(r['requested'] for r in report['companies']),flush=True)
     from .chain_geo import collect as collect_locations
     collect_locations(d)
+    from .chain_evidence import collect as collect_evidence
+    evidence = collect_evidence(d)
+    print('CHAIN source checks',sum(r['requested'] for r in evidence['attempts']),flush=True)
 
 
 if __name__ == '__main__':

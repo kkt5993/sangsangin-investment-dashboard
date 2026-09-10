@@ -1,0 +1,775 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+  "sources": {
+    "tsmc": {
+      "title": "TSMC · Business Contacts",
+      "url": "https://www.tsmc.com/english/aboutTSMC/business_contacts",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "mediatek": {
+      "title": "MediaTek · Contact Us",
+      "url": "https://www.mediatek.com/company/contact-us",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "disco": {
+      "title": "DISCO · Haneda R&D Center",
+      "url": "https://www.disco.co.jp/eg/news/corp/20220331.html",
+      "published_on": "2022-03-31",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "inditex": {
+      "title": "Inditex · ITX Apps Privacy Policy",
+      "url": "https://static.inditex.com/iopproduct/privacy/en-en/ITXPartnerAppPrivacyStatementEN.html",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "richemont": {
+      "title": "Richemont · Capital Structure",
+      "url": "https://www.richemont.com/investors/shareholder-information/capital-structure/",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "toyota": {
+      "title": "Toyota · Company Overview",
+      "url": "https://global.toyota/en/company/profile/overview/",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "byd_address": {
+      "title": "BYD · Basic Information",
+      "url": "https://www.bydglobal.com/en/BasicInformation.html?scroll=true",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "sdi": {
+      "title": "Samsung SDI · Global Network",
+      "url": "https://samsungsdi.com/about-sdi/global-network.html",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "novo_address": {
+      "title": "Novo Nordisk · Corporate Headquarters",
+      "url": "https://www.novonordisk.com/contact-us/contact-overview.html",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "mastercard": {
+      "title": "Mastercard · Global Locations",
+      "url": "https://www.mastercard.com/us/en/for-the-world/about-us/global-locations.html",
+      "published_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "ge": {
+      "title": "GE Aerospace · Evendale Headquarters",
+      "url": "https://www.geaerospace.com/news/articles/quick-six-phil-wickler-chief-transformation-officer-and-pride-alliance-champion",
+      "published_on": "2025-06-04",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "novo_sites": {
+      "title": "Novo Nordisk · Three Fill-finish Sites",
+      "url": "https://www.novonordisk.com/news-and-media/news-and-ir-materials/news-details.html?id=167017",
+      "published_on": "2024-02-05",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "novo_completion": {
+      "title": "Novo Nordisk · Acquisition Completed",
+      "url": "https://www.novonordisk.com/news-and-media/news-and-ir-materials/news-details.html?id=915081",
+      "published_on": "2024-12-18",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "byd_brazil": {
+      "title": "BYD · EXPLORER NO.1 Brazil Arrival",
+      "url": "https://www.byd.com/us/news-list/BYD-EXPLORER-NO1-Docks-in-Brazil.html",
+      "published_on": "2024-06-01",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00"
+    }
+  },
+  "places": {
+    "1675151": {
+      "id": "1675151",
+      "name": "Hsinchu",
+      "lat": 24.80361,
+      "lon": 120.96861,
+      "country": "TW",
+      "region": "04",
+      "modified": "2025-06-14",
+      "source": "https://www.geonames.org/1675151/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "8469289": {
+      "id": "8469289",
+      "name": "Ōta",
+      "lat": 35.56126,
+      "lon": 139.71605,
+      "country": "JP",
+      "region": "40",
+      "modified": "2025-06-02",
+      "source": "https://www.geonames.org/8469289/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "3129329": {
+      "id": "3129329",
+      "name": "Arteixo",
+      "lat": 43.30482,
+      "lon": -8.50749,
+      "country": "ES",
+      "region": "58",
+      "modified": "2016-12-12",
+      "source": "https://www.geonames.org/3129329/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "2661568": {
+      "id": "2661568",
+      "name": "Bellevue",
+      "lat": 46.25739,
+      "lon": 6.15475,
+      "country": "CH",
+      "region": "GE",
+      "modified": "2013-02-26",
+      "source": "https://www.geonames.org/2661568/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "1849814": {
+      "id": "1849814",
+      "name": "Toyota",
+      "lat": 35.08333,
+      "lon": 137.15,
+      "country": "JP",
+      "region": "01",
+      "modified": "2022-09-02",
+      "source": "https://www.geonames.org/1849814/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "1795565": {
+      "id": "1795565",
+      "name": "Shenzhen",
+      "lat": 22.54554,
+      "lon": 114.0683,
+      "country": "CN",
+      "region": "30",
+      "modified": "2025-10-22",
+      "source": "https://www.geonames.org/1795565/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "5133135": {
+      "id": "5133135",
+      "name": "Purchase",
+      "lat": 41.04093,
+      "lon": -73.71457,
+      "country": "US",
+      "region": "NY",
+      "modified": "2017-05-23",
+      "source": "https://www.geonames.org/5133135/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "4511196": {
+      "id": "4511196",
+      "name": "Evendale",
+      "lat": 39.25617,
+      "lon": -84.418,
+      "country": "US",
+      "region": "OH",
+      "modified": "2017-05-23",
+      "source": "https://www.geonames.org/4511196/",
+      "coordinate_source": "https://download.geonames.org/export/dump/cities500.zip",
+      "scope": "도시 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "1832426": {
+      "id": "1832426",
+      "name": "Yongin-si",
+      "lat": 37.23825,
+      "lon": 127.17795,
+      "country": "KR",
+      "region": null,
+      "modified": "2026-04-30",
+      "source": "https://www.geonames.org/1832426/",
+      "coordinate_source": "https://sws.geonames.org/1832426/about.rdf",
+      "scope": "행정구역 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    },
+    "2624388": {
+      "id": "2624388",
+      "name": "Bagsværd",
+      "lat": 55.76095,
+      "lon": 12.45317,
+      "country": "DK",
+      "region": null,
+      "modified": "2017-10-18",
+      "source": "https://www.geonames.org/2624388/",
+      "coordinate_source": "https://sws.geonames.org/2624388/about.rdf",
+      "scope": "정주지 대표점",
+      "checked_at": "2026-09-10T10:31:24.207427+00:00"
+    }
+  },
+  "addresses": [
+    {
+      "symbol": "TSM",
+      "profile_match": {
+        "city": "Hsinchu City",
+        "country": "Taiwan"
+      },
+      "city": "Hsinchu",
+      "place_id": "1675151",
+      "role": "본사",
+      "address": "8 Li-Hsin Rd. 6, Hsinchu Science Park, Taiwan",
+      "source_ids": [
+        "tsmc"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": ""
+    },
+    {
+      "symbol": "2454.TW",
+      "profile_match": {
+        "city": "Hsinchu City",
+        "country": "Taiwan"
+      },
+      "city": "Hsinchu",
+      "place_id": "1675151",
+      "role": "본사",
+      "address": "No. 1, Dusing 1st Rd., Hsinchu Science Park, Taiwan",
+      "source_ids": [
+        "mediatek"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": ""
+    },
+    {
+      "symbol": "6146.T",
+      "profile_match": {
+        "city": "Ota",
+        "country": "Japan"
+      },
+      "city": "Ōta, Tokyo",
+      "place_id": "8469289",
+      "role": "본사",
+      "address": "13-11 Omori-Kita 2-chome, Ota-ku, Tokyo",
+      "source_ids": [
+        "disco"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": "2022년 공식 발표의 본사 위치. 현재 이전 여부는 후속 공식 자료 대조 대상입니다."
+    },
+    {
+      "symbol": "ITX.MC",
+      "profile_match": {
+        "city": "Corunna",
+        "country": "Spain"
+      },
+      "city": "Arteixo, A Coruña",
+      "place_id": "3129329",
+      "role": "등기 주소",
+      "address": "Avda. de la Diputación, Edificio Inditex, 15143 Arteixo, Spain",
+      "source_ids": [
+        "inditex"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": "공식 주소의 Arteixo를 지도에 표시합니다. 프로필의 Corunna는 A Coruña 지역 표기와 구분합니다."
+    },
+    {
+      "symbol": "CFR.SW",
+      "profile_match": {
+        "city": "Bellevue",
+        "country": "Switzerland"
+      },
+      "city": "Bellevue, Geneva",
+      "place_id": "2661568",
+      "role": "등기 주소",
+      "address": "Chemin de la Chênaie 50, 1293 Bellevue, Switzerland",
+      "source_ids": [
+        "richemont"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": ""
+    },
+    {
+      "symbol": "TM",
+      "profile_match": {
+        "city": "Toyota",
+        "country": "Japan"
+      },
+      "city": "Toyota, Aichi",
+      "place_id": "1849814",
+      "role": "본사(Honsha)",
+      "address": "1 Toyota-Cho, Toyota City, Aichi, Japan",
+      "source_ids": [
+        "toyota"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": "도쿄 본사 사무소·나고야 사무소는 이 주소와 별도로 공시합니다."
+    },
+    {
+      "symbol": "1211.HK",
+      "profile_match": {
+        "city": "Shenzhen",
+        "country": "China"
+      },
+      "city": "Shenzhen",
+      "place_id": "1795565",
+      "role": "사업 주소",
+      "address": "3009 BYD Road, Pingshan District, Shenzhen, China",
+      "source_ids": [
+        "byd_address"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": "등기 주소는 Shenzhen Dapeng New District로 따로 공시합니다."
+    },
+    {
+      "symbol": "006400.KS",
+      "profile_match": {
+        "city": "Yongin-Si",
+        "country": "South Korea"
+      },
+      "city": "Yongin-si, Gyeonggi-do",
+      "place_id": "1832426",
+      "role": "기흥 본사",
+      "address": "150-20 Gongse-ro, Giheung-gu, Yongin-si, South Korea",
+      "source_ids": [
+        "sdi"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": "지도 점은 용인시 행정구역 대표점이며 기흥 본사 건물 위치가 아닙니다."
+    },
+    {
+      "symbol": "NVO",
+      "profile_match": {
+        "city": "Bagsvaerd",
+        "country": "Denmark"
+      },
+      "city": "Bagsværd",
+      "place_id": "2624388",
+      "role": "본사",
+      "address": "Novo Alle 1, 2880 Bagsvaerd, Denmark",
+      "source_ids": [
+        "novo_address"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": ""
+    },
+    {
+      "symbol": "MA",
+      "profile_match": {
+        "city": "Purchase",
+        "country": "United States",
+        "region": "NY"
+      },
+      "city": "Purchase, New York",
+      "place_id": "5133135",
+      "role": "글로벌 본사",
+      "address": "2000 Purchase Street, Purchase, NY 10577, USA",
+      "source_ids": [
+        "mastercard"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": ""
+    },
+    {
+      "symbol": "GE",
+      "profile_match": {
+        "city": "Evendale",
+        "country": "United States",
+        "region": "OH"
+      },
+      "city": "Evendale, Ohio",
+      "place_id": "4511196",
+      "role": "본사",
+      "address": "Evendale, Ohio, USA",
+      "source_ids": [
+        "ge"
+      ],
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "note": "2025-06-04 공식 기사에서 확인한 도시이며 건물 주소를 추가 추정하지 않습니다."
+    }
+  ],
+  "routes": [
+    {
+      "id": "novo-fill-US",
+      "owner": "NVO",
+      "kind": "valuechain",
+      "from_country": "DK",
+      "to_country": "US",
+      "label": "Bloomington, Indiana 무균 충전·완제 시설 인수",
+      "subtype": "생산시설 소유 관계",
+      "source_ids": [
+        "novo_sites",
+        "novo_completion"
+      ],
+      "observed_on": "2024-12-18",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "Novo Nordisk가 인수한 3개 시설 중 하나입니다. Catalent 전체 인수 주체는 Novo Holdings이며, 이 선은 재료 운송이나 가동률을 나타내지 않습니다.",
+      "date_basis": "event"
+    },
+    {
+      "id": "novo-fill-IT",
+      "owner": "NVO",
+      "kind": "valuechain",
+      "from_country": "DK",
+      "to_country": "IT",
+      "label": "Anagni 무균 충전·완제 시설 인수",
+      "subtype": "생산시설 소유 관계",
+      "source_ids": [
+        "novo_sites",
+        "novo_completion"
+      ],
+      "observed_on": "2024-12-18",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "Novo Nordisk가 인수한 3개 시설 중 하나입니다. Catalent 전체 인수 주체는 Novo Holdings이며, 이 선은 재료 운송이나 가동률을 나타내지 않습니다.",
+      "date_basis": "event"
+    },
+    {
+      "id": "novo-fill-BE",
+      "owner": "NVO",
+      "kind": "valuechain",
+      "from_country": "DK",
+      "to_country": "BE",
+      "label": "Brussels 무균 충전·완제 시설 인수",
+      "subtype": "생산시설 소유 관계",
+      "source_ids": [
+        "novo_sites",
+        "novo_completion"
+      ],
+      "observed_on": "2024-12-18",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "Novo Nordisk가 인수한 3개 시설 중 하나입니다. Catalent 전체 인수 주체는 Novo Holdings이며, 이 선은 재료 운송이나 가동률을 나타내지 않습니다.",
+      "date_basis": "event"
+    },
+    {
+      "id": "byd-suape-shipping",
+      "owner": "1211.HK",
+      "kind": "logistics",
+      "from_country": "CN",
+      "to_country": "BR",
+      "label": "EXPLORER NO.1 · 중국 출발, 브라질 Suape항 도착",
+      "subtype": "실제 운송 발표",
+      "source_ids": [
+        "byd_brazil"
+      ],
+      "observed_on": "2024-06-01",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": true,
+      "quantity": {
+        "value": 5459,
+        "unit": "대"
+      },
+      "note": "공식 발표일 기준 과거 항차입니다. 27일 항해·인도 5,459대이며 최대 적재능력 7,000대와 구분합니다. 지도 곡선은 국가 간 연결이며 선박 항적이 아닙니다.",
+      "date_basis": "publication"
+    },
+    {
+      "id": "byd-suape-market",
+      "owner": "1211.HK",
+      "kind": "export",
+      "from_country": "CN",
+      "to_country": "BR",
+      "label": "브라질 시장에 차량 5,459대 인도",
+      "subtype": "시장 공급 실적",
+      "source_ids": [
+        "byd_brazil"
+      ],
+      "observed_on": "2024-06-01",
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": true,
+      "quantity": {
+        "value": 5459,
+        "unit": "대"
+      },
+      "note": "같은 Suape항 도착 건을 시장 공급 관점으로 표시합니다. 별도 추가 물량이 아니며 통관 수출액·연간 수출량을 뜻하지 않습니다.",
+      "date_basis": "publication"
+    },
+    {
+      "id": "tsmc-office-CN",
+      "owner": "TSM",
+      "kind": "valuechain",
+      "from_country": "TW",
+      "to_country": "CN",
+      "label": "중국 고객 관리·엔지니어링 서비스 사무소",
+      "subtype": "서비스 거점",
+      "source_ids": [
+        "tsmc"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 사업 연락망의 소재국 연결입니다. 공장·납품 계약·국가별 매출을 뜻하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "tsmc-office-IN",
+      "owner": "TSM",
+      "kind": "valuechain",
+      "from_country": "TW",
+      "to_country": "IN",
+      "label": "인도 고객 관리·엔지니어링 서비스 사무소",
+      "subtype": "서비스 거점",
+      "source_ids": [
+        "tsmc"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 사업 연락망의 소재국 연결입니다. 공장·납품 계약·국가별 매출을 뜻하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "tsmc-office-JP",
+      "owner": "TSM",
+      "kind": "valuechain",
+      "from_country": "TW",
+      "to_country": "JP",
+      "label": "일본 고객 관리·엔지니어링 서비스 사무소",
+      "subtype": "서비스 거점",
+      "source_ids": [
+        "tsmc"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 사업 연락망의 소재국 연결입니다. 공장·납품 계약·국가별 매출을 뜻하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "tsmc-office-KR",
+      "owner": "TSM",
+      "kind": "valuechain",
+      "from_country": "TW",
+      "to_country": "KR",
+      "label": "한국 고객 관리·엔지니어링 서비스 사무소",
+      "subtype": "서비스 거점",
+      "source_ids": [
+        "tsmc"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 사업 연락망의 소재국 연결입니다. 공장·납품 계약·국가별 매출을 뜻하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "ma-hq-SG",
+      "owner": "MA",
+      "kind": "valuechain",
+      "from_country": "US",
+      "to_country": "SG",
+      "label": "Singapore · 아시아·태평양 지역 본부",
+      "subtype": "지역 본부",
+      "source_ids": [
+        "mastercard"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "글로벌 본사와 지역 본부의 조직 관계입니다. 상품 운송이나 결제 데이터 이동 경로를 뜻하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "ma-hq-BE",
+      "owner": "MA",
+      "kind": "valuechain",
+      "from_country": "US",
+      "to_country": "BE",
+      "label": "Waterloo · 유럽 지역 본부",
+      "subtype": "지역 본부",
+      "source_ids": [
+        "mastercard"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "글로벌 본사와 지역 본부의 조직 관계입니다. 상품 운송이나 결제 데이터 이동 경로를 뜻하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "ma-hq-AE",
+      "owner": "MA",
+      "kind": "valuechain",
+      "from_country": "US",
+      "to_country": "AE",
+      "label": "Dubai · 중동·아프리카 지역 본부",
+      "subtype": "지역 본부",
+      "source_ids": [
+        "mastercard"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "글로벌 본사와 지역 본부의 조직 관계입니다. 상품 운송이나 결제 데이터 이동 경로를 뜻하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "sdi-network-CN",
+      "owner": "006400.KS",
+      "kind": "valuechain",
+      "from_country": "KR",
+      "to_country": "CN",
+      "label": "Tianjin Samsung SDI · 배터리 법인",
+      "subtype": "사업 거점",
+      "source_ids": [
+        "sdi"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 글로벌 네트워크의 시설·법인 소재국입니다. 생산 능력·가동 상태·납품 상대를 추가 추정하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "sdi-network-AT",
+      "owner": "006400.KS",
+      "kind": "valuechain",
+      "from_country": "KR",
+      "to_country": "AT",
+      "label": "Samsung SDI Battery Systems · Kalsdorf",
+      "subtype": "사업 거점",
+      "source_ids": [
+        "sdi"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 글로벌 네트워크의 시설·법인 소재국입니다. 생산 능력·가동 상태·납품 상대를 추가 추정하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "sdi-network-MY",
+      "owner": "006400.KS",
+      "kind": "valuechain",
+      "from_country": "KR",
+      "to_country": "MY",
+      "label": "Samsung SDI Energy Malaysia · Sungai Gadut",
+      "subtype": "사업 거점",
+      "source_ids": [
+        "sdi"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 글로벌 네트워크의 시설·법인 소재국입니다. 생산 능력·가동 상태·납품 상대를 추가 추정하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "sdi-network-VN",
+      "owner": "006400.KS",
+      "kind": "valuechain",
+      "from_country": "KR",
+      "to_country": "VN",
+      "label": "Samsung SDI VietNam · Bac Ninh",
+      "subtype": "사업 거점",
+      "source_ids": [
+        "sdi"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 글로벌 네트워크의 시설·법인 소재국입니다. 생산 능력·가동 상태·납품 상대를 추가 추정하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "sdi-network-US",
+      "owner": "006400.KS",
+      "kind": "valuechain",
+      "from_country": "KR",
+      "to_country": "US",
+      "label": "Samsung SDI R&D America · Cambridge",
+      "subtype": "R&D 거점",
+      "source_ids": [
+        "sdi"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 글로벌 네트워크의 시설·법인 소재국입니다. 생산 능력·가동 상태·납품 상대를 추가 추정하지 않습니다.",
+      "date_basis": null
+    },
+    {
+      "id": "sdi-network-DE",
+      "owner": "006400.KS",
+      "kind": "valuechain",
+      "from_country": "KR",
+      "to_country": "DE",
+      "label": "Samsung SDI R&D Europe · Ismaning",
+      "subtype": "R&D 거점",
+      "source_ids": [
+        "sdi"
+      ],
+      "observed_on": null,
+      "reviewed_at": "2026-09-10T10:31:24.207427+00:00",
+      "directed": false,
+      "quantity": null,
+      "note": "공식 글로벌 네트워크의 시설·법인 소재국입니다. 생산 능력·가동 상태·납품 상대를 추가 추정하지 않습니다.",
+      "date_basis": null
+    }
+  ],
+  "business": [
+    {
+      "symbol": "TSM",
+      "summary": "반도체 위탁 제조와 고객 엔지니어링 서비스를 제공하며, 최종 소비자에게 자체 브랜드 반도체를 판매하는 사업과 구분합니다.",
+      "source_ids": [
+        "tsmc"
+      ]
+    },
+    {
+      "symbol": "6146.T",
+      "summary": "반도체·전자부품 제조용 정밀 절단·연삭 장비와 블레이드·휠, 가공 기술을 제공합니다.",
+      "source_ids": [
+        "disco"
+      ]
+    },
+    {
+      "symbol": "NVO",
+      "summary": "당뇨·비만 등 만성질환 의약품 사업을 운영하며, 인수한 무균 충전·완제 시설을 기존 공급망에 추가했습니다.",
+      "source_ids": [
+        "novo_completion",
+        "novo_sites"
+      ]
+    },
+    {
+      "symbol": "1211.HK",
+      "summary": "신에너지 차량과 동력 배터리를 공급하며, 전용 자동차 운반선을 이용한 해외 차량 인도 사례를 발표했습니다.",
+      "source_ids": [
+        "byd_brazil"
+      ]
+    },
+    {
+      "symbol": "TM",
+      "summary": "자동차 생산·판매가 공식 회사 개요의 주된 사업입니다.",
+      "source_ids": [
+        "toyota"
+      ]
+    }
+  ]
+}

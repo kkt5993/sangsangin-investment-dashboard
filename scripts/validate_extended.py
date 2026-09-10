@@ -32,6 +32,15 @@ def section(s,cutoff,module):
             assert r['source'] in symbols and r['target'] in symbols and r['kind']=='valuechain'
             assert r['evidence']['url'].startswith('https://')
         assert s['geo_source']['license']=='CC BY 4.0'
+        from pipeline.chain_evidence import settings as chain_evidence
+        c=chain_evidence()
+        assert s['company_routes']==c['routes'] and s['evidence_sources']==c['sources']
+        area_ids={a['id'] for a in s['trade_areas']+s['company_areas']}
+        for r in s['company_routes']:
+            assert r['from_country'] in area_ids and r['to_country'] in area_ids
+        for company in s['companies']:
+            if company.get('official_address') and company['address_profile_match']:
+                assert company['location']['id']==company['official_address']['place_id']
     if kind=='sauron':
         from pipeline.sauron_data import stations,utc
         assert len(s['sites'])==22 and len({a['id'] for a in s['sites']})==22

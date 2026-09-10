@@ -36,7 +36,6 @@ for path in ROOT.rglob('*'):
     if path.suffix=='.png':
         from PIL import Image
         assert path.parent==ROOT/'docs/data/satellite' and re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',path.name)
-        assert path.stat().st_size<1024*1024
         with Image.open(path) as image:
             assert image.format=='PNG' and image.mode=='RGBA' and image.size==(400,400)
             assert not image.info,'Satellite PNG must not contain ancillary metadata'

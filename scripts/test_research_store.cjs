@@ -15,7 +15,7 @@ module.exports=(async()=>{
  const pdf=await S.prepare(new Blob(['%PDF-1.7\nlocal fixture\n%%EOF']),'연구.pdf'),png=await S.prepare(new Blob([new Uint8Array([137,80,78,71,13,10,26,10,0])]),'chart.png');
  assert.equal(pdf.meta.mime,'application/pdf');assert.equal(pdf.meta.id.length,64);
  await assert.rejects(S.prepare(new Blob(['<svg onload="alert(1)">']),'fake.png'));
- await assert.rejects(S.prepare(new Blob([new Uint8Array(S.MAX_FILE+1)]),'big.pdf'));
+ const largePDF=await S.prepare(new Blob(['%PDF-1.7\n',new Uint8Array(25*2**20)]),'big.pdf');assert(largePDF.meta.size>25*2**20);
  r.attachments=[pdf.ref];book=await repo.commit(book.revision,b=>S.edit(b,r,[pdf]),[pdf]);assert.equal(book.files.length,1);assert.equal(await (await repo.blob(pdf.meta.id)).text(),'%PDF-1.7\nlocal fixture\n%%EOF');
  const stale=await second.read();book=await repo.commit(book.revision,b=>S.edit(b,{...r,title:'수정'}));await assert.rejects(second.commit(stale.revision,b=>S.trash(b,r.id)),/다른 창/);assert.equal((await repo.read()).entries[0].title,'수정');
  const before=plain(book),put=IDB.IDBObjectStore.prototype.put;
@@ -32,9 +32,10 @@ module.exports=(async()=>{
  const conflict=plain(decoded.book);conflict.entries[0].title='conflicting import';other=await transferred.commit(other.revision,b=>S.merge(b,conflict),decoded.prepared);assert.equal(other.entries.length,2);assert.equal(new Set(other.entries.map(r=>r.id)).size,2);
  const old='[{"title":"old","body":"preserve","date":"2026-09-08T00:00:00.000Z"}]',a=await S.legacy(old,'iw'),b=await S.legacy(old,'iw');assert.equal(a.entries[0].id,b.entries[0].id);assert.equal(a.entries[0].core,'preserve');
  assert.throws(()=>S.validate({...S.empty(),entries:[{...r,attachments:[png.ref]}]}),/누락/);
- assert.throws(()=>S.validate({...S.empty(),entries:Array.from({length:501},(_,i)=>({...r,id:String(i),attachments:[]}))}),/500/);
- const korean='한'.repeat(12000);assert.throws(()=>S.validate({...S.empty(),entries:Array.from({length:16},(_,i)=>({...r,id:String(i),core:korean,ideas:korean,evidence:korean,actions:korean,attachments:[]}))}),/2MiB/);
- assert.throws(()=>S.validate({...S.empty(),files:Array.from({length:9},(_,i)=>({id:String(i).padStart(64,'0'),mime:'application/pdf',size:S.MAX_FILE}))}),/64MiB/);
+ assert.equal(S.validate({...S.empty(),entries:Array.from({length:501},(_,i)=>({...r,id:String(i),attachments:[]}))}).entries.length,501);
+ const korean='한'.repeat(12000);assert.equal(S.validate({...S.empty(),entries:Array.from({length:16},(_,i)=>({...r,id:String(i),core:korean,ideas:korean,evidence:korean,actions:korean,attachments:[]}))}).entries.length,16);
+ assert.equal(S.validate({...S.empty(),files:Array.from({length:9},(_,i)=>({id:String(i).padStart(64,'0'),mime:'application/pdf',size:25*2**20}))}).files.length,9);
+ const manyFiles=Array.from({length:13},(_,i)=>({id:String(i).padStart(64,'0'),mime:'application/pdf',size:26*2**20}));assert.equal(S.validate({...S.empty(),files:manyFiles,entries:[{...r,attachments:manyFiles.map(f=>({id:f.id,name:'report.pdf'}))}]}).entries[0].attachments.length,13);
  book=await repo.commit(book.revision,b=>S.trash(b,r.id));book=await repo.commit(book.revision,b=>S.purge(b,r.id));assert.equal(book.entries.length,0);assert.equal(book.files.length,0);await assert.rejects(repo.blob(pdf.meta.id));
  repo.close();second.close();transferred.close();console.log('PASS: research records, attachment hashes, atomic quota rollback, stale-tab rejection, backup round trip, collision copies, trash/restore/purge and legacy identity.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

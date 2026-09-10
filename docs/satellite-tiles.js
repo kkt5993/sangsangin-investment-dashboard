@@ -1,7 +1,7 @@
 /* NASA GIBS viewport tiles. No prefetch, persistent storage, credentials or proxy. */
 (function(root){
  'use strict';
- const MAX_LAT=85.0511287798066,MAX_NATIVE=8,MAX_BYTES=8*1024*1024,MAX_TILE_BYTES=1024*1024;
+ const MAX_LAT=85.0511287798066,MAX_NATIVE=8,MAX_TILE_BYTES=1024*1024;
  const BASE='https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/';
  const wrap=lon=>((lon+180)%360+360)%360-180;
  function plan(c,width,height){
@@ -21,9 +21,9 @@
  }
  function create(options={}){
   const get=options.fetch||root.fetch.bind(root),urls=options.urls||root.URL,notify=options.onChange||(()=>{});
-  const cache=new Map(),active=new Map(),failed=new Set();let wanted=new Map(),bytes=0,disposed=false,paused=false,halted=false;
-  const trim=(reserve=0)=>{for(const [key,item]of cache){if(cache.size<=48&&bytes+reserve<=MAX_BYTES)break;if(wanted.has(key))continue;urls.revokeObjectURL(item.href);bytes-=item.bytes;cache.delete(key);}};
-  function status(){return {total:wanted.size,loaded:[...wanted.keys()].filter(k=>cache.has(k)).length,failed:[...wanted.keys()].filter(k=>failed.has(k)).length,active:active.size,bytes,cached:cache.size,halted};}
+  const cache=new Map(),active=new Map(),failed=new Set();let wanted=new Map(),disposed=false,paused=false,halted=false;
+  const trim=()=>{for(const [key,item]of cache){if(cache.size<=48)break;if(wanted.has(key))continue;urls.revokeObjectURL(item.href);cache.delete(key);}};
+  function status(){return {total:wanted.size,loaded:[...wanted.keys()].filter(k=>cache.has(k)).length,failed:[...wanted.keys()].filter(k=>failed.has(k)).length,active:active.size,cached:cache.size,halted};}
   function pump(){
    if(disposed||paused||halted)return;
    for(const [key,tile]of wanted){
@@ -44,8 +44,7 @@
       const prefix=[];for(const chunk of chunks){for(const v of chunk){prefix.push(v);if(prefix.length===2)break;}if(prefix.length===2)break;}
       if(count<3||prefix[0]!==255||prefix[1]!==216)throw Error('Invalid JPEG');
       const blob=new Blob(chunks,{type:'image/jpeg'});
-      if(bytes+blob.size>MAX_BYTES){trim(blob.size);if(bytes+blob.size>MAX_BYTES)throw Error('Tile memory budget');}
-      cache.set(key,{href:urls.createObjectURL(blob),bytes:blob.size});bytes+=blob.size;trim();
+      cache.set(key,{href:urls.createObjectURL(blob)});trim();
      }catch(e){if(!disposed&&wanted.has(key)&&!paused&&(!controller.signal.aborted||controller.signal.reason==='timeout'))failed.add(key);}
      finally{clearTimeout(timeout);if(active.get(key)===controller)active.delete(key);if(!disposed){notify(status());pump();}}
     })();
@@ -56,7 +55,7 @@
    lookup(key){const item=cache.get(key);if(item){cache.delete(key);cache.set(key,item);}return item?.href||'';},
    pause(value){paused=value;if(paused)for(const c of active.values())c.abort('pause');else pump();},
    retry(){failed.clear();halted=false;pump();},status,
-   dispose(){disposed=true;for(const c of active.values())c.abort('dispose');active.clear();for(const item of cache.values())urls.revokeObjectURL(item.href);cache.clear();wanted.clear();failed.clear();bytes=0;}
+   dispose(){disposed=true;for(const c of active.values())c.abort('dispose');active.clear();for(const item of cache.values())urls.revokeObjectURL(item.href);cache.clear();wanted.clear();failed.clear();}
   };
  }
  root.SatelliteTiles={plan,create,wrap,MAX_LAT,MAX_NATIVE};

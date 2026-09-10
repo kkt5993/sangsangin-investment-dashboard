@@ -115,7 +115,6 @@ def main():
     write_json(out/'momentum.json',mom)
     print('RS',rs['coverage'])
     print('Momentum',mom['coverage'])
-    print('Public derived JSON bytes:',sum((out/n).stat().st_size for n in ['rs.json','momentum.json']))
 
 
 if __name__ == '__main__':

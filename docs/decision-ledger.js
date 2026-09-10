@@ -1,7 +1,7 @@
 /* Local decision records and dated entity cards. No orders or remote writes. */
 (function(root){
  'use strict';
- const KEY='sangsangin-decisions-v2',LEGACY='sangsangin-journal-v1-dragonglass',LIMIT=500,BYTES=2*1024*1024;
+ const KEY='sangsangin-decisions-v2',LEGACY='sangsangin-journal-v1-dragonglass';
  const E=v=>root.ResearchCharts.esc(v??''),N=v=>typeof v==='number'&&Number.isFinite(v)?root.AnalysisCharts.n(v):'—';
  const now=()=>new Date().toISOString(),uid=()=>root.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
  const fail=m=>{throw Error(m);};
@@ -22,21 +22,18 @@
   return out;
  }
  function decode(raw){
-  if(raw.length>BYTES)fail('원장 JSON은 2MiB 이하만 읽을 수 있습니다.');
-  const a=JSON.parse(raw);if(!a||a.version!==2||!Array.isArray(a.entries)||a.entries.length>LIMIT||typeof a.revision!=='string')fail('지원하지 않는 원장 형식입니다.');
+  const a=JSON.parse(raw);if(!a||a.version!==2||!Array.isArray(a.entries)||typeof a.revision!=='string')fail('지원하지 않는 원장 형식입니다.');
   const entries=a.entries.map(validate);if(new Set(entries.map(a=>a.id)).size!==entries.length)fail('중복된 결정 ID가 있습니다.');return {version:2,revision:a.revision,entries};
  }
  function legacyRecords(a){
-  if(!Array.isArray(a)||a.length>LIMIT)fail('이전 메모는 최대 500건입니다.');
+  if(!Array.isArray(a))fail('이전 메모 형식을 확인하세요.');
   return a.map(r=>{const t=now();return validate({id:uid(),object_id:'',name:text(r.title,160,true),thesis:text(r.body,12000,true),catalyst:'',invalidate:'',direction:null,conviction:null,horizon:null,size:null,status:'제안',created_at:date(r.date)?r.date:t,updated_at:t,closed_at:null,deleted_at:null,history:[{at:t,action:'이전 메모 가져오기'}],upside:null,downside:null,probability:null});});
  }
  function store(storage){
   let original=null,book;
   const reload=()=>{original=storage.getItem(KEY);book=original===null?{version:2,revision:'',entries:[]}:decode(original);return book.entries;};reload();
   const write=entries=>{
-   if(entries.length>LIMIT)fail('원장은 휴지통 포함 최대 500건입니다.');
    const next={version:2,revision:uid(),entries:entries.map(validate)},raw=JSON.stringify(next);
-   if(new TextEncoder().encode(raw).length>BYTES)fail('원장 저장 한도 2MiB를 초과했습니다.');
    if(storage.getItem(KEY)!==original)fail('다른 창에서 원장이 바뀌었습니다. 새로 읽은 뒤 다시 저장하세요.');
    storage.setItem(KEY,raw);original=raw;book=next;return book.entries;
   };
@@ -58,7 +55,6 @@
     return history(r,t,{activate:'실행 상태 기록',close:'청산 상태 기록',reopen:'실행 재개',delete:'휴지통 이동',restore:'복원'}[action]);
    });},
    import(raw){
-    if(new TextEncoder().encode(raw).length>BYTES)fail('가져올 파일은 2MiB 이하여야 합니다.');
     const parsed=JSON.parse(raw),isLegacy=Array.isArray(parsed),incoming=isLegacy?legacyRecords(parsed):decode(raw).entries;
     const next=book.entries.map(r=>({...r}));let added=0;
     for(let r of incoming){if(isLegacy&&next.some(a=>a.name===r.name&&a.thesis===r.thesis&&a.created_at===r.created_at))continue;const existing=next.find(a=>a.id===r.id);if(existing&&JSON.stringify(existing)===JSON.stringify(r))continue;if(existing)r={...r,id:uid(),history:[...r.history,{at:now(),action:'ID 충돌 사본 가져오기'}].slice(-50)};next.push(r);added++;}
@@ -136,7 +132,7 @@
      else {vault.action(id,act);status('상태 변경을 저장했습니다.');}
      repaint();
     }catch(e){status('저장하지 못했습니다: '+e.message);}}));
-    body.querySelector('[data-ledger-import]').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>BYTES)fail('파일은 2MiB 이하여야 합니다.');const count=vault.import(await file.text());status(count+'건을 가져왔습니다. 기존 ID 충돌은 별도 사본으로 보존합니다.');repaint();}catch(error){status('가져오지 못했습니다: '+error.message);}});
+    body.querySelector('[data-ledger-import]').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const count=vault.import(await file.text());status(count+'건을 가져왔습니다. 기존 ID 충돌은 별도 사본으로 보존합니다.');repaint();}catch(error){status('가져오지 못했습니다: '+error.message);}});
    };repaint();
   });
  }

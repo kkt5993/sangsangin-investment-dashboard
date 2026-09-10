@@ -142,7 +142,7 @@ def section(s,cutoff,module):
             assert west<x<east and south<y<north
             for mode,image in a['images'].items():
                 assert mode in ['rgb','ndvi'] and image['path']=='data/satellite/'+r['id']+'-'+mode+'.png'
-                path=ROOT/'docs'/image['path'];assert path.stat().st_size==image['bytes']<1024*1024
+                path=ROOT/'docs'/image['path'];assert path.stat().st_size==image['bytes']
                 assert hashlib.sha256(path.read_bytes()).hexdigest()==image['sha256']
                 with Image.open(path) as png:assert png.format=='PNG' and png.size==(400,400) and png.mode=='RGBA'
     if kind=='releasecalendar':

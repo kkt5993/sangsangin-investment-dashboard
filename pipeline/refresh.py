@@ -150,7 +150,7 @@ def copy_satellite_outputs(stage,destination=ROOT):
     source=Path(stage)/'docs/data/satellite';target=Path(destination)/'docs/data/satellite'
     files=list(source.glob('*.png'))
     for p in files:
-        if p.is_symlink() or not re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',p.name) or p.stat().st_size>=1024*1024:
+        if p.is_symlink() or not re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',p.name):
             raise ValueError('Unexpected generated satellite image')
     if files:target.mkdir(parents=True,exist_ok=True)
     for p in files:

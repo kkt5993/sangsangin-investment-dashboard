@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. PM 키 게이지 / 금리·성장 / 크로스에셋 속보 / CTA 시스템 트렌드 / 매크로 z-score / 다이버전스·실적 / 기초 매크로 시계열 / CFTC 포지션.
+**부분 구현** · 가격 기준 2026-09-10. PM 키 게이지 / 금리·성장 / 크로스에셋 속보 / CTA 시스템 트렌드 / 매크로 z-score / 다이버전스·실적 / 기초 매크로 시계열 / CFTC 포지션.
 
 - 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [cot_data.py](../../pipeline/cot_data.py) · [pm_details.py](../../pipeline/pm_details.py) · [gpr_data.py](../../pipeline/gpr_data.py) · [flows.py](../../pipeline/flows.py) · [flows_data.py](../../pipeline/flows_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/pm_weekend.json)

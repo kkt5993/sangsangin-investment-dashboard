@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 종합.
+**부분 구현** · 가격 기준 2026-09-10. 종합.
 
 - 계산 코드: [discovery.py](../../pipeline/discovery.py) · [financial_modules.py](../../pipeline/financial_modules.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/discovery.json)

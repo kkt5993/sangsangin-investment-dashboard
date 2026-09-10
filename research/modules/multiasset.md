@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 자산 모니터 / 패턴 스캐너 / 자산배분.
+**부분 구현** · 가격 기준 2026-09-10. 자산 모니터 / 패턴 스캐너 / 자산배분.
 
 - 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [asset_monitor.py](../../pipeline/asset_monitor.py) · [allocation_model.py](../../pipeline/allocation_model.py) · [allocation_views.py](../../pipeline/allocation_views.py) · [technical_scan.py](../../pipeline/technical_scan.py) · [oecd_data.py](../../pipeline/oecd_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/multiasset.json)

@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 국가 교역 / 기업 국가 탐색 / 밸류체인 유니버스 / SAURON.
+**부분 구현** · 가격 기준 2026-09-10. 국가 교역 / 기업 국가 탐색 / 밸류체인 유니버스 / SAURON.
 
 - 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py) · [trade_data.py](../../pipeline/trade_data.py) · [trade_views.py](../../pipeline/trade_views.py) · [trade-views.js](../../docs/trade-views.js) · [sauron_data.py](../../pipeline/sauron_data.py) · [sauron_views.py](../../pipeline/sauron_views.py) · [sauron-views.js](../../docs/sauron-views.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/globe.json)

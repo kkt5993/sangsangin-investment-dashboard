@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 5기간·그룹별정렬·짝곡선·OEF101/KOSPI200 공식 신고가·RS/고점점선/44점·검색/시장필터.
+**부분 구현** · 가격 기준 2026-09-10. 5기간·그룹별정렬·짝곡선·OEF101/KOSPI200 공식 신고가·RS/고점점선/44점·검색/시장필터.
 
 - 계산 코드: [build.py](../../pipeline/build.py) · [analytics.py](../../pipeline/analytics.py) · [universe.py](../../pipeline/universe.py) · [momentum_highs.py](../../pipeline/momentum_highs.py) · [us100_data.py](../../pipeline/us100_data.py)
 - 화면: [dashboard.js](../../docs/dashboard.js) · [계산 결과](../../docs/data/momentum.json)

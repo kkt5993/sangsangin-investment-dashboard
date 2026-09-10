@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위.
+**부분 구현** · 가격 기준 2026-09-10. 공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위.
 
 - 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [build.py](../../pipeline/build.py) · [analytics.py](../../pipeline/analytics.py) · [universe.py](../../pipeline/universe.py)
 - 화면: [dashboard.js](../../docs/dashboard.js) · [계산 결과](../../docs/data/rs.json)

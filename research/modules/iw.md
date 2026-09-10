@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 월말 복기 / 주간 연대기 / 이번 주의 그림 / 주간 판단 원장.
+**부분 구현** · 가격 기준 2026-09-10. 월말 복기 / 주간 연대기 / 이번 주의 그림 / 주간 판단 원장.
 
 - 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py) · [public_assets.py](../../pipeline/public_assets.py) · [pdf-text.js](../../docs/pdf-text.js) · [pdf-ocr.js](../../docs/pdf-ocr.js) · [notebook-pdf.js](../../docs/notebook-pdf.js) · [research-store.js](../../docs/research-store.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/iw.json)

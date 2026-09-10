@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 전망 요약 / KOSPI · 1M / KOSPI · 3M / NASDAQ · 1M / NASDAQ · 3M / S&P500 · 1M / S&P500 · 3M / 모델 비교 / SHAP 해석 / 변수 선택.
+**부분 구현** · 가격 기준 2026-09-10. 전망 요약 / KOSPI · 1M / KOSPI · 3M / NASDAQ · 1M / NASDAQ · 3M / S&P500 · 1M / S&P500 · 3M / 모델 비교 / SHAP 해석 / 변수 선택.
 
 - 계산 코드: [ml_models.py](../../pipeline/ml_models.py) · [ml_features.py](../../pipeline/ml_features.py) · [ml_ensemble.py](../../pipeline/ml_ensemble.py) · [ml_transformer.py](../../pipeline/ml_transformer.py) · [ml_views.py](../../pipeline/ml_views.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/ml.json)

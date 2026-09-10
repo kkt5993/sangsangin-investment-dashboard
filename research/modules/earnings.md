@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. US / KR / 종합 / 글로벌 순이익 / 국내 추정 상세 / 미국 추정 상세 / 연간·분기 상세 / 추정치 변화 / 실적 이벤트.
+**부분 구현** · 가격 기준 2026-09-10. US / KR / 종합 / 글로벌 순이익 / 국내 추정 상세 / 미국 추정 상세 / 연간·분기 상세 / 추정치 변화 / 실적 이벤트.
 
 - 계산 코드: [financial_modules.py](../../pipeline/financial_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [events_data.py](../../pipeline/events_data.py) · [earnings_details.py](../../pipeline/earnings_details.py) · [flows.py](../../pipeline/flows.py) · [flows_data.py](../../pipeline/flows_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/earnings.json)

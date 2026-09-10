@@ -7,7 +7,7 @@ from .engine import Data,number
 from .events_data import save,read
 from .acquire import stamp,get_bytes
 from .flow_catalog import US_STOCKS,ETF_DEFINITIONS
-from .options_data import normalize,parse_contracts
+from .options_data import normalize,parse_contracts,FLOW_SCOPE
 
 def upcoming(d,now):
     from .subview_modules import event_data
@@ -19,7 +19,7 @@ def upcoming(d,now):
             if t.tzinfo and now<t<=now+pd.Timedelta(days=21) and number(row.get('Reported EPS')) is None:out.append((symbol,t.isoformat()))
     return sorted(out,key=lambda a:a[1])[:8]
 
-def collect_us(d):
+def collect_us(d,allow_cboe_download=False):
     folder=d.base/'flows';folder.mkdir(exist_ok=True);logging.getLogger('yfinance').setLevel(logging.CRITICAL)
     fields=['longName','currency','quoteType','totalAssets','marketCap','floatShares','sharesShort','shortPercentOfFloat','shortRatio','dateShortInterest','sharesShortPreviousMonthDate','regularMarketTime','regularMarketPrice']
     symbols=sorted(set(US_STOCKS)|{a['symbol'] for a in ETF_DEFINITIONS})
@@ -33,26 +33,42 @@ def collect_us(d):
         except Exception as e:out=dict(symbol=symbol,retrieved_at=stamp(),status='error',error_type=type(e).__name__,info={})
         save(dest,out);print('FLOW INFO',symbol,out['status'],flush=True);time.sleep(.4)
     now=pd.Timestamp.now(tz='UTC');events=dict(upcoming(d,now));save(folder/'earnings_targets.json.gz',dict(retrieved_at=now.isoformat(),events=events))
+    collect_us_options(d,events,allow_download=allow_cboe_download)
+    good_info=sum(read(folder/('info_'+s+'.json.gz')).get('status')=='ok' for s in US_STOCKS)
+    good_funds=sum((read(folder/('info_'+a['symbol']+'.json.gz')).get('info',{}).get('totalAssets') or 0)>0 for a in ETF_DEFINITIONS)
+    if good_info<18 or good_funds<len(ETF_DEFINITIONS)*.9:raise ValueError('Flow provider coverage below 90%; stop publication')
+
+def collect_us_options(d,events,allow_download=False,fetch=None):
+    """A separate optional source must not stop non-option market updates."""
+    folder=d.base/'flows';rows=[]
+    fetch=fetch or (lambda s:json.loads(get_bytes('https://cdn.cboe.com/api/global/delayed_quotes/options/'+s+'.json')))
     for symbol in sorted(set(US_STOCKS)|set(events)):
         dest=folder/('options_'+symbol+'.json.gz');event_dest=folder/('earnings_'+symbol+'.json.gz')
-        if dest.exists() and (symbol not in events or event_dest.exists()):continue
-        raw=json.loads(get_bytes('https://cdn.cboe.com/api/global/delayed_quotes/options/'+symbol+'.json'));now=pd.Timestamp.now(tz='UTC')
-        price=d.price(symbol,False)
-        if len(price) and str(raw.get('timestamp',''))[:10]<str(price.index[-1].date()):raise ValueError('Cboe flow observation predates completed underlying session')
-        if not dest.exists():
-            try:out=dict(normalize(raw,symbol,now),status='ok')
-            except ValueError as e:out=dict(symbol=symbol,retrieved_at=now.isoformat(),status='insufficient',reason=str(e),records=[])
-            save(dest,out);print('FLOW OPTIONS',symbol,out['status'],len(out['records']),flush=True)
-        if symbol in events and not event_dest.exists():
-            records=parse_contracts(raw,symbol);event=pd.Timestamp(events[symbol])
-            expiries=sorted({r['expiry'] for r in records if event+pd.Timedelta(hours=1)<pd.Timestamp(r['expiry']+' 16:00',tz='America/New_York')<event+pd.Timedelta(days=15)})
-            expiry=expiries[0] if expiries else None
-            save(event_dest,dict(symbol=symbol,event_at=event.isoformat(),retrieved_at=now.isoformat(),provider_timestamp=raw.get('timestamp'),source='Cboe public delayed quotes',spot=raw['data']['current_price'],expiry=expiry,records=[r for r in records if r['expiry']==expiry]))
+        prior=d.resource('flows/options_'+symbol+'.json.gz');old=read(prior) if prior.exists() else {}
+        if not allow_download:
+            rows.append(dict(symbol=symbol,status='retained_permission_required' if old.get('status')=='ok' else 'missing_permission_required',retrieved_at=old.get('retrieved_at')));continue
+        if dest.exists() and (symbol not in events or event_dest.exists()):
+            rows.append(dict(symbol=symbol,status='reused_current_run',retrieved_at=old.get('retrieved_at')));continue
+        try:
+            raw=fetch(symbol);now=pd.Timestamp.now(tz='UTC')
+            # A sparse stock gamma sample can still contain a valid same-strike
+            # earnings straddle. Validate these two outputs independently.
+            try:out=dict(normalize(raw,symbol,now,scope=FLOW_SCOPE),status='ok')
+            except ValueError:out=None
+            if out and not dest.exists():save(dest,out)
+            if symbol in events and not event_dest.exists():
+                records=parse_contracts(raw,symbol);event=pd.Timestamp(events[symbol])
+                expiries=sorted({r['expiry'] for r in records if event+pd.Timedelta(hours=1)<pd.Timestamp(r['expiry']+' 16:00',tz='America/New_York')<event+pd.Timedelta(days=15)})
+                expiry=expiries[0] if expiries else None
+                save(event_dest,dict(symbol=symbol,event_at=event.isoformat(),retrieved_at=now.isoformat(),provider_timestamp=raw.get('timestamp'),source='Cboe delayed option observation',spot=raw['data']['current_price'],expiry=expiry,records=[r for r in records if r['expiry']==expiry]))
+            rows.append(dict(symbol=symbol,status='collected' if out else 'retained_error' if old.get('status')=='ok' else 'missing_error',retrieved_at=out['retrieved_at'] if out else old.get('retrieved_at')))
+        except Exception as error:
+            rows.append(dict(symbol=symbol,status='retained_error' if old.get('status')=='ok' else 'missing_error',retrieved_at=old.get('retrieved_at'),error_type=type(error).__name__))
+        print('FLOW OPTIONS',symbol,rows[-1]['status'],flush=True)
         time.sleep(.6)
-    good_info=sum(read(folder/('info_'+s+'.json.gz')).get('status')=='ok' for s in US_STOCKS)
-    good_options=sum(read(folder/('options_'+s+'.json.gz')).get('status')=='ok' for s in US_STOCKS)
-    good_funds=sum((read(folder/('info_'+a['symbol']+'.json.gz')).get('info',{}).get('totalAssets') or 0)>0 for a in ETF_DEFINITIONS)
-    if min(good_info,good_options)<18 or good_funds<len(ETF_DEFINITIONS)*.9:raise ValueError('Flow provider coverage below 90%; stop publication')
+    report=dict(retrieved_at=pd.Timestamp.now(tz='UTC').isoformat(),automatic_access_authorized=allow_download,rows=rows)
+    save(folder/'option_collection.json.gz',report)
+    return report
 
 def krx_number(v):return number(str(v).replace(',',''))
 
@@ -90,9 +106,9 @@ def collect_kr(d):
     print('KRX FLOWS',len(stocks),'stocks /',len(rows),'ETFs',flush=True)
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--as-of',required=True);p.add_argument('--allow-krx-auth',action='store_true');p.add_argument('--market',choices=['US','KR','all'],default='all');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--as-of',required=True);p.add_argument('--allow-krx-auth',action='store_true');p.add_argument('--allow-cboe-download',action='store_true');p.add_argument('--market',choices=['US','KR','all'],default='all');a=p.parse_args()
     if a.market in ['KR','all'] and not a.allow_krx_auth:p.error('Existing KRX account authorization required')
     d=Data(a.as_of)
-    if a.market in ['US','all']:collect_us(d)
+    if a.market in ['US','all']:collect_us(d,allow_cboe_download=a.allow_cboe_download)
     if a.market in ['KR','all']:collect_kr(d)
 if __name__=='__main__':main()

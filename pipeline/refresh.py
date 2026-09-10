@@ -82,8 +82,9 @@ def collect(parent,base,as_of,env,config,log):
     if due(parent,'release_calendar.json.gz',7):run('pipeline.calendar_data')
     if due(parent,'kr_release_calendar.json.gz',7):run('pipeline.kr_calendar')
     if due(parent,'satellite_collection.json.gz',7):run('pipeline.satellite_data')
-    run('pipeline.options_data')
-    run('pipeline.flows_data','--market','US')
+    option_flags=['--allow-cboe-download'] if config.get('allow_cboe_automated_quotes') is True else []
+    run('pipeline.options_data',*option_flags)
+    run('pipeline.flows_data','--market','US',*option_flags)
     if config.get('allow_krx_auth'):run('pipeline.flows_data','--market','KR','--allow-krx-auth')
     if config.get('allow_krx_auth'):run('pipeline.kr_shortgamma_data','--allow-krx-auth')
     if config.get('allow_krx_auth'):run('pipeline.krx_reconcile','--allow-krx-auth')

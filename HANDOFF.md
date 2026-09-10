@@ -244,3 +244,7 @@ pead.py/strategy-cards.js는 최근60일 최신 확정 EPS·양의 서프라이�
 첫 전체213Python/두검증기/3JS/30JS·MJS구문 통과. 실제 Edge1440/1024/390에서12/48·검색/상세·미도래D20·가로넘침0·console오류0; CUA에서NVDA표시구간+5.127606% vsD0후−0.986929%·SPY관측·출처링크 확인. 마지막출처링크/중복날짜수정후 최종검사 상태는runtime/pead-final-validation.log, 배포run 20260910T054223Z 결과는state.json/file-verification 보고서를 확인한다. 원본가격선 대조·검수이미지는private runtime/pead-*에만 둔다. 전체원본세부탭 구현완료는 아직아님.
 
 전체목표계속: 관계망전체/본사/교역·Esri고해상도/지명권한·SEC13F/연속수집·직접글로벌NI/OP/PIT·LLM요약/공유DB·원본기간/모델설정 등REFERENCE_PARITY의남은범위유지. Grok worktree는확인당시 HEAD0097d49/완료커밋없음; 별도세션/Claude전환은문의만있고아직생성하지않았다. 최종통합은이메인에서수행.
+
+
+미국 옵션 수집·범위 후속(2026-09-10): 공개 설명의SPY GEX는7~50일·행사가±15%이며 전체시장전만기를 요구한 이전TODO를 바로잡았다. options_data 정규화는제공범위의모든만기/중복·경계검사, 별도주식수급은기존7~45일첫3만기 유지. 만기별OI/GEX집계·같은행사가ATM·수집당시현물/금리를사용하는과거체인처리와갱신상태표코드를구현. Cboe자동추출금지안내를확인하여index/stock/eventstraddle 두수집경로모두기본비활성화했고사용자허용API질문응답대기. refresh는설정boolean true만명시플래그전달,이번에권한설정변경없음. 다른Yahoo/KRX갱신은옵션중단으로실패하지않는다.
+보존SPY12086계약응답에서2328계약/11만기/OI유효1836/GEX유효1825를로컬검산,만기합계반올림오차1e-6. 새네트워크0회·새시세관측아님·3%금리시험가정. private runtime/options-offline-qa.json. 게시JSON과raw빈티지는PEAD게시본을유지하며새범위결과는아직게시하지않았다. 정확한상태는research/OPTIONS_CONTRACT.md. 코드·공통차트통합후전체검사예정.

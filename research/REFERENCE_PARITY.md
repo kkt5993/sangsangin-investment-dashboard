@@ -69,3 +69,8 @@
 PM 금리 분해와 산업 계열은 [FRED](https://fred.stlouisfed.org/), 국내 실질 GDP·수출은 [한국은행 ECOS](https://ecos.bok.or.kr/)의 관측값을 사용한다. 반도체 생산 [IPG3344S](https://fred.stlouisfed.org/series/IPG3344S), 반도체 PPI [PCU334413334413](https://fred.stlouisfed.org/series/PCU334413334413), 물동량 [TSIFRGHT](https://fred.stlouisfed.org/series/TSIFRGHT), 차량 판매 [TOTALSA](https://fred.stlouisfed.org/series/TOTALSA)의 정의·단위를 확인했다. 월간 GPR는 [Caldara–Iacoviello의 공개 자료](https://www.matteoiacoviello.com/gpr.htm)이다. 세부 계열 코드는 pipeline/catalog.py와 industry_details.py에 둔다.
 
 재귀성 규칙은 보존한 app.js의 reflexHTML·_RX_CFG와 regime.json의 score trace에서 확인했다. 250일 로그가격 회귀·26주 AR1·120일 군집 회귀·P80 동시 조건과 5축 역할은 공개된 구조를 따른다. 로그가격 2차회귀를 완전한 LPPLS 적합이라고 부르지 않는다. 현대 시총으로 고른 군집 표본을 역사 구성종목이라고 주장하지 않는다.
+
+
+### 2026-09-10 밸류체인 기업 탐색 추가
+
+20그룹·53업종·159배치·151기업 프로필과140기업/95도시 지도, 공급 공시4관계 및소재국UN TOTAL상위5방향을연결했다. 원본의기업별3종류추정경로전체와경쟁우위문구를사실로복사하지않았다. 전체공급·물류·본사공식검증및11기업의도시좌표는남아있다. [표시·수집·계산 계약](CHAIN_UNIVERSE_CONTRACT.md)을새기준으로확인한다. 연결된하위탭수를원본의모든관계완성도로읽지말것.

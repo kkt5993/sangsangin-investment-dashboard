@@ -15,6 +15,23 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='chainuniverse':
+        assert len(s['groups'])==20 and len(s['sectors'])==53 and len(s['companies'])==151
+        symbols={c['symbol'] for c in s['companies']};assert len(symbols)==151
+        assert sum(len(a['symbols']) for a in s['sectors'])==159
+        assert all(set(a['symbols'])<=symbols for a in s['sectors'])
+        for c in s['companies']:
+            if c['location']:
+                p=c['location'];assert p['profile_city']==c['city'] and p['profile_country']==c['country']
+                assert -90<=p['lat']<=90 and -180<=p['lon']<=180
+                assert p['source']=='https://www.geonames.org/'+p['id']+'/'
+            if c['market_cap'] is not None:
+                assert c['market_cap']>0 and re.fullmatch('[A-Z]{3}',c['cap_currency'])
+            if c['checked_at']:assert datetime.fromisoformat(c['checked_at']).tzinfo
+        for r in s['relations']:
+            assert r['source'] in symbols and r['target'] in symbols and r['kind']=='valuechain'
+            assert r['evidence']['url'].startswith('https://')
+        assert s['geo_source']['license']=='CC BY 4.0'
     if kind=='sauron':
         from pipeline.sauron_data import stations,utc
         assert len(s['sites'])==22 and len({a['id'] for a in s['sites']})==22

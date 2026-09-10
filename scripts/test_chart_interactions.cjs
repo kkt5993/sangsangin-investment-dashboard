@@ -60,7 +60,16 @@ fs.mkdirSync(out,{recursive:true});
    }
    if(tab==='geoecon'){
     const chart=page.locator('.analysis-line-wrap svg').first();
-    if(await chart.count()){await chart.focus();await chart.press('End');assert.match(await page.locator('.analysis-readout').first().innerText(),/^\d{4}-/);report.interactions.push({width,line:'End full-precision readout'});}
+    if(await chart.count()){
+     await chart.focus();await chart.press('End');assert.match(await page.locator('.analysis-readout').first().innerText(),/^\d{4}-/);
+     const dates=await chart.evaluate(el=>[...new Set(Array.from(el.querySelectorAll('[data-observations]')).flatMap(p=>JSON.parse(p.dataset.observations).map(v=>v[0])))].sort());
+     await chart.press('Home');await chart.press('ArrowRight');assert((await page.locator('.analysis-readout').first().innerText()).startsWith(dates[1]));
+     // Replace markup exactly as a filter does; no explicit rebinding call.
+     await chart.evaluate(el=>{const wrap=el.closest('.analysis-line-wrap');wrap.replaceWith(wrap.cloneNode(true));});
+     const replaced=page.locator('.analysis-line-wrap svg').first();await replaced.focus();await replaced.press('End');
+     assert((await page.locator('.analysis-readout').first().innerText()).startsWith(dates.at(-1)));
+     report.interactions.push({width,line:'precise keyboard step, replacement chart delegation'});
+    }
    }
    if(tab==='regime'){
     const box=page.locator('[data-hologram]').first(),canvas=box.locator('[data-holo-canvas]');

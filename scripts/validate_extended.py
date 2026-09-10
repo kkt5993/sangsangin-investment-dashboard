@@ -412,6 +412,13 @@ def section(s,cutoff,module):
             assert r['gamma_available']==(r['gex'] is not None)
         if s['flip'] is not None:assert .8*s['spot']<=s['flip']<=1.2*s['spot']
         if s['em'] is not None:assert s['em_low']<s['spot']<s['em_high']
+        if 'maturity' in s:
+            maturity=s['maturity'];assert len({r['expiry'] for r in maturity})==len(maturity)
+            assert sum(r['valid_oi'] for r in maturity)==s['valid_oi']
+            assert sum(r['valid_gamma'] for r in maturity)==s['valid_gamma']
+            assert abs(sum(r['oi_pct'] for r in maturity)-100)<=max(1,len(maturity))*1e-6
+            assert abs(sum(r['gex'] or 0 for r in maturity)-s['net'])<=max(1,len(maturity))*1e-6+1e-9
+            assert all(r['dte']>0 and r['call_oi']>=0 and r['put_oi']>=0 and 0<=r['valid_gamma']<=r['valid_oi'] for r in maturity)
 
 count=0
 for file in (ROOT/'docs/data').glob('*.json'):

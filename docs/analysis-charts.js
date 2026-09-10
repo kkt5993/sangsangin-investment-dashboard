@@ -201,12 +201,18 @@
   s.rows.forEach((r,i)=>{if(i%3===0||i===s.rows.length-1){const x=L+(i+.5)*bw,y=T+2*step+bar+16;body+=`<text x="${x}" y="${y}" transform="rotate(-40 ${x} ${y})" text-anchor="end" class="axis">${E(r[0].slice(2,7))}</text>`;}});
   body+=`<text x="${L}" y="${H-12}" class="axis">회색: 필수 입력 미산출 · 각 칸은 완료된 한 달</text>`;return svg(body,s.title,W,H,'data-chart-type="state-timeline"');
  }
- function bindLines(container){container.querySelectorAll('.analysis-line-wrap').forEach(wrap=>{
-  const chart=wrap.querySelector('svg'),output=wrap.querySelector('output');let cache=null,index=0;
-  const read=()=>{if(cache)return cache;const series=Array.from(chart.querySelectorAll('[data-observations]')).map(el=>({name:el.dataset.analysisSeries,axis:el.dataset.axis,points:new Map(JSON.parse(el.dataset.observations))})),dates=[...new Set(series.flatMap(s=>Array.from(s.points.keys())))].sort();return cache={series,dates,times:dates.map(Date.parse)};};
-  const show=i=>{const {series,dates}=read();index=Math.max(0,Math.min(dates.length-1,i));const date=dates[index],{times}=read(),x=72+(times[index]-times[0])/Math.max(86400000,times.at(-1)-times[0])*748,cursor=chart.querySelector('[data-analysis-cursor]');cursor.removeAttribute('hidden');cursor.setAttribute('x1',x);cursor.setAttribute('x2',x);output.textContent=date+' · '+series.map(s=>s.name+(s.axis==='right'?' (우축)':'')+': '+(s.points.has(date)?String(s.points.get(date)):'관측 없음')).join(' · ');};
-  chart.addEventListener('pointermove',e=>{const {times}=read(),box=chart.getBoundingClientRect(),ratio=Math.max(0,Math.min(1,((e.clientX-box.left)/box.width*900-72)/748)),t=times[0]+ratio*(times.at(-1)-times[0]);let lo=0,hi=times.length-1;while(lo<hi){const mid=(lo+hi)>>1;if(times[mid]<t)lo=mid+1;else hi=mid;}show(lo>0&&Math.abs(times[lo-1]-t)<Math.abs(times[lo]-t)?lo-1:lo);});
-  chart.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();show(e.key==='Home'?0:e.key==='End'?Infinity:index+(e.key==='ArrowLeft'?-1:1));}});
- });}
+ const boundLines=new WeakSet();
+ function bindLines(container){
+  if(!container.addEventListener||boundLines.has(container))return;
+  boundLines.add(container);const states=new WeakMap();
+  // Delegate from the stable parent so filters can replace chart markup without
+  // duplicate handlers or leaving newly rendered observations unresponsive.
+  const state=e=>{const chart=e.target.closest?.('.analysis-line-wrap svg');if(!chart||!container.contains(chart))return null;
+   let s=states.get(chart);if(s)return s;const wrap=chart.closest('.analysis-line-wrap'),series=Array.from(chart.querySelectorAll('[data-observations]')).map(el=>({name:el.dataset.analysisSeries,axis:el.dataset.axis,points:new Map(JSON.parse(el.dataset.observations))})),dates=[...new Set(series.flatMap(v=>Array.from(v.points.keys())))].sort();
+   s={chart,output:wrap.querySelector('output'),series,dates,times:dates.map(Date.parse),index:0};states.set(chart,s);return s;};
+  const show=(s,i)=>{const {chart,output,series,dates,times}=s;if(!dates.length)return;s.index=Math.max(0,Math.min(dates.length-1,i));const date=dates[s.index],x=72+(times[s.index]-times[0])/Math.max(86400000,times.at(-1)-times[0])*748,cursor=chart.querySelector('[data-analysis-cursor]');cursor.removeAttribute('hidden');cursor.setAttribute('x1',x);cursor.setAttribute('x2',x);output.textContent=date+' · '+series.map(v=>v.name+(v.axis==='right'?' (우축)':'')+': '+(v.points.has(date)?String(v.points.get(date)):'관측 없음')).join(' · ');};
+  container.addEventListener('pointermove',e=>{const s=state(e);if(!s||!s.times.length)return;const {times}=s,box=s.chart.getBoundingClientRect(),ratio=Math.max(0,Math.min(1,((e.clientX-box.left)/box.width*900-72)/748)),t=times[0]+ratio*(times.at(-1)-times[0]);let lo=0,hi=times.length-1;while(lo<hi){const mid=(lo+hi)>>1;if(times[mid]<t)lo=mid+1;else hi=mid;}show(s,lo>0&&Math.abs(times[lo-1]-t)<Math.abs(times[lo]-t)?lo-1:lo);});
+  container.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;const s=state(e);if(!s)return;e.preventDefault();show(s,e.key==='Home'?0:e.key==='End'?Infinity:s.index+(e.key==='ArrowLeft'?-1:1));});
+ }
  root.AnalysisCharts={bindLines,line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,scanCandles,modelLeaderboard,lagCorrelation,shap,featureSelection,moeFan,moeTopology,stateTimeline,n,empty};
 })(typeof window==='undefined'?globalThis:window);

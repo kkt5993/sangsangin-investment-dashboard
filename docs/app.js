@@ -32,13 +32,14 @@ function renderCatalog(){
  document.querySelectorAll('[data-group]').forEach(b=>{b.classList.toggle('active',b.dataset.group===group);b.setAttribute('aria-pressed',String(b.dataset.group===group));});
 }
 function overview(){
- content.innerHTML=`<p class="eyebrow">SANGSANGIN / INVESTMENT RESEARCH</p><div class="title-row"><div><h1>투자 리서치 대시보드</h1><p class="lead">국면·주도·실적·위험을 같은 근거 위에서 비교합니다.</p></div><span class="count-badge">가격 기준 ${BUILD_STATUS.as_of}</span></div>
+ content.innerHTML=`<section class="research-hero"><p class="eyebrow">SANGSANGIN INVESTMENT RESEARCH</p><h1>시장을 입체적으로.<br><span>판단은 명확하게.</span></h1><p class="lead">국면부터 주도주까지.<br>같은 데이터 위에서, 더 깊이 들여다보세요.</p><div class="hero-actions"><button type="button" data-explore>시장 좌표 살펴보기 <span aria-hidden="true">↓</span></button><a href="#growth">성장주 3D 탐색 <span aria-hidden="true">↗</span></a></div><p class="hero-asof">투자 리서치 대시보드 · 가격 기준 ${BUILD_STATUS.as_of} · PC 계산 스냅샷</p></section>
  <div class="build-entry"><a href="#rs"><small>실데이터 · 부분 구현</small><strong>주간 상대강도 (RS) ↗</strong><span>한국·미국 페어 · 5년 z-score · 순위와 히트맵</span></a><a href="#momentum"><small>실데이터 · 부분 구현</small><strong>모멘텀 ↗</strong><span>국가·섹터·팩터·자산 · 3M/6M 누적 초과수익</span></a></div>
  <div class="metrics"><div class="metric"><b>${BUILD_STATUS.implemented}</b><span>계산·콘텐츠 연결 탭</span><small>완료 범위와 남은 항목은 탭마다 표시</small></div><div class="metric"><b>${BUILD_STATUS.price_series}</b><span>로컬 가격 시계열</span><small>거시 ${BUILD_STATUS.macro_series}계열 · 재무 ${BUILD_STATUS.financial_companies}기업</small></div><div class="metric"><b>${MODULES.length}</b><span>전체 화면 가이드</span><small>원자료 PC 보관 · 평일 08:00·18:00 갱신</small></div></div>
  <div class="summary-facts"><a href="#regime"><b>경제·시장 국면 ↗</b><p>한국은행 ECOS · 미국 FRED</p></a><a href="#growth"><b>성장 컨센서스 ↗</b><p>3D FY1/FY2 · 기준 ${BUILD_STATUS.consensus_as_of}</p></a><a href="#dynamics"><b>시장 역학 ↗</b><p>변동성 표면 · 위상공간 · 노출 조절</p></a><a href="#quant"><b>퀀트 전략 ↗</b><p>5개 선별 화면 · 가격과 거래량</p></a><a href="#ml"><b>예측 검증 ↗</b><p>시간순 OOS · 학습 타깃 시차</p></a><a href="#etfmon"><b>ETF 모니터 ↗</b><p>9개 분류 · 분배금·수익률·현금흐름</p></a></div>
  <div id="overview-state"><p class="quiet">거시·시장 좌표를 읽는 중…</p></div><div class="refresh-status" id="refresh-status">정기 갱신: 평일 08:00·18:00 (한국시간) · PC와 Codex 앱 실행 필요 · 수집→계산→검증→게시</div><div class="section-head"><h2>전체 탭</h2><span>구현 상태와 문서를 확인하세요</span></div>
  <div class="group-filter" aria-label="화면 분류">${[['all','전체'],['special','플랫폼'],['regime','국면'],['momentum','주도'],['context','맥락'],['opportunity','기회']].map(([k,t])=>`<button type="button" data-group="${k}">${t}</button>`).join('')}</div><div id="catalog" class="catalog"></div>
  <div class="section-head"><h2>데이터 기준</h2></div><p class="quiet">한국 대형주는 KRX 공식 구성목록, 미국은 IVV 공시 주식과 GICS 분류를 사용합니다. 가격·경제지표 관측일과 컨센서스 빈티지는 다를 수 있으며 화면에 구분합니다. 비공개 원본 모델을 복제했다고 주장하지 않습니다.</p>`;
+ content.querySelector('[data-explore]').addEventListener('click',()=>{const target=document.querySelector('#overview-state');target.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});target.setAttribute('tabindex','-1');target.focus({preventScroll:true});});
  OverviewViews.mount(document.querySelector('#overview-state'));
  fetch('data/refresh.json').then(r=>r.ok?r.json():null).then(r=>{const box=document.querySelector('#refresh-status');if(box&&r)box.textContent='정기 갱신: 평일08:00·18:00 · 마지막 검증 '+r.completed_at+' · 가격 기준 '+r.as_of+' · 수집·계산·검증 통과본';}).catch(()=>{});
  content.querySelectorAll('[data-group]').forEach(b=>b.addEventListener('click',()=>{group=b.dataset.group;renderCatalog();}));renderCatalog();
@@ -56,12 +57,18 @@ function detail(m){
 }
 function render(){
  PriceDashboard.cancel();ResearchDashboard.cancel();OverviewViews.cancel();
- const id=location.hash.slice(1)||'overview';const m=MODULES.find(x=>x.id===id);
+ const id=location.hash.slice(1)||'overview';document.body.dataset.page=id;const m=MODULES.find(x=>x.id===id);
  if(!m){content.innerHTML='<h1>화면을 찾을 수 없습니다.</h1><a class="method-link" href="#overview">전체 보기</a>';return;}
  document.querySelector('#breadcrumb').textContent=id.toUpperCase();document.title=m.title+' · 상상인 투자 리서치';
  if(id==='overview')overview();else if(id==='glance')glance();else if(['rs','momentum'].includes(id))PriceDashboard.render(content,m);else if(built(id))ResearchDashboard.render(content,m);else detail(m);setActive();
 }
 document.querySelector('#search').addEventListener('input',()=>{renderNav();renderCatalog();});
 document.querySelector('.skip').addEventListener('click',event=>{event.preventDefault();content.focus();content.scrollIntoView();});
-window.addEventListener('hashchange',()=>{render();document.querySelector('#content').focus({preventScroll:true});window.scrollTo(0,0);});
+window.addEventListener('hashchange',()=>{setNavigation(false);render();document.querySelector('#content').focus({preventScroll:true});window.scrollTo(0,0);});
+const navToggle=document.querySelector('.nav-toggle'),side=document.querySelector('.sidebar'),scrim=document.querySelector('.nav-scrim'),compactNav=matchMedia('(max-width: 760px)');
+function setNavigation(open){const drawer=compactNav.matches;document.body.classList.toggle('nav-open',drawer&&open);side.inert=drawer&&!open;scrim.hidden=!(drawer&&open);navToggle.setAttribute('aria-expanded',String(drawer&&open));if(drawer&&open){side.setAttribute('role','dialog');side.setAttribute('aria-modal','true');side.setAttribute('aria-label','화면 탐색');document.querySelector('#search').focus();}else{side.removeAttribute('role');side.removeAttribute('aria-modal');}}
+navToggle.addEventListener('click',()=>setNavigation(!document.body.classList.contains('nav-open')));
+scrim.addEventListener('click',()=>{setNavigation(false);navToggle.focus();});
+document.addEventListener('keydown',e=>{if(!compactNav.matches||!document.body.classList.contains('nav-open'))return;if(e.key==='Escape'){setNavigation(false);navToggle.focus();}if(e.key==='Tab'){const focusable=[...side.querySelectorAll('a,button,input')].filter(n=>n.getClientRects().length),first=focusable[0],last=focusable.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
+compactNav.addEventListener('change',()=>setNavigation(false));setNavigation(false);
 renderNav();render();

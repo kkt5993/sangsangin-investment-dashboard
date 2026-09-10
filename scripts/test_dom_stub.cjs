@@ -2,7 +2,11 @@
 'use strict';
 const unescape=s=>s.replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 class Node {
- constructor(tag='div',attrs={},text=''){this.tag=tag;this.attrs=attrs;this.children=[];this.events={};this.text=text;this.hidden=false;}
+ constructor(tag='div',attrs={},text=''){this.tag=tag;this.attrs=attrs;this.children=[];this.events={};this.text=text;this.hidden=false;this.style={};}
+ setAttribute(k,v){this.attrs[k]=String(v);}
+ getAttribute(k){return this.attrs[k]??null;}
+ removeAttribute(k){delete this.attrs[k];}
+ click(){return this.fire('click');}
  get dataset(){return Object.fromEntries(Object.entries(this.attrs).filter(([k])=>k.startsWith('data-')).map(([k,v])=>[k.slice(5).replace(/-([a-z])/g,(_,a)=>a.toUpperCase()),v]));}
  set innerHTML(s){this.children=parse(s).children;this.raw=s;this.selectedValue=undefined;}
  get innerHTML(){return this.raw||'';}

@@ -3,7 +3,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict'),{parse}=require('./test_dom_stub.cjs');
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8'),data=JSON.parse(read('docs/data/dragonglass.json')),g=data.sections.find(s=>s.type==='relationlab');
 assert(g,'relation snapshot required');
-const frames=new Map(),memory=new Map();let frameId=0;
+const frames=new Map(),memory=new Map();let frameId=0;const flush=()=>{for(const [id,fn] of [...frames]){frames.delete(id);fn();}};
 const ctx=vm.createContext({window:{atob,requestAnimationFrame:f=>{frames.set(++frameId,f);return frameId;},cancelAnimationFrame:id=>frames.delete(id),localStorage:{getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v)}},TextEncoder,console});
 for(const f of ['charts','analysis-charts','relation-views','decision-ledger'])vm.runInContext(read('docs/'+f+'.js'),ctx);
 const R=ctx.window.RelationViews,plain=x=>JSON.parse(JSON.stringify(x));
@@ -33,10 +33,10 @@ async function checks(){
  find('[data-rcontrol="relation"]').value='supplies';await find('[data-rcontrol="relation"]').fire('change');assert.equal(all('[data-redge]').length,4);
  await find('[data-rnode="stock:TSM"]').fire('click');assert.equal(find('[data-rcontrol="node"]').value,'stock:TSM');assert(find('[data-relation-detail]').innerHTML.includes('TSMC'));await find('[data-rentity]').fire('click');assert.equal(navigation[0],'Entity 360');
  find('[data-rcorr]').checked=true;await find('[data-rcorr]').fire('change');assert(find('[data-relation-output]').innerHTML.includes('음의 부호 보존'));
- const chart=find('[data-relation-graph]'),before=chart.innerHTML;chart.events.pointerdown[0]({clientX:0,clientY:0});chart.events.pointermove[0]({clientX:40,clientY:10});chart.events.pointerup[0]({});assert.notEqual(chart.innerHTML,before);
+ const chart=find('[data-relation-graph]'),before=chart.innerHTML;chart.events.pointerdown[0]({clientX:0,clientY:0});chart.events.pointermove[0]({clientX:40,clientY:10});chart.events.pointerup[0]({});flush();assert.notEqual(chart.innerHTML,before);
  chart.events.wheel[0]({deltaY:200,preventDefault(){}});assert(+find('[data-rzoom]').value<100);await find('[data-rreset]').fire('click');assert.equal(find('[data-rzoom]').value,'100');
  chart.events.pointerdown[0]({pointerId:1,clientX:0,clientY:0});chart.events.pointerdown[0]({pointerId:2,clientX:100,clientY:0});chart.events.pointermove[0]({pointerId:2,clientX:150,clientY:0});assert.equal(+find('[data-rzoom]').value,150);chart.events.pointerup[0]({pointerId:2});chart.events.pointerup[0]({pointerId:1});
- await find('[data-rspin]').fire('click');assert.equal(frames.size,1);R.dispose();assert.equal(frames.size,0,'navigation stops animation');
+ flush();await find('[data-rspin]').fire('click');assert.equal(frames.size,1);R.dispose();assert.equal(frames.size,0,'navigation stops animation');
  const s=parse(R.render({type:'relationscenario',title:'8 scenarios'},1));R.bind(s,data,()=>{});box=s.querySelector('[data-relation-view]');
  for(const scenario of g.scenarios){find('[data-rcontrol="scenario"]').value=scenario.id;await find('[data-rcontrol="scenario"]').fire('change');assert(find('[data-relation-output]').innerHTML.includes(scenario.name));}
  R.dispose();assert.equal(memory.size,0,'read-only diagnostics never write to user storage');console.log('Relation engine, 8 Python/JS scenarios, packed correlations, ledger coverage and offline UI callbacks passed.');

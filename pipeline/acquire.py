@@ -73,7 +73,7 @@ def collect_prices(base,as_of,selection,symbols_override=None):
     mf=folder/'manifest.json';manifest=read_json(mf) if mf.exists() else dict(provider='Yahoo Finance via yfinance',retrieved_at=stamp(),as_of=as_of,instruments={})
     long_symbols={s for _,s,_ in INDICES}|{s for s,n in DYNAMICS_STOCKS}
     members=[]
-    for n in ['us_largecap','kr_largecap','kospi200','kr_screen']:
+    for n in ['us_largecap','us100','kr_largecap','kospi200','kr_screen']:
         path=base/(n+'.json')
         if path.exists():members+=read_json(path)['members']
     if selection=='core':symbols=extra_price_symbols()

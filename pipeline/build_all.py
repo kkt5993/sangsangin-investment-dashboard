@@ -19,6 +19,8 @@ def build(d):
     quality={s:dict(m,first_date=m.get('first') or m.get('first_date'),last_date=m.get('last') or m.get('last_date')) for s,m in d.quality.items() if s in symbols()}
     rs,mom=make_snapshots(price,dict(provider='Yahoo Finance; KRX and official ETF definitions',vintage=d.vintage,instruments=quality),d.as_of)
     rs['stock_rankings']={market:{k:v for k,v in r.items() if k!='rows'} for market,r in rank.items()}
+    from .momentum_highs import build as momentum_highs
+    mom['new_highs']=momentum_highs(d)
     for a in [rs,mom]:
         a['price_quality']=d.correction_meta
         a['method_note']='공식 KRX·ETF 운용사·미국 GICS 정의를 바탕으로 독립 계산합니다. 국내 종목 순위는 KRX 구성목록, 미국은 IVV 공시 주식입니다. 원본의 불명확한 종목명은 공식 상품명으로 확정해 표시하며, 비공개 원본 엔진과 수치 동등성은 미검증입니다.'

@@ -41,7 +41,7 @@ def valid_frame(f,symbol):
 def universe_symbols(members):
     # kr_sectors is the classification dictionary for the entire exchange; it
     # must not silently turn a large-cap refresh into an all-listings download.
-    return {m['symbol'] for key in ['kr_largecap','kospi200','us_largecap','kr_screen'] for m in members.get(key,{}).get('members',[]) if 'symbol' in m}
+    return {m['symbol'] for key in ['kr_largecap','kospi200','us_largecap','us100','kr_screen'] for m in members.get(key,{}).get('members',[]) if 'symbol' in m}
 
 def prices(parent,base,as_of,members=None,now=None):
     dest=base/'price_delta.json.gz';out=read(dest) if dest.exists() else dict(as_of=as_of,instruments={},attempts={})

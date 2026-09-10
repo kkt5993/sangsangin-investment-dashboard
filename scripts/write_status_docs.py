@@ -7,7 +7,7 @@ load=lambda p:json.loads(p.read_text(encoding='utf8'))
 modules=json.loads((ROOT/'docs/modules.js').read_text(encoding='utf8').removeprefix('const MODULES = ').rstrip().removesuffix(';'))
 meta=load(ROOT/'docs/data/status.json')
 CODE={
- 'rs':'market_modules.py · build.py · analytics.py · universe.py','momentum':'build.py · analytics.py · universe.py',
+ 'rs':'market_modules.py · build.py · analytics.py · universe.py','momentum':'build.py · analytics.py · universe.py · momentum_highs.py · us100_data.py',
  'etfmon':'etf_details.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
  'regime':'macro_modules.py','risk':'macro_modules.py · option_analytics.py','pm_weekend':'macro_modules.py','geoecon':'macro_modules.py',
  'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'discovery.py · financial_modules.py','strategies':'financial_modules.py',
@@ -39,8 +39,8 @@ PARITY={
  'globe':('지구본·국가/기업 탐색·교역 관계','로컬 지도 경계·정사영 회전·국가/기업 선택·수치표','본사 좌표·교역 경로/품목/금액은 미연결'),
  'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF/이미지·휴지통/백업','자동 추출/LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),
  'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이·주간 RSI/가격·성장/물가·한미13출처90일달력·국가/기간/분류검색','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
- 'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약6·15위표','공식 상품 35페어·KR/US 종목 1W선별 1M막대·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
- 'momentum':('32자산·24섹터, 기간 히트맵, 상위16×3M/6M=32곡선','동일 그룹 수·5기간·3M/6M 짝·0선·양음 영역','조선 5Y z 없음, 누적 비율/달력 월 계약은 팀 설정'),
+ 'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약8표/8+6막대·15위표','공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
+ 'momentum':('32자산·24섹터, 강8/약8×3M/6M=32곡선·미국/한국 신고가 카드','5기간·그룹별정렬·짝곡선·OEF101/KOSPI200 공식 신고가·RS/고점점선/44점·검색/시장필터','조선5Y·누적 곡선/원본 사전표본·PIT 동등성 미검증'),
  'discovery':('4개 분류·3개 평가축·공식 유니버스 발굴','KR기술100%, US45/30/25%, 시장·분류·검색·더 보기·근거 상세','비공개 정규화/리서치 서술 엔진 대신 공개 팀 규칙'),
  'strategies':('전략별 후보·재무·OHLC·이벤트 결과','흑자전환·OHLC·PEAD 시각정렬·SEC P 원문/접수 대조·90일 카드/원장','SEC 자동수집 접근 제한·Form4/A·13F·공매도 원장·비용 후 OOS'),
  'earnings':('US/KR 이익성장·글로벌 Top20 겹침막대·한국2/미국10 추정 상세·연간/분기 선택','보고 NI/OP/매출·국내 QuantiWise OP/지배NI·미국 EPS 연결 NI 근사/직접 매출·회계기간/통화 검사','해외 직접 NI/OP 컨센서스·역사 PIT·한국 증권사별 원문 미확보'),
@@ -99,6 +99,16 @@ for m in modules:
     for v in meta['modules'][m['id']].get('subviews',[]):
         connected+=v['status']=='connected';pending+=v['status']=='pending'
         views.append(f"| {m['title']} | {v['name']} | {'연결' if v['status']=='connected' else '미연결'} | {v['sections']} | {v['reason'] if v['status']=='pending' else ''} |")
-views[2]+=f' 현재 화면 그룹 목록: 연결 {connected}개, 미연결 {pending}개. 이 숫자는 완성된 원본 세부 기능 수가 아닙니다. RS/모멘텀과 원본의 중첩 화면·그룹 내부 기능은 별도 대조가 필요하며 [원본 기능 대조](REFERENCE_PARITY.md)에서 관리합니다.'
+views[2]+=f' 공통 화면 그룹 목록: 연결 {connected}개, 미연결 {pending}개. 이 숫자는 완성된 원본 세부 기능 수가 아닙니다. RS/모멘텀의 별도 필터는 아래에 기록하며 원본의 중첩 화면·그룹 내부 기능은 [원본 기능 대조](REFERENCE_PARITY.md)에서 관리합니다.'
+views += ['', '## RS·모멘텀의 별도 필터', '',
+ '이 두 탭은 별도 렌더러를 사용하므로 위 공통 섹션 수에 합산하지 않습니다. 전체 보기는 각 필터를 함께 표시합니다.', '',
+ '| 대형 탭 | 필터 | 연결 범위 |', '|---|---|---|',
+ '| RS | 한국 / 미국 | 시장별 섹터 z 차트·강약 막대·강약 8종목 표 |',
+ '| 모멘텀 | 국가·지역 | 국가 ETF 수익률 막대·기간별 비교표 |',
+ '| 모멘텀 | 섹터 로테이션 | 섹터 z 순위·강8/약8의 3M/6M 쌍곡선 |',
+ '| 모멘텀 | 팩터(스타일) | 팩터 ETF 수익률 막대·기간별 비교표 |',
+ '| 모멘텀 | 자산군 | 자산군 수익률 막대·기간별 비교표 |',
+ '| 모멘텀 | 신고가 발굴 | 공식 미국100/KOSPI200 선별·44점 가격선/고점 점선·시장/검색/고점 갱신 필터·전체 유니버스 원장 |', '',
+ '[신고가 계산·구성 계약](NEW_HIGHS_CONTRACT.md) · [가격 계산 계약과 남은 차이](PRICE_CONTRACT.md)']
 (ROOT/'research/SUBVIEWS.md').write_text('\n'.join(views)+'\n',encoding='utf8')
 print('Updated 25 module guides, implementation status and chart parity.')

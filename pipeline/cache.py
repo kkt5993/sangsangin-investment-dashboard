@@ -70,9 +70,14 @@ def load_into(d,data_root,vintage):
             for symbol,p in unpack(pf)['instruments'].items():
                 d.frames[symbol]=apply_patch_frame(d.frames.get(symbol),p)
                 f=d.frames[symbol];d.quality[symbol]=dict(d.quality.get(symbol,{}),status='ok',sha256=meta['sha256'],rows=len(f),first=str(f.index[0].date()),last=str(f.index[-1].date()),retrieved_at=p.get('retrieved_at'),provenance='parent + run delta')
-        for key in ['kr_largecap','kospi200','us_largecap','kr_screen','kr_sectors']:
+        for key in ['kr_largecap','kospi200','us_largecap','us100','kr_screen','kr_sectors']:
             path=base/(key+'.json')
-            if path.exists():d.members[key]=read_json(path)
+            if path.exists():
+                membership=read_json(path)
+                if key=='us100':
+                    raw=base/membership['raw_file']
+                    if raw.parent.resolve()!=base.resolve() or digest(raw)!=membership['sha256']:raise ValueError('OEF holdings checksum')
+                d.members[key]=membership
         cf=base/'price_corrections.json.gz'
         if cf.exists():
             correction_hashes.append(digest(cf))

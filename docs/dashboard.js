@@ -3,7 +3,7 @@
  'use strict';
  const C=ResearchCharts,E=C.esc,F=C.fmt;
  const cache=new Map();let request=0;
- const state={rs:{market:'all'},momentum:{group:'all'}};
+ const state={rs:{market:'all'},momentum:{group:'all',highs:{market:'all',q:'',onlyNew:false}}};
  const groupNames={country:'국가·지역',sector:'섹터 로테이션',factor:'팩터(스타일)',asset:'자산군',KR:'한국',US:'미국'};
  const valid=r=>typeof r.z==='number'&&Number.isFinite(r.z);
  const sortZ=rows=>[...rows].sort((a,b)=>(b.z??-Infinity)-(a.z??-Infinity));
@@ -41,7 +41,7 @@
    const rows=d.assets.filter(a=>a.group===g).sort((a,b)=>(b.returns['3M']??-Infinity)-(a.returns['3M']??-Infinity)).slice(0,g==='country'?12:99);
    return chartCard(`${groupNames[g]} · 3M 수익률${g==='country'?' 상위 12':''}`,C.bars(rows.map(a=>({name:`${a.name} (${a.symbol})`,value:a.returns['3M']})),{unit:'%',title:groupNames[g]}),`공통 기준일 ${d.asset_as_of} · USD 표시 ETF / BTC`);
   }).join('');
-  let html=header(d,'모멘텀')+`<div class="kpi-grid">${cards}</div><div class="coverage-note">국가·팩터·자산 ${d.coverage.assets}/${d.coverage.expected_assets} · 섹터 ${d.coverage.sectors}/${d.coverage.expected_sectors} · 3M/6M 차트 ${d.coverage.charts}/${d.coverage.expected_charts}<br>국가·팩터·자산 공통 기준일 ${d.asset_as_of} · 섹터 기준일 ${d.as_of}. 자산별 휴장·제공 시차를 반영했습니다.</div>`+controls('momentum',[['all','전체'],['country','국가·지역'],['sector','섹터 로테이션'],['factor','팩터(스타일)'],['asset','자산군']],'group')+`<div class="chart-grid summary-charts">${charts}</div>`;
+  let html=header(d,'모멘텀')+`<div class="kpi-grid">${cards}</div><div class="coverage-note">국가·팩터·자산 ${d.coverage.assets}/${d.coverage.expected_assets} · 섹터 ${d.coverage.sectors}/${d.coverage.expected_sectors} · 3M/6M 차트 ${d.coverage.charts}/${d.coverage.expected_charts}<br>국가·팩터·자산 공통 기준일 ${d.asset_as_of} · 섹터 기준일 ${d.as_of}. 자산별 휴장·제공 시차를 반영했습니다.</div>`+controls('momentum',[['all','전체'],['country','국가·지역'],['sector','섹터 로테이션'],['factor','팩터(스타일)'],['asset','자산군'],['highs','신고가 발굴']],'group')+(sel==='all'||sel==='highs'?window.MomentumHighs.render(d.new_highs,state.momentum.highs):'')+`<div class="chart-grid summary-charts">${charts}</div>`;
   if(assets.length){
    const cols=['1W','1M','3M','YTD','1Y'];
    html+=heading('기간별 수익률 히트맵','열별 색상 스케일 · %')+C.heatmap(assets.map(a=>({group:groupNames[a.group],name:`${a.name} (${a.symbol})`,values:cols.map(c=>a.returns[c])})),cols.map(c=>c+' (%)'),'절대 수익률 · USD')+
@@ -53,7 +53,7 @@
   return html+method(d);
  }
  function guide(m){return `<details class="method-details"><summary>기존 구현 가이드</summary><div class="method-body"><p>${E(m.purpose)}</p><ol>${m.build.map(s=>`<li>${E(s)}</li>`).join('')}</ol><a href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/modules/${m.id}.md">탭별 문서 ↗</a></div></details>`;}
- function paint(container,m,d){C.reset();container.innerHTML=(m.id==='rs'?rs(d):momentum(d))+guide(m);C.bind(container);container.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{state[m.id][m.id==='rs'?'market':'group']=b.dataset.filter;paint(container,m,d);}));}
+ function paint(container,m,d){C.reset();container.innerHTML=(m.id==='rs'?rs(d):momentum(d))+guide(m);C.bind(container);if(m.id==='momentum')window.MomentumHighs.bind(container,d.new_highs,state.momentum.highs);container.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{state[m.id][m.id==='rs'?'market':'group']=b.dataset.filter;paint(container,m,d);}));}
  async function render(container,m){
   const token=++request;
   container.innerHTML=`<h1>${E(m.title)}</h1><p role="status">저장된 계산 결과를 불러옵니다…</p>`;

@@ -6,9 +6,9 @@ from .catalog import MULTI,SCAN_EXTRA,INDICES,DYNAMICS_STOCKS,etfs
 from .patterns import candidates
 from .analytics import rs_percentiles
 
-def rankings(d):
+def rankings(d,universes=None):
     out={}
-    for market,key in [('KR','kr_largecap'),('US','us_largecap'),('KOSPI200','kospi200')]:
+    for market,key in universes or [('KR','kr_largecap'),('US','us_largecap'),('KOSPI200','kospi200')]:
         members=d.members.get(key,{}).get('members',[]);rows=[];excluded=[]
         for m in members:
             a=d.stats(m['symbol']);p=d.price(m['symbol'])

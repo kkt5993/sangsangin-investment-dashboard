@@ -3,12 +3,12 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 동일 그룹 수·5기간·3M/6M 짝·0선·양음 영역.
+**부분 구현** · 가격 기준 2026-09-08. 5기간·그룹별정렬·짝곡선·OEF101/KOSPI200 공식 신고가·RS/고점점선/44점·검색/시장필터.
 
-- 계산 코드: [build.py](../../pipeline/build.py) · [analytics.py](../../pipeline/analytics.py) · [universe.py](../../pipeline/universe.py)
+- 계산 코드: [build.py](../../pipeline/build.py) · [analytics.py](../../pipeline/analytics.py) · [universe.py](../../pipeline/universe.py) · [momentum_highs.py](../../pipeline/momentum_highs.py) · [us100_data.py](../../pipeline/us100_data.py)
 - 화면: [dashboard.js](../../docs/dashboard.js) · [계산 결과](../../docs/data/momentum.json)
 - 계산/자료 계약: 공식 KRX·ETF 운용사·미국 GICS 정의를 바탕으로 독립 계산합니다. 국내 종목 순위는 KRX 구성목록, 미국은 IVV 공시 주식입니다. 원본의 불명확한 종목명은 공식 상품명으로 확정해 표시하며, 비공개 원본 엔진과 수치 동등성은 미검증입니다.
-- 남은 범위: 조선 5Y z 없음, 누적 비율/달력 월 계약은 팀 설정
+- 남은 범위: 조선5Y·누적 곡선/원본 사전표본·PIT 동등성 미검증
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 

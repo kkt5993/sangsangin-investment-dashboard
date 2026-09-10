@@ -52,6 +52,7 @@ def collect(parent,base,as_of,env,config,log):
     if due(parent,'kr_largecap.json',7):
         run('pipeline.acquire','universes')
         if config.get('allow_krx_auth'):run('pipeline.krx_members','--allow-krx-auth')
+    if due(parent,'us100_collection.json',7):run('pipeline.us100_data')
     members=Data(parent.as_of,base.name).members
     summary=prices(parent,base,as_of,members)
     run('pipeline.acquire','macro')

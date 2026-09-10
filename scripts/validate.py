@@ -70,6 +70,23 @@ for p in rs['pairs']:
 assert len(momentum['assets'])==32 and len(momentum['sectors'])==24
 assert sum(a['returns']['3M'] is not None for a in momentum['assets'])==momentum['coverage']['assets']
 assert len(set(a['as_of'] for a in momentum['assets'] if a['as_of']))<=1
+highs=momentum['new_highs']
+assert highs['as_of']==momentum['as_of'] and [g['universe'] for g in highs['groups']]==['us100','kospi200']
+for g in highs['groups']:
+    assert g['selected']==len(g['rows']) and len({r['symbol'] for r in g['rows']})==g['selected']
+    if g['status']=='missing':
+        assert not g['rows'] and g['reason'];continue
+    assert g['membership_as_of']<=highs['as_of'] and len(g['members'])==g['eligible']
+    assert g['high_eligible']==sum(r['reason'] is None for r in g['members'])
+    assert set(r['symbol'] for r in g['members'])|set(r['symbol'] for r in g['excluded'])
+    assert len(set(r['symbol'] for r in g['members'])|set(r['symbol'] for r in g['excluded']))==g['expected']
+    for r in g['rows']:
+        assert 65<=r['rs']<=99 and -5<=r['from_high']<=.00001 and r['high52']>=r['price']-.00001
+        assert abs(r['from_high']-(r['price']/r['high52']-1)*100)<.0001
+        assert r['high_window_start']<=r['high_date']<=r['as_of']<=highs['as_of']
+        assert len(r['spark'])==44 and r['spark'][-1]==[r['as_of'],r['price']]
+        assert [p[0] for p in r['spark']]==sorted({p[0] for p in r['spark']})
+        assert r['high_window_start']<=r['spark'][0][0] and all(math.isfinite(p[1]) and p[1]>0 for p in r['spark'])
 assert len(momentum['chart_pairs'])<=16 and len(set(momentum['chart_pairs']))==len(momentum['chart_pairs'])
 for pair in momentum['chart_pairs']:
     for horizon in ['3','6']:

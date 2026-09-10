@@ -17,7 +17,7 @@ def build(d):
     rank=rankings(d);print('Official rankings',[(k,v['available'],v['expected']) for k,v in rank.items()],flush=True)
     price={s:d.price(s,adjusted=s.endswith('.KS')) for s in d.frames}
     quality={s:dict(m,first_date=m.get('first') or m.get('first_date'),last_date=m.get('last') or m.get('last_date')) for s,m in d.quality.items() if s in symbols()}
-    rs,mom=make_snapshots(price,dict(provider='Yahoo Finance; KRX and official ETF definitions',vintage=d.as_of,instruments=quality),d.as_of)
+    rs,mom=make_snapshots(price,dict(provider='Yahoo Finance; KRX and official ETF definitions',vintage=d.vintage,instruments=quality),d.as_of)
     rs['stock_rankings']={market:{k:v for k,v in r.items() if k!='rows'} for market,r in rank.items()}
     for a in [rs,mom]:
         a['price_quality']=d.correction_meta

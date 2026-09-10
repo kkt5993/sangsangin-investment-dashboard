@@ -21,7 +21,7 @@ function interactiveContainer(){
  const attr=s=>s.replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
  const node=(value='',dataset={})=>({value,dataset,innerHTML:'',events:{},setAttribute(k,v){this[k]=v;},addEventListener(k,f){this.events[k]=f;},fire(k){this.events[k]?.({target:this});}});
  const c={html:'',buttons:[],boxes:[],select:node('all'),get innerHTML(){return this.html;},set innerHTML(h){
-  this.html=h;this.select=node('all');this.buttons=[...h.matchAll(/data-subview="([^"]+)"/g)].map(m=>node('',{subview:attr(m[1])}));
+  this.html=h;this.select=node('all');this.income=node(h.match(/id="income-amount"[^>]*value="([^"]+)"/)?.[1]||'');this.buttons=[...h.matchAll(/data-subview="([^"]+)"/g)].map(m=>node('',{subview:attr(m[1])}));
   this.boxes=[...h.matchAll(/data-scenario="(\d+)"/g)].map(m=>{const market=node('KR'),shock=node('-10'),output=node();return {dataset:{scenario:m[1]},market,shock,output,querySelector:s=>({'[data-scenario-market]':market,'[data-shock]':shock,'[data-scenario-output]':output}[s]||null),querySelectorAll:()=>[market,shock]};});
   this.moes=[...h.matchAll(/data-moe="(\d+)"/g)].map(m=>{const section=data.maximus.sections[+m[1]],selector=section.select_target?node(section.cards[0].symbol):null,output=node();return {dataset:{moe:m[1]},selector,output,querySelector:s=>s==='[data-moe-target]'?selector:output,querySelectorAll:()=>[]};});
   this.reviews=[...h.matchAll(/data-review-charts="(\d+)"/g)].map(m=>{const selector=node('latest'),output=node();return {dataset:{reviewCharts:m[1]},selector,output,querySelector:s=>s==='[data-review-date]'?selector:output};});
@@ -32,7 +32,7 @@ function interactiveContainer(){
   this.scanners=[...h.matchAll(/data-scanner="(\d+)"/g)].map(m=>{const pattern=node('all'),group=node('all'),count=node('9'),output=node();return {dataset:{scanner:m[1]},pattern,group,count,output,querySelector:s=>({'[data-scan-pattern]':pattern,'[data-scan-group]':group,'[data-scan-count]':count,'[data-scan-output]':output}[s]),querySelectorAll:s=>s==='select'?[pattern,group,count]:[]};});
   this.valuations=[...h.matchAll(/data-valuation="(\d+)"/g)].map(m=>{const months=node('180'),output=node();return {dataset:{valuation:m[1]},months,output,querySelector:s=>s==='[data-valuation-months]'?months:output};});
   this.industries=[...h.matchAll(/data-industries="(\d+)"/g)].map(m=>{const sector=node('all'),role=node('all'),cards=[...h.matchAll(/data-industry="([^"]+)" data-indicator-role="([^"]+)"/g)].map(a=>node('',{industry:a[1],indicatorRole:a[2]}));return {sector,role,cards,querySelector:s=>s==='[data-industry-filter]'?sector:role,querySelectorAll:s=>s==='select'?[sector,role]:cards};});
- },querySelector(s){return s==='#analysis-group'?this.select:null;},querySelectorAll(s){return s==='[data-digest-trends]'?this.digests:s==='[data-review-charts]'?this.reviews:s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-moe]'?this.moes:s==='[data-industries]'?this.industries:s==='[data-rebalancing]'?this.rebals:s==='[data-valuation]'?this.valuations:s==='[data-scanner]'?this.scanners:s==='[data-discovery]'?this.discoveries:[];}};
+ },querySelector(s){return s==='#analysis-group'?this.select:s==='#income-amount'?this.income:null;},querySelectorAll(s){return s==='[data-digest-trends]'?this.digests:s==='[data-review-charts]'?this.reviews:s==='[data-subview]'?this.buttons:s==='[data-scenario]'?this.boxes:s==='[data-hologram]'?this.holos:s==='[data-moe]'?this.moes:s==='[data-industries]'?this.industries:s==='[data-rebalancing]'?this.rebals:s==='[data-valuation]'?this.valuations:s==='[data-scanner]'?this.scanners:s==='[data-discovery]'?this.discoveries:[];}};
  return c;
 }
 (async()=>{
@@ -112,6 +112,24 @@ function interactiveContainer(){
  for(const s of data.ml.sections.filter(s=>s.type==='ml')){assert.equal(s.detail_table.rows.length,24);assert.equal(s.charts[0].series.length,2);assert(s.charts[0].series.every(a=>a.axis==='left'));assert.equal(s.charts[1].series[0].points.length,36);assert.equal((A.line(s.charts[1]).match(/data-line-marker=/g)||[]).length,37);assert(A.line(s.charts[1]).includes('data-axis="right"'));}
  context.location.hash='#ml';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='ml'));
  for(const group of ['모델 비교','변수 선택','SHAP 해석',...data.ml.sections.filter(s=>s.type==='ml').map(s=>s.group)]){interactive.buttons.find(b=>b.dataset.subview===group).fire('click');assert(!interactive.innerHTML.includes('role="alert"'));assert(interactive.innerHTML.includes(context.window.ResearchCharts.esc(group)));}
+ context.location.hash='#etfmon';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='etfmon'));
+ for(const section of data.etfmon.sections){
+  interactive.buttons.find(b=>b.dataset.subview===section.group).fire('click');
+  assert.equal((interactive.innerHTML.match(/data-etf-symbol=/g)||[]).length,section.rows.length);
+  assert.equal((interactive.innerHTML.match(/data-etf-history=/g)||[]).length,section.rows.length);
+  assert(interactive.innerHTML.includes('배당락일별 현금분배 (지급일 아님)'));
+  let last=-1;for(const r of section.rows){const at=interactive.innerHTML.indexOf('data-etf-symbol="'+r.symbol+'"');assert(at>last);last=at;}
+ }
+ const monthlySection=data.etfmon.sections.find(s=>s.id==='monthly');interactive.buttons.find(b=>b.dataset.subview===monthlySection.group).fire('click');
+ for(const amount of [20000000,0]){
+  interactive.income.value=String(amount);interactive.income.fire('change');
+  const r=monthlySection.rows.find(r=>r.yield_pct>0),row=interactive.innerHTML.split('data-etf-symbol="'+r.symbol+'"')[1].split('</tr>')[0];
+  assert(row.includes(Math.round(amount*r.yield_pct/1200).toLocaleString('ko-KR')+'원'));
+ }
+ const absent={...monthlySection,rows:[{...monthlySection.rows[0],yield_pct:null,payments:null,reason:'missing',events:[],returns:[null,null,null,null]}]};
+ const absentHTML=context.window.ResearchDashboard.section(absent,0,{amount:10000000});
+ assert(!absentHTML.includes('data-value="0"'),'unknown distribution must not become a zero cash flow');
+ assert(!/NaN|Infinity|undefined/.test(absentHTML));
  const moeGroups=data.maximus.sections.filter(s=>s.type==='moe');assert(moeGroups.length>=3);
  assert.equal(moeGroups.find(s=>s.group==='지수').cards.length,2);assert.equal(moeGroups.find(s=>s.group==='매크로').cards.length,6);
  for(const s of moeGroups){const graph=A.moeTopology(s.cards);assert.equal((graph.match(/data-moe-expert=/g)||[]).length,10);assert.equal((graph.match(/data-moe-output=/g)||[]).length,s.cards.length);for(const c of s.cards){const fan=A.moeFan(c);assert(fan.includes('data-moe-history='));if(c.bands['1'])assert(fan.includes('data-moe-band="68"')&&fan.includes('data-moe-band="95"'));}}

@@ -4,6 +4,7 @@ import pandas as pd
 from .engine import *
 from .catalog import MULTI,SCAN_EXTRA,INDICES,DYNAMICS_STOCKS,etfs
 from .patterns import candidates
+from .analytics import rs_percentiles
 
 def rankings(d):
     out={}
@@ -11,33 +12,21 @@ def rankings(d):
         members=d.members.get(key,{}).get('members',[]);rows=[];excluded=[]
         for m in members:
             a=d.stats(m['symbol']);p=d.price(m['symbol'])
-            if not a or any(a[k] is None for k in ['r1w','r1m','r3m','r6m','r1y']):
+            if not a or (pd.Timestamp(d.as_of)-p.index[-1]).days>7 or any(a[k] is None for k in ['r1w','r1m','r3m','r6m','r1y']):
                 excluded.append(dict(symbol=m['symbol'],name=m['name'],observations=len(p),reason='252일 수익률 계산을 위한 253개 가격 부족' if len(p) else '최근 유효 가격 미수집'))
                 continue
             a.update(name=m['name'],sector=m['sector'],score=.4*a['r3m']+.2*a['r6m']+.2*ret(p,189)+.2*a['r1y']);rows.append(a)
-        scores=pd.Series([r['score'] for r in rows]);rank=scores.rank(method='average',pct=True)*98+1
+        scores=pd.Series([r['score'] for r in rows],dtype=float);rank=rs_percentiles(scores)
         for i,r in enumerate(rows):r['rs']=number(rank.iloc[i])
         rows.sort(key=lambda r:r['rs'],reverse=True)
         ordered=sorted(rows,key=lambda r:r['r1w'],reverse=True)
-        out[market]=dict(universe=key,expected=len(members),available=len(rows),excluded=excluded,membership_as_of=d.members.get(key,{}).get('as_of'),source=d.members.get(key,{}).get('source'),leaders=rows[:15],strong=ordered[:8],weak=ordered[-6:],rows=rows)
+        weak=sorted(rows,key=lambda r:r['r1w'])[:8]
+        out[market]=dict(universe=key,expected=len(members),available=len(rows),excluded=excluded,membership_as_of=d.members.get(key,{}).get('as_of'),source=d.members.get(key,{}).get('source'),leaders=rows[:15],strong=ordered[:8],weak=weak[:6],weak_table=weak,rows=rows)
     return out
 
 def etf_monitor(d):
-    sections=[];counts=0
-    for category in etfs():
-        rows=[]
-        for item in category['items']:
-            s=item['symbol'];st=d.stats(s);f=d.frames.get(s)
-            if not st:continue
-            cutoff=f.index[-1]-pd.DateOffset(years=1)
-            div=f.loc[f.index>cutoff,'dividend'];div=div[div>0]
-            yield_=number(div.sum()/f.close.iloc[-1]*100)
-            # Yahoo action cash amounts are already adjusted for splits: do not apply splits twice.
-            rows.append(dict(name=item['name'],symbol=s,returns=[st['r1m'],st['r3m'],st['ytd'],st['r1y']],yield_pct=yield_,payments=len(div),monthly_per_10m=number(10_000_000*yield_/1200),as_of=st['as_of']))
-        title=category.get('name') or category.get('title') or category.get('id');counts+=len(rows)
-        sections.append(dict(type='etf',title=title,group=title,rows=rows))
-    return module('etfmon',d.as_of,'9개 ETF 분류. 수익률은 분배금 조정종가, 분배율은 최근 12개월 실제 지급액/현재 종가입니다. 월 현금흐름은 세전 단순 월평균이며 미래 지급액이 아닙니다. 레버리지·옵션 ETF도 같은 정의를 적용합니다.',sections,
-        [('관측 ETF 위치',str(counts)),('분류',str(len(sections))),('USD/KRW',number(d.price('KRW=X',False).iloc[-1]) if len(d.price('KRW=X')) else None)],'operational')
+    from .etf_details import monitor
+    return monitor(d)
 
 def multiasset(d):
     rows=[];scans=[]

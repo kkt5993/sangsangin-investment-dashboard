@@ -9,24 +9,33 @@ from pathlib import Path
 import re
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from pipeline.store import load_prices, read_json
+from pipeline.store import read_json
+from pipeline.engine import Data
 from pipeline.build import make_snapshots
 
 
 def compare(reference, vintage):
     as_of=reference['as_of'][:10]
-    prices,manifest=load_prices(vintage,as_of)
+    data=Data(as_of,vintage)
+    prices={s:data.price(s,adjusted=s.endswith('.KS')) for s in data.frames}
+    manifest=dict(provider='local corrected cache',vintage=vintage,instruments={})
     rs,_=make_snapshots(prices,manifest,as_of)
     reference_rows={r['name']:r for r in reference['table'] if r['group'] in ['KR','US']}
     differences=[]
+    aliases={'kr_ship':'조선 / KOSPI','kr_holdings':'지주 / KOSPI','kr_size':'대형 vs 중소형',
+             'kr_style':'가치 vs 성장','kr_cyclical':'경기민감 vs 방어'}
+    unmatched=[]
     for p in rs['pairs']:
         if p['z'] is None:
             continue
-        r=reference_rows[p['name']]
+        r=reference_rows.get(aliases.get(p['id'],p['name']))
+        if r is None:
+            unmatched.append(p['id']);continue
         spread=float(re.search(r'[+-]?\d+(?:\.\d+)?',r['value']).group())
         differences.append(dict(id=p['id'],market=p['market'],spread_abs_error_pp=abs(p['spread_pp']-spread),z_abs_error=abs(p['z']-r['z'])))
     summary=dict(reference_as_of=reference['as_of'], vintage=vintage, compared=len(differences),
-                 unavailable=[p['id'] for p in rs['pairs'] if p['z'] is None],
+                 unavailable=[p['id'] for p in rs['pairs'] if p['z'] is None],unmatched=unmatched,
+                 price_corrections=data.correction_meta,
                  note='One historical snapshot is a diagnostic, not proof of engine equivalence.', markets={})
     for market in ['KR','US']:
         d=[r for r in differences if r['market']==market]

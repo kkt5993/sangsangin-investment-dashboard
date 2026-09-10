@@ -13,14 +13,14 @@
   const id='series-'+(++sequence), W=800,H=390,L=64,R=22,T=20,B=50;
   const minT=Date.parse(data.start||pts[0][0]),maxT=Date.parse(data.end||pts.at(-1)[0]);
   const span=Math.max(86400000,maxT-minT),values=pts.map(p=>p[1]);
-  let lo=Math.min(0,...values),hi=Math.max(0,...values);
-  if(kind==='rs'){lo=Math.min(-3,Math.floor(lo));hi=Math.max(3,Math.ceil(hi));}
-  else {const step=Math.max(1,Math.ceil((hi-lo)/5));lo=Math.floor(lo/step)*step-step*.15;hi=Math.ceil(hi/step)*step+step*.15;}
+  let lo=Math.min(0,...values),hi=Math.max(0,...values),yStep=1;
+  if(kind==='rs'){[lo,hi]=data.y_domain||[-3.2,3.2];}
+  else {const raw=(hi-lo)/6||1,scale=10**Math.floor(Math.log10(raw));yStep=[1,2,2.5,5,10].map(v=>v*scale).find(v=>v>=raw);lo=Math.floor(lo/yStep)*yStep-yStep*.15;hi=Math.ceil(hi/yStep)*yStep+yStep*.15;}
   if(hi===lo){hi++;lo--;}
   const X=d=>L+(Date.parse(d)-minT)/span*(W-L-R),Y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
   const tick=(v,y)=>`<text x="${L-10}" y="${y+4}" text-anchor="end" class="axis">${v.toFixed(kind==='rs'?0:1)}</text>`;
   let axes='';
-  const yTicks=kind==='rs'?[...new Set([0,...Array.from({length:Math.floor((hi-lo)/Math.max(1,Math.ceil((hi-lo)/8)))+1},(_,i)=>lo+i*Math.max(1,Math.ceil((hi-lo)/8)))])].sort((a,b)=>a-b):Array.from({length:6},(_,i)=>lo+(hi-lo)*i/5);
+  const yTicks=kind==='rs'?Array.from({length:Math.floor(hi)-Math.ceil(lo)+1},(_,i)=>Math.ceil(lo)+i):Array.from({length:Math.floor(hi/yStep)-Math.ceil(lo/yStep)+1},(_,i)=>(Math.ceil(lo/yStep)+i)*yStep);
   for(const v of yTicks){const y=Y(v);axes+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" class="grid-line"/>${tick(v,y)}`;}
   // Calendar year/month ticks preserve the reference's time-axis structure.
   const dates=[];
@@ -28,7 +28,7 @@
   else {let d=new Date(minT);d.setUTCDate(1);while(d.getTime()<=maxT){if(d.getTime()>=minT)dates.push([d.toISOString().slice(0,10),`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`]);d.setUTCMonth(d.getUTCMonth()+1);}}
   if(!dates.length)dates.push([pts[0][0],pts[0][0]]);
   for(const [d,label] of dates)axes+=`<text x="${X(d)}" y="${H-B+25}" text-anchor="middle" class="axis">${label}</text>`;
-  const guides=(kind==='rs'?[-2,-1,0,1,2]:[0]).map(v=>`<line data-guide="${v}" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="reference-line ${v===0?'zero-line':''}" ${v?'stroke-dasharray="5 5"':''}/>`).join('');
+  const guides=(kind==='rs'?[-2,-1,0,1,2]:[0]).map(v=>`<line data-guide="${v}" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="reference-line ${v===0?'zero-line':''}" ${v?'stroke-dasharray="5 5"':''}/>${kind==='rs'&&v?`<text x="${L+8}" y="${Y(v)-5}" class="axis">${fmt(v,'σ',0)}</text>`:''}`).join('');
   const coordinates=pts.map(([d,v])=>`${X(d).toFixed(2)},${Y(v).toFixed(2)}`).join(' ');
   let area='';
   if(kind==='momentum'){
@@ -37,7 +37,8 @@
   }else area=`<rect data-band="-2:2" x="${L}" y="${Y(2)}" width="${W-L-R}" height="${Y(-2)-Y(2)}" fill="#f0f5f7"/>`;
   const label=data.y_label||(kind==='rs'?'RS z-score (5Y)':'누적 초과수익률 (%)');
   registry.set(id,{pts,X,Y,L,R,W,H});
-  return `<div class="line-wrap"><svg data-series="${id}" data-kind="${kind}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)} · ${esc(label)} · ${pts[0][0]} ~ ${pts.at(-1)[0]} · 마지막 ${fmt(pts.at(-1)[1])}" tabindex="0"><title>${esc(title)}</title>${area}${axes}${guides}<polyline data-price-series="1" points="${coordinates}" fill="none" stroke="#246a91" stroke-width="1.8" stroke-linejoin="round"/><text transform="translate(16 ${H/2}) rotate(-90)" text-anchor="middle" class="axis">${esc(label)}</text><line class="crosshair" x1="0" x2="0" y1="${T}" y2="${H-B}" hidden/><circle class="crosspoint" r="4" hidden/></svg><output class="chart-tooltip" aria-live="off">${pts.at(-1)[0]} · ${fmt(pts.at(-1)[1],kind==='rs'?'σ':'%')}</output></div>`;
+  const clip=`<defs><clipPath id="${id}-plot"><rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}"/></clipPath></defs>`;
+  return `<div class="line-wrap"><svg data-series="${id}" data-kind="${kind}" data-y-min="${lo}" data-y-max="${hi}" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)} · ${esc(label)} · ${pts[0][0]} ~ ${pts.at(-1)[0]} · 마지막 ${fmt(pts.at(-1)[1])}" tabindex="0"><title>${esc(title)}</title>${clip}${area}${axes}${guides}<polyline data-price-series="1" clip-path="url(#${id}-plot)" points="${coordinates}" fill="none" stroke="#246a91" stroke-width="1.8" stroke-linejoin="round"/><text transform="translate(16 ${H/2}) rotate(-90)" text-anchor="middle" class="axis">${esc(label)}</text><line class="crosshair" x1="0" x2="0" y1="${T}" y2="${H-B}" hidden="hidden"/><circle class="crosspoint" clip-path="url(#${id}-plot)" r="4" hidden="hidden"/></svg><output class="chart-tooltip" aria-live="off">${pts.at(-1)[0]} · ${fmt(pts.at(-1)[1],kind==='rs'?'σ':'%')}</output></div>`;
  }
  function bars(items,{unit='',markers=[],title='',digits=1,valueUnit=unit}={}){
   const rows=items.filter(r=>ok(r.value));if(!rows.length)return empty();

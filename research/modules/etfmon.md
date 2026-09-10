@@ -5,10 +5,10 @@
 
 **계산·화면 연결** · 가격 기준 2026-09-08. 월급형 (Monthly Paycheck) / 초고배당 커버드콜·YieldMax (⚠️ 양날의 검) / 배당성장 귀족 (Dividend Growth) / 채권·현금 인컴 사다리 (Fixed Income Ladder) / 자산군 벨웨더 (One per Asset Class) / 파괴적 혁신 테마 (Disruption) / 국가 원픽 (Country Single-Play) / 팩터·스마트베타 (Smart Beta) / 레버리지·인버스 (Turbo, ⚠️위험).
 
-- 계산 코드: [market_modules.py](../../pipeline/market_modules.py)
+- 계산 코드: [etf_details.py](../../pipeline/etf_details.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/etfmon.json)
-- 계산/자료 계약: 9개 ETF 분류. 수익률은 분배금 조정종가, 분배율은 최근 12개월 실제 지급액/현재 종가입니다. 월 현금흐름은 세전 단순 월평균이며 미래 지급액이 아닙니다. 레버리지·옵션 ETF도 같은 정의를 적용합니다.
-- 남은 범위: 분배는 과거12M의 세전 월평균; 미래 지급액·실제 자금유입 추정 아님
+- 계산/자료 계약: 9분류의 1M·3M·YTD·1Y 수익률은 분배금 조정종가(USD) 기준입니다. 분배율은 최근 12개월 관측 현금분배 합계/시장 종가이며 운용사의 NAV 기준 분배율·SEC 수익률과 다릅니다. 월 금액은 세전 단순 월평균으로, 미래 지급액이나 실제 원화 투자성과가 아닙니다. 관측 날짜는 배당락일이며 지급일이 아닙니다.
+- 남은 범위: 주기는 최근 배당락일 간격에서 계산한 관측 분류입니다. 세금·환전비용·향후 지급일·원금 반환 비중은 별도 원천이 필요합니다.
 
 연결된 하위 그룹: 월급형 (Monthly Paycheck), 초고배당 커버드콜·YieldMax (⚠️ 양날의 검), 배당성장 귀족 (Dividend Growth), 채권·현금 인컴 사다리 (Fixed Income Ladder), 자산군 벨웨더 (One per Asset Class), 파괴적 혁신 테마 (Disruption), 국가 원픽 (Country Single-Play), 팩터·스마트베타 (Smart Beta), 레버리지·인버스 (Turbo, ⚠️위험).
 

@@ -77,10 +77,21 @@
   if(s.type==='scatter3d')return figure(s.title,projection(s,i,'scatter3d'));
   if(s.type==='candles')return figure(s.title,`<div class="candle-grid">${A.candles(s)}${A.candles(s,true)}</div>`,s.annotation||'');
   if(s.type==='etf'){
-   const amount=st.amount??10000000;
-   return heading(s.title)+figure('연간 분배율 (TTM)',C.bars(s.rows.map(r=>({name:r.symbol,value:r.yield_pct})),{unit:'%',title:s.title}))+
-    C.heatmap(s.rows.map(r=>({name:r.symbol+' · '+r.name,group:s.title,values:r.returns})),['1M %','3M %','YTD %','1Y %'],'분배금 조정 수익률')+
-    table({title:'분배금 · 세전 단순 월평균',columns:['ETF','TTM 분배율 %','12M 지급 횟수','월평균 원','연평균 원','가격 기준일'],rows:s.rows.map(r=>[r.symbol,r.yield_pct,r.payments,r.yield_pct*amount/1200,r.yield_pct*amount/100,r.as_of])});
+   const amount=st.amount??10000000,known=v=>typeof v==='number'&&Number.isFinite(v);
+   const money=v=>known(v)?Math.round(v).toLocaleString('ko-KR')+'원':'—';
+   const cell=(value,html=num(value))=>`<td data-value="${E(value??'')}">${html}</td>`;
+   const monthly=s.rows.filter(r=>r.frequency==='월간 간격'&&known(r.yield_pct)&&r.yield_pct>0).sort((a,b)=>b.yield_pct-a.yield_pct)[0];
+   const headers=['상품','1M %','3M %','YTD %','1Y %','12M 분배율 %','관측 주기','월평균 원','연 환산 원','상품 특성 · 관측 상태'];
+   const body=s.rows.map(r=>{
+    const annual=known(r.yield_pct)?amount*r.yield_pct/100:null,monthly=annual===null?null:annual/12;
+    return `<tr data-etf-symbol="${E(r.symbol)}"><td data-value="${E(r.symbol)}"><b>${E(r.symbol)}</b><small>${E(r.name)} · ${E(r.instrument_type)}</small></td>${r.returns.map(v=>cell(v)).join('')}${cell(r.yield_pct)}${cell(r.frequency,`${E(r.frequency)}<small>${r.payments??'—'}회 관측</small>`)}${cell(monthly,money(monthly))}${cell(annual,money(annual))}${cell(r.feature,`${E(r.feature)}<small>${E(r.reason||'12개월 관측')} · 가격 ${E(r.as_of||'미확보')}</small>`)}</tr>`;
+   }).join('');
+   const history=s.rows.map(r=>`<details class="method-details" data-etf-history="${E(r.symbol)}"><summary>${E(r.symbol)} · 분배 관측 ${r.payments??'—'}회 · 근거</summary><p>관측창 (${E(r.window_start||'—')}, ${E(r.as_of||'—')}] · 주당 현금 합계 ${num(r.cash_per_share)} USD · 종가 ${num(r.close)} USD<br>수집 ${E(r.retrieved_at||'확인 불가')} · 이력 시작 ${E(r.history_start||'—')}</p><p><a href="${E(r.price_source)}" target="_blank" rel="noopener noreferrer">가격·분배 원천 ↗</a>${r.product_source?` · <a href="${E(r.product_source)}" target="_blank" rel="noopener noreferrer">운용사 상품·일정 ↗</a>`:''}</p>${table({title:r.symbol+' · 배당락일별 현금분배 (지급일 아님)',columns:['배당락일','주당 USD'],rows:r.events})}</details>`).join('');
+   return heading(s.title)+`<p class="scope-note">${E(s.note)} 기본 정렬: ${s.sort_key==='yield_pct'?'12M 분배율':'1Y 총수익률'} 내림차순.</p>`+
+    (monthly?`<div class="coverage-note" data-monthly-highlight="${E(monthly.symbol)}">월간 간격 관측 중 분배율 상위: <b>${E(monthly.symbol)}</b> · ${money(amount)} 가정 시 세전 월평균 <b>${money(amount*monthly.yield_pct/1200)}</b> · 1Y 총수익률 ${C.fmt(monthly.returns[3],'%')}<br>과거 현금분배의 단순 환산이며 실제 다음 달 지급액이 아닙니다.</div>`:'')+
+    `<div class="table-scroll"><table class="data-table sortable etf-comparison"><caption>${E(s.title)} · 수익률과 현금분배</caption><thead><tr>${headers.map((h,i)=>`<th><button data-sort="${i}" type="button">${E(h)} ↕</button></th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`+
+    `<details class="method-details"><summary>분배율 막대 · 기간별 수익률 열지도</summary>${figure('12M 현금분배 / 시장 종가',C.bars(s.rows.map(r=>({name:r.symbol,value:r.yield_pct})),{unit:'%',title:s.title}))}${C.heatmap(s.rows.map(r=>({name:r.symbol+' · '+r.name,group:s.title,values:r.returns})),['1M %','3M %','YTD %','1Y %'],'분배금 조정 수익률')}</details>`+
+    `<details class="method-details"><summary>상품별 배당락일 원장과 데이터 출처</summary><p>관측 주기는 최근 최대 6개 배당락일 간격으로 분류합니다. 월 환산금은 세금·비용·환율 변동을 반영하지 않습니다.</p>${history}</details>`;
   }
   if(s.type==='dynamics'){
    const k=s.current;return heading(s.title+' · '+s.date)+`<div class="kpi-grid">${[['취약성 /100',k.risk],['β',k.beta],['α',k.alpha],['τ',k.tau],['노출 %',k.exposure*100]].map(([l,v])=>`<article class="kpi"><small>${l}</small><strong>${num(v)}</strong></article>`).join('')}</div>`+

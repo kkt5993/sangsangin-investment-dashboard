@@ -41,7 +41,7 @@ def make_snapshots(prices, manifest, as_of):
         cutoff = pd.Timestamp(as_of)-pd.DateOffset(years=5)
         history = rs.z.loc[cutoff:]
         series[p['id']] = dict(points=points(history), start=str(cutoff.date()), end=as_of,
-                               y_label='RS z-score (5Y)', guides=[-2,-1,0,1,2])
+                               y_label='RS z-score (5Y)', y_domain=PARAMETERS['rs_y_domain'], guides=[-2,-1,0,1,2])
         if row['z'] is None:
             row['reason'] = '63일 수익률 + 1,260개 분포 관측치가 부족하거나 분산이 0'
         if p['sector']:
@@ -60,6 +60,8 @@ def make_snapshots(prices, manifest, as_of):
     for a in ASSETS:
         if a['symbol'] in prices and len(prices[a['symbol']].dropna()):
             idx = clean(prices[a['symbol']],as_of).index
+            if not len(idx) or (pd.Timestamp(as_of)-idx[-1]).days>PARAMETERS['max_staleness_calendar_days']:
+                continue
             common_dates = idx if common_dates is None else common_dates.intersection(idx)
     asset_as_of = str(common_dates[-1].date()) if common_dates is not None and len(common_dates) else as_of
     asset_rows = []
@@ -86,7 +88,8 @@ def make_snapshots(prices, manifest, as_of):
               quality=quality)
     sectors = [r for r in rows if r['sector']]
     # Same ranked sector identities receive both the 3M and 6M charts.
-    chosen = sorted([r for r in sectors if r['z'] is not None],key=lambda r:r['z'],reverse=True)[:16]
+    ranked = sorted([r for r in sectors if r['z'] is not None],key=lambda r:r['z'],reverse=True)
+    chosen = ranked if len(ranked)<=16 else ranked[:8]+ranked[-8:]
     mom = dict(meta, module='momentum', asset_as_of=asset_as_of, assets=asset_rows, sectors=sectors, curves=curves,
                chart_pairs=[r['id'] for r in chosen],
                coverage={'assets':sum(r['returns']['3M'] is not None for r in asset_rows), 'expected_assets':32,

@@ -22,18 +22,29 @@ vm.runInContext(fs.readFileSync(path.join(root,'docs/dashboard.js'),'utf8'),ctx)
  assert(datasets.rs.stock_rankings.US.expected>=450&&datasets.rs.stock_rankings.US.expected<=550);
  assert.equal(datasets.rs.stock_rankings.KR.strong.length,8);
  assert.equal(datasets.rs.stock_rankings.US.weak.length,6);
+ assert(c.innerHTML.includes('KOSPI200 · 오닐 RS 1위'));
+ assert.equal((c.innerHTML.match(/data-weekly-table=/g)||[]).length,4);
+ for(const m of ['KR','US'])assert.equal(datasets.rs.stock_rankings[m].weak_table.length,8);
+ assert.equal((c.innerHTML.match(/data-y-min="-3.2"/g)||[]).length,datasets.rs.coverage.pairs);
  assert(!c.innerHTML.includes('[object Object]')&&!c.innerHTML.includes('NaN'));
  c.querySelectorAll('[data-filter]').find(b=>b.dataset.filter==='US').click();
  assert.equal((c.innerHTML.match(/data-kind="rs"/g)||[]).length,17);
  assert.equal(requests,1,'local filters must not fetch again');
+ assert(!c.innerHTML.includes('data-weekly-table="KR-'));
+ assert.equal((c.innerHTML.match(/data-weekly-table=/g)||[]).length,2);
  ctx.location.hash='#momentum';await D.render(c,modules.find(m=>m.id==='momentum'));
  assert.equal((c.innerHTML.match(/data-kind="momentum"/g)||[]).length,32);
+ const ranked=[...datasets.momentum.sectors].filter(r=>r.z!==null).sort((a,b)=>b.z-a.z);
+ assert.deepEqual(datasets.momentum.chart_pairs,[...ranked.slice(0,8),...ranked.slice(-8)].map(r=>r.id));
  assert.equal((c.innerHTML.match(/data-area="positive"/g)||[]).length,32);
  assert(c.innerHTML.includes('1Y (%)')&&c.innerHTML.includes('3M SPY 대비 (%p)'));
  for(const [g,n] of [['country',13],['factor',10],['asset',9]]){
   c.querySelectorAll('[data-filter]').find(b=>b.dataset.filter===g).click();
   assert.equal((c.innerHTML.match(/data-kind="momentum"/g)||[]).length,0);
   assert.equal((c.innerHTML.match(/<th scope="row">/g)||[]).length,n*2);
+  const ordered=datasets.momentum.assets.filter(a=>a.group===g).sort((a,b)=>b.returns['3M']-a.returns['3M']);
+  const heat=c.innerHTML.slice(c.innerHTML.indexOf('<table class="heatmap">'));
+  for(let i=1;i<ordered.length;i++)assert(heat.indexOf(ctx.window.ResearchCharts.esc(ordered[i-1].name+' ('))<heat.indexOf(ctx.window.ResearchCharts.esc(ordered[i].name+' (')),'heatmap must descend by 3M within group');
  }
  c.querySelectorAll('[data-filter]').find(b=>b.dataset.filter==='sector').click();
  assert.equal((c.innerHTML.match(/data-kind="momentum"/g)||[]).length,32);

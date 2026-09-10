@@ -8,7 +8,7 @@ modules=json.loads((ROOT/'docs/modules.js').read_text(encoding='utf8').removepre
 meta=load(ROOT/'docs/data/status.json')
 CODE={
  'rs':'market_modules.py · build.py · analytics.py · universe.py','momentum':'build.py · analytics.py · universe.py',
- 'etfmon':'market_modules.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
+ 'etfmon':'etf_details.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
  'regime':'macro_modules.py','risk':'macro_modules.py · option_analytics.py','pm_weekend':'macro_modules.py','geoecon':'macro_modules.py',
  'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'discovery.py · financial_modules.py','strategies':'financial_modules.py',
  'quant':'quant_modules.py','ml':'ml_models.py · ml_features.py · ml_ensemble.py · ml_transformer.py · ml_views.py','maximus':'maximus_model.py · maximus_features.py · maximus_moe.py · maximus_views.py',
@@ -53,7 +53,7 @@ PARITY={
  'dynamics':('3지수+15주식, 8룩백×시간 변동성표면·β×τ·위험/가격·노출성과','18대상·표면 회전/시간·위상·0~100/65선·가격 우축·전일노출','21D/5D/expanding252는 명시적 팀 파라미터, 거래비용·차입금리 미반영'),
  'iw':('월말15복기·주간14연대기·국면/ML2그림·판단 원장','원점/실현 방향 집계·지난주 수치/차트 보존·36월3띠/7계열ML·기록별 그림 선택·첨부/백업','현재 자료 OOS 재구성·팀 국면 규칙이며 과거 실제 발행본/PIT/공용 DB 미연결'),
  'pm_weekend':('주말 매크로 다중 선·이중축·지표표','미국/한국 금리·물가·유동성 등 5년 패널·단위/최신일','원본 주간 서술 대신 자체 관측표'),
- 'etfmon':('9분류·73위치, 분배율 막대·기간 수익률·투자금 현금흐름','9그룹·TTM실제분배/현재종가·조정수익률·투자금 변경','분배는 과거12M의 세전 월평균; 미래 지급액·실제 자금유입 추정 아님'),
+ 'etfmon':('9분류·73위치, 수익률/분배/주기/현금흐름 통합표·배당락일 원장','9그룹·12M현금관측/시장종가·총수익률·금액변경·월간간격 상위·정렬/검색','운용사 NAV 분배율·실제 지급일·원금 반환/별도 자본이득·세금·미래 지급액은 구분'),
  'geoecon':('상황6·지역5·채널6·복합3·키워드·카테고리4·뉴스','제목15주제/4카테고리·30일/7일변화·6채널과보도후가격·3복합z·GPR3지수/8분류/8국가','팀 단어/채널 규칙·제한RSS범위·위성 배경/시설·원본 비공개 감성가중치 미연결'),
  'ask_digest':('시장 brief·3기간·10테마·16종목·21자산·위험/4지표·모듈요약','달력수익·사업공식출처·RS16·9위험관측·4차트·20모듈·로컬 질문/첨부','1~2기업 테마 표본·구루/전체뉴스량·자동 AI 질의 미연결'),
 }

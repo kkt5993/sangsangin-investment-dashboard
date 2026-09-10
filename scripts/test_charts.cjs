@@ -20,3 +20,12 @@ assert.equal((bars.match(/data-bar-guide=/g)||[]).length,5);
 const hm=C.heatmap([{name:'a',group:'KR',values:[null,3]}],['%p','σ'],'units');
 assert(hm.includes('—')&&!hm.includes('NaN')&&hm.includes('σ'));
 console.log('PASS: RS guides, single series, momentum positive/negative areas, units, missing data and escaping.');
+
+const extremes=C.line({points:[['2025-01-01',-7],['2025-02-01',8]]},{kind:'rs'});
+assert(extremes.includes('data-y-min="-3.2"')&&extremes.includes('data-y-max="3.2"'));
+assert(/data-price-series="1" clip-path="url\(#series-\d+-plot\)"/.test(extremes));
+assert(extremes.includes('+8.0σ'),'raw extreme remains available in tooltip');
+const coordinates=extremes.match(/points="([^"]+)"/)[1].split(' ').map(s=>s.split(',').map(Number));
+assert(coordinates[0][1]>340&&coordinates[1][1]<20,'extremes are clipped at plot boundary, never winsorized');
+
+assert(mom.includes('>0.0</text>'),'momentum keeps zero as an axis tick');

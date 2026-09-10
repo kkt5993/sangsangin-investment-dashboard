@@ -6,9 +6,9 @@ No forward fill; pair observations use the intersection of completed sessions.
 import numpy as np
 import pandas as pd
 
-PARAMETERS = dict(version='prices-v1', return_sessions={'1W':5, '1M':21, '3M':63, '6M':126, '1Y':252},
+PARAMETERS = dict(version='prices-v3', return_sessions={'1W':5, '1M':21, '3M':63, '6M':126, '1Y':252},
                   z_window=1260, z_min_periods=1260, z_ddof=0,
-                  chart_years=5, momentum_chart_months=[3,6],
+                  chart_years=5, rs_y_domain=[-3.2,3.2], momentum_chart_months=[3,6],
                   max_staleness_calendar_days=7,
                   price={'KR_ETF':'Yahoo Adj Close','US_ETF':'Yahoo Close (dividends excluded)', 'index_crypto':'Yahoo Close'},
                   alignment='pairwise intersection; no fill; completed date only',
@@ -97,10 +97,20 @@ def stock_ranking(prices, members, as_of):
         rows.append(dict(**m, ret_1w=r['5'], ret_1m=r['21'], ytd=ytd_return(s), score=score))
     valid = [r for r in rows if r['score'] is not None]
     scores = pd.Series([r['score'] for r in valid])
-    ranks = 1 + 98*(scores.rank(method='average')-1)/max(1,len(valid)-1)
+    ranks = rs_percentiles(scores)
     for r,rank in zip(valid,ranks):
         r['rs_rating'] = int(round(rank))
     weekly = sorted([r for r in rows if r['ret_1w'] is not None], key=lambda r:r['ret_1w'], reverse=True)
     return dict(eligible=len(valid), observed=len(rows), requested=len(members),
                 strong=weekly[:8], weak=sorted(weekly[-8:],key=lambda r:r['ret_1w']),
                 leaders=sorted(valid,key=lambda r:r['score'],reverse=True)[:15])
+
+
+def rs_percentiles(scores):
+    """Map the full eligible population to 1..99; ties use average ranks.
+
+    A singleton has no relative ordering and receives the neutral midpoint 50.
+    """
+    if len(scores) == 1:
+        return pd.Series([50.],index=scores.index)
+    return 1 + 98*(scores.rank(method='average')-1)/max(1,len(scores)-1)

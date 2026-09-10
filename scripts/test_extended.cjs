@@ -2,6 +2,7 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 require('./test_decisions.cjs');
+require('./test_chart_readability.cjs');
 const relationChecks=require('./test_relations.cjs');
 const overviewChecks=require('./test_overview.cjs');
 const geoChecks=require('./test_geo.cjs');

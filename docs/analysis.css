@@ -59,3 +59,28 @@
 .asset-monitor-groups table.data-table{min-width:0;table-layout:fixed}.asset-monitor-groups .data-table td,.asset-monitor-groups .data-table th{padding:10px 8px;white-space:normal;overflow-wrap:anywhere}.asset-monitor-groups .data-table th:first-child{width:32%}.asset-monitor-groups .data-table th:nth-child(2){width:18%}.asset-monitor-groups .data-table th:nth-child(3){width:24%}.asset-monitor-groups .data-table th:nth-child(4){width:26%}
 
 .asset-trend-long{color:#227568}.asset-trend-short{color:#994965}.asset-trend-neutral{color:#866023}.asset-trend-long:before,.asset-trend-short:before,.asset-trend-neutral:before{content:"● ";font-size:1rem}
+
+/* Reading and direct manipulation: preserve chart coordinates and data domains. */
+.projection-controls{align-items:end;background:#f4f8fa;gap:12px 20px}
+.projection-controls button{font:inherit;font-size:13px;min-height:40px;padding:7px 15px;border:1px solid #a7bdcc;border-radius:6px;background:white;color:#214b64;cursor:pointer}
+.projection-controls select{font:inherit;max-width:100%;min-height:40px;border:1px solid #a7bdcc;border-radius:6px;background:white;color:#214b64;padding:6px 10px}
+.point-picker{min-width:0;max-width:260px}.chart-help{font-size:12px;color:#4f6576;margin:10px 0;line-height:1.7}
+[data-projection-canvas]{overflow:auto;cursor:grab;touch-action:pan-y;overscroll-behavior-x:contain;border:1px solid #e3eaf0;border-radius:6px;background:linear-gradient(#fff,#f7fafc)}
+[data-projection-canvas]:active{cursor:grabbing}[data-projection-canvas] svg{min-width:680px;overflow:visible}
+.projection-detail,.analysis-readout{display:block;padding:10px 12px;margin-top:8px;background:#eff5f7;color:#294d62;border-radius:5px;font-size:13px;line-height:1.75;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;min-height:44px}
+.point-selected{stroke:#142e44!important;stroke-width:3!important;opacity:1!important;filter:drop-shadow(0 0 3px #f3b748)}
+.chart-legend{font-size:13px;font-weight:600}.chart-viewport{overflow-x:auto;overscroll-behavior-x:contain}.chart-viewport svg{min-width:620px}
+.analysis-section .data-chart{border-radius:10px}.analysis-section .axis{paint-order:stroke;stroke:#ffffffc9;stroke-width:2px;stroke-linejoin:round}
+@media(max-width:720px){.projection-controls{gap:12px}.projection-controls label{flex:1 1 120px}.point-picker{max-width:none;flex-basis:100%!important}.projection input[type=range]{width:100%;min-height:32px}.projection-controls button{min-height:44px}.projection-detail{font-size:12px}.analysis-heading{font-size:21px;line-height:1.5}.subview-tabs{gap:6px}.subview-tabs button{min-height:44px}.analysis-section{margin:24px 0}}
+@media print{.chart-help,.projection-detail,.analysis-readout{display:none}.chart-viewport,[data-projection-canvas]{overflow:visible}.chart-viewport svg,[data-projection-canvas] svg{min-width:0}}
+
+[data-projection-canvas] .axis{font-size:15px}.chart-viewport:focus-within{outline:1px solid #90aab9}
+
+[data-holo-canvas]{overflow:auto;touch-action:pan-y;cursor:grab;min-width:0}[data-holo-canvas] svg{min-width:600px}.hologram-grid{grid-template-columns:minmax(0,1.5fr) minmax(0,1fr)}@media(max-width:850px){.hologram-grid{grid-template-columns:minmax(0,1fr)}}@media print{[data-holo-canvas] svg{min-width:0}}
+
+.analysis-legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:4px 0 8px;color:#314f63;font-size:13px;line-height:1.6}.analysis-legend span{display:flex;align-items:center;gap:7px;min-width:0;overflow-wrap:anywhere}.analysis-legend i{width:22px;flex:0 0 22px;border-top:3px solid}
+
+.relation-columns>*{min-width:0}.analysis-readout{max-height:180px;overflow:auto}
+.analysis-section .chart-viewport .axis{font-size:16px}[data-holo-canvas] .axis{font-size:16px}
+
+.projection-pan{display:flex;gap:8px;margin-top:8px}.projection-pan button{min-height:44px;padding:7px 12px;border:1px solid #afc4d0;border-radius:6px;background:white;color:#214b64;font-size:12px;cursor:pointer}@media(min-width:1100px){.projection-pan{display:none}}@media print{.projection-pan{display:none}}

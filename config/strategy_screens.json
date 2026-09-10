@@ -1,0 +1,18 @@
+{
+  "fundamental_support": ["CSCO", "PYPL", "BA", "003670.KS", "010130.KS", "024110.KS", "030200.KS"],
+  "pairs": [
+    ["ADBE", "CRM", "ADBE–CRM", "US"],
+    ["XOM", "CVX", "XOM–CVX", "US"],
+    ["105560.KS", "055550.KS", "KB금융–신한지주", "KR"],
+    ["GS", "MS", "GS–MS", "US"],
+    ["JPM", "BAC", "JPM–BAC", "US"],
+    ["051910.KS", "006400.KS", "LG화학–삼성SDI", "KR"],
+    ["V", "MA", "V–MA", "US"],
+    ["005380.KS", "000270.KS", "현대차–기아", "KR"],
+    ["HD", "LOW", "HD–LOW", "US"],
+    ["MAR", "HLT", "MAR–HLT", "US"],
+    ["UPS", "FDX", "UPS–FDX", "US"],
+    ["005930.KS", "000660.KS", "삼성전자–SK하이닉스", "KR"],
+    ["DAL", "UAL", "DAL–UAL", "US"]
+  ]
+}

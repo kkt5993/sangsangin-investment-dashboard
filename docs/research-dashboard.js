@@ -46,6 +46,7 @@
    `<p class="quiet">YTD 연초 관측이1월10일까지 없으면 미산출합니다. 상승은 가격 > MA50 > MA200, 하락은 가격 < MA50 < MA200이며 동률·나머지는 중립입니다. 자료 부족은 별도로 미산출합니다.</p><ul>${s.rows.map(r=>`<li><a href="${E(r.source?.startsWith('https://finance.yahoo.com/quote/')?r.source:'#')}" target="_blank" rel="noopener noreferrer">${E(r.name)} · ${E(r.symbol)} 가격 출처 ↗</a></li>`).join('')}</ul></details></div>`;
  }
  function section(s,i,st){
+  if(s.type==='strategycards')return heading(s.title)+root.StrategyCards.render(s,i);
   if(s.type==='assetmonitor')return heading(s.title)+assetMonitor(s);
   if(s.type==='satellite'||s.type==='facilitydetail')return heading(s.title)+root.SatelliteViews.render(s,i);
   if(s.type==='releasecalendar')return heading(s.title)+root.CalendarViews.render(s,i);
@@ -166,6 +167,7 @@
   container.querySelectorAll('[data-industries]').forEach(box=>{const filter=()=>{const sector=box.querySelector('[data-industry-filter]').value,role=box.querySelector('[data-role-filter]').value;box.querySelectorAll('[data-industry]').forEach(card=>{card.hidden=(sector!=='all'&&card.dataset.industry!==sector)||(role!=='all'&&card.dataset.indicatorRole!==role);});};box.querySelectorAll('select').forEach(el=>el.addEventListener('change',filter));});
   if(container.querySelector('#journal-list'))bindJournal(container,m.id);
   root.ResearchNotes?.bind(container,d);
+  root.StrategyCards?.bind(container,d.sections);
   bindSort(container);
  }
  function scanOutput(rows,limit){

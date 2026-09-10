@@ -24,7 +24,7 @@ CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py · kr_shortgamma.py · kr_shortgamma_data.py'
 CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
 CODE['earnings']+=' · earnings_details.py'
-CODE['strategies']+=' · sec_ownership.py · ownership_views.py'
+CODE['strategies']+=' · sec_ownership.py · ownership_views.py · strategy_cards.py'
 CODE['dragonglass']+=' · entities.py · relation_model.py · relation_views.py'
 CODE['multiasset']+=' · asset_monitor.py · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
 CODE['watch']+=' · technical_scan.py'
@@ -42,7 +42,7 @@ PARITY={
  'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약8표/8+6막대·15위표','공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
  'momentum':('32자산·24섹터, 강8/약8×3M/6M=32곡선·미국/한국 신고가 카드','5기간·그룹별정렬·짝곡선·OEF101/KOSPI200 공식 신고가·RS/고점점선/44점·검색/시장필터','조선5Y·누적 곡선/원본 사전표본·PIT 동등성 미검증'),
  'discovery':('4개 분류·3개 평가축·공식 유니버스 발굴','KR기술100%, US45/30/25%, 시장·분류·검색·더 보기·근거 상세','비공개 정규화/리서치 서술 엔진 대신 공개 팀 규칙'),
- 'strategies':('전략별 후보·재무·OHLC·이벤트 결과','흑자전환·OHLC·PEAD 시각정렬·SEC P 원문/접수 대조·90일 카드/원장','SEC 자동수집 접근 제한·Form4/A·13F·공매도 원장·비용 후 OOS'),
+ 'strategies':('전략별 후보·연간순이익·44점가격/스프레드·이벤트 결과','3개년 반등/흑자전환 카드·지정13페어/252회귀/120z·필터/상세·PEAD·SEC P/90일 카드','미수집 재무·PEAD 원본 미니카드·SEC 자동수집 접근 제한·Form4/A·13F·I(1)/다중검정·비용 후 OOS'),
  'earnings':('US/KR 이익성장·글로벌 Top20 겹침막대·한국2/미국10 추정 상세·연간/분기 선택','보고 NI/OP/매출·국내 QuantiWise OP/지배NI·미국 EPS 연결 NI 근사/직접 매출·회계기간/통화 검사','해외 직접 NI/OP 컨센서스·역사 PIT·한국 증권사별 원문 미확보'),
  'growth':('FY1/FY2 3D: x영업이익성장 yYTD z영업이익률, 시총 크기','국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표','해외 영업이익 컨센서스 부족으로 글로벌 3D 전체 범위 차이'),
  'multiasset':('21자산4KPI·6군신호표·열지도/추세막대·실제지수·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),

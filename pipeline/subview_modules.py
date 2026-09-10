@@ -172,6 +172,8 @@ def extend(d,objects,ranks):
     for i,s in enumerate(objects['multiasset']['sections']):s['group']='자산 모니터' if i<2 else '패턴 스캐너' if i==2 else '자산배분'
     from .asset_monitor import views as asset_monitor_views
     asset_monitor_views(d,objects['multiasset'])
+    from .strategy_cards import views as strategy_card_views
+    strategy_card_views(d,objects['strategies'])
     objects['ask_digest']['sections'].insert(0,dict(type='library',title='최근 발표·보도 원문',group='최근 뉴스',items=news[:30]))
     from .iw_review import iw_views
     iw_views(d,objects)

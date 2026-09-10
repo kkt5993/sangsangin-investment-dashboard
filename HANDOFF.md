@@ -211,3 +211,16 @@ viewport타일만동시3/180ms,12초/1MiB/최대100화면타일,48Blob/8MiB캐�
 196Python(122.685초)·2자료검증기·3JSsuite·24JS/MJS구문 통과. CUA localhost에서4KPI/21×6열지도/21정렬막대·추세색·0선, 6표의4열노출·상세가격 비축약·21기준일원장·숫자정렬·Russell검색·스캐너/배분 전환·console오류0 확인. QA에서 표 min-width로 신호열이 가려진 문제를 전용 CSS로 수정하고 수평overflow0 재확인; 마지막 UI 변경 후 관련 JS suite/구문 재통과. 전체탭 브라우저 동등성 선언 아님. 증거는 private runtime/asset-monitor-validation.log, asset-monitor-browser-qa.json, asset-monitor-reference-audit.json. 공개 출처 제외검사 유지.
 
 게시 run 20260910T035436Z; 최종 커밋/URL/성공은 runtime/state.json과 해당 file-verification 보고서를 확인한다. 전체목표는 계속 진행: 원본 미공개MA/모멘텀누적곡선/모델설정, 관계망확대·본사/교역, Esri고해상도/지명(권한 질문 대기), SEC13F/연속수집, 직접글로벌NI/OP/PIT, OCR/LLM/팀공유DB/로그인 등 REFERENCE_PARITY의 남은 범위는 미완료다.
+
+
+전략 카드 후속(2026-09-10): strategy_cards.py/strategy-cards.js/config strategy_screens.json은 턴어라운드의 연간3개년 이익 저점반등·흑자전환/4점근거/252종가 저점·고점·MA200·FY EPS·44점과 지정 US9/KR4 페어카드를 연결했다. 기존 분기흑자전환+8대형캔들과 퀀트 자동발굴 한국10쌍의 재사용은 전략 화면에서 교체했다. 퀀트 자체는 불변, 내부자/PEAD/실적모멘텀11개섹션은 객체 동일성 확인. 모듈 요약 스키마는 cards=[[label,value]]이며 별도 kpis 필드는 쓰지 않는다(재등장 검사 추가).
+
+공식706합집합 중 수집141/연간3개년140, 후보13(기본8/전체13/KR6), 미수집565와 ISRG연간부족을 전체검사완료로 표시하지 않는다. 연간간격330~400·최신550일·최근이익양수/직전저점, 가격저점+10이상/고점−15이하; 점수기본1+흑전1+MA200상회1+FY EPS성장15초과1. 이절단/사전표본은 명시한 팀규칙, 원본 비공개Python과 같다고 하지 않는다. Fiscal2027인 CSCO 추정기간과 실제2024~26 NI를 분리, 통화/조회시각/정확한 수치 표시. STRATEGY_CARD_CONTRACT.md에 계약 기록.
+
+페어는252공통조정종가 로그OLS·120스프레드평균/표본sd1·252일수익ρ·130관측3간격44점, |z|내림차순/±2방향. 원본 미니선은 log(A)−βlog(B), 점선은 표시min/max중앙이며 z0/평균선아님. 미국9쌍은원본9/4가격β2자리/z2자리 모두일치, KR은정정/기준시각차이유지. 추가Engle–Granger 상수/maxlag5/AIC p값은I(1)/다중검정전진성과완료의미아님; p미통과도13지정자리를보존. 미확보/252미만/7일초과/상수/비양수β는표시구분. 지연/미래행/중복/정렬/분기혼용/점수경계 검사.
+
+부족했던CSCO/PYPL/BA/003670.KS/010130.KS/024110.KS/030200.KS의7재무를기존수집기로추가(23523bytes); 일반시세/원본사이트요청0. 원자료 정본은 DATA/expanded/20260910T040459Z, 부모20260910T033238Z. cache.chain은 expanded를사용한다. 새파일은초기경로오류후경계확인하여expanded로옮겼으며기존빈티지/자료는변경없음. 로컬펀더멘털객체212·가격1137; 기존전역 financial_companies는financial_rows 표본197의뜻으로유지. default재무수집에7심볼합집합추가·기존7일주기/평일08·18검증게시연결.
+
+205Python(119.512초)·2자료검증기·3JSsuite·25JS/MJS구문통과. CUA localhost: 요약13/140of706/13, 기본8/전체13·한국6·003670검색/연간원장,13페어/13미니선/13중간점선·미국/ADBE검색·252/120/β/p 상세·console오류0·가로overflow0. 상세는비축약숫자,카드는원본처럼티커/이름·요약정밀도구분. private runtime/strategy-cards-validation.log, strategy-cards-browser-qa.json, strategy-card-reference-audit.json 참조. 전체탭동등성QA아님. run 20260910T042518Z; 실제성공은state.json/file-verification으로확인.
+
+전체목표계속. 다음직접확인가능범위는PEAD 원본12카드/발표후가격미니선이다: 보존12행은서프라이즈+드리프트내림차순과부합하나정확한이벤트기간/가격시작점을추가대조할것. 원본종목을고정후보로복사하지않고 실제발표시각/현재표본으로재계산한다. 나머지미수집재무/발표빈티지·본사/교역/관계망·Esri권한·SEC13F/연속수집·직접글로벌NI/OP/PIT·OCR/LLM/공유DB등 REFERENCE_PARITY 남은범위유지. 배포제작자이름/소스사이트링크/Rosenbach 제외검사유지.

@@ -14,6 +14,26 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='strategycards':
+        assert s['kind'] in ['turnaround','pairs']
+        assert len(s['rows'])==len({r['id'] for r in s['rows']})
+        if s['kind']=='pairs':assert len(s['rows'])==13 and sum(r['market']=='US' for r in s['rows'])==9
+        for r in s['rows']:
+            assert r['market'] in ['US','KR'] and (r['date'] is None or r['date']<=cutoff)
+            pts=r['spark'];assert len(pts) in [0,44]
+            assert [p[0] for p in pts]==sorted({p[0] for p in pts})
+            assert all(p[0]<=r['date'] and math.isfinite(p[1]) for p in pts)
+            if s['kind']=='pairs':
+                assert r['signal'] in ['long_a','short_a','neutral','missing']
+                if r['z'] is not None:
+                    assert r['observations']>=252 and r['fit_start']<=r['z_start']<=r['date']
+                    assert r['spread_sd']>0 and r['pvalue'] is not None and 0<=r['pvalue']<=1
+                    assert abs(r['z']-(pts[-1][1]-r['spread_mean'])/r['spread_sd'])<.003
+                    assert abs(r['midrange']-(min(p[1] for p in pts)+max(p[1] for p in pts))/2)<.00001
+            else:
+                assert len(r['annual'])==3 and r['annual'][-1][0]<=cutoff
+                assert r['annual'][1][1]<r['annual'][0][1] and r['annual'][-1][1]>max(0,r['annual'][1][1])
+                assert r['off_low']>=10 and r['off_high']<=-15 and r['score']==sum(r['score_parts'])<=4
     if kind=='assetmonitor':
         assert len(s['rows'])==len({r['symbol'] for r in s['rows']})==21 and len(s['cards'])==4
         assert s['columns']==['1D','1W','1M','3M','YTD','12M']

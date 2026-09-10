@@ -69,11 +69,12 @@ def satellite_views(d,obj):
     obj['sections'].append(dict(type='satellite',title='위성 현장 · RGB / NDVI',group='위성 현장',sites=sites,
         retrieved_at=raw['retrieved_at'],observation_cutoff=raw['observation_cutoff'],registry_reviewed_at=spec['reviewed_at'],
         location_count=sum(s['location_status']=='reviewed' for s in sites),image_count=sum(s['scene'] is not None for s in sites),
+        basemap=dict(provider='NASA GIBS',layer='BlueMarble_ShadedRelief_Bathymetry',observation_month='2004-08',native_resolution_m=500,max_native_zoom=8,source='https://worldview.earthdata.nasa.gov/',dynamic=False),
         attribution='Contains modified Copernicus Sentinel data ('+years+') · Earth Search / Element84 · © OpenStreetMap contributors (ODbL1.0) · Natural Earth · 위치별 추가 출처는 시설 상세 참조',
         note='각 시설 주변 4×4km의 최근60일·최대36개 후보 중 유효 화소70% 이상, 중심1km 맑은 화소85% 이상인 최신 확보 영상입니다. 촬영일은 시설마다 다릅니다. NDVI는 식생 지수로, 건설 진척률·가동률·실적 추정값이 아닙니다. 구름·그림자·눈·결측 화소는 제외합니다.'))
-    obj['missing']=[x.replace('위성 시설 관측·','') for x in obj['missing']]
+    obj['missing']=[x.replace('위성 시설 관측·','') for x in obj['missing'] if not x.startswith(('위성 지도 배경은','위성 배경은'))]
     pending=[s['name'] for s in sites if s['location_status']!='reviewed']
     if pending:obj['missing'].append('위성 관측 위치 대조 중: '+', '.join(pending)+'. 해당 시설 슬롯은 보존하며 미확인 좌표의 영상은 표시하지 않습니다.')
     missing=[s['name'] for s in sites if s['location_status']=='reviewed' and s['scene'] is None]
     if missing:obj['missing'].append('검증 위치 중 위성 영상 미확보: '+', '.join(missing)+'.')
-    obj['missing'].append('위성 지도 배경은 로컬 해안선과 확보한 Sentinel 장면입니다. 원본 Esri 전 지구 위성 배경·건설 진척 자동 추정은 미구현입니다.')
+    obj['missing'].append('위성 배경은 NASA Blue Marble 2004년 합성 영상입니다. 원본 Esri 고해상도 영상·지명 레이어는 이용권한 확인이 남아 있습니다. 시설 관측은 별도 촬영일의 Sentinel 자료이며 건설 진척·가동률을 추정하지 않습니다.')

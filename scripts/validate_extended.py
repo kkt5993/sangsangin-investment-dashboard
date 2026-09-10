@@ -15,6 +15,8 @@ def series(s,cutoff,forecast=False):
 def section(s,cutoff,module):
     kind=s['type']
     if kind=='satellite':
+        assert s['basemap']['provider']=='NASA GIBS' and s['basemap']['observation_month']=='2004-08'
+        assert s['basemap']['native_resolution_m']==500 and s['basemap']['max_native_zoom']==8 and s['basemap']['dynamic'] is False
         import hashlib
         from PIL import Image
         assert len(s['sites'])==len({r['id'] for r in s['sites']})==22

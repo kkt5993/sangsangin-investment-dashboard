@@ -193,3 +193,10 @@ research-store DB/schema2,기존같은DB의meta/files보존·oldversion연결닫
 refresh의기존allow_krx_auth 경로에연결·index10달력일겹침의신규/정정행만추가·정의/만기7일주기·실패이전파일보존. 실제수집시코드조회3파트(index2구간)외추가원본요청0. 승인계정로그전체억제,필요한공식기초정보만로컬보존. collector모의실패/증분1검사포함190Python·2검증기·3JS·23JS/MJS구문통과. CUA localhost에서8지표·252일두SVG육안·계산원장접힘/펼침·122630검색/초기화검증. 테스트증거runtime/kr-shortgamma-browser-qa.json,최종검사로그kr-shortgamma-final-validation.log. PC약306.4MiB/512,공개JSON약7.925MiB/8(배포패키지전). 게시run 20260910T025609Z;실제최종성공은runtime/state.json 및 file-verification을확인.
 
 전체목표는여전히진행: 모든공통그룹에콘텐츠가연결됐다는사실은전체원본동등성완료가아니다. REFERENCE_PARITY의세계위성배경·관계망확대/본사/교역·SEC13F/연속수집·직접글로벌NI/OP/PIT·원본미공개기간/모델·OCR/LLM/공유DB등을계속한다. 참조제작자이름/출처사이트링크의배포제외검사를항상유지한다.
+
+
+전 지구 배경 후속(2026-09-10): satellite-tiles.js/satellite-views.js에NASA GIBS BlueMarble_ShadedRelief_Bathymetry 고정2004-08 배경을 연결했다. 공식EPSG3857 WMTS,256px/level0~8,배경500m 원자료와시설10m/촬영일을분리. 드래그/키보드/날짜변경선·전체시설fit·실제폭ResizeObserver·높이400/560/760·확대19(배경8이후확대표시)·RGB/NDVI·해안선전환. 관측아래불투명matte로구름/결측에과거배경이비치지않게했다. 원본Esri고해상도/지명레이어는구독권한질문중이며NASA로동등성완료선언금지. 추가원본사이트/시세/시설원밴드요청0;같은raw빈티지20260910T023239Z의44PNG재생해시불변.
+
+viewport타일만동시3/180ms,12초/1MiB/최대100화면타일,48Blob/8MiB캐시·화면밖/숨김/drag/탭전환abort·URL해제.401/403/429/503추가요청중단과명시재시도; 앱지속저장/전지구수집없음,브라우저HTTPcache는별개. 구체계약은SATELLITE_CONTRACT.md. 기존Sentinel주간증분/평일08·18파이프라인유지,새JS검사기와배경메타검증을정기게이트에연결.
+
+190Python(117.726초)·2검증기·3JS suite·24JS/MJS구문통과. 신규offline타일검사에원점/극지/날짜변경선/확대·동시성·중단·429·JPEG스트림/1MiB·48LRU·URL해제포함. CUA로NASA전지구12/12·TSMC14배1/1·RGB/NDVI·3높이·방향키·배경off/on·다른subview이동시지도제거및console오류0확인. 전체25탭브라우저검증이라는뜻아님. 검증기록은private runtime/satellite-basemap-validation.log 및 satellite-basemap-browser-qa.json. 게시run=20260910T032324Z;실제성공commit/URL은runtime/state.json과file-verification을확인. 전체목표여전히진행:Esri고해상도/지명(권한확인)·원본추가터치/비행애니메이션대조,관계망/본사/교역·SEC13F/연속수집·NI/OP/PIT·원본모델/기간·OCR/LLM/공유DB등.

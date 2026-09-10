@@ -3,7 +3,7 @@
 Credentials remain in existing local config/Git Credential Manager. A lock
 prevents overlapping runs. Failed staging never replaces the published site.
 """
-import argparse,contextlib,json,os,shutil,subprocess,sys,time
+import argparse,contextlib,json,os,re,shutil,subprocess,sys,time
 from datetime import datetime,timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -99,13 +99,17 @@ def stage_project(dest):
 
 def prune_staging(keep=2):
     """Remove only old disposable code copies; immutable raw vintages remain."""
-    root=(RUNTIME/'staging').resolve()
+    directory=RUNTIME/'staging';root=directory.resolve()
     if not root.exists():return
-    folders=sorted((p for p in root.iterdir() if p.is_dir()),key=lambda p:p.name,reverse=True)
+    if root.parent!=RUNTIME.resolve() or directory.is_symlink() or directory.is_junction():raise ValueError('Unexpected staging root')
+    # Other folders can hold manual QA or user files; they are not dated runs.
+    folders=sorted((p for p in root.iterdir() if p.is_dir() and re.fullmatch(r'\d{8}(?:T\d{6}Z)?',p.name)),key=lambda p:p.name,reverse=True)
+    removed=0
     for folder in folders[keep:]:
         target=folder.resolve()
-        if target.parent!=root or folder.is_symlink():raise ValueError('Unexpected staging path')
-        shutil.rmtree(target)
+        if target.parent!=root or folder.is_symlink() or folder.is_junction():raise ValueError('Unexpected staging path')
+        shutil.rmtree(target);removed+=1
+    return removed
 
 def validate(stage,env,log):
     env={**env,'PYTHON_EXECUTABLE':sys.executable}
@@ -166,6 +170,8 @@ def complete_publication(pending,env,log,config=None):
                 if verify(url,expected):
                     pending['site_url']=url;write_json(RUNTIME/'state.json',pending)
                     (RUNTIME/'pending_publish.json').unlink(missing_ok=True)
+                    try:prune_staging()
+                    except (OSError,ValueError):print('Published successfully; staging cleanup needs local review',flush=True)
                     print('VERCEL VERIFIED',url,flush=True);return head
             except Exception:pass
             time.sleep(10)

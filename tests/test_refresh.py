@@ -122,8 +122,10 @@ class RefreshTests(unittest.TestCase):
             root=Path(tmp);raw=root/'expanded/20260901';raw.mkdir(parents=True);(raw/'data').write_text('preserve')
             for n in ['20260901','20260902','20260903']:
                 p=root/'runtime/staging'/n;p.mkdir(parents=True);(p/'generated').write_text('copy')
+            manual=root/'runtime/staging/zz-review';manual.mkdir();(manual/'notes').write_text('preserve manual review')
             with patch('pipeline.refresh.RUNTIME',root/'runtime'):prune_staging(2)
-            self.assertEqual(len(list((root/'runtime/staging').iterdir())),2)
+            self.assertEqual({p.name for p in (root/'runtime/staging').iterdir()},{'20260902','20260903','zz-review'})
+            self.assertEqual((manual/'notes').read_text(),'preserve manual review')
             self.assertEqual((raw/'data').read_text(),'preserve')
 
 if __name__=='__main__':unittest.main()

@@ -12,8 +12,8 @@ from html.parser import HTMLParser
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from pipeline.public_assets import pdf_assets
-pdf_binary=pdf_assets(ROOT/'docs',ROOT/'config/pdfjs_vendor.json')
+from pipeline.public_assets import pdf_assets,ocr_assets
+pdf_binary=pdf_assets(ROOT/'docs',ROOT/'config/pdfjs_vendor.json')|ocr_assets(ROOT/'docs',ROOT/'config/ocr_vendor.json')
 errors=[]
 class Links(HTMLParser):
     def handle_starttag(self,tag,attrs):

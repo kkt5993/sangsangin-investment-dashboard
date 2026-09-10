@@ -25,6 +25,7 @@ CODE['risk']+=' · wagdog.py · kr_shortgamma.py · kr_shortgamma_data.py'
 CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
 CODE['earnings']+=' · earnings_details.py'
 CODE['strategies']+=' · sec_ownership.py · ownership_views.py · strategy_cards.py'
+for key in ['principium','iw','ask_digest']:CODE[key]+=' · public_assets.py · pdf-text.js · pdf-ocr.js · notebook-pdf.js · research-store.js'
 CODE['dragonglass']+=' · entities.py · relation_model.py · relation_views.py'
 CODE['multiasset']+=' · asset_monitor.py · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
 CODE['watch']+=' · technical_scan.py'
@@ -37,7 +38,7 @@ PARITY={
  'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','39객체·근거·3D/전파·8시나리오·701Entity·22시설RGB/NDVI·NASA배경·원장 프리모템/상관','전체255객체/581관계·고해상도 배경/지명·선행/후행·구루/사건·팀DB 미연결'),
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),
  'globe':('지구본·국가/기업 탐색·교역 관계','로컬 지도 경계·정사영 회전·국가/기업 선택·수치표','본사 좌표·교역 경로/품목/금액은 미연결'),
- 'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF/이미지·휴지통/백업','스캔 OCR/LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),
+ 'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF 파서/선택 OCR·이미지·휴지통/백업','LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),
  'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이·주간 RSI/가격·성장/물가·한미13출처90일달력·국가/기간/분류검색','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
  'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약8표/8+6막대·15위표','공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
  'momentum':('32자산·24섹터, 강8/약8×3M/6M=32곡선·미국/한국 신고가 카드','5기간·그룹별정렬·짝곡선·OEF101/KOSPI200 공식 신고가·RS/고점점선/44점·검색/시장필터','조선5Y·누적 곡선/원본 사전표본·PIT 동등성 미검증'),
@@ -77,7 +78,7 @@ for m in modules:
     first,rest=old.split('\n',1);block=['','<!-- implementation:start -->','## 현재 팀 구현','',f'**{label}** · 가격 기준 {meta["as_of"]}. {scope}.','']
     if key in CODE:
         a=load(ROOT/'docs/data'/(key+'.json'))
-        block += [f"- 계산 코드: "+' · '.join(f'[{f}](../../pipeline/{f})' for f in CODE[key].split(' · ')),
+        block += [f"- 계산 코드: "+' · '.join(f'[{f}](../../{"docs" if f.endswith((".js",".mjs")) else "pipeline"}/{f})' for f in CODE[key].split(' · ')),
           f"- 화면: [{'dashboard.js' if key in ['rs','momentum'] else 'research-dashboard.js'}](../../docs/{'dashboard.js' if key in ['rs','momentum'] else 'research-dashboard.js'}) · [계산 결과](../../docs/data/{key}.json)",
           '- 계산/자료 계약: '+a['method_note'],
           '- 남은 범위: '+' / '.join(a.get('missing') or [gap]),'']

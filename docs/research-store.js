@@ -11,10 +11,12 @@
  function url(v){v=str(v||'',2000);if(v){let u;try{u=new URL(v);}catch{fail('출처 주소가 올바르지 않습니다.');}if(!['https:','http:'].includes(u.protocol)||u.username||u.password)fail('출처는 인증정보 없는 HTTP/HTTPS 주소만 사용할 수 있습니다.');}return v;}
  function extraction(a){
   if(!a||a.version!==1||!/^[a-f0-9]{64}$/.test(a.file_id)||!time(a.extracted_at)||!Number.isInteger(a.page_count)||a.page_count<1||a.page_count>1000000||!Array.isArray(a.pages)||a.pages.length<1||a.pages.length>Math.min(300,a.page_count))fail('PDF 추출 메타데이터 오류');
-  const pages=a.pages.map((p,i)=>{if(p.number!==i+1||typeof p.text!=='string'||p.text.length>200000||typeof p.cut!=='boolean'||(p.cut&&i!==a.pages.length-1))fail('PDF 페이지·본문 형식 오류');return {number:p.number,label:str(p.label,80,true),text:p.text,cut:p.cut};});
+  const pages=a.pages.map((p,i)=>{if(p.number!==i+1||typeof p.text!=='string'||p.text.length>200000||typeof p.cut!=='boolean'||(p.cut&&i!==a.pages.length-1))fail('PDF 페이지·본문 형식 오류');const r={number:p.number,label:str(p.label,80,true),text:p.text,cut:p.cut};if(p.method!==undefined){if(!['text','ocr','blank','pending','error'].includes(p.method)||!(p.confidence===null||Number.isFinite(p.confidence)&&p.confidence>=0&&p.confidence<=100)||!Number.isFinite(p.elapsed_ms)||p.elapsed_ms<0||p.elapsed_ms>3600000||!Number.isInteger(p.dpi)||p.dpi<0||p.dpi>600)fail('PDF OCR 처리 정보 오류');Object.assign(r,{method:p.method,reason:str(p.reason,160),confidence:p.confidence,elapsed_ms:p.elapsed_ms,dpi:p.dpi});}return r;});
   const characters=pages.reduce((n,p)=>n+p.text.length,0);
   if(characters>200000||characters!==a.characters||a.truncated!==(pages.length<a.page_count||pages.some(p=>p.cut)))fail('PDF 추출 길이·범위 오류');
-  return {version:1,file_id:a.file_id,engine:str(a.engine,80,true),extracted_at:a.extracted_at,page_count:a.page_count,pages,characters,truncated:a.truncated,title:str(a.title,160),authors:str(a.authors,200)};
+  const r={version:1,file_id:a.file_id,engine:str(a.engine,80,true),extracted_at:a.extracted_at,page_count:a.page_count,pages,characters,truncated:a.truncated,title:str(a.title,160),authors:str(a.authors,200)};
+  if(a.profile!==undefined){r.profile=str(a.profile,100,true);if(!a.stats||typeof a.stats!=='object')fail('PDF 처리 시간 정보 오류');r.stats={};for(const key of ['elapsed_ms','parse_ms','ocr_ms','render_ms','worker_ms','cached_pages','ocr_attempts','rendered_pixels']){const v=a.stats[key];if(!Number.isFinite(v)||v<0||v>1e10)fail('PDF 처리 시간 정보 오류');r.stats[key]=v;}}
+  return r;
  }
  function entry(a){
   if(!a||Array.isArray(a)||typeof a!=='object')fail('기록 형식 오류');const r={};

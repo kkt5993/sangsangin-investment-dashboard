@@ -5,7 +5,7 @@
 
 **부분 구현** · 가격 기준 2026-09-08. 월말 복기 / 주간 연대기 / 이번 주의 그림 / 주간 판단 원장.
 
-- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py)
+- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py) · [public_assets.py](../../pipeline/public_assets.py) · [pdf-text.js](../../docs/pdf-text.js) · [pdf-ocr.js](../../docs/pdf-ocr.js) · [notebook-pdf.js](../../docs/notebook-pdf.js) · [research-store.js](../../docs/research-store.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/iw.json)
 - 계산/자료 계약: 월말 복기15건은 팀 ML 원점별 예측·실현을 같은 원장에서 집계합니다. 주간 연대기14건은 지수·YTD·국면·전망을 묶습니다. 최초 과거 주간은 현재 빈티지로 재구성했다고 표시하며 이후 지나간 주간의 기록과 그림은 보존합니다.
 - 남은 범위: 과거 재구성은 현재 수정 거시와 현재 팀 모형의 OOS 재생이며 과거 실제 발행본/PIT 예측이 아닙니다. 원본 본문·합계·표 사이의 불일치는 복제하지 않고 한 계산 결과에서 생성합니다. / 경제/시장/위험의 가용 입력·임계값은 공개한 팀 규칙입니다. 원본의 미공개 복합 가중치와 수치 동등성을 주장하지 않습니다. / 원본 작성자의 주간 논평·과거 개인 기록, 팀 공용 DB·LLM 자동 글쓰기는 미연결입니다. 사용자 판단과 첨부는 브라우저 로컬입니다.

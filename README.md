@@ -79,7 +79,7 @@ node scripts/test_extended.cjs
 
 PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하며 백업 JSON으로 이동합니다. 저장 범위·이전 메모 가져오기·한도는 [로컬 리서치 가이드](research/LOCAL_RESEARCH.md)를 참조하세요.
 
-PDF는 제목·저자·페이지별 본문을 읽고 원문 페이지를 근거에 인용할 수 있습니다. 본문 검색·TXT 내보내기·첨부 포함 백업과 기존 기록 보존을 연결했습니다. [PDF 처리 범위와 검증](research/PDF_EXTRACTION.md)에 스캔 OCR·요약의 남은 범위와 한도를 표시합니다.
+PDF는 제목·저자·페이지별 본문을 읽고 원문 페이지를 근거에 인용할 수 있습니다. 본문 검색·TXT 내보내기·첨부 포함 백업과 기존 기록 보존을 연결했습니다. [PDF 처리 범위와 검증](research/PDF_EXTRACTION.md)에 파서·OCR 비교와 페이지 재사용, 처리 한도 및 요약의 남은 범위를 표시합니다.
 
 ## 학습 출처
 

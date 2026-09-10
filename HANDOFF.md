@@ -224,3 +224,12 @@ viewport타일만동시3/180ms,12초/1MiB/최대100화면타일,48Blob/8MiB캐�
 205Python(119.512초)·2자료검증기·3JSsuite·25JS/MJS구문통과. CUA localhost: 요약13/140of706/13, 기본8/전체13·한국6·003670검색/연간원장,13페어/13미니선/13중간점선·미국/ADBE검색·252/120/β/p 상세·console오류0·가로overflow0. 상세는비축약숫자,카드는원본처럼티커/이름·요약정밀도구분. private runtime/strategy-cards-validation.log, strategy-cards-browser-qa.json, strategy-card-reference-audit.json 참조. 전체탭동등성QA아님. run 20260910T042518Z; 실제성공은state.json/file-verification으로확인.
 
 전체목표계속. 다음직접확인가능범위는PEAD 원본12카드/발표후가격미니선이다: 보존12행은서프라이즈+드리프트내림차순과부합하나정확한이벤트기간/가격시작점을추가대조할것. 원본종목을고정후보로복사하지않고 실제발표시각/현재표본으로재계산한다. 나머지미수집재무/발표빈티지·본사/교역/관계망·Esri권한·SEC13F/연속수집·직접글로벌NI/OP/PIT·OCR/LLM/공유DB등 REFERENCE_PARITY 남은범위유지. 배포제작자이름/소스사이트링크/Rosenbach 제외검사유지.
+
+
+PDF 파서/OCR 최적화(2026-09-10): docs/pdf-ocr.js·pdf-text.js·notebook-pdf.js로 파서 우선/필요 페이지 OCR·파서만/전체OCR·한영/영어·한단/다단 선택을 연결. PDF.js6.3.289, Tesseract.js6.0.1/core6.0.0, eng fast4.1.0/kor best4.1.0 선택. 합성6쪽에서 정밀전체13.73s→선택9.11s(약34% 단축), 같은 결과 재사용0.157s, 렌더링40% 감소. 정밀 선택은 숫자 문자열24/25 일치(남은1개는 천단위쉼표 누락), 한글 일부오인식은 남아 원문대조. 경량kor는 숫자값오류가 있어 기본에서 제외. 공식고정해시/라이선스11파일21,660,329bytes, 개별필요시동일출처로만로드, 문서외부업로드0.
+
+페이지300/20만자·회당OCR30/180s·최대8M화소, 해시/버전/언어/모드/배치/DPI 일치 완료페이지재사용 및 대기이어읽기, OCR실패파서보존, 취소시activecanvas해제, 백업메타검사/구버전호환. docs/index.html은pdf-text.js앞에pdf-ocr.js추가. 사진·PDF 원문·벤치마크·이미지는private runtime/pdf-ocr-fixtures. 상세research/PDF_EXTRACTION.md. 새로운시세/원본사이트요청0, raw빈티지20260910T040459Z/가격기준2026-09-08유지.
+
+prune_staging이날짜가붙은작업만최신2개유지하고검증게시뒤에도실행. 수동검토폴더·원자료유지, 실제21개임시복사본정리265,229,784bytes회수. 검사207Python/두검증기/3JS/30JS·MJS구문통과. 실제로컬브라우저첨부→OCR→인용→저장→새로고침→본문검색→캐시재사용통과. 게시실행20260910T050723Z, 실제배포는runtime/state.json확인. 전체목표진행: 원본PEAD카드·관계/교역·실적입력·SEC자동수집·LLM요약/공유DB 등REFERENCE_PARITY의남은범위계속.
+
+Grok 디자인분담수신: 별도worktree grok/dashboard-design-20260910, 기준0097d49. 공동sangsangin-investment-collaboration/ASTRA_STATUS.md에PDF새select/스크립트순서계약기록. Grok미착수확인, 완료커밋이오면현재기능위에서검토/통합/검증/게시한다. 사용자일정예측요청은철회됨; 기능구현과측정기반최적화를계속한다.

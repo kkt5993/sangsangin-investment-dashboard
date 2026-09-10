@@ -32,7 +32,7 @@ Cesium1.145.0(Apache-2.0), satellite.js7.1.0(MIT)을 고정하고 npm SHA512와 
 
 승인된 평일08/18시 refresh에 수집기를 연결했다. USGS 최소1시간, CelesTrak 최소2시간 캐시를 적용하며 브라우저는 두 관측 공급자를 조회하지 않는다. 성공/확인 시각을 구분하고 실패 시 마지막 성공 자료를 보존한다. [CelesTrak 이용 정책](https://celestrak.org/usage-policy.php)에 따라 어떤 비200 HTTP 응답도 `sauron/stations-halted.json.gz`를 남겨 후속 자동 조회를 중단한다. 원인 확인 후 운영자가 중단 기록을 검토해야 재개할 수 있다. 네트워크 오류와 자료 검증 오류도 수집 원장에 기록한다.
 
-응답당1MiB, 최대200개 OMM/2,000개 지진, 로컬 원자료512MiB 한도를 유지한다. 이번 관측을 넣은 공개 JSON 약8.02MiB를 수용하도록 코드의 정적 JSON 한도만8→10MiB로 늘렸다. 원자료·다운로드 아카이브·실행 로그는 GitHub와 Vercel에 게시하지 않는다.
+응답당1MiB, 최대200개 OMM/2,000개 지진으로 요청을 제한한다. 누적 원자료와 정적 JSON의 저장 용량 상한은 적용하지 않는다. 원자료·다운로드 아카이브·실행 로그는 GitHub와 Vercel에 게시하지 않는다.
 
 Python은 규모 원값/빈 관측/범위/시각/중복, OMM 단위·정밀도·6자리 번호·좌표계, 캐시0요청/이전 값 보존/HTTP 중단/크기와 vendor 무결성을 검사한다. JS는 [CelesTrak 검증 구현](https://celestrak.org/software/tutorials/sgp4-verification.php)이 생성한3개 객체×4시점의 TEME 위치·속도와 독립 좌표변환 결과를 대조한다. 허용오차는 TEME 1e−6km, 고도0.01km, 위·경도0.001°다. 이는 수학적 구현 검증이며 실제 궤도 예측 정확도를 보증하지 않는다.
 

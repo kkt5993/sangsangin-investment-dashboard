@@ -63,8 +63,7 @@ class ProfileTests(unittest.TestCase):
         save(parent/cd.PROFILE,dict(companies={'NVDA':old}))
         return d,old
 
-    @patch('pipeline.events_data.budget')
-    def test_identical_response_and_fresh_cache(self,_):
+    def test_identical_response_and_fresh_cache(self):
         with tempfile.TemporaryDirectory() as folder:
             d,old=self.setup_cache(folder);conf=dict(companies=[dict(symbol='NVDA')])
             with patch.object(cd,'stamp',return_value=NOW.isoformat()):
@@ -75,8 +74,7 @@ class ProfileTests(unittest.TestCase):
             report=cd.collect(d,fetch=never,pause=lambda _:None,now=NOW+timedelta(hours=1),config=conf)
             self.assertFalse(report['companies'][0]['requested'])
 
-    @patch('pipeline.events_data.budget')
-    def test_failure_keeps_previous_success_and_rate_limit_stops(self,_):
+    def test_failure_keeps_previous_success_and_rate_limit_stops(self):
         class YFRateLimitError(Exception):pass
         with tempfile.TemporaryDirectory() as folder:
             d,old=self.setup_cache(folder);before=copy.deepcopy(old);calls=[]
@@ -87,8 +85,7 @@ class ProfileTests(unittest.TestCase):
             self.assertEqual([r['state'] for r in report['companies']],['error','deferred','deferred'])
             self.assertEqual(read(d.resource(cd.PROFILE))['companies']['NVDA'],before)
 
-    @patch('pipeline.events_data.budget')
-    def test_three_consecutive_errors_stop(self,_):
+    def test_three_consecutive_errors_stop(self):
         with tempfile.TemporaryDirectory() as folder:
             d,_old=self.setup_cache(folder)
             def fail(s):raise ValueError('fixture')

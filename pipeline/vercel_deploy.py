@@ -3,7 +3,6 @@ import json,re,shutil,subprocess
 from pathlib import Path
 import requests
 from .store import ROOT,write_json
-from .acquire import budget
 
 def cli(config):
     script=Path(config.get('vercel_cli',''))
@@ -21,7 +20,6 @@ def package_site(site,dest,project=None):
     allowed={'.html','.css','.js','.mjs','.bcmap','.pfb','.ttf','.json','.svg','.png','.ico','.txt',''}
     for p in files:
         if p.is_symlink() or not p.resolve().is_relative_to(site) or (p.suffix not in allowed and p not in ocr_binary) or p.name.startswith('.env'):raise ValueError('Unexpected public file')
-    budget(sum(p.stat().st_size for p in files))
     static=dest/'.vercel/output/static'
     if static.exists():raise ValueError('Deployment package already exists')
     shutil.copytree(site,static)

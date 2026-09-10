@@ -5,7 +5,7 @@ from xml.etree import ElementTree as ET
 import pandas as pd
 import requests,yfinance as yf
 from .engine import Data,clean_json
-from .acquire import budget,stamp
+from .acquire import stamp
 
 FEEDS=[('Federal Reserve','https://www.federalreserve.gov/feeds/press_all.xml'),
        ('ECB','https://www.ecb.europa.eu/rss/press.html'),('BIS','https://www.bis.org/doclist/all_pressrels.rss'),
@@ -13,7 +13,7 @@ FEEDS=[('Federal Reserve','https://www.federalreserve.gov/feeds/press_all.xml'),
        ('BBC World','https://feeds.bbci.co.uk/news/world/rss.xml'),('DW','https://rss.dw.com/rdf/rss-en-all')]
 def save(path,data):
     encoded=gzip.compress(json.dumps(clean_json(data),ensure_ascii=False,allow_nan=False).encode(),mtime=0)
-    budget(len(encoded));path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_bytes(encoded);tmp.replace(path)
+    path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_bytes(encoded);tmp.replace(path)
 
 def read(path):return json.loads(gzip.decompress(path.read_bytes()))
 

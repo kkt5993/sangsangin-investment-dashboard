@@ -2,7 +2,7 @@
 import gzip,io
 import pandas as pd
 import numpy as np
-from .acquire import get_bytes,stamp,budget
+from .acquire import get_bytes, stamp
 from .store import write_json,read_json,digest
 from .events_data import save
 
@@ -25,7 +25,7 @@ def collect(base,as_of):
     if detail.exists() and all((folder/(k+'.csv')).exists() for k in ['GPR','GPRT','GPRA']):return
     source=base/'gpr-source.dta.gz'
     if not source.exists():
-        encoded=gzip.compress(get_bytes(URL),mtime=0);budget(len(encoded));source.write_bytes(encoded)
+        encoded=gzip.compress(get_bytes(URL),mtime=0);source.write_bytes(encoded)
     f,labels=parse(gzip.decompress(source.read_bytes()),as_of);retrieved=stamp();mf=folder/'manifest.json';m=read_json(mf) if mf.exists() else dict(as_of=as_of,instruments={})
     for key in ['GPR','GPRT','GPRA']:
         file=folder/(key+'.csv');f[[key]].rename_axis('observation_date').to_csv(file)

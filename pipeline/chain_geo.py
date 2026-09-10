@@ -53,7 +53,7 @@ def collect(d):
     import zipfile
     from datetime import datetime, timezone
     import requests
-    from .acquire import budget,stamp
+    from .acquire import stamp
     from .events_data import read,save
     from .chain_data import PROFILE,age_hours
     url='https://download.geonames.org/export/dump/cities5000.zip'
@@ -73,7 +73,7 @@ def collect(d):
             with zipfile.ZipFile(io.BytesIO(blob)) as z:
                 if z.getinfo('cities5000.txt').file_size>40*1024*1024:raise ValueError('Gazetteer expansion cap')
                 places(z.read('cities5000.txt').decode('utf-8').splitlines())
-            budget(len(blob));target=d.base/'chain/cities5000.zip';target.parent.mkdir(parents=True,exist_ok=True)
+            target=d.base/'chain/cities5000.zip';target.parent.mkdir(parents=True,exist_ok=True)
             temp=target.with_suffix('.tmp');temp.write_bytes(blob);temp.replace(target);archive=target
             meta=dict(source=url,sha256=hashlib.sha256(blob).hexdigest(),bytes=len(blob),
                       checked_at=stamp(),retrieved_at=stamp(),license='CC BY 4.0')

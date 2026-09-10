@@ -50,7 +50,7 @@ class SatelliteTests(unittest.TestCase):
         site=dict(id='ST_TEST',lat=35,lon=125,scope='fixture')
         response=SimpleNamespace(raise_for_status=lambda:None,
             raw=SimpleNamespace(read=lambda *a,**kw:b'{"features":[]}'))
-        with tempfile.TemporaryDirectory() as folder, patch.object(sat.requests,'get') as get, patch.object(sat,'budget'):
+        with tempfile.TemporaryDirectory() as folder, patch.object(sat.requests,'get') as get:
             get.return_value.__enter__.return_value=response
             now=datetime(2026,9,10,tzinfo=timezone.utc);base=Path(folder)
             sat.search(site,base,now);sat.search(site,base,now)
@@ -137,7 +137,7 @@ class SatelliteTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);parent=root/'prior.json.gz';parent.write_bytes(gzip.compress(json.dumps({'sites':[dict(id='ST_TEST',scene=previous)]}).encode()))
             base=root/'next';base.mkdir();d=SimpleNamespace(base=base,resource=lambda key:parent)
-            with patch.object(sat,'registry',return_value={'reviewed_at':'2026-09-10','sites':[site,dict(id='ST_PENDING',location_status='pending')]}),patch.object(sat,'search',side_effect=ValueError('provider unavailable')) as query,patch.object(sat,'budget'):
+            with patch.object(sat,'registry',return_value={'reviewed_at':'2026-09-10','sites':[site,dict(id='ST_PENDING',location_status='pending')]}),patch.object(sat,'search',side_effect=ValueError('provider unavailable')) as query:
                 result=sat.collect(d,now=datetime(2026,9,10,tzinfo=timezone.utc))
             self.assertEqual(query.call_count,1)
             self.assertEqual(result['sites'][0]['status'],'stale');self.assertEqual(result['sites'][0]['scene'],previous)

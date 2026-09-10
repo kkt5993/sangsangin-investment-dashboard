@@ -5,7 +5,6 @@ import requests
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from pipeline.acquire import budget
 from pipeline.store import DATA,write_json
 
 VERSION='6.3.289'
@@ -17,7 +16,6 @@ def main():
     archive=DATA/'runtime/dependencies'/f'pdfjs-dist-{VERSION}.tgz'
     if archive.exists():raw=archive.read_bytes()
     else:
-        budget(LIMIT)
         with requests.get(URL,stream=True,timeout=(10,45)) as r:
             r.raise_for_status();parts=[];size=0
             for chunk in r.iter_content(65536):
@@ -34,7 +32,6 @@ def main():
                 if not member.isfile():continue
                 if '..' in Path(name).parts or Path(name).is_absolute():raise ValueError('Unexpected package path')
                 selected[name]=tar.extractfile(member).read()
-    budget(sum(map(len,selected.values()))+(0 if archive.exists() else len(raw)))
     archive.parent.mkdir(parents=True,exist_ok=True)
     if not archive.exists():archive.write_bytes(raw)
     out=ROOT/'docs/vendor/pdfjs';manifest=[]

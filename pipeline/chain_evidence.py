@@ -10,7 +10,7 @@ from urllib.parse import urlsplit
 import requests
 from .store import ROOT, read_json
 from .events_data import read, save
-from .acquire import budget, stamp
+from .acquire import stamp
 from .chain_data import age_hours
 
 MANIFEST = 'chain/evidence_sources.json.gz'
@@ -111,7 +111,7 @@ def collect(d, fetcher=fetch, pause=time.sleep, now=None, config=None):
             if not blob or len(blob) > MAX_BYTES:raise ValueError('Source transfer cap')
             sha = hashlib.sha256(blob).hexdigest();changed = bool(old.get('sha256') and old['sha256'] != sha)
             if old.get('sha256') != sha:
-                packed = gzip.compress(blob);budget(len(packed));target = d.base / ('chain/evidence/' + id + '.html.gz')
+                packed = gzip.compress(blob);target = d.base / ('chain/evidence/' + id + '.html.gz')
                 target.parent.mkdir(parents=True, exist_ok=True)
                 temporary = target.with_suffix('.tmp');temporary.write_bytes(packed);temporary.replace(target)
                 row['retrieved_at'] = now.isoformat()

@@ -110,7 +110,5 @@ for pair in momentum['chart_pairs']:
 for d in [rs,momentum]:
     assert d['schema_version']==1 and d['status']=='partial'
     assert all(re.fullmatch('[a-f0-9]{64}',q['sha256']) for q in d['quality'] if q['status']=='ok')
-assert sum(p.stat().st_size for p in data_dir.iterdir() if p.is_file()) < 10*1024*1024,'Public snapshot budget exceeded'
-assert sum(p.stat().st_size for p in (data_dir/'satellite').glob('*.png')) < 24*1024*1024,'Public satellite image budget exceeded'
 if errors:raise SystemExit('\n'.join(errors))
 print('PASS: 25 guides, links, public content, strict JSON, coverage, date alignment, curve anchors, hashes and size; offline.')

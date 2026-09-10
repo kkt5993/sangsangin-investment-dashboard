@@ -2,7 +2,7 @@
 from .store import data_base
 import argparse,contextlib,io,time
 from .store import DATA,write_json
-from .acquire import stamp,budget
+from .acquire import stamp
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--allow-krx-auth',action='store_true');p.add_argument('--as-of',default='2026-09-08');a=p.parse_args()
@@ -31,7 +31,7 @@ def main():
             if len(found)!=1:raise ValueError('Official index name is ambiguous: '+label)
             code=found[0];members=stock.get_index_portfolio_deposit_file(code,day)
             result=[dict(sectors.get(str(s)+'.KS',dict(symbol=str(s)+'.KS',name=str(s),market='KR',sector='미분류')),universe=label) for s in members]
-            budget();write_json(base/(key+'.json'),dict(source='https://data.krx.co.kr/',index_id=code,index_name=names[code],as_of=a.as_of,retrieved_at=stamp(),members=result))
+            write_json(base/(key+'.json'),dict(source='https://data.krx.co.kr/',index_id=code,index_name=names[code],as_of=a.as_of,retrieved_at=stamp(),members=result))
         write_json(base/'kr_sectors.json',dict(source='https://data.krx.co.kr/',as_of=a.as_of,retrieved_at=stamp(),members=list(sectors.values())))
     print('Saved KRX Large Cap, KOSPI 200 and KRX industry classifications.')
 

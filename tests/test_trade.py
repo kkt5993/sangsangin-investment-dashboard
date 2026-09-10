@@ -26,10 +26,6 @@ def response(rows=None):
 
 
 class TradeTests(unittest.TestCase):
-    def setUp(self):
-        # Fixture writes must not traverse the user's live multi-vintage cache.
-        budget=patch('pipeline.events_data.budget');budget.start();self.addCleanup(budget.stop)
-
     def test_download_cap_and_decimal_parse(self):
         class Reply:
             def __init__(self,body):self.body=body

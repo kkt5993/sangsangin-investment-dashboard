@@ -14,7 +14,6 @@ from pipeline.store import ROOT
 
 class SauronTests(unittest.TestCase):
     def setUp(self):
-        p=patch('pipeline.events_data.budget');p.start();self.addCleanup(p.stop)
         self.now=datetime(2026,9,10,9,tzinfo=timezone.utc)
         self.omm=json.loads((ROOT/'tests/fixtures/sauron-orbits.json').read_text())['records'][0]['omm']
 

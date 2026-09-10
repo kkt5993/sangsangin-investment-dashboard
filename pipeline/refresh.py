@@ -9,7 +9,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from .store import ROOT,DATA,read_json,write_json,digest
 from .engine import Data
-from .acquire import stamp,budget
+from .acquire import stamp
 
 RUNTIME=DATA/'runtime'
 def price_cutoff(now=None):
@@ -97,7 +97,6 @@ def collect(parent,base,as_of,env,config,log):
     return summary
 
 def stage_project(dest):
-    budget(sum(p.stat().st_size for name in ['docs','research','pipeline','scripts','tests','config'] for p in (ROOT/name).rglob('*') if p.is_file()))
     for name in ['docs','research','pipeline','scripts','tests','config']:
         shutil.copytree(ROOT/name,dest/name,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
     for name in ['AGENTS.md','README.md','HANDOFF.md','requirements.txt']:
@@ -207,7 +206,7 @@ def main():
                 as_of=resumed['as_of'];report['as_of']=as_of
             elif a.offline:vintage=parent_vintage;as_of=state['as_of'];report['as_of']=as_of
             else:
-                vintage=run_id;base=DATA/'expanded'/vintage;base.mkdir(parents=True);write_json(base/'parent.json',dict(vintage=parent_vintage,as_of=as_of));budget()
+                vintage=run_id;base=DATA/'expanded'/vintage;base.mkdir(parents=True);write_json(base/'parent.json',dict(vintage=parent_vintage,as_of=as_of))
             env={**os.environ,'SANGSANGIN_DATA_DIR':str(DATA),'SANGSANGIN_VINTAGE':vintage,'PYTHONIOENCODING':'utf-8','GIT_TERMINAL_PROMPT':'0','GCM_INTERACTIVE':'never'}
             if not a.offline:report['collection']=collect(parent,base,as_of,env,config,log)
             # Keep recent reviewable staging copies; no site mutation on failure.

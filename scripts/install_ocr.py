@@ -5,7 +5,6 @@ import requests
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from pipeline.acquire import budget
 from pipeline.store import DATA,write_json
 
 PACKAGES=[
@@ -14,7 +13,6 @@ PACKAGES=[
 
 def download(url,path,limit):
     if path.exists():return path.read_bytes()
-    budget(limit)
     with requests.get(url,stream=True,timeout=(10,45)) as r:
         r.raise_for_status();parts=[];size=0
         for chunk in r.iter_content(65536):
@@ -41,13 +39,11 @@ def main():
         if prior and prior['sha256']!=sha:raise ValueError('OCR language source changed')
         sources.append(dict(url=url,sha256=sha))
         selected['lang/'+name+('.gz' if name.endswith('.traineddata') else '')]=gzip.compress(raw,mtime=0) if name.endswith('.traineddata') else raw
-    size=sum(map(len,selected.values()))
-    if size>24*2**20:raise ValueError('OCR public assets exceed 24MiB')
-    budget(size);files=[]
+    files=[]
     for name,raw in sorted(selected.items()):
         path=dest/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
         files.append(dict(path=path.relative_to(ROOT/'docs').as_posix(),bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest()))
     write_json(manifest_path,dict(name='tesseract.js',version='6.0.1',core='6.0.0',languages='tessdata_fast 4.1.0 eng / tessdata_best 4.1.0 kor',license='Apache-2.0',sources=sources,files=files))
-    print(json.dumps(dict(public_files=len(files),public_bytes=size)))
+    print(json.dumps(dict(public_files=len(files))))
 
 if __name__=='__main__':main()

@@ -50,9 +50,7 @@ class EvidenceTests(unittest.TestCase):
         conf=dict(sources={'a':dict(url='https://example.org/a')})
         return d,conf
 
-    @patch('pipeline.events_data.budget')
-    @patch.object(ce,'budget')
-    def test_source_reuse_and_failed_refresh_keep_success(self,*_):
+    def test_source_reuse_and_failed_refresh_keep_success(self):
         with tempfile.TemporaryDirectory() as folder:
             d,c=self.cache(folder)
             first=ce.collect(d,fetcher=lambda _:b'first',pause=lambda _:None,now=NOW,config=c)
@@ -65,9 +63,7 @@ class EvidenceTests(unittest.TestCase):
             self.assertEqual(failed['sources']['a']['checked_at'],first['sources']['a']['checked_at'])
             self.assertEqual(failed['sources']['a']['error_type'],'ValueError')
 
-    @patch('pipeline.events_data.budget')
-    @patch.object(ce,'budget')
-    def test_changed_document_never_becomes_new_semantic_review(self,*_):
+    def test_changed_document_never_becomes_new_semantic_review(self):
         with tempfile.TemporaryDirectory() as folder:
             d,c=self.cache(folder)
             ce.collect(d,fetcher=lambda _:b'first',pause=lambda _:None,now=NOW,config=c)
@@ -77,9 +73,7 @@ class EvidenceTests(unittest.TestCase):
             self.assertTrue(third['sources']['a']['changed_since_review'])
             self.assertEqual(third['sources']['a']['retrieved_at'],second['sources']['a']['retrieved_at'])
 
-    @patch('pipeline.events_data.budget')
-    @patch.object(ce,'budget')
-    def test_host_failure_stops_same_host_and_url_change_drops_old_success(self,*_):
+    def test_host_failure_stops_same_host_and_url_change_drops_old_success(self):
         with tempfile.TemporaryDirectory() as folder:
             d,c=self.cache(folder);c['sources']['b']=dict(url='https://example.org/b')
             calls=[]

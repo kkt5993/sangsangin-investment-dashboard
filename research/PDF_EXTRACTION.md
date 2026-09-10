@@ -34,7 +34,7 @@ PRINCIPIUM·IW·ASK의 PDF 첨부를 브라우저에서 읽고 제목·저자·�
 
 [PDF.js 공식 API](https://mozilla.github.io/pdf.js/api/draft/api.js.html)의6.3.289 legacy build, [Tesseract.js6.0.1 API](https://github.com/naptha/tesseract.js/blob/v6.0.1/docs/api.md)와 core6.0.0을 고정한다. 영어는 [tessdata_fast4.1.0](https://github.com/tesseract-ocr/tessdata_fast/tree/4.1.0), 한국어는 [tessdata_best4.1.0](https://github.com/tesseract-ocr/tessdata_best/tree/4.1.0)다. Apache-2.0 라이선스와 번들 의존성 고지를 포함한다.
 
-- OCR 자산11파일21,660,329bytes는 별도24MiB 한도를 갖는다. npm SHA-512 및 파일별 SHA-256·크기·목록을 설치/검증/배포에서 검사한다. 임의 바이너리는 허용하지 않는다. PDF 파서188파일3,811,556bytes와8MiB 한도는 별도 유지한다.
+- OCR 자산은11파일21,660,329bytes다. npm SHA-512 및 파일별 SHA-256·크기·목록을 설치/검증/배포에서 검사한다. 임의 바이너리는 허용하지 않는다. PDF 파서는188파일3,811,556bytes다.
 - 페이지 탐색 시 OCR 자산을 미리 내려받지 않는다. 처음 필요한 때 같은 사이트에서 받는다. 영어 전용은 한국어 모델을 내려받지 않는다. 언어 모델의 브라우저 캐시 키에 모델 버전을 포함한다.
 - [공식 성능 안내](https://github.com/naptha/tesseract.js/blob/v6.0.1/docs/performance.md)에 따라 한 문서의 worker를 재사용하고 페이지를 순차 처리한다. LSTM만 실행하며 SIMD/비SIMD 두 LSTM 코어를 제공한다. 사용하지 않는 legacy 코어는 배포하지 않는다.
 - 기본300dpi·캔버스800만 화소 상한이다. A4는 실제 약287dpi다. 한 페이지씩 처리 후 캔버스·페이지 자원을 해제하고 완료/취소 때 worker를 종료한다. 800만 화소 RGBA 캔버스는 약32MB이며 브라우저 전체 메모리 상한이라는 뜻은 아니다.

@@ -35,15 +35,9 @@ def stamp():
     return datetime.now(timezone.utc).isoformat()
 
 
-def budget(extra=0):
-    size = sum(p.stat().st_size for p in DATA.rglob('*') if p.is_file())
-    if size + extra > 512 * 1024 * 1024:
-        raise RuntimeError('512 MiB local budget reached')
-
-
 def pack(path, value):
     content = gzip.compress(json.dumps(value, ensure_ascii=False, allow_nan=False).encode(), mtime=0)
-    budget(len(content)); path.parent.mkdir(parents=True, exist_ok=True)
+    path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix('.tmp'); tmp.write_bytes(content); tmp.replace(path)
 
 
@@ -260,7 +254,7 @@ def collect(d, now=None, only=None):
                 _, _, metrics = derived(arrays, scene['assets'])
                 if metrics['valid_fraction'] < MIN_CLEAR: continue
                 path = 'satellite/'+site['id']+'/'+scene['id']+'.npz'
-                buf = io.BytesIO(); np.savez_compressed(buf, **arrays); content = buf.getvalue(); budget(len(content))
+                buf = io.BytesIO(); np.savez_compressed(buf, **arrays); content = buf.getvalue()
                 target = d.base/path; target.parent.mkdir(parents=True, exist_ok=True)
                 tmp = target.with_suffix('.tmp'); tmp.write_bytes(content); tmp.replace(target)
                 info = dict(id=scene['id'], captured_at=scene['properties']['datetime'], retrieved_at=stamp(),

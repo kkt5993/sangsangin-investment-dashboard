@@ -4,7 +4,7 @@ from datetime import datetime,timezone
 import pandas as pd
 import requests
 from .store import data_base,read_json,write_json
-from .acquire import budget,stamp
+from .acquire import stamp
 
 URL='https://www.ishares.com/us/products/239723/ishares-s-p-100-etf/latest-holdings.csv'
 PRODUCT='https://www.ishares.com/us/products/239723/ishares-sp-100-etf'
@@ -53,14 +53,13 @@ def collect(base,as_of):
                     if size>LIMIT:raise ValueError('Holdings response exceeds 1MiB')
                     parts.append(part)
                 content=b''.join(parts)
-        result=parse(content,as_of);budget(len(content)+40000)
+        result=parse(content,as_of)
         raw.write_bytes(content)
         result.update(source=URL,product_source=PRODUCT,retrieved_at=checked,sha256=hashlib.sha256(content).hexdigest(),raw_file=raw.name)
         write_json(base/'us100.json',result)
         status=dict(status='ok',checked_at=checked,source=URL,as_of=result['as_of'],members=len(result['members']),bytes=len(content),sha256=result['sha256'])
     except Exception as error:
         status=dict(status='error',checked_at=checked,source=URL,error_type=type(error).__name__)
-        if 'budget' in str(error).lower():raise
     write_json(record,status);print('OEF membership',status['status'],status.get('members'),status.get('as_of'),flush=True)
     return status
 

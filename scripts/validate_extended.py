@@ -433,6 +433,44 @@ for file in (ROOT/'docs/data').glob('*.json'):
         if v['status']=='pending':assert v['reason']
     for s in d['sections']:section(s,d['as_of'],d['module'])
     if d['module']=='risk':
+        from pipeline.risk_signals import level,aggregate,risk_streak,COLORS,SIGNALS,SPECIAL
+        signals=d['risk_signals'];rules=load(ROOT/'config/risk_signal_rules.json')
+        assert signals['schema_version']==1 and signals['as_of']==d['as_of']
+        assert len(signals['rows'])==len({r['id'] for r in signals['rows']})==19
+        assert [r['id'] for r in signals['rows']]==[r['id'] for r in rules['rules']]
+        summaries={s['market']:s for s in signals['summary']};assert set(summaries)=={'US','KR'}
+        for rule,r in zip(rules['rules'],signals['rows']):
+            assert all(r[k]==v for k,v in rule.items()) and r['source']
+            if r['date'] is None:assert r['value'] is None and r['age_days'] is None and not r['fresh']
+            else:
+                age=(date.fromisoformat(summaries[r['market']]['date'])-date.fromisoformat(r['date'])).days
+                assert age==r['age_days'] and age>=0 and r['date']<=d['as_of']
+                assert r['fresh']==(age<=r['max_age_days'] and r['value'] is not None)
+            assert r['level']==(level(r['value'],rule) if r['fresh'] else None)
+            if r['level'] is not None:assert r['signal']==COLORS[r['level']]
+            else:assert r['signal'].startswith('⚪')
+        for market,n in [('US',12),('KR',7)]:
+            rows=[r for r in signals['rows'] if r['market']==market];assert len(rows)==n
+            result=aggregate(rows,rules)
+            assert all(summaries[market][k]==v for k,v in result.items())
+            assert len(next(s for s in d['sections'] if s['title']==market+' 신호등 · '+str(n)+'개 지표')['rows'])==n
+        assert len(signals['kr_history'])==63
+        assert signals['kr_history']==sorted(signals['kr_history'],key=lambda r:r['date'])
+        assert all(r['date']<=summaries['KR']['date'] and r['expected']==7 for r in signals['kr_history'])
+        assert signals['kr_streak']==risk_streak(signals['kr_history'])
+        assert all(signals['kr_history'][-1][k]==v for k,v in summaries['KR'].items() if k!='market')
+        assert {(r['market'],r['kind']) for r in signals['special']}=={(m,k) for m in ['US','KR'] for k in ['csd','cluster']}
+        assert len(signals['special'])==4
+        for r in signals['special']:
+            assert r['date']<=d['as_of']
+            if r['value'] is not None:
+                assert 0<=r['value']<=100 and r['signal']==COLORS[sum(r['value']>=t for t in rules['special_thresholds'])]
+        charts=[s for s in d['sections'] if s.get('group')==SPECIAL and s['type']=='line']
+        assert len(charts)==2 and all(s['limits']==[0,100] and s['guides']==[40,66] and len(s['series'])==2 for s in charts)
+        assert {r['part'] for r in signals['collection']['parts']}=={'sentiment','investors','vkospi'}
+        assert {'id':'vkospi','unit':'지수p','source':'KRX · 코스피 200 변동성지수 (1300)'}.items()<=next(r for r in signals['rows'] if r['id']=='vkospi').items()
+        assert next(r for r in signals['rows'] if r['id']=='hy')['unit']=='bp'
+        assert all(next(r for r in signals['rows'] if r['id']==k)['unit']=='억원' for k in ['foreign','institution'])
         if 'cockpit' in d:
             import numpy as np
             import pandas as pd

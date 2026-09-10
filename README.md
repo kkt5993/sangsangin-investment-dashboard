@@ -52,6 +52,7 @@ python -m pipeline.options_data --as-of 2026-09-08
 python -m pipeline.ecos_data --key-file '<로컬 ECOS 키 설정 파일>' --as-of 2026-09-08
 python -m pipeline.local_consensus '<로컬 qw_consensus.duckdb>' --as-of 2026-09-08
 python -m pipeline.krx_reconcile --allow-krx-auth --as-of 2026-09-08
+python -m pipeline.risk_signals_data --allow-krx-auth --as-of 2026-09-08
 python -m pipeline.oecd_data --as-of 2026-09-08
 # 아래 계산은 네트워크를 사용하지 않음
 python -m pipeline.ml_models --as-of 2026-09-08
@@ -80,6 +81,8 @@ node scripts/test_extended.cjs
 PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하며 백업 JSON으로 이동합니다. 저장 범위·이전 메모 가져오기·한도는 [로컬 리서치 가이드](research/LOCAL_RESEARCH.md)를 참조하세요.
 
 PDF는 제목·저자·페이지별 본문을 읽고 원문 페이지를 근거에 인용할 수 있습니다. 본문 검색·TXT 내보내기·첨부 포함 백업과 기존 기록 보존을 연결했습니다. [PDF 처리 범위와 검증](research/PDF_EXTRACTION.md)에 파서·OCR 비교와 페이지 재사용, 처리 한도 및 요약의 남은 범위를 표시합니다.
+
+리스크의 신호등은 미국12·한국7개 지표, 선제위험은 CSD·변동성 군집4진단을 제공합니다. 공식 KRX VKOSPI·코스피 순매수 금액과 SF Fed 뉴스감성을 PC에서 갱신하며, [신호등 계산 계약](research/RISK_SIGNALS_CONTRACT.md)에 단위·관측일·팀 임계값과 원본의 미공개 범위를 기록했습니다.
 
 ## 학습 출처
 

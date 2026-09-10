@@ -21,7 +21,7 @@ for key in ['risk','pm_weekend']:CODE[key]+=' · cot_data.py'
 CODE['regime']+=' · reflexivity.py · industry_details.py'
 CODE['regime']+=' · valuation.py · calendar_data.py · kr_calendar.py · calendar_views.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
-CODE['risk']+=' · wagdog.py · kr_shortgamma.py · kr_shortgamma_data.py · risk_cockpit.py'
+CODE['risk']+=' · wagdog.py · kr_shortgamma.py · kr_shortgamma_data.py · risk_cockpit.py · risk_signals.py · risk_signals_data.py'
 CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
 CODE['earnings']+=' · earnings_details.py'
 CODE['strategies']+=' · sec_ownership.py · ownership_views.py · strategy_cards.py · pead.py · pead_data.py'
@@ -47,7 +47,7 @@ PARITY={
  'earnings':('US/KR 이익성장·글로벌 Top20 겹침막대·한국2/미국10 추정 상세·연간/분기 선택','보고 NI/OP/매출·국내 QuantiWise OP/지배NI·미국 EPS 연결 NI 근사/직접 매출·회계기간/통화 검사','해외 직접 NI/OP 컨센서스·역사 PIT·한국 증권사별 원문 미확보'),
  'growth':('FY1/FY2 3D: x영업이익성장 yYTD z영업이익률, 시총 크기','국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표','해외 영업이익 컨센서스 부족으로 글로벌 3D 전체 범위 차이'),
  'multiasset':('21자산4KPI·6군신호표·열지도/추세막대·실제지수·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),
- 'risk':('옵션 GEX/스팟곡선·VIX/SKEW·CSD·모델북 위험','ML배분33비중·120개월 위험·9요인·5충격 가정·OOS 신뢰도, 제한만기 GEX·CSD','딜러 실제 포지션·전 만기·실제 계좌 없음. 충격표는 팀 가정'),
+ 'risk':('US12/KR7 신호·CSD/군집4진단·옵션 GEX/스팟곡선·모델북 위험','19신호·KR63세션·공식 VKOSPI/수급·SF Fed 백분위·4진단/2보조곡선·33비중·120개월 위험·9요인·5가정','뉴스 분모/다단계 점수/기간은 팀 설정. 딜러 실제 포지션·전체 만기·실제 계좌 없음'),
  'watch':('KR/US 상승6·하락4, 일/주봉·MA·거래량·패턴 근거','5기하 패턴·피벗·120일/52주·MA·ADX/DI/MA4조건·12지표 점수','미공개 판정/ADX 합성 점수 동등성 미검증, 적합도는 성공확률 아님'),
  'ml':('3지수×1M/3M, 실제 막대/예측선·68/90%·적중점·z/확률/가격·OOS','6타깃·11모델+2앙상블·Shadow/강제변수·TreeSHAP·3패널 비교·장기/36월·24월표','CAPE/감성 등 일부 입력·원본 하이퍼파라미터·PIT 빈티지 동등성 미검증'),
  'quant':('Stat Arb·8팩터·BAB·TSMOM·단기반전 5뷰','페어 z 0/±2·상관/Hurst/공적분/반감기·요인/비중·후보','현재 단면 스크리닝, 역사 구성·모든 전략 비용 후 OOS 필요'),

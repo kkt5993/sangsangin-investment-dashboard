@@ -169,6 +169,8 @@ def extend(d,objects,ranks):
     allocation_views(d,objects['multiasset'])
     from .risk_cockpit import views as cockpit_views
     cockpit_views(d,objects['risk'],objects['multiasset'])
+    from .risk_signals import views as risk_signal_views
+    risk_signal_views(d,objects['risk'])
     from .technical_scan import scanner_view
     objects['multiasset']['sections'][2]=scanner_view(d)
     for i,s in enumerate(objects['multiasset']['sections']):s['group']='자산 모니터' if i<2 else '패턴 스캐너' if i==2 else '자산배분'

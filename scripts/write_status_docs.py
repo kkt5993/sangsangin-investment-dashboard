@@ -23,7 +23,7 @@ CODE['regime']+=' · valuation.py · calendar_data.py · kr_calendar.py · calen
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
 CODE['risk']+=' · wagdog.py · kr_shortgamma.py · kr_shortgamma_data.py · risk_cockpit.py · risk_signals.py · risk_signals_data.py'
 CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
-CODE['globe']+=' · trade_data.py · trade_views.py · trade-views.js'
+CODE['globe']+=' · trade_data.py · trade_views.py · trade-views.js · sauron_data.py · sauron_views.py · sauron-views.js'
 CODE['earnings']+=' · earnings_details.py'
 CODE['strategies']+=' · sec_ownership.py · ownership_views.py · strategy_cards.py · pead.py · pead_data.py'
 for key in ['principium','iw','ask_digest']:CODE[key]+=' · public_assets.py · pdf-text.js · pdf-ocr.js · notebook-pdf.js · research-store.js'
@@ -38,7 +38,7 @@ PARITY={
  'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','2기본지수+Nasdaq·6매크로·종목 캐시·10전문가/ADF/SIS/게이트·68/95팬·R/I·원장','지수 이익앵커·SEC/KR수급·일부 입력·부분월/임의 티커 서버·PIT 미연결'),
  'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','39객체·근거·3D/전파·8시나리오·701Entity·22시설RGB/NDVI·NASA배경·원장 프리모템/상관','전체255객체/581관계·고해상도 배경/지명·선행/후행·구루/사건·팀DB 미연결'),
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),
- 'globe':('밸류체인53세부업종·기업/도시·3종교역선·SAURON','UN45지역 연간 총수출·방향/금액별 곡선·회전/확대/검색·정확한USD/분모·30일갱신·기존기업소재국표','기업151개 본사/도시·공급/수출/물류 근거·SAURON 3D/지진/궤도 위성 미연결'),
+ 'globe':('밸류체인53세부업종·기업/도시·3종교역선·SAURON','UN45지역 연간 총수출·방향/금액별 곡선·회전/확대/검색·정확한USD/분모·30일갱신·기업소재국표·SAURON 3D/지진/SGP4/6효과/카메라/투어/검색','기업151개 본사/도시·공급/수출/물류 근거·Google 실사3D 키 미연결'),
  'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF 파서/선택 OCR·이미지·휴지통/백업','LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),
  'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이·주간 RSI/가격·성장/물가·한미13출처90일달력·국가/기간/분류검색','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
  'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약8표/8+6막대·15위표','공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),

@@ -33,3 +33,23 @@ def ocr_assets(site,manifest):
         if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()):raise ValueError('Unexpected OCR runtime path')
         if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('OCR runtime integrity mismatch: '+name)
     return {p for p in files.values() if p.suffix=='.gz'}
+
+
+def globe_assets(site,config):
+    """Only exact published package bytes may bypass generic text/image checks."""
+    site=Path(site);out=set()
+    for folder,name,version,license_name,maximum in [('cesium','cesium','1.145.0','Apache-2.0',20*1024**2),('satellite','satellite.js','7.1.0','MIT',256*1024)]:
+        root=site/'vendor'/folder
+        if not root.exists():
+            if (site/'sauron-views.js').exists():raise ValueError('Missing globe runtime')
+            continue
+        data=json.loads((Path(config)/(folder+'_vendor.json')).read_text(encoding='utf8'))
+        if (data['name'],data['version'],data['license'])!=(name,version,license_name):raise ValueError('Unexpected globe vendor identity')
+        entries={r['path']:r for r in data['files']};files={p.relative_to(site).as_posix():p for p in root.rglob('*') if p.is_file()}
+        if len(entries)!=len(data['files']) or set(entries)!=set(files):raise ValueError('Missing or unlisted globe runtime')
+        if sum(p.stat().st_size for p in files.values())>maximum:raise ValueError('Globe runtime byte limit')
+        for name,p in files.items():
+            if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()):raise ValueError('Unsafe globe asset path')
+            if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('Globe runtime integrity mismatch: '+name)
+        out.update(files.values())
+    return out

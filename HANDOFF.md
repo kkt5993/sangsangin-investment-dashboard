@@ -279,3 +279,14 @@ raw빈티지20260910T081012Z(부모20260910T070347Z), 초기지역별수출45요
 전체249Python(234.791초)·두자료검증기·3JS모음·31JS/MJS구문통과. 후속교역12단위검사(기존10+응답바이트/정확소수·캐시미래시각2추가)와변경관련검사재통과. 단위fixture쓰기의사용자캐시전체용량탐색을mock해교역12검사는1초이내이며운영예산검사는유지. 실제Edge1440/1024/390에서양방향금액/서로다른World분모·지도선20/전체·44파트너·검색/정렬·포인터/드래그/키보드/확대/회전·탭왕복·45수집원장·페이지넘침0/JS오류0/외부요청0과지도실패시표대체확인. 최초collapsible필드명오류를collapsed로고쳐원장접기를검증. private runtime/trade-validation.log,trade-browser-qa.json,trade-cache-verification.json. 실제게시커밋/실행은runtime/state.json과발행보고서확인.
 
 전체목표미완료: 다음은53업종기업등록·본사도시/사업및공급물류근거연결또는SAURON공개관측부터보존소스와대조. 모든종목의모호한시총순위/AI생성공급망문장을사실로복사하지않는다. 새세션/Claude는검증분담권장만안내했으며별도생성없음. 옵션권한질문여전히미응답.
+
+
+SAURON 후속(2026-09-10): sauron_data.py/sauron_views.py/sauron-views.js로 보존 원본의 Cesium 3D 카메라,22시설·USGS M≥2.5 지진·CelesTrak stations OMM/SGP4,3레이어/6색상효과/시설투어/지명검색/키보드/HUD/전체화면/관측원장을 연결했다. 효과는 실제 열·야간센서가 아니며 지진 스냅샷과 현재 UTC 궤도 계산을 분리한다. 원본의200km 최저고도 강제보정은 재현하지 않고 유효 실제 계산고도를 표시한다. 요소7일 초과/계산실패는 위치를 숨긴다.
+
+최초 USGS37 중 raw M2.45를 제외한36, stations21; 보존 가격9/8과 관측9/10을 구분. refresh08/18에 연결, USGS1시간/CelesTrak2시간 캐시·응답1MiB·실패 이전 성공자료 보존·CelesTrak 비200 응답은 영속 중단기록으로 재요청 중단. 공식 정책을 대조했으며 원본사이트 추가요청0. 코드의 공개JSON cap만8→10MiB(현재8.02), 사용자 DATA512MiB 유지(배포 전258.6MiB).
+
+Cesium1.145.0 Apache2/browser394파일 약17.1MiB, satellite.js7.1.0 MIT/22파일, npm SHA512·개별 SHA256·gitattributes 검증. 기본 Natural Earth II는 로컬, 선택 OSM은 viewport/정상 캐시·미리읽기 없음; headless QA에서는 OSM을 전부 fixture로 대체했다. Google 실사3D 키는 없음. 한국어 Wikipedia 좌표 미제공을 실제 조회로 확인하고 ko→공식 영어 langlink→좌표 일괄조회로 보완, Api-User-Agent/최대2조회·5후보·15초/검색간격2초/캐시50. 외부주소 지오코딩과 다르다.
+
+검사261Python(188.966초)·2검증기·3JS·166JS/MJS구문, CelesTrak 별도 구현의3객체×4시점 TEME 오차0km·좌표 허용오차 통과. Edge1440/1024/390 WebGL·레이어/효과/카메라/투어정지/마커/3초갱신/검색캐시/전체화면/이탈destroy/재진입/넘침0·오류0; 추가 실제 한국어 검색2조회·초기 로드 중 이탈·오래된 요소·WebGL 미지원 원장 보존. 이후 검색 보완에 JS suite/구문 재검사. private runtime/sauron-* 보고서 참조.
+
+게시 run 20260910T091629Z; raw 20260910T084457Z (부모 20260910T081012Z), 가격 2026-09-08. 실제 커밋/게시 완료는 runtime/state.json 및 해당 file-verification을 확인. 전체 목표는 미완료이며 REFERENCE_PARITY의53세부업종/151기업·96도시의 본사/사업/공급/수출/물류, 전체 관계망과 나머지 데이터·모델 범위를 계속한다. 새 세션은 검증 전담 방식만 권고했으며 생성하거나 Claude를 실행하지 않았다.

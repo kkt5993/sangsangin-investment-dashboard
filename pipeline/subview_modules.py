@@ -190,5 +190,7 @@ def extend(d,objects,ranks):
     satellite_views(d,objects['dragonglass'])
     from .trade_views import views as trade_views
     trade_views(d,objects['globe'])
+    from .sauron_views import views as sauron_views
+    sauron_views(d,objects['globe'])
     digest_views(d,objects,ranks,news)
     return objects

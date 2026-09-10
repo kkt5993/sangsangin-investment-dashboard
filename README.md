@@ -27,9 +27,11 @@ Overview는 TESSERACT6축·CROWDING5축의36시점 궤적, 4시점 적층 레이
 python -m http.server 8769 --bind 127.0.0.1 --directory docs
 ```
 
+SAURON은 22시설·USGS 지진·CelesTrak 궤도 요소를 Cesium 3D 지구본에 연결합니다. 카메라·투어·3개 레이어·6개 색상 효과·지명 검색과 관측 원장을 제공합니다. [SAURON 계약](research/SAURON_CONTRACT.md)에 자료 시각, SGP4 계산, 배경 선택과 요청 제한을 기록했습니다.
+
 ## 로컬 수집과 계산
 
-지구본의 국가 교역은 UN Comtrade45개 통계지역의 연간 총수출을 지도와 원장에 연결합니다. 수출 방향·금액별 곡선·국가 검색·정확한 USD와 분모를 표시하고 PC에서30일마다 재확인합니다. [교역 계약](research/TRADE_CONTRACT.md)에 통계지역·결측·참조연도와 기업별 밸류체인/SAURON의 남은 범위를 기록했습니다.
+지구본의 국가 교역은 UN Comtrade45개 통계지역의 연간 총수출을 지도와 원장에 연결합니다. 수출 방향·금액별 곡선·국가 검색·정확한 USD와 분모를 표시하고 PC에서30일마다 재확인합니다. [교역 계약](research/TRADE_CONTRACT.md)에 통계지역·결측·참조연도와 기업별 밸류체인의 남은 범위를 기록했습니다.
 
 Python 3.13과 [requirements.txt](requirements.txt)의 환경을 사용합니다. 원자료는 형제 폴더 sangsangin-investment-data에 저장합니다. SANGSANGIN_DATA_DIR로 경로를 바꿀 수 있습니다. 사용자가 승인한 실행 시간은 **한국시간 평일 오전8시·오후6시**입니다. 이 PC와 Codex 앱이 실행 중이어야 합니다. 예약은 Codex 앱의 자동화에서 관리하며, 아래 명령은 예약과 수동 실행이 공통으로 사용합니다.
 

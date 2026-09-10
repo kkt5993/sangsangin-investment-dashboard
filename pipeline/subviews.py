@@ -12,7 +12,7 @@ EXPECTED={
 GAPS={'위성 현장':'22시설 실관측·NASA 전 지구 배경 연결; 고해상도 배경·지명 레이어는 추가 확인 필요','인과·영향 모델':'이벤트와 인과 관계·전파 가중치 필요','Soros 재귀성':'원본 복합 산식과 지수 이익 역사 필요'}
 GAPS['비펀더멘탈 수급']='종목·레버리지 ETF AUM·공매도·국내 투자자별 수급 수집 중'
 GAPS['밸류체인 유니버스']='53개 세부 업종·기업 본사/도시·회사별 공급 및 물류 관계 근거 연결 필요'
-GAPS['SAURON']='3D 카메라·USGS 지진·CelesTrak 궤도·센서 스타일 연결 필요'
+GAPS['SAURON']='시설·지진 스냅샷·SGP4 궤도·3D 카메라·6개 화면 효과 연결; Google 실사3D는 별도 키 필요'
 def attach(obj):
     groups=list(dict.fromkeys(s.get('group','종합') for s in obj.get('sections',[])))
     expected=EXPECTED.get(obj['module'],groups)

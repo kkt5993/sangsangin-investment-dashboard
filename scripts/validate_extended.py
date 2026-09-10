@@ -15,6 +15,22 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='sauron':
+        from pipeline.sauron_data import stations,utc
+        assert len(s['sites'])==22 and len({a['id'] for a in s['sites']})==22
+        assert all(-90<=a['lat']<=90 and -180<=a['lon']<=180 and a['sources'] and a['coordinate_source'].startswith('https://') for a in s['sites'])
+        assert s['config']['min_magnitude']==2.5 and s['config']['orbit_tick_ms']==3000
+        assert s['config']['max_epoch_age_days']==7 and s['config']['home']==[30,18,26000000]
+        assert len({a['id'] for a in s['quakes']})==len(s['quakes'])
+        if s['quakes']:
+            generated=utc(s['quake_generated'])
+            for a in s['quakes']:
+                assert 2.5<=a['mag']<=10.5 and -10<=a['depth_km']<=800
+                assert -180<=a['lon']<=180 and -90<=a['lat']<=90
+                assert generated-timedelta(hours=25)<=utc(a['time'])<=generated and utc(a['updated'])>=utc(a['time'])
+                assert a['url'].startswith('https://earthquake.usgs.gov/earthquakes/eventpage/')
+        if s['elements']:assert stations(s['elements'],utc(s['stations_retrieved']))==s['elements']
+        assert len(s['collection'])==2 and {r['key'] for r in s['collection']}=={'quakes','stations'}
     if kind=='tradeglobe':
         from decimal import Decimal
         assert s['year']==int(cutoff[:4])-2 and len(s['areas'])==45

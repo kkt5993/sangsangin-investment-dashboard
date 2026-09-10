@@ -14,9 +14,9 @@ def cli(config):
 def package_site(site,dest,project=None):
     site=Path(site).resolve();dest=Path(dest).resolve()
     if not (site/'index.html').exists():raise ValueError('Public site index is missing')
-    from .public_assets import pdf_assets,ocr_assets
+    from .public_assets import pdf_assets,ocr_assets,globe_assets
     pdf_assets(site,ROOT/'config/pdfjs_vendor.json')
-    ocr_binary=ocr_assets(site,ROOT/'config/ocr_vendor.json')
+    ocr_binary=ocr_assets(site,ROOT/'config/ocr_vendor.json')|globe_assets(site,ROOT/'config')
     files=[p for p in site.rglob('*') if p.is_file()]
     allowed={'.html','.css','.js','.mjs','.bcmap','.pfb','.ttf','.json','.svg','.png','.ico','.txt',''}
     for p in files:

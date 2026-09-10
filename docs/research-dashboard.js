@@ -30,7 +30,23 @@
  const safe=value=>/^https?:\/\/[^\s]+$/i.test(value||'')?value:'#';
  function digestTrend(p){return `<p>가용 ${p.available}/${p.expected}자산 · 관측 수익률 %</p>`+C.bars(p.rows,{unit:'%',title:p.title})+table({title:p.title+' · 관측일',columns:['자산','심볼','분류','과거 수익률 %','실제 가격일'],rows:p.rows.map(r=>[r.name,r.symbol,r.group,r.value,r.date])});}
  function digestSources(rows){return rows.map(r=>`<p><strong>${E(r.name)} · ${E(r.symbol)}</strong> ${E(r.role)}<br><a href="${E(safe(r.source))}" target="_blank" rel="noopener noreferrer">공식 사업 설명 ↗</a></p>`).join('');}
+ function assetMonitor(s){
+  const names={long:'상승 추세',short:'하락 추세',neutral:'중립',missing:'미산출'},groups=[...new Set(s.rows.map(r=>r.group))];
+  const precise=v=>v===null||v===undefined?null:String(v);
+  const bars=s.rows.filter(r=>Number.isFinite(r.values[2])).slice().sort((a,b)=>b.values[2]-a.values[2]).map(r=>({name:r.name,value:r.values[2],signal:r.signal}));
+  return `<div data-asset-monitor><div class="kpi-grid">${s.cards.map(c=>`<article class="kpi" data-monitor-kpi><small>${E(c.label)}</small><strong>${E(String(c.value))}</strong><small>${E(c.detail)}</small></article>`).join('')}</div><p class="scope-note">${E(s.note)}</p>`+
+   C.heatmap(s.rows.map(r=>({name:r.name,group:r.group,values:r.values})),s.columns,'자산군 × 기간 수익률 (%)')+
+   `<p class="quiet">열마다 최대 절대 수익률을 기준으로 색 강도를 표시합니다. YTD: 올해 첫 관측 종가 대비.</p>`+
+   figure('멀티에셋 · 1개월 수익률',C.bars(bars,{unit:'%',markers:[0],title:'멀티에셋 · 1개월 수익률',signalMode:true,extentPadding:1}))+
+   `<p class="quiet">막대 길이 = 1M 수익률 · 색 = <span class="asset-trend-long">상승 추세</span> / <span class="asset-trend-short">하락 추세</span> / <span class="asset-trend-neutral">중립</span> · 방향과 추세 판정은 서로 다를 수 있습니다.</p><div class="asset-monitor-groups">`+
+   groups.map(g=>table({title:g+' · '+s.rows.filter(r=>r.group===g).length+'자산',columns:['자산','1M %','판정 기준','신호'],rows:s.rows.filter(r=>r.group===g).map(r=>[r.name,r.values[2],'50/200MA',names[r.signal]])})).join('')+'</div>'+
+   `<details class="method-details"><summary>21자산의 실제 상품·단위·가격일·이동평균·수익률 기준일</summary>`+
+   table({title:'계산에 사용한 지수·상품과 단위',columns:['자산','심볼','가격 종류','단위','관측일','시장 종가','계산 종가','MA50','MA200','가용 관측','상태'],rows:s.rows.map(r=>[r.name,r.symbol,r.basis,r.unit,r.date,...[r.market_close,r.price,r.ma50,r.ma200,r.observations].map(precise),r.reason||names[r.signal]])})+
+   table({title:'수익률 분모의 실제 관측일',columns:['자산',...s.columns],rows:s.rows.map(r=>[r.name,...r.anchors])})+
+   `<p class="quiet">YTD 연초 관측이1월10일까지 없으면 미산출합니다. 상승은 가격 > MA50 > MA200, 하락은 가격 < MA50 < MA200이며 동률·나머지는 중립입니다. 자료 부족은 별도로 미산출합니다.</p><ul>${s.rows.map(r=>`<li><a href="${E(r.source?.startsWith('https://finance.yahoo.com/quote/')?r.source:'#')}" target="_blank" rel="noopener noreferrer">${E(r.name)} · ${E(r.symbol)} 가격 출처 ↗</a></li>`).join('')}</ul></details></div>`;
+ }
  function section(s,i,st){
+  if(s.type==='assetmonitor')return heading(s.title)+assetMonitor(s);
   if(s.type==='satellite'||s.type==='facilitydetail')return heading(s.title)+root.SatelliteViews.render(s,i);
   if(s.type==='releasecalendar')return heading(s.title)+root.CalendarViews.render(s,i);
   if(s.type==='ownership')return heading(s.title)+root.OwnershipViews.render(s,i);

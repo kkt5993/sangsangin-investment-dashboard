@@ -47,6 +47,18 @@ function interactiveContainer(){
   await context.window.ResearchDashboard.render(c,m);count++;
  }
  assert.equal(requests,count,'one local request per module across repeated navigation');
+ const monitor=data.multiasset.sections.find(s=>s.type==='assetmonitor');assert(monitor);
+ const monitorHTML=context.window.ResearchDashboard.section(monitor,0,{});
+ assert.equal((monitorHTML.match(/data-monitor-kpi/g)||[]).length,4);
+ assert.equal((monitorHTML.match(/class="table-group"/g)||[]).length,6);
+ assert.equal((monitorHTML.match(/data-bar-value=/g)||[]).length,monitor.rows.filter(r=>r.values[2]!==null).length);
+ for(const r of monitor.rows)assert(monitorHTML.includes(r.name.replace('&','&amp;'))&&monitorHTML.includes(r.symbol.replace('&','&amp;')));
+ assert(monitorHTML.indexOf('자산군 × 기간 수익률')<monitorHTML.indexOf('멀티에셋 · 1개월 수익률'));
+ assert(monitorHTML.includes('data-bar-guide="0"'));
+ for(const r of monitor.rows)for(const v of [r.market_close,r.price,r.ma50,r.ma200,r.observations].filter(v=>v!==null))assert(monitorHTML.includes('data-value="'+v+'">'+v+'</td>'),'exact monitor price and count display');
+ for(const r of monitor.rows.filter(r=>r.values[2]!==null))assert(monitorHTML.includes('data-bar-signal="'+r.signal+'"'));
+ const unsafe=JSON.parse(JSON.stringify(monitor));unsafe.rows[0].name='<script>alert(1)</script>';unsafe.rows[0].source='javascript:alert(1)';
+ const escaped=context.window.ResearchDashboard.section(unsafe,0,{});assert(!escaped.includes('<script>'));assert(!escaped.includes('href="javascript:'));
  const interactive=interactiveContainer();context.location.hash='#dragonglass';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='dragonglass'));
  interactive.buttons.find(b=>b.dataset.subview==='시장 Beta 민감도').fire('click');assert.equal(interactive.boxes.length,1);
  const box=interactive.boxes[0],scenario=data.dragonglass.sections.find(s=>s.type==='scenario');

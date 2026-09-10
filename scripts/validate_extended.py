@@ -14,6 +14,23 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='assetmonitor':
+        assert len(s['rows'])==len({r['symbol'] for r in s['rows']})==21 and len(s['cards'])==4
+        assert s['columns']==['1D','1W','1M','3M','YTD','12M']
+        assert {'^GSPC','^IXIC','^RUT','GC=F'}<=set(r['symbol'] for r in s['rows'])
+        assert len({r['group'] for r in s['rows']})==6
+        assert s['cards'][0]['value']==sum(r['signal']=='long' for r in s['rows'])
+        assert s['cards'][1]['value']==sum(r['signal']=='short' for r in s['rows'])
+        for r in s['rows']:
+            assert len(r['values'])==len(r['anchors'])==6
+            assert r['signal'] in ['long','short','neutral','missing']
+            assert r['date'] is None or r['date']<=cutoff
+            assert all(t is None or t<=r['date'] for t in r['anchors'])
+            assert all(v is None or math.isfinite(v) for v in r['values'])
+            assert all((v is None)==(t is None) for v,t in zip(r['values'],r['anchors']))
+            if r['signal']=='long':assert r['price']>r['ma50']>r['ma200']
+            if r['signal']=='short':assert r['price']<r['ma50']<r['ma200']
+            if r['anchors'][4]:assert r['anchors'][4][:4]==cutoff[:4]
     if kind=='satellite':
         assert s['basemap']['provider']=='NASA GIBS' and s['basemap']['observation_month']=='2004-08'
         assert s['basemap']['native_resolution_m']==500 and s['basemap']['max_native_zoom']==8 and s['basemap']['dynamic'] is False

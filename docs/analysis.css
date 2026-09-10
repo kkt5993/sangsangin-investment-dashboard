@@ -53,3 +53,8 @@
 .ownership-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin:18px 0}.ownership-card{min-width:0}.ownership-card svg{display:block;width:100%;height:auto}.ownership-card button{display:block;margin-top:12px}.ownership-card h3 small{display:block;margin-top:7px;font-size:12px;color:#527d76}
 
 .data-table.readable-table{width:100%;min-width:640px;table-layout:fixed}.data-table.readable-table td,.data-table.readable-table th{white-space:normal;overflow-wrap:anywhere;vertical-align:top}.data-table.readable-table th:nth-child(1){width:26%}.data-table.readable-table th:nth-child(2){width:26%}.data-table.readable-table th:nth-child(3){width:37%}.data-table.readable-table th:nth-child(4){width:11%}
+
+.asset-monitor-groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,390px),1fr));gap:1rem}.asset-monitor-groups .table-scroll{margin:0}
+.asset-monitor-groups table.data-table{min-width:0;table-layout:fixed}.asset-monitor-groups .data-table td,.asset-monitor-groups .data-table th{padding:10px 8px;white-space:normal;overflow-wrap:anywhere}.asset-monitor-groups .data-table th:first-child{width:32%}.asset-monitor-groups .data-table th:nth-child(2){width:18%}.asset-monitor-groups .data-table th:nth-child(3){width:24%}.asset-monitor-groups .data-table th:nth-child(4){width:26%}
+
+.asset-trend-long{color:#227568}.asset-trend-short{color:#994965}.asset-trend-neutral{color:#866023}.asset-trend-long:before,.asset-trend-short:before,.asset-trend-neutral:before{content:"● ";font-size:1rem}

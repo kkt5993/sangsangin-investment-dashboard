@@ -26,7 +26,7 @@ CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
 CODE['earnings']+=' · earnings_details.py'
 CODE['strategies']+=' · sec_ownership.py · ownership_views.py'
 CODE['dragonglass']+=' · entities.py · relation_model.py · relation_views.py'
-CODE['multiasset']+=' · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
+CODE['multiasset']+=' · asset_monitor.py · allocation_model.py · allocation_views.py · technical_scan.py · oecd_data.py'
 CODE['watch']+=' · technical_scan.py'
 for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_data.py'
 # Original structures were read from the saved source and chart captions, offline.
@@ -45,7 +45,7 @@ PARITY={
  'strategies':('전략별 후보·재무·OHLC·이벤트 결과','흑자전환·OHLC·PEAD 시각정렬·SEC P 원문/접수 대조·90일 카드/원장','SEC 자동수집 접근 제한·Form4/A·13F·공매도 원장·비용 후 OOS'),
  'earnings':('US/KR 이익성장·글로벌 Top20 겹침막대·한국2/미국10 추정 상세·연간/분기 선택','보고 NI/OP/매출·국내 QuantiWise OP/지배NI·미국 EPS 연결 NI 근사/직접 매출·회계기간/통화 검사','해외 직접 NI/OP 컨센서스·역사 PIT·한국 증권사별 원문 미확보'),
  'growth':('FY1/FY2 3D: x영업이익성장 yYTD z영업이익률, 시총 크기','국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표','해외 영업이익 컨센서스 부족으로 글로벌 3D 전체 범위 차이'),
- 'multiasset':('21자산 막대·열지도·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),
+ 'multiasset':('21자산4KPI·6군신호표·열지도/추세막대·실제지수·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),
  'risk':('옵션 GEX/스팟곡선·VIX/SKEW·CSD·포트폴리오 위험','3ETF 만기 제한 GEX·OI PCR, CSD·곡선·VaR/CVaR·스트레스','딜러 실제 포지션·전 만기·실제 팀 포트폴리오 없음'),
  'watch':('KR/US 상승6·하락4, 일/주봉·MA·거래량·패턴 근거','5기하 패턴·피벗·120일/52주·MA·ADX/DI/MA4조건·12지표 점수','미공개 판정/ADX 합성 점수 동등성 미검증, 적합도는 성공확률 아님'),
  'ml':('3지수×1M/3M, 실제 막대/예측선·68/90%·적중점·z/확률/가격·OOS','6타깃·11모델+2앙상블·Shadow/강제변수·TreeSHAP·3패널 비교·장기/36월·24월표','CAPE/감성 등 일부 입력·원본 하이퍼파라미터·PIT 빈티지 동등성 미검증'),

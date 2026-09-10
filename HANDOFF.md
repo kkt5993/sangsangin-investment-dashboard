@@ -200,3 +200,14 @@ refresh의기존allow_krx_auth 경로에연결·index10달력일겹침의신규/
 viewport타일만동시3/180ms,12초/1MiB/최대100화면타일,48Blob/8MiB캐시·화면밖/숨김/drag/탭전환abort·URL해제.401/403/429/503추가요청중단과명시재시도; 앱지속저장/전지구수집없음,브라우저HTTPcache는별개. 구체계약은SATELLITE_CONTRACT.md. 기존Sentinel주간증분/평일08·18파이프라인유지,새JS검사기와배경메타검증을정기게이트에연결.
 
 190Python(117.726초)·2검증기·3JS suite·24JS/MJS구문통과. 신규offline타일검사에원점/극지/날짜변경선/확대·동시성·중단·429·JPEG스트림/1MiB·48LRU·URL해제포함. CUA로NASA전지구12/12·TSMC14배1/1·RGB/NDVI·3높이·방향키·배경off/on·다른subview이동시지도제거및console오류0확인. 전체25탭브라우저검증이라는뜻아님. 검증기록은private runtime/satellite-basemap-validation.log 및 satellite-basemap-browser-qa.json. 게시run=20260910T032324Z;실제성공commit/URL은runtime/state.json과file-verification을확인. 전체목표여전히진행:Esri고해상도/지명(권한확인)·원본추가터치/비행애니메이션대조,관계망/본사/교역·SEC13F/연속수집·NI/OP/PIT·원본모델/기간·OCR/LLM/공유DB등.
+
+
+멀티에셋 자산 모니터 후속(2026-09-10): 보존 multiasset.json/app.js의4KPI→21자산6기간열지도→1M내림차순/중앙0/좌우대칭막대→6자산군4열표를 asset_monitor.py와 전용 렌더러로 연결했다. 막대색은 수익률 부호가 아닌50/200MA 추세이며 범례/툴팁에 표시한다. S&P500/Nasdaq Composite/Russell2000/금은 SPY/QQQ/IWM/GLD 대용에서 실제 ^GSPC/^IXIC/^RUT/GC=F로 수정했다. 별도 배분/스캐너의15개섹션은 기존 계산값 그대로 유지했음을 객체 비교와 화면 전환으로 확인했다.
+
+수익률은1/5/21/63/252관측 간격, YTD는 전년 말이 아닌 연초 첫 종가다. 미국9/4·한국/일본9/8·유럽/선물/FX/크립토9/8장중 가설로 원본6기간의 반올림 가격구간이21자산 모두 양립함을 대조했다. 유럽9/7 가설은 불일치해 폐기; 추론된 가격은 공개 결과에 넣지 않았다. 원본MA 세부 조건 미공개로 팀 가격>MA50>MA200/역배열/동률중립을 명시한다. 200관측 미만·7일초과 지연은 미산출, 크립토 주말 유지·미래행 선제 제외·ETF6개 조정종가/나머지 원종가·환율방향·선물비용 미포함. 실제 심볼/단위/종가/MA/관측수/6기간 분모날짜를 펼침표에 표시한다. 자세한 MULTIASSET_MONITOR_CONTRACT.md 참조.
+
+새 ^RUT만3년752행 수집, raw +17721bytes, 빈티지20260910T033238Z(부모20260910T023239Z), 가격1137종/기준2026-09-08. 기존 가격은 상속, 원본사이트 추가 요청0. 정기 가격목록에 ^RUT 추가; ACTIVE인 기존 automation의 평일08/18 refresh --publish 경로 확인, 새 예약 없음. PC약353.865MiB/512(게시패키지전), 공개JSON약7.934MiB/8.
+
+196Python(122.685초)·2자료검증기·3JSsuite·24JS/MJS구문 통과. CUA localhost에서4KPI/21×6열지도/21정렬막대·추세색·0선, 6표의4열노출·상세가격 비축약·21기준일원장·숫자정렬·Russell검색·스캐너/배분 전환·console오류0 확인. QA에서 표 min-width로 신호열이 가려진 문제를 전용 CSS로 수정하고 수평overflow0 재확인; 마지막 UI 변경 후 관련 JS suite/구문 재통과. 전체탭 브라우저 동등성 선언 아님. 증거는 private runtime/asset-monitor-validation.log, asset-monitor-browser-qa.json, asset-monitor-reference-audit.json. 공개 출처 제외검사 유지.
+
+게시 run 20260910T035436Z; 최종 커밋/URL/성공은 runtime/state.json과 해당 file-verification 보고서를 확인한다. 전체목표는 계속 진행: 원본 미공개MA/모멘텀누적곡선/모델설정, 관계망확대·본사/교역, Esri고해상도/지명(권한 질문 대기), SEC13F/연속수집, 직접글로벌NI/OP/PIT, OCR/LLM/팀공유DB/로그인 등 REFERENCE_PARITY의 남은 범위는 미완료다.

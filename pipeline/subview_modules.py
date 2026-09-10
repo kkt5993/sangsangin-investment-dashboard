@@ -167,6 +167,8 @@ def extend(d,objects,ranks):
         t=s['title'];s['group']='파생·옵션' if any(k in t for k in ['GEX','감마','옵션','VIX','SKEW']) else '신호등 US·KR' if any(k in t for k in ['조기경보','변동성 · 시장']) else '쏠림·신용' if any(k in t for k in ['쏠림','신용']) else '리스크 콕핏'
     from .allocation_views import allocation_views
     allocation_views(d,objects['multiasset'])
+    from .risk_cockpit import views as cockpit_views
+    cockpit_views(d,objects['risk'],objects['multiasset'])
     from .technical_scan import scanner_view
     objects['multiasset']['sections'][2]=scanner_view(d)
     for i,s in enumerate(objects['multiasset']['sections']):s['group']='자산 모니터' if i<2 else '패턴 스캐너' if i==2 else '자산배분'

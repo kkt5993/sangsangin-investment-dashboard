@@ -1,9 +1,10 @@
 """Financial/date/shape invariants for every new public snapshot, offline."""
 from pathlib import Path
-import json,math,re,base64,struct
+import json,math,re,base64,struct,sys
 from datetime import date,datetime,timedelta,timezone
 from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 def load(p):return json.loads(p.read_text(encoding='utf8'),parse_constant=lambda v:(_ for _ in ()).throw(ValueError(v)))
 
 def series(s,cutoff,forecast=False):
@@ -432,6 +433,46 @@ for file in (ROOT/'docs/data').glob('*.json'):
         if v['status']=='pending':assert v['reason']
     for s in d['sections']:section(s,d['as_of'],d['module'])
     if d['module']=='risk':
+        if 'cockpit' in d:
+            import numpy as np
+            import pandas as pd
+            from pipeline.risk_cockpit import validated_weights,stress_results
+            c=d['cockpit'];a=load(ROOT/'docs/data/multiasset.json')['allocation_book']
+            assert c['allocation']==a and c['as_of']==d['as_of']
+            w=validated_weights(a,d['as_of']);m=c['metrics'];f=c['factors']
+            source=next(s for s in load(ROOT/'docs/data/multiasset.json')['sections'] if s['type']=='allocation' and s['title'].startswith('ML 국면'))
+            assert {r['name'].rsplit(' · ',1)[1]:r['value'] for r in source['weights']}=={r['symbol']:r['weight_pct'] for r in a['weights']}
+            assert c['stress']==stress_results(w,load(ROOT/'config/risk_stress.json'))
+            ledger=next(s for s in d['sections'] if s['title']=='고정 장부 월별 계산 원장')['rows'][::-1]
+            assert len(ledger)==m['months']==120 and ledger[0][0]==m['start'] and ledger[-1][0]==m['end']
+            assert [r[0] for r in ledger]==[str(t.date()) for t in pd.date_range(m['start'],m['end'],freq='ME')]
+            returns=np.asarray([r[1]/100 for r in ledger]);wealth=np.cumprod(1+returns)
+            drawdown=wealth/np.maximum(1,np.maximum.accumulate(wealth))-1
+            assert np.allclose(wealth,[r[2] for r in ledger],atol=2e-6,rtol=0)
+            assert np.allclose(drawdown*100,[r[3] for r in ledger],atol=2e-5,rtol=0)
+            assert math.isclose(np.std(returns,ddof=1)*np.sqrt(12)*100,m['vol_pct'],abs_tol=2e-5)
+            q95,q99=np.quantile(returns,[.05,.01])
+            for actual,expected in [(q95*100,m['var95_pct']),(q99*100,m['var99_pct']),
+                    (returns[returns<=q95].mean()*100,m['cvar95_pct']),(drawdown.min()*100,m['mdd_pct'])]:
+                assert math.isclose(actual,expected,abs_tol=2e-5)
+            assert m['cvar95_pct']<=m['var95_pct'] and m['var99_pct']<=m['var95_pct']
+            assert math.isclose(m['hhi'],(w*w).sum(),abs_tol=1e-6)
+            assert math.isclose(m['effective_assets'],1/(w*w).sum(),abs_tol=1e-6)
+            assert math.isclose(m['cash_pct']+m['noncash_pct'],100,abs_tol=1e-6)
+            assert len(f['exposures'])==9 and f['rank']==10 and f['months']==len(f['observations'])>=36
+            assert f['end']<=m['end']<d['as_of'] and len(c['stress']['scenarios'])==5
+            assert len(c['confidence'])==6
+            for r in c['confidence']:
+                if r['status']!='available':continue
+                assert r['end']<=m['end'] and r['model_as_of']<=d['as_of'] and r['band_pct']==1
+                assert r['all']['n']==sum(r[k]['n'] for k in ['up','down','neutral'])
+                assert r['all']['hits']==sum(r[k]['hits'] for k in ['up','down','neutral'])
+                assert r['directional']['n']==r['up']['n']+r['down']['n']
+                assert r['directional']['hits']==r['up']['hits']+r['down']['hits']
+                for k in ['all','directional','up','down','neutral']:
+                    s=r[k];assert 0<=s['hits']<=s['n']
+                    if s['n']:assert math.isclose(s['hit_pct'],s['hits']/s['n']*100,abs_tol=1e-6)
+                    else:assert s['hit_pct'] is None
         p=d['kr_shortgamma'];assert p['as_of']==d['as_of'] and p['index_code']=='1028'
         assert p['fund_count']==len(p['funds']) and p['covered_funds']==sum(r['coefficient'] is not None for r in p['funds'])
         assert p['complete']==(bool(p['funds']) and p['covered_funds']==p['fund_count'])

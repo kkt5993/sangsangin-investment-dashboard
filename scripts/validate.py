@@ -3,6 +3,9 @@ from pathlib import Path
 import json
 import re
 import math
+import html
+import unicodedata
+from urllib.parse import unquote
 from datetime import date
 from html.parser import HTMLParser
 
@@ -35,6 +38,11 @@ for path in ROOT.rglob('*'):
             image.verify()
         continue
     text=path.read_text(encoding='utf-8')
+    if path.is_relative_to(ROOT/'docs'):
+        public_text=unicodedata.normalize('NFKC',html.unescape(unquote(text)))
+        public_text=re.sub(r'\\u([0-9a-fA-F]{4})',lambda m:chr(int(m[1],16)),public_text)
+        if re.search(r'lee[\s_-]*chang[\s_-]*woo|chang[\s_-]*woo[\s_-]*lee|이\s*창\s*우|aragorn-investium\.pages\.dev',public_text,re.I):
+            errors.append('Excluded reference-creator attribution in '+str(path.relative_to(ROOT)))
     for pattern in [r'AIza[\w-]{30,}',r'gh[pousr]_[A-Za-z0-9]{20,}',r'github_pat_[A-Za-z0-9_]{20,}',r'C:\\Users\\',r'127\.0\.0\.1:8799']:
         if re.search(pattern,text):errors.append('Disallowed content in '+str(path.relative_to(ROOT)))
     if path.suffix=='.md':

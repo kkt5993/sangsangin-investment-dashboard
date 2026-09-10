@@ -7,6 +7,7 @@
 - Match each reference chart's axes, series, horizon, benchmark, guides, panels and grouping. Colors need not match. Record undisclosed parameters and unresolved instruments explicitly.
 - Run collection and calculation on the user's computer. Keep raw prices and acquisition manifests in the sibling `sangsangin-investment-data/` directory (or SANGSANGIN_DATA_DIR), outside this repository. Publish only code, documentation and compact calculated outputs. Ask the user before large downloads; the collector enforces a conservative 512 MiB local cache budget (explicitly authorized 2026-09-09).
 - Vercel serves the verified static `docs/` output. GitHub retains code, docs and compact results. All asset links must work beneath the repository subpath.
+- User excluded the reference creator's name, profile and source-site links from the deployed website. Check all public output before each publication; keep source comparison evidence in research documentation outside `docs/`.
 - Prefer plain HTML/CSS/JavaScript for the current reading/navigation workflow; introduce dependencies only when needed.
 - Before publishing, run `python -m unittest discover -s tests`, `python scripts/validate.py`, `node scripts/test_charts.cjs`, `node scripts/test_dashboard.cjs`, and syntax checks for changed JavaScript.
 - Extended modules also require `python scripts/validate_extended.py` and `node scripts/test_extended.cjs`. Update generated module documentation with `python scripts/write_status_docs.py` after building snapshots.

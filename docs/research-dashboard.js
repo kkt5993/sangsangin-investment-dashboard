@@ -31,6 +31,7 @@
  function digestTrend(p){return `<p>가용 ${p.available}/${p.expected}자산 · 관측 수익률 %</p>`+C.bars(p.rows,{unit:'%',title:p.title})+table({title:p.title+' · 관측일',columns:['자산','심볼','분류','과거 수익률 %','실제 가격일'],rows:p.rows.map(r=>[r.name,r.symbol,r.group,r.value,r.date])});}
  function digestSources(rows){return rows.map(r=>`<p><strong>${E(r.name)} · ${E(r.symbol)}</strong> ${E(r.role)}<br><a href="${E(safe(r.source))}" target="_blank" rel="noopener noreferrer">공식 사업 설명 ↗</a></p>`).join('');}
  function section(s,i,st){
+  if(s.type==='satellite'||s.type==='facilitydetail')return heading(s.title)+root.SatelliteViews.render(s,i);
   if(s.type==='releasecalendar')return heading(s.title)+root.CalendarViews.render(s,i);
   if(s.type==='ownership')return heading(s.title)+root.OwnershipViews.render(s,i);
   if(['earningsglobal','earningsestimates','earningsactual'].includes(s.type))return heading(s.title)+root.EarningsViews.render(s,i);
@@ -133,6 +134,7 @@
   root.NetworkViews?.bind(container,d,m.id==='dragonglass'?navigate:null);
   root.DecisionLedger?.bind(container,d,navigate,st);
   root.RelationViews?.bind(container,d,navigate,st);
+  root.SatelliteViews?.bind(container,d,navigate,st);
   container.querySelectorAll('[data-hologram]').forEach(box=>box.querySelector('[data-holo-yaw]').addEventListener('input',e=>{box.querySelector('[data-holo-canvas]').innerHTML=A.hologram(d.sections[+box.dataset.hologram],+e.target.value/100);}));
   container.querySelectorAll('[data-industries]').forEach(box=>{const filter=()=>{const sector=box.querySelector('[data-industry-filter]').value,role=box.querySelector('[data-role-filter]').value;box.querySelectorAll('[data-industry]').forEach(card=>{card.hidden=(sector!=='all'&&card.dataset.industry!==sector)||(role!=='all'&&card.dataset.indicatorRole!==role);});};box.querySelectorAll('select').forEach(el=>el.addEventListener('change',filter));});
   if(container.querySelector('#journal-list'))bindJournal(container,m.id);

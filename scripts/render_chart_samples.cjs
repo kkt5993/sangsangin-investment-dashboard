@@ -2,10 +2,13 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const root=path.join(__dirname,'..'),out=process.argv[2],sharp=require(path.join(process.argv[3],'sharp'));
 if(!out)throw Error('Output directory required');fs.mkdirSync(out,{recursive:true});
-const ctx=vm.createContext({window:{},console});for(const n of ['charts','analysis-charts','network-views','relation-views','overview-views','research-notes','geo-views','earnings-views','ownership-views'])vm.runInContext(fs.readFileSync(path.join(root,'docs',n+'.js'),'utf8'),ctx);
+const ctx=vm.createContext({window:{},console});for(const n of ['charts','analysis-charts','network-views','relation-views','overview-views','research-notes','geo-views','earnings-views','ownership-views','satellite-views'])vm.runInContext(fs.readFileSync(path.join(root,'docs',n+'.js'),'utf8'),ctx);
 const data=n=>JSON.parse(fs.readFileSync(path.join(root,'docs/data',n+'.json'),'utf8')),A=ctx.window.AnalysisCharts,G=ctx.window.NetworkViews;
 const styles='<style>.axis{fill:#506d80;font-size:12px}.grid-line{stroke:#dce6ec;stroke-width:1}.reference-line{stroke:#93a8b6;stroke-width:1}.bar-name{fill:#274d66;font-size:13px}</style><rect width="100%" height="100%" fill="white"/>';
 const samples={dynamics:A.surface(data('dynamics').sections[0].surface),risk:A.line(data('dynamics').sections[0].charts[0]),candles:A.candles(data('watch').sections[0]),forecast:A.forecast(data('ml').sections.find(s=>s.type==='ml')),growth:A.scatter3d(data('growth').sections[0]),globe:G.sphere(data('globe').sections[0],data('coastlines').arcs),network:G.graph(data('aragorn').sections[0])};
+const sat=data('dragonglass').sections.find(s=>s.type==='satellite'),SV=ctx.window.SatelliteViews,sc={lon:0,lat:20,zoom:1,size:1,selected:'',mode:'rgb'};
+samples.satellite_world=SV.map(sat,sc,data('coastlines').arcs);
+const site=sat.sites.find(s=>s.id==='ST_BOISE'&&s.scene)||sat.sites.find(s=>s.scene);if(site)for(const mode of ['rgb','ndvi'])samples['satellite_'+mode]=SV.map(sat,{...SV.focus(sc,site),mode},data('coastlines').arcs).replace(/href="(data\/satellite\/[^\"]+\.png)"/g,(_,p)=>'href="data:image/png;base64,'+fs.readFileSync(path.join(root,'docs',p)).toString('base64')+'"');
 samples.pead=A.scatter(data('strategies').sections.find(s=>s.group==='PEAD'&&s.type==='scatter'));
 samples.reflex_hologram=A.hologram(data('regime').sections.find(s=>s.type==='hologram'));
 samples.reflex_radar=A.radar(data('regime').sections.find(s=>s.type==='hologram'));

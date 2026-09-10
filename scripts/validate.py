@@ -25,6 +25,15 @@ for m in mods:
 for path in ROOT.rglob('*'):
     if not path.is_file() or any(p in path.parts for p in ['.git','__pycache__','.venv','node_modules']):continue
     assert path.suffix not in {'.pdf','.mp4','.duckdb','.key','.pem'},str(path)
+    if path.suffix=='.png':
+        from PIL import Image
+        assert path.parent==ROOT/'docs/data/satellite' and re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',path.name)
+        assert path.stat().st_size<1024*1024
+        with Image.open(path) as image:
+            assert image.format=='PNG' and image.mode=='RGBA' and image.size==(400,400)
+            assert not image.info,'Satellite PNG must not contain ancillary metadata'
+            image.verify()
+        continue
     text=path.read_text(encoding='utf-8')
     for pattern in [r'AIza[\w-]{30,}',r'gh[pousr]_[A-Za-z0-9]{20,}',r'github_pat_[A-Za-z0-9_]{20,}',r'C:\\Users\\',r'127\.0\.0\.1:8799']:
         if re.search(pattern,text):errors.append('Disallowed content in '+str(path.relative_to(ROOT)))
@@ -72,5 +81,6 @@ for d in [rs,momentum]:
     assert d['schema_version']==1 and d['status']=='partial'
     assert all(re.fullmatch('[a-f0-9]{64}',q['sha256']) for q in d['quality'] if q['status']=='ok')
 assert sum(p.stat().st_size for p in data_dir.iterdir() if p.is_file()) < 8*1024*1024,'Public snapshot budget exceeded'
+assert sum(p.stat().st_size for p in (data_dir/'satellite').glob('*.png')) < 24*1024*1024,'Public satellite image budget exceeded'
 if errors:raise SystemExit('\n'.join(errors))
 print('PASS: 25 guides, links, public content, strict JSON, coverage, date alignment, curve anchors, hashes and size; offline.')

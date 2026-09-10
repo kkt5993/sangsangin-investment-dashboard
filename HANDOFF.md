@@ -142,3 +142,10 @@ config/sec_ownership_reviews.json은공개SEC원문/색인에서검토한사실8
 달력기준은가격일9/8과별도로최신달력수집일의KST날짜·90일양끝포함. 미국실시간대DST/KST날짜이월·미표기회의미국일자유지·임의발표시각없음. BOK금통위모든정기회의가아니라정책결정회의8건목록. HTML원자료·해시private보존,구축5공식요청(월간/진입확인2포함),기본정기3요청/7일·연도교차한국은행추가표. 실패한출처는이전성공시각/원일정그대로유지;새정상표로대체하며취소일정합집합복원금지. collect_raw현재실행재사용. 상세research/CALENDAR_CONTRACT.md.
 
 개발raw빈티지20260909T232154Z(부모20260909T225247Z),가격1136/거시62/재무197변동없음. 부모파일필드는vintage(다른키아님)이며Data정상상속확인. 검사151Python·두자료검증기·3JS/17구문·66SVG래스터통과,원본사이트요청0·브라우저QA없음. 공개JSON7.703MiB/8,PC122.38MiB/512(새배포패키지생성전). 실행ID 20260909T233734Z;실제게시여부는runtime/state.json확인. 전체목표는아직진행: 위성실관측·국내옵션·직접글로벌NI/OP·SEC13F/연속수집·교역/본사·PDF추출/팀DB·RS/모멘텀/ETF최종계약등REFERENCE_PARITY를계속.
+
+
+위성 후속(2026-09-10): satellite_data.py/satellite_views.py/satellite-views.js는22시설 슬롯·14검증위치/실제Sentinel2 C1 L2A·RGB/NDVI·평면Mercator지도/드래그/키보드/확대/3크기·시설 Entity와 기업 연결을 구현했다. 8미확인(M15X/평택/IntelOhio·Magdeburg/Vandenberg/Sabine/Ghawar/Permian)은 위치 대조 중으로 유지. 공식주소·OSM객체대표점 구분, Colossus1은FCC9쪽 공식gateway좌표. Magdeburg2025-07-24중단발표 반영. 원본좌표의도심/잘못된시설을 복제하지 않았다. 자세한 SATELLITE_CONTRACT.md/registry 참조.
+
+공개COG 사용자opener로206/ContentRange/4MiB요청·192MiB실행전송한도,전체200응답본문거부. 4×4km/400×400/10m원밴드·20mSCL,band별scale+offset후NDVI,음수/분모0/구름제외. 전체70%/coverage98%에추가로중심1km85%·100m95%검사. QA에서Taylor/JASM/Meta공장위구름 발견해이전맑은장면으로교체. 14장면촬영2026-08-23~09-09,가격09-08과별개. 이전관측상속·위치서명변경시미표시·주간시도실패시stale. 건설진척/가동률미추정. 전체Esri배경미구현;로컬해안선과실제장면표시.
+
+refresh의staging→공개복사에PNG가누락되는경로를수정하고회귀검사추가. rasterio1.5.1/affine3.0.1/click8.5.0설치,기존Pillow12.2.0선언. 원자료빈티지20260909T234733Z(부모20260909T232154Z),PC캐시약147.12MiB/512(새배포패키지전),공개JSON7.733MiB/8·PNG7.312MiB/24. 160전체Python+신규게시1검사=161,운영/위성24검사통과,2검증기·3JS·18구문·69SVG래스터·28PNG해시/품질확인. 브라우저QA/원본사이트추가요청0. 새게시run 20260910T001619Z;실제배포완료는runtime/state.json. 목표계속진행:8시설/전지구배경,KR옵션,SEC13F/연속수집,직접NI·OP/PIT,본사/교역,PDF추출/팀DB,RS/모멘텀/ETF기간계약 등REFERENCE_PARITY 남은범위를진행한다.

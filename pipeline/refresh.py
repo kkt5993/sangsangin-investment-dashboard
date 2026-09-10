@@ -79,6 +79,7 @@ def collect(parent,base,as_of,env,config,log):
     if due(parent,'cot.json.gz',7):run('pipeline.cot_data')
     if due(parent,'release_calendar.json.gz',7):run('pipeline.calendar_data')
     if due(parent,'kr_release_calendar.json.gz',7):run('pipeline.kr_calendar')
+    if due(parent,'satellite_collection.json.gz',7):run('pipeline.satellite_data')
     run('pipeline.options_data')
     run('pipeline.flows_data','--market','US')
     if config.get('allow_krx_auth'):run('pipeline.flows_data','--market','KR','--allow-krx-auth')
@@ -117,6 +118,7 @@ def publish(stage,env,log,config=None):
     # Copy only generated public outputs. Code and user files are never committed
     # by the recurring refresh. Vercel receives this validated public output.
     for p in (stage/'docs/data').glob('*.json'):shutil.copy2(p,ROOT/'docs/data'/p.name)
+    copy_satellite_outputs(stage)
     shutil.copy2(stage/'docs/status.js',ROOT/'docs/status.js')
     generated=['research/IMPLEMENTATION_STATUS.md','research/CHART_PARITY.md','research/SUBVIEWS.md']
     generated += [str(p.relative_to(stage)).replace('\\','/') for p in (stage/'research/modules').glob('*.md')]
@@ -129,6 +131,19 @@ def publish(stage,env,log,config=None):
     pending=dict(commit=head,as_of=snapshot['as_of'],vintage=snapshot['vintage'],run_id=snapshot['run_id'],target=config.get('publish_target','vercel'))
     write_json(RUNTIME/'pending_publish.json',pending)
     return complete_publication(pending,env,log,config)
+
+def copy_satellite_outputs(stage,destination=ROOT):
+    """Validated raster outputs must follow their JSON into the public checkout."""
+    import re
+    source=Path(stage)/'docs/data/satellite';target=Path(destination)/'docs/data/satellite'
+    files=list(source.glob('*.png'))
+    for p in files:
+        if p.is_symlink() or not re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',p.name) or p.stat().st_size>=1024*1024:
+            raise ValueError('Unexpected generated satellite image')
+    if files:target.mkdir(parents=True,exist_ok=True)
+    for p in files:
+        temporary=target/(p.name+'.tmp');shutil.copy2(p,temporary);temporary.replace(target/p.name)
+
 
 def complete_publication(pending,env,log,config=None):
     config=config or {}

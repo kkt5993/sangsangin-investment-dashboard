@@ -174,5 +174,7 @@ def extend(d,objects,ranks):
     from .digest import digest_views
     from .relation_views import relation_views
     relation_views(d,objects['dragonglass'])
+    from .satellite_views import satellite_views
+    satellite_views(d,objects['dragonglass'])
     digest_views(d,objects,ranks,news)
     return objects

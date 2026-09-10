@@ -14,6 +14,30 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='satellite':
+        import hashlib
+        from PIL import Image
+        assert len(s['sites'])==len({r['id'] for r in s['sites']})==22
+        assert s['image_count']==sum(r['scene'] is not None for r in s['sites'])
+        assert s['location_count']==sum(r['location_status']=='reviewed' for r in s['sites'])
+        for r in s['sites']:
+            a=r['scene']
+            if r['location_status']!='reviewed':assert r['lat'] is None and r['lon'] is None and a is None
+            if not a:continue
+            assert r['status'] in ['ok','stale'] and r['coordinate_source'].startswith('https://') and r['sources']
+            assert datetime.fromisoformat(a['captured_at'])<=datetime.fromisoformat(a['retrieved_at'])<=datetime.fromisoformat(s['retrieved_at'])
+            assert .7<=a['valid_fraction']<=a['clear_fraction']<=a['coverage']<=1 and -1<=a['ndvi_median']<=1
+            assert .85<=a['core_clear_fraction']<=1 and .95<=a['point_clear_fraction']<=1
+            assert a['native_resolution_m']==10 and a['classification_resolution_m']==20
+            assert len(a['bounds_mercator'])==4 and all(math.isfinite(v) for v in a['bounds_mercator'])
+            west,south,east,north=a['bounds_mercator'];assert west<east and south<north
+            x=6378137*r['lon']*math.pi/180;y=6378137*math.log(math.tan(math.pi/4+r['lat']*math.pi/360))
+            assert west<x<east and south<y<north
+            for mode,image in a['images'].items():
+                assert mode in ['rgb','ndvi'] and image['path']=='data/satellite/'+r['id']+'-'+mode+'.png'
+                path=ROOT/'docs'/image['path'];assert path.stat().st_size==image['bytes']<1024*1024
+                assert hashlib.sha256(path.read_bytes()).hexdigest()==image['sha256']
+                with Image.open(path) as png:assert png.format=='PNG' and png.size==(400,400) and png.mode=='RGBA'
     if kind=='releasecalendar':
         assert (date.fromisoformat(s['to_date'])-date.fromisoformat(s['from_date'])).days==s['days']-1==89
         sources={r['id']:r for r in s['sources']};assert len(sources)==len(s['sources'])

@@ -17,3 +17,6 @@ lightgbm==4.7.0
 Boruta==0.4.3
 torch==2.11.0
 xgboost==3.4.1
+# Bounded COG reads and georeferenced RGB/NDVI maps; no full satellite tiles.
+rasterio==1.5.1
+Pillow==12.2.0

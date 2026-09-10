@@ -109,7 +109,7 @@ const MODULES = [
     "group": "special"
   },
   {
-    "purpose": "논문(article)·기관보고서(report)·프라이머(primer)의 공개 요약 아카이브. 관리자 쓰기 기능은 인증이 필요하다.",
+    "purpose": "논문·리포트·프라이머를 읽고 PDF 페이지별 본문과 근거를 보관하는 리서치 아카이브. 새 기록은 이 브라우저에 저장한다.",
     "build": [
       "slug를 키로 title/date/source/author/org와 core/ideas/evidence/action_plan/keywords를 표시한다.",
       "kind 필터·검색·항목 펼치기·키워드 구름·공동 키워드 연결을 구현한다.",

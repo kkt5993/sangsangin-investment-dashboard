@@ -14,9 +14,11 @@ LIBRARY=[dict(kind='primer',title='공식 유니버스로 상대강도를 비교
  dict(kind='report',title='리스크 수치의 해석 범위',source='상상인 팀 구현 노트',date='2026-09-09',keywords=['리스크','VaR','변동성'],
  core='과거 손익분포에서 계산한 VaR는 정해진 기간과 포트폴리오 비중을 전제로 한다. 국면 진단 점수를 폭락 확률이라고 해석할 수 없으며, 시나리오의 가정된 충격은 예측과 구분해야 한다.',evidence='포트폴리오 비중, 월간 관측 수, 신뢰수준을 콕핏에 표시한다.')]
 
+def principium(as_of):
+    return module('principium',as_of,'논문·리포트·프라이머를 제목/메타·핵심·아이디어·근거·시사점의5단으로 열람하고 등록·수정합니다. 제목 노드의 공유 키워드 관계와 빈도 구체를 문서에서 계산합니다. PDF의 제목·저자·페이지별 본문을 읽고 원문 해시·페이지를 근거에 연결합니다. 초기 공개 콘텐츠는 팀 구현 노트이며 새 글·첨부·추출 본문은 이 브라우저의 로컬 자료입니다.',
+        [dict(type='notebook',title='리서치 아카이브',group='리서치 아카이브',mode='principium',items=LIBRARY)],missing=['PDF 텍스트 추출은 파일당25MiB·300쪽·20만자 범위입니다. 스캔·그림의 OCR, LLM 요약·번역은 추가 구현 대상이며 원문 배치·표 읽기 순서는 검토가 필요합니다.','이 브라우저의 IndexedDB에 저장합니다. 팀 공용 DB·서버 인증/공개 배포·서버 조회 통계는 추가 구현 대상입니다.'])
 def libraries(d):
-    lib=module('principium',d.as_of,'논문·리포트·프라이머를 제목/메타·핵심·아이디어·근거·시사점의5단으로 열람하고 등록·수정합니다. 제목 노드의 공유 키워드 관계와 빈도 구체를 문서에서 계산합니다. 초기 공개 콘텐츠는 팀 구현 노트이며 새 글·첨부는 이 브라우저의 로컬 자료입니다.',
-        [dict(type='notebook',title='리서치 아카이브',group='리서치 아카이브',mode='principium',items=LIBRARY)],missing=['원본 기관 보고서·개인 아카이브는 복제하지 않습니다. 현재 첨부는 PDF/래스터 이미지 보관·다운로드이며 자동 추출·LLM 요약은 미연결입니다.','이 브라우저의 IndexedDB에 저장합니다. 팀 공용 DB·서버 인증/공개 배포·서버 조회 통계는 추가 구현 대상입니다.'])
+    lib=principium(d.as_of)
     digest=[]
     for s,n in [('SPY','S&P500 ETF'),('^KS11','KOSPI'),('TLT','미국 장기국채 ETF'),('GLD','금 ETF')]:
         a=d.stats(s)

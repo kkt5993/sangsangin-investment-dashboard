@@ -9,12 +9,13 @@ const earningsChecks=require('./test_earnings.cjs');
 const ownershipChecks=require('./test_ownership.cjs');
 const calendarChecks=require('./test_calendar.cjs');
 const satelliteChecks=require('./test_satellite.cjs');
+const pdfChecks=require('./test_notebook_pdf.cjs');
 const researchChecks=Promise.resolve().then(()=>require('./test_research_store.cjs')).then(()=>require('./test_research_notes.cjs'));
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8');
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','relation-views','decision-ledger','research-store','research-notes','geo-views','earnings-views','ownership-views','calendar-views','satellite-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','calendar-views','satellite-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
 // Minimal event targets exercise the actual tab and scenario callbacks offline.
 function interactiveContainer(){
@@ -36,7 +37,7 @@ function interactiveContainer(){
  return c;
 }
 (async()=>{
- await relationChecks;await overviewChecks;await geoChecks;await earningsChecks;await ownershipChecks;await calendarChecks;await satelliteChecks;await researchChecks;
+ await relationChecks;await overviewChecks;await geoChecks;await earningsChecks;await ownershipChecks;await calendarChecks;await satelliteChecks;await researchChecks;await pdfChecks;
  let count=0;
  for(const m of modules){const d=data[m.id];if(d?.schema_version!==2)continue;const c=container();context.location.hash='#'+m.id;await context.window.ResearchDashboard.render(c,m);
   assert(c.innerHTML.includes('<h1>'),m.id);assert(!c.innerHTML.includes('role="alert"'),m.id);assert(!/\b(NaN|Infinity|undefined)\b|\[object Object\]/.test(c.innerHTML),m.id+' invalid rendering');assert(c.innerHTML.includes('data/'+m.id+'.json'),m.id);

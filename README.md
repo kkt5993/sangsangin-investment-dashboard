@@ -79,6 +79,8 @@ node scripts/test_extended.cjs
 
 PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하며 백업 JSON으로 이동합니다. 저장 범위·이전 메모 가져오기·한도는 [로컬 리서치 가이드](research/LOCAL_RESEARCH.md)를 참조하세요.
 
+PDF는 제목·저자·페이지별 본문을 읽고 원문 페이지를 근거에 인용할 수 있습니다. 본문 검색·TXT 내보내기·첨부 포함 백업과 기존 기록 보존을 연결했습니다. [PDF 처리 범위와 검증](research/PDF_EXTRACTION.md)에 스캔 OCR·요약의 남은 범위와 한도를 표시합니다.
+
 ## 학습 출처
 
 설계 학습의 출발점은 [ARAGORN-INVESTIUM](https://aragorn-investium.pages.dev/#glance)입니다. 원본 HTML/JS/차트/리서치 보존본은 별도 로컬 연구 폴더에 있으며 재게시하지 않습니다. 이번 확장 중 원본 사이트 요청은 하지 않았습니다. [지도 데이터 라이선스](research/MAP_LICENSE.md)를 별도로 표시합니다.

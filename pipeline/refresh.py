@@ -107,9 +107,10 @@ def prune_staging(keep=2):
         shutil.rmtree(target)
 
 def validate(stage,env,log):
+    env={**env,'PYTHON_EXECUTABLE':sys.executable}
     steps=[[sys.executable,'-m','unittest','discover','-s','tests'],[sys.executable,'scripts/validate.py'],[sys.executable,'scripts/validate_extended.py']]
     steps += [['node','scripts/'+s] for s in ['test_charts.cjs','test_dashboard.cjs','test_extended.cjs']]
-    steps += [['node','--check',str(p)] for p in (stage/'docs').glob('*.js')]
+    steps += [['node','--check',str(p)] for p in (stage/'docs').rglob('*') if p.suffix in {'.js','.mjs'}]
     for step in steps:command(step,stage,env,log)
 
 def publish(stage,env,log,config=None):

@@ -20,3 +20,6 @@ xgboost==3.4.1
 # Bounded COG reads and georeferenced RGB/NDVI maps; no full satellite tiles.
 rasterio==1.5.1
 Pillow==12.2.0
+
+# Synthetic PDF fixtures for the browser parser and extraction checks.
+PyMuPDF==1.26.4

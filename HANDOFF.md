@@ -175,3 +175,12 @@ momentum_highs.py/momentum-highs.js는 OEF101중RS100/후보9와 공식KOSPI2002
 
 
 2026-09-10 배포 출처 제외 요청: 사용자는 배포 웹사이트의 참조 제작자 이름·관련 출처 표기를 전부 제외하도록 지시했다. 현재 docs 정적 파일과 실제 열린 모멘텀 화면에서 이름/참조사이트 링크는 발견되지 않았다. scripts/validate.py에 배포 docs 전체의 이름 변형·HTML/URL/Unicode escape 및 참조 도메인 검사 추가, 정기 갱신 시 재등장하면 게시 중단. 연구용 대조 문서는 docs 밖에 유지한다. 현재 PDF 본문 추출 후속은 원본 principium.js 업로드 계약/PDF.js 공식문서·npm 메타 확인까지만 수행했고 다운로드/코드변경은 아직 없다. 다음 목표 턴에서 이어갈 것.
+
+
+PDF 본문 후속(2026-09-10): pdf-text.js/notebook-pdf.js를 PRINCIPIUM/IW/ASK에 연결. 공식 npm PDF.js6.3.289 legacy파서/worker+CMap168+표준font14+license4=188파일3811556bytes, tarball8503425bytes SHA512/개별SHA256 검증. 같은사이트lazy import/worker이며 문서업로드/API/외부CDN없음. .gitattributes로업스트림byte를Windowscheckout에서도유지. public_assets.py가파일누락/추가/해시/8MiB한도검사,패키지.mjs/.bcmap/.pfb/.ttf허용·정기JS구문검사23파일확장. PDF runtime assets는정상오픈소스배포라이선스를보존한다.
+
+본문은파일당25MiB(보존원본상한대응),300쪽/20만문자/90초. 한글·영문·부호/단위,물리페이지+문서라벨,파일SHA256,제목/저자·본문·부분범위를보존. 저장 전인용발췌/12000자한도·기존입력보존,전체추출본문검색·TXT. 스캔본문없음/OCR필요,손상·암호화·취소구분;원문배치/표순서별도확인. auto-core는추출기록임을표시하고AI요약으로주장하지않음. Node현재runtime은지원폭이넓은legacybuild사용;@napi-rs/canvas미설치경고는Node이미지렌더용이며텍스트실제파서검사정상,브라우저기능도정상. 실제PDF미리보기/그림렌더는제품에없으며PDF원문다운로드가능.
+
+research-store DB/schema2,기존같은DB의meta/files보존·oldversion연결닫기·v1백업/본문/Blob보존. 기존2MiB메타/64MiB첨부한도유지하고전체추출본문은메타한도에포함;초과시atomic실패/입력유지. 원문첨부없거나페이지/문자/부분범위모순은거부. 첨부제거시해당글의추출본문도제거. 파일당25MiB확대는사용자선택로컬첨부이며PC raw512MiB정책과별개.
+
+181Python·2검증기·3JSsuite(실제PDF파서/신규저장UI검사포함)·23JS/MJS구문통과. 합성PDF4(혼합한글영문+스캔·암호·손상·302쪽),3페이지래스터중영문/한글육안확인. CUA localhost에서선택→실제worker→한글2쪽/라벨ii→원문근거→저장→새로고침→본문에만있는숫자검색→페이지전환·화면검사. 테스트자료만사용,localhost의 [QA] PDF 추출 검증 기록은공개사이트개인DB와별개. 전체25탭브라우저QA라는뜻아님. pdf-browser-qa.json과pdf-fixtures,검사로그는private runtime. 새price/원본사이트요청0,raw빈티지20260910T011831Z동일,원자료추가없음(의존성archive/합성fixtures만추가). run 20260910T021913Z,게시최종상태는runtime/state.json/file-verification. 목표여전히진행:OCR·분류/번역/LLM요약/팀공유DB·로그인과REFERENCE_PARITY의세계위성배경·KR옵션·SEC13F/연속수집·직접NI/OP/PIT·본사/교역·원본기간등.

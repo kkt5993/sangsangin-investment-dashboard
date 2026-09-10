@@ -1,0 +1,2 @@
+# Keep upstream PDF.js, CMap, font and license bytes equal to their pinned hashes.
+docs/vendor/pdfjs/** -text -whitespace

@@ -14,8 +14,10 @@ def cli(config):
 def package_site(site,dest,project=None):
     site=Path(site).resolve();dest=Path(dest).resolve()
     if not (site/'index.html').exists():raise ValueError('Public site index is missing')
+    from .public_assets import pdf_assets
+    pdf_assets(site,ROOT/'config/pdfjs_vendor.json')
     files=[p for p in site.rglob('*') if p.is_file()]
-    allowed={'.html','.css','.js','.json','.svg','.png','.ico','.txt',''}
+    allowed={'.html','.css','.js','.mjs','.bcmap','.pfb','.ttf','.json','.svg','.png','.ico','.txt',''}
     for p in files:
         if p.is_symlink() or not p.resolve().is_relative_to(site) or p.suffix not in allowed or p.name.startswith('.env'):raise ValueError('Unexpected public file')
     budget(sum(p.stat().st_size for p in files))

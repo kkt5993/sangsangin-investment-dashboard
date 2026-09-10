@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from .engine import number,clean_json,ret,points
 from .catalog import MULTI,SCAN_EXTRA
+from .cache import valid_ohlc
 
 
 def wilder(s,n=14):
@@ -18,7 +19,7 @@ def wilder(s,n=14):
 def indicators(frame):
     f=frame.copy();ratio=f.adjusted_close/f.close
     for k in ['open','high','low','close']:f[k]=f[k]*ratio
-    f=f.dropna(subset=['open','high','low','close']).tail(800);p=f.close
+    f=f.loc[valid_ohlc(f)].tail(800);p=f.close
     tr=pd.concat([f.high-f.low,(f.high-p.shift()).abs(),(f.low-p.shift()).abs()],axis=1).max(axis=1);tr.iloc[0]=np.nan
     up=f.high.diff();down=-f.low.diff()
     pdm=up.where((up>down)&(up>0),0).where(up.notna());mdm=down.where((down>up)&(down>0),0).where(down.notna())

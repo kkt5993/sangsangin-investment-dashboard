@@ -1,0 +1,10 @@
+{
+  "reviewed_at": "2026-09-10",
+  "source": "https://www.nyse.com/trade/hours-calendars",
+  "start": "2026-01-01",
+  "end": "2028-12-31",
+  "timezone": "America/New_York",
+  "regular_close_hour": 16,
+  "early_close_hour": 13,
+  "early_close_dates": ["2026-11-27", "2026-12-24", "2027-11-26", "2028-07-03", "2028-11-24"]
+}

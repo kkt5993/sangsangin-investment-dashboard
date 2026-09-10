@@ -16,12 +16,12 @@ def event_data(d):
             r=read(p);result[r['symbol']]=r
     return result
 
-def event_returns(price,benchmark,timestamp):
+def event_returns(price,benchmark,timestamp,close_hour=16):
     """D0 is first regular close after release; drift starts at that close."""
     t=pd.Timestamp(timestamp)
     if t.tzinfo is None:return None
     local=t.tz_convert('America/New_York');day=local.tz_localize(None).normalize()
-    eligible=price.index[price.index>day] if local.hour>=16 else price.index[price.index>=day]
+    eligible=price.index[price.index>day] if local.hour>=close_hour else price.index[price.index>=day]
     if not len(eligible):return None
     first=eligible[0];i=price.index.get_loc(first)
     if i==0:return None
@@ -174,6 +174,8 @@ def extend(d,objects,ranks):
     asset_monitor_views(d,objects['multiasset'])
     from .strategy_cards import views as strategy_card_views
     strategy_card_views(d,objects['strategies'])
+    from .pead import views as pead_views
+    pead_views(d,objects['strategies'])
     objects['ask_digest']['sections'].insert(0,dict(type='library',title='최근 발표·보도 원문',group='최근 뉴스',items=news[:30]))
     from .iw_review import iw_views
     iw_views(d,objects)

@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),asse
 const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'utf8'),ctx=vm.createContext({window:{},console});
 for(const f of ['charts','strategy-cards'])vm.runInContext(read('docs/'+f+'.js'),ctx);
 const V=ctx.window.StrategyCards,data=JSON.parse(read('docs/data/strategies.json'));
-const turn=data.sections.find(s=>s.type==='strategycards'&&s.kind==='turnaround'),pair=data.sections.find(s=>s.type==='strategycards'&&s.kind==='pairs');
+const turn=data.sections.find(s=>s.type==='strategycards'&&s.kind==='turnaround'),pair=data.sections.find(s=>s.type==='strategycards'&&s.kind==='pairs'),pead=data.sections.find(s=>s.type==='strategycards'&&s.kind==='pead');
 module.exports=(async()=>{
  assert(turn&&pair);assert.equal(pair.rows.length,13);
  for(const s of [turn,pair]){const h=V.render(s,0);assert(!/\b(NaN|Infinity|undefined)\b/.test(h));for(const c of s.rows){const svg=V.spark(c,s.kind);assert.equal((svg.match(/data-strategy-spark/g)||[]).length,c.spark.length>1?1:0);if(s.kind==='pairs'&&c.spark.length>1)assert(svg.includes('data-strategy-guide="midrange"'));}}
@@ -19,5 +19,12 @@ module.exports=(async()=>{
  q.value='';market.value='all';await q.fire('input');await grid.querySelectorAll('[data-strategy-detail]')[4].fire('click');assert(out.innerHTML.includes('Sample4'));
  const bad={...card,name:'<script>alert(1)</script>',source:'javascript:alert(1)'};assert(!V.detail(bad,'turnaround').includes('<script>'));assert(!V.detail(bad,'turnaround').includes('href="javascript:'));
  assert(V.cards({...turn,rows:[]}).includes('후보가 없습니다'));
+ assert(pead);assert.equal(pead.scope.expected,pead.rows.length+pead.scope.excluded.length);
+ for(const c of pead.rows){const h=V.detail(c,'pead');assert(h.includes(String(c.display_return)));assert(h.includes('발표 전 포함'));assert(!/\b(NaN|Infinity|undefined)\b/.test(h));assert(!V.spark(c,'pead').includes('data-strategy-guide'));}
+ const pc=pead.rows[0];assert(pc);const ps={...pead,rows:Array.from({length:15},(_,i)=>({...pc,id:'P'+i,symbol:'P'+i,name:'Pead'+i}))};
+ const pb=parse(V.render(ps,0));V.bind(pb,[ps]);const pg=pb.querySelector('[data-strategy-cards]'),pm=pb.querySelector('[data-strategy-more]'),pq=pb.querySelector('[data-strategy-search]');
+ assert.equal(pg.querySelectorAll('[data-strategy-detail]').length,12);await pm.fire('click');assert.equal(pg.querySelectorAll('[data-strategy-detail]').length,15);assert(pm.textContent.includes('12'));
+ pq.value='Pead14';await pq.fire('input');assert.equal(pg.querySelectorAll('[data-strategy-detail]').length,1);assert(pb.querySelector('[data-strategy-output]').innerHTML.includes('Pead14'));
+ assert(V.cards({...pead,rows:[{...pc,drift:-5}]}).includes('-5%'));
  console.log('Strategy cards: annual recovery,13fixed pairs,44point sparks/midrange,full-precision details,market/search/top8 toggles and escaping passed.');
 })();

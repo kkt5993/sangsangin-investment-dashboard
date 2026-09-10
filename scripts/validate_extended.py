@@ -15,12 +15,12 @@ def series(s,cutoff,forecast=False):
 def section(s,cutoff,module):
     kind=s['type']
     if kind=='strategycards':
-        assert s['kind'] in ['turnaround','pairs']
+        assert s['kind'] in ['turnaround','pairs','pead']
         assert len(s['rows'])==len({r['id'] for r in s['rows']})
         if s['kind']=='pairs':assert len(s['rows'])==13 and sum(r['market']=='US' for r in s['rows'])==9
         for r in s['rows']:
             assert r['market'] in ['US','KR'] and (r['date'] is None or r['date']<=cutoff)
-            pts=r['spark'];assert len(pts) in [0,44]
+            pts=r['spark'];assert 2<=len(pts)<=50 if s['kind']=='pead' else len(pts) in [0,44]
             assert [p[0] for p in pts]==sorted({p[0] for p in pts})
             assert all(p[0]<=r['date'] and math.isfinite(p[1]) for p in pts)
             if s['kind']=='pairs':
@@ -30,6 +30,14 @@ def section(s,cutoff,module):
                     assert r['spread_sd']>0 and r['pvalue'] is not None and 0<=r['pvalue']<=1
                     assert abs(r['z']-(pts[-1][1]-r['spread_mean'])/r['spread_sd'])<.003
                     assert abs(r['midrange']-(min(p[1] for p in pts)+max(p[1] for p in pts))/2)<.00001
+            elif s['kind']=='pead':
+                assert r['surprise']>0 and r['display_return']>0 and r['actual_eps'] is not None
+                assert r['anchor_date']==pts[0][0]<=r['event_date']<=r['first_session']<=r['date']<=cutoff
+                assert r['days']==(date.fromisoformat(cutoff)-date.fromisoformat(r['event_date'])).days<=60
+                assert abs(r['display_return']-(pts[-1][1]/pts[0][1]-1)*100)<.0001
+                assert abs(r['score']-r['surprise']-r['display_return'])<.00001
+                assert r['close_hour'] in [13,16]
+                for h in [5,20]:assert (r['d'+str(h)] is None)==(r['sessions']<h)
             else:
                 assert len(r['annual'])==3 and r['annual'][-1][0]<=cutoff
                 assert r['annual'][1][1]<r['annual'][0][1] and r['annual'][-1][1]>max(0,r['annual'][1][1])

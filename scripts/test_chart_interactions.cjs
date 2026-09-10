@@ -23,13 +23,12 @@ fs.mkdirSync(out,{recursive:true});
    assert.equal(await page.locator('.brand').count(),0,'removed sidebar logo');
    if(tab==='growth'){
     const scene=page.locator('.scene-view').first(),plot=scene.locator('[data-projection-canvas]'),svg=plot.locator('svg');
-    const original=await svg.getAttribute('viewBox');await scene.locator('[data-camera-mode="pan"]').click();
-    await plot.scrollIntoViewIfNeeded();const box=await plot.boundingBox();await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.5+45,box.y+box.height*.5+25,{steps:6});await page.mouse.up();
+    const original=await svg.getAttribute('viewBox');await page.keyboard.down('Shift');
+    await plot.scrollIntoViewIfNeeded();const box=await plot.boundingBox();await page.mouse.move(box.x+box.width*.5,box.y+box.height*.5);await page.mouse.down();await page.mouse.move(box.x+box.width*.5+45,box.y+box.height*.5+25,{steps:6});await page.mouse.up();await page.keyboard.up('Shift');
     assert.notEqual(await svg.getAttribute('viewBox'),original,'camera translates in two dimensions');
-    const shifted=await svg.getAttribute('viewBox');await scene.locator('[data-camera-zoom="1"]').click();await page.waitForTimeout(80);assert.equal(await svg.getAttribute('viewBox'),shifted,'translation persists after render');
+    const shifted=await svg.getAttribute('viewBox');await plot.focus();await plot.press('+');await page.waitForTimeout(80);assert.equal(await svg.getAttribute('viewBox'),shifted,'translation persists after render');
     await scene.locator('[data-camera-reset]').click();await page.waitForTimeout(80);assert.equal(await svg.getAttribute('viewBox'),original,'reset clears translation');
-    for(const preset of ['front','top','side','iso']){await scene.locator('[data-camera-preset="'+preset+'"]').click();await page.waitForTimeout(60);assert.ok(!(await svg.innerHTML()).includes('NaN'),'finite preset projection');}
-    await scene.locator('[data-camera-reset]').click();await scene.locator('[data-camera-mode="rotate"]').click();
+    await scene.locator('[data-camera-reset]').click();
    }
    if(tab==='geoecon')await page.locator('[data-subview="시장 지표"]').click();
    if(tab==='regime')await page.locator('[data-subview="Soros 재귀성"]').click();
@@ -57,8 +56,7 @@ fs.mkdirSync(out,{recursive:true});
      await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
      assert.notEqual(await box.locator('[data-yaw]').inputValue(),'-65');await cdp.detach();
      await box.locator('[data-projection-reset]').click();
-     await box.locator('[data-scene-pan="1"]').click();assert((await canvas.evaluate(e=>e.scrollLeft))>0);
-     await box.locator('[data-scene-pan="-1"]').click();
+
     }
     report.interactions.push({width,growth:'keyboard zoom/reset, selection, mouse rotation, '+(width===390?'CDP touch rotation':'desktop')});
    }
@@ -87,7 +85,16 @@ fs.mkdirSync(out,{recursive:true});
     report.interactions.push({width,tab,camera:'rotation, elevation, zoom and Home'});
    }
    if(tab==='overview'){
-    const first=page.locator('[data-coordinate]').first();await first.locator('[data-state-select]').selectOption({index:5});assert.match(await first.locator('[data-state-detail]').innerText(),/^\d{4}-/);
+    const first=page.locator('[data-coordinate]').first();
+    assert.equal(await first.locator('input[type=range]').count(),0,'no camera sliders');
+    const direct=first.locator('[data-state-holo]');await direct.evaluate(e=>e.scrollIntoView({block:'center'}));const r=await direct.boundingBox(),beforeDrag=await direct.innerHTML();
+    await page.mouse.move(r.x+r.width*.4,r.y+r.height*.4);await page.mouse.down();await page.mouse.move(r.x+r.width*.4+65,r.y+r.height*.4+30,{steps:7});await page.mouse.up();await page.waitForTimeout(80);
+    assert.notEqual(await direct.innerHTML(),beforeDrag,'Tesseract direct drag');assert.notEqual(await first.locator('[data-state-pitch]').inputValue(),'38','vertical drag tilts');
+    const zoomBefore=Number(await first.locator('[data-state-zoom]').inputValue());await page.mouse.wheel(0,-100);await page.waitForTimeout(80);assert(Number(await first.locator('[data-state-zoom]').inputValue())>zoomBefore,'focused plain wheel zoom');
+    await direct.press('Home');await page.waitForTimeout(80);
+    const clicked=direct.locator('[data-state-date]').last();const clickedDate=await clicked.getAttribute('data-state-date');await clicked.click();assert((await first.locator('[data-state-detail]').innerText()).startsWith(clickedDate),'click object reads raw data');
+    const point=direct.locator('[data-state-date]').last();await point.focus();await point.press('Enter');assert.match(await first.locator('[data-state-detail]').innerText(),/^\d{4}-/,'object keyboard selection');
+    await first.locator('[data-state-select]').selectOption({index:5});assert.match(await first.locator('[data-state-detail]').innerText(),/^\d{4}-/);
     for(const selector of ['[data-state-radar]','[data-state-worm]']){const panel=page.locator(selector).first();const before=await panel.innerHTML();await panel.focus();await panel.press('ArrowRight');await page.waitForTimeout(50);assert.notEqual(await panel.innerHTML(),before);await panel.press('Home');}
    }
    if(tab==='aragorn'){await page.locator('[data-node-select]').selectOption({index:2});assert(!(await page.locator('.network-detail').innerText()).includes('모든 객체'));}
@@ -95,11 +102,11 @@ fs.mkdirSync(out,{recursive:true});
    if(tab==='growth'){
     const box=page.locator('[data-projection]').first();await box.locator('[data-scene-full]').click();await page.waitForFunction(()=>!!document.fullscreenElement);await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.fullscreenElement);
     if(width===390){
-     await box.locator('[data-scene-touch]').click();const touchCanvas=box.locator('[data-projection-canvas]');await touchCanvas.evaluate(e=>e.scrollIntoView({block:'center'}));const r=await touchCanvas.boundingBox(),cdp=await page.context().newCDPSession(page),y=r.y+Math.min(80,r.height/2);
+     const touchCanvas=box.locator('[data-projection-canvas]');await touchCanvas.evaluate(e=>e.scrollIntoView({block:'center'}));const r=await touchCanvas.boundingBox(),cdp=await page.context().newCDPSession(page),y=r.y+Math.min(80,r.height/2);
      await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:r.x+90,y},{x:r.x+210,y}]});
      await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:r.x+60,y},{x:r.x+240,y}]});
      await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await cdp.detach();assert(Number(await box.locator('[data-zoom]').inputValue())>100,'two-finger zoom');
-     await box.locator('[data-scene-touch]').click();await box.locator('[data-projection-reset]').click();
+     await box.locator('[data-projection-reset]').click();
      await page.locator('.nav-toggle').click();assert.equal(await page.locator('.sidebar').evaluate(e=>e.inert),false);await page.keyboard.press('Escape');assert.equal(await page.locator('.sidebar').evaluate(e=>e.inert),true);
     }
    }

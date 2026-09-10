@@ -1,5 +1,6 @@
 """Visible subview inventory, including the remaining unconnected source views."""
 EXPECTED={
+ 'globe':['국가 교역','기업 국가 탐색','밸류체인 유니버스','SAURON'],
  'dragonglass':['관계 지도','지금 주목','위성 현장','Entity 360','시나리오','결정 원장','트리거·촉매','리서치','데이터 소스','현황판','방법론'],
  'geoecon':['주목 상황','지역 모니터','복합지표','키워드 트렌드','시장 지표','뉴스 원장','인과·영향 모델'],
  'regime':['월별 국면','미국 경제국면','한국 시장국면','시장국면','국면별 성과','국면 전이','밸류에이션','실적 이벤트','거시 발표 달력','산업별 핵심지표','Soros 재귀성'],
@@ -10,6 +11,8 @@ EXPECTED={
 }
 GAPS={'위성 현장':'22시설 실관측·NASA 전 지구 배경 연결; 고해상도 배경·지명 레이어는 추가 확인 필요','인과·영향 모델':'이벤트와 인과 관계·전파 가중치 필요','Soros 재귀성':'원본 복합 산식과 지수 이익 역사 필요'}
 GAPS['비펀더멘탈 수급']='종목·레버리지 ETF AUM·공매도·국내 투자자별 수급 수집 중'
+GAPS['밸류체인 유니버스']='53개 세부 업종·기업 본사/도시·회사별 공급 및 물류 관계 근거 연결 필요'
+GAPS['SAURON']='3D 카메라·USGS 지진·CelesTrak 궤도·센서 스타일 연결 필요'
 def attach(obj):
     groups=list(dict.fromkeys(s.get('group','종합') for s in obj.get('sections',[])))
     expected=EXPECTED.get(obj['module'],groups)

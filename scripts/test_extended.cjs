@@ -11,6 +11,7 @@ const ownershipChecks=require('./test_ownership.cjs');
 const strategyChecks=require('./test_strategy_cards.cjs');
 const calendarChecks=require('./test_calendar.cjs');
 const satelliteChecks=require('./test_satellite.cjs');
+const tradeChecks=require('./test_trade.cjs');
 const satelliteTileChecks=require('./test_satellite_tiles.cjs');
 const pdfChecks=require('./test_notebook_pdf.cjs');
 const ocrChecks=require('./test_pdf_ocr.cjs');
@@ -19,7 +20,8 @@ const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','trade-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+tradeChecks(context,data);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
 // Minimal event targets exercise the actual tab and scenario callbacks offline.
 function interactiveContainer(){

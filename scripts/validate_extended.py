@@ -15,6 +15,23 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='tradeglobe':
+        from decimal import Decimal
+        assert s['year']==int(cutoff[:4])-2 and len(s['areas'])==45
+        ids={a['id'] for a in s['areas']};assert len(ids)==45
+        assert len({a['code'] for a in s['areas']})==45
+        for a in s['areas']:
+            assert -180<=a['lon']<=180 and -90<=a['lat']<=90
+            assert len({r[0] for r in a['exports']})==len(a['exports'])
+            for partner,usd,reported,aggregate in a['exports']:
+                assert partner in ids and partner!=a['id'] and isinstance(usd,str) and re.fullmatch(r'\d+(\.\d+)?',usd)
+                assert isinstance(reported,bool) and isinstance(aggregate,bool)
+            if a['world_usd'] is None:assert not a['exports']
+            else:
+                world=Decimal(a['world_usd']);assert world>0
+                assert sum(Decimal(r[1]) for r in a['exports'])<=world*Decimal('1.000001')
+                assert a['official_name'] and a['retrieved_at'] and a['checked_at']
+        assert s['source']=='https://comtradeapi.un.org/public/v1/preview/C/A/HS'
     if kind=='strategycards':
         assert s['kind'] in ['turnaround','pairs','pead']
         assert len(s['rows'])==len({r['id'] for r in s['rows']})

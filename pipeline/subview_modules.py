@@ -188,5 +188,7 @@ def extend(d,objects,ranks):
     relation_views(d,objects['dragonglass'])
     from .satellite_views import satellite_views
     satellite_views(d,objects['dragonglass'])
+    from .trade_views import views as trade_views
+    trade_views(d,objects['globe'])
     digest_views(d,objects,ranks,news)
     return objects

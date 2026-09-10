@@ -10,7 +10,7 @@
  function line(c){
   const series=(c.series||[]).map(s=>({...s,points:s.points.filter(p=>finite(p[1])&&Number.isFinite(Date.parse(p[0])))})).filter(s=>s.points.length);
   if(!series.length)return empty();
-  const W=900,H=420,L=72,R=80,T=37+18*Math.floor((series.filter(s=>s.legend!==false).length-1)/4),B=51;
+  const W=900,H=420,L=72,R=80,T=37,B=51;
   const times=series.flatMap(s=>s.points.map(p=>Date.parse(p[0]))),t0=Math.min(...times),t1=Math.max(...times),X=t=>L+(Date.parse(t)-t0)/Math.max(86400000,t1-t0)*(W-L-R);
   const vals=a=>series.filter(s=>(s.axis||'left')===a).flatMap(s=>s.points.map(p=>p[1]));
   const lr=c.limits||range([...vals('left'),...(c.guides||[])]),rr=vals('right').length?range(vals('right')):lr;
@@ -20,9 +20,11 @@
   for(let i=0;i<6;i++){let v=lr[0]+(lr[1]-lr[0])*i/5,y=Y(v);body+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" class="grid-line"/><text x="${L-8}" y="${y+4}" text-anchor="end" class="axis">${n(v)}</text>`;if(vals('right').length)body+=`<text x="${W-R+8}" y="${y+4}" class="axis">${n(rr[0]+(rr[1]-rr[0])*i/5)}</text>`;}
   for(let i=0;i<6;i++){const date=new Date(t0+(t1-t0)*i/5).toISOString().slice(0,10);body+=`<text x="${X(date)}" y="${H-24}" text-anchor="middle" class="axis">${c.date_format==='day'?date.slice(5):date.slice(0,7)}</text>`;}
   body+=(c.guides||[]).map(v=>`<line data-guide="${v}" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="reference-line" stroke-dasharray="5 5"/>`).join('');
-  let legend=0;series.forEach((s,i)=>{const color=E(s.color||colors[i%colors.length]);body+=`<polyline data-analysis-series="${E(s.name)}" data-axis="${E(s.axis)}" points="${s.points.map(p=>`${X(p[0]).toFixed(2)},${Y(p[1],s.axis).toFixed(2)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="${s.width||1.9}" opacity="${s.opacity??1}" ${s.dashed?'stroke-dasharray="6 4"':''}/>`;if(s.legend!==false){body+=`<text x="${L+legend%4*190}" y="${20+Math.floor(legend/4)*18}" fill="${color}" class="axis">${E(s.name)}</text>`;legend++;}const dots=c.markers&&i===0?s.points:[s.points.at(-1)];body+=dots.map(p=>`<circle data-line-marker="1" cx="${X(p[0])}" cy="${Y(p[1],s.axis)}" r="3" fill="${color}"><title>${E(s.name)} · ${p[0]} · ${n(p[1])}</title></circle>`).join('');});
+  series.forEach((s,i)=>{const color=E(s.color||colors[i%colors.length]);body+=`<polyline data-analysis-series="${E(s.name)}" data-observations="${E(JSON.stringify(s.points))}" data-axis="${E(s.axis)}" points="${s.points.map(p=>`${X(p[0]).toFixed(2)},${Y(p[1],s.axis).toFixed(2)}`).join(' ')}" fill="none" stroke="${color}" stroke-width="${s.width||1.9}" opacity="${s.opacity??1}" ${s.dashed?'stroke-dasharray="6 4"':''}/>`;const dots=c.markers&&i===0?s.points:[s.points.at(-1)];body+=dots.map(p=>`<circle data-line-marker="1" cx="${X(p[0])}" cy="${Y(p[1],s.axis)}" r="3" fill="${color}"><title>${E(s.name)} · ${p[0]} · ${n(p[1])}</title></circle>`).join('');});
   body+=`<text x="${L}" y="${H-5}" class="axis">${E(c.left||'')}</text><text x="${W-R}" y="${H-5}" text-anchor="end" class="axis">${E(c.right||'')}</text>`;
-  return svg(body,c.title,W,H,'data-chart-type="line"');
+  body+=`<line data-analysis-cursor hidden="hidden" y1="${T}" y2="${H-B}" class="crosshair"/>`;
+  const legend=series.map((s,i)=>s.legend===false?'':`<span><i style="border-color:${E(s.color||colors[i%colors.length])};border-top-style:${s.dashed?'dashed':'solid'}"></i>${E(s.name)}${s.axis==='right'?' · 우축':''}</span>`).join('');
+  return `<div class="analysis-line-wrap"><div class="analysis-legend" aria-label="계열 범례">${legend}</div><div class="chart-viewport">${svg(body,c.title,W,H,'data-chart-type="line" tabindex="0"')}</div><output class="analysis-readout">포인터 또는 ← → 키로 관측값 확인 · Home/End 처음/마지막</output></div>`;
  }
  function scatter(c){
   const pts=(c.points||[]).filter(p=>finite(p.x)&&finite(p.y));if(!pts.length)return empty();
@@ -33,7 +35,7 @@
   if(c.trajectory)b+=`<polyline points="${pts.map(p=>`${X(p.x)},${Y(p.y)}`).join(' ')}" fill="none" stroke="#a1acb8"/>`;
   pts.forEach((p,i)=>{b+=`<circle data-point="${E(p.name)}" cx="${X(p.x)}" cy="${Y(p.y)}" r="${i===pts.length-1?7:3.5}" fill="${colors[Math.floor(i/6)%colors.length]}" opacity=".8"><title>${E(p.name)} · x ${n(p.x)} · y ${n(p.y)}</title></circle>`;});
   b+=`<text x="${W/2}" y="${H-6}" text-anchor="middle" class="axis">${E(c.x_label)}</text><text transform="translate(18 ${H/2}) rotate(-90)" text-anchor="middle" class="axis">${E(c.y_label)}</text>`;
-  return svg(b,c.title,W,H,'data-chart-type="scatter"');
+  return `<div class="chart-viewport">${svg(b,c.title,W,H,'data-chart-type="scatter"')}</div>`;
  }
  function candles(c,weekly=false){
   const rows=weekly?c.weekly:c.candles;if(!rows?.length)return empty();const W=800,H=540,L=68,R=15,T=32,PB=366,VT=411,VB=500;
@@ -55,9 +57,9 @@
   return svg(b,c.title,W,H,'data-chart-type="groupedbars"');
  }
  function project3d(x,y,z,yaw,tilt=.48,zoom=1){const rx=x*Math.cos(yaw)-y*Math.sin(yaw),ry=x*Math.sin(yaw)+y*Math.cos(yaw);return [450+rx*480*zoom,300+ry*125*zoom-z*175*zoom,ry];}
- function surface(c,yaw=-.8,count=null){
+ function surface(c,yaw=-.65,count=null,zoom=1){
   const surf=c.values.slice(0,count||c.values.length),nt=surf.length,nw=c.windows.length;if(nt<2)return empty();
-  const vals=surf.flat().filter(finite),lo=Math.max(0,Math.min(...vals)),hi=Math.max(lo+.1,...vals),P=(i,t,z)=>project3d(i/(nw-1)-.5,t/(nt-1)-.5,(z-lo)/(hi-lo),yaw);
+  const vals=surf.flat().filter(finite),lo=Math.max(0,Math.min(...vals)),hi=Math.max(lo+.1,...vals),P=(i,t,z)=>project3d(i/(nw-1)-.5,t/(nt-1)-.5,(z-lo)/(hi-lo),yaw,.48,zoom);
   let quads=[];for(let t=0;t<nt-1;t++)for(let k=0;k<nw-1;k++){const z=[surf[t][k],surf[t][k+1],surf[t+1][k+1],surf[t+1][k]];if(!z.every(finite))continue;const p=[P(k,t,z[0]),P(k+1,t,z[1]),P(k+1,t+1,z[2]),P(k,t+1,z[3])];quads.push({p,z:z.reduce((a,b)=>a+b)/4,depth:p.reduce((a,b)=>a+b[2],0)});}
   quads.sort((a,b)=>a.depth-b.depth);let b=quads.map(q=>`<polygon points="${q.p.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="hsl(${220-(q.z-lo)/(hi-lo)*185} 48% 55%)" stroke="#ffffff55" stroke-width=".5"><title>연환산 변동성 ${n(q.z)}%</title></polygon>`).join('');
   c.windows.forEach((w,i)=>{let p=P(i,0,lo);b+=`<text x="${p[0]}" y="${p[1]+21}" text-anchor="middle" class="axis">${w}D</text>`;});
@@ -65,12 +67,18 @@
   b+=`<text x="30" y="30" class="axis">Z: 변동성 ${n(lo)} ~ ${n(hi)}%</text><text x="30" y="425" class="axis">X: 룩백 기간 · Y: ${c.dates[0]} → ${c.dates[nt-1]}</text>`;
   return svg(b,'기간 × 시간 × 변동성',900,450,'data-chart-type="surface"');
  }
- function scatter3d(c,yaw=-.8,zoom=1){
+ function scatter3d(c,yaw=-.65,zoom=1){
   const pts=c.points.filter(p=>[p.x,p.y,p.z].every(finite));if(!pts.length)return empty();const ranges=['x','y','z'].map(k=>range(pts.map(p=>p[k]),true));
   const project=p=>project3d((p.x-ranges[0][0])/(ranges[0][1]-ranges[0][0])-.5,(p.y-ranges[1][0])/(ranges[1][1]-ranges[1][0])-.5,(p.z-ranges[2][0])/(ranges[2][1]-ranges[2][0]),yaw,.48,zoom);
   const max=Math.max(1,...pts.map(p=>p.size||0));const group=[...new Set(pts.map(p=>p.country||p.group))];
-  let b='';const origin=project3d(-.5,-.5,0,yaw,.48,zoom);[[.5,-.5,0],[-.5,.5,0],[-.5,-.5,1]].forEach((v,i)=>{const end=project3d(...v,yaw,.48,zoom);b+=`<line x1="${origin[0]}" y1="${origin[1]}" x2="${end[0]}" y2="${end[1]}" stroke="#99aabc"/><text x="${end[0]}" y="${end[1]-10}" text-anchor="middle" class="axis">${E([c.x_label,c.y_label,c.z_label][i])}</text>`;});
-  pts.map(p=>({p,xy:project(p)})).sort((a,b)=>a.xy[2]-b.xy[2]).forEach(({p,xy})=>{const radius=p.size?4+15*Math.sqrt(p.size/max):4;b+=`<circle data-point="${E(p.name)}" cx="${xy[0]}" cy="${xy[1]}" r="${radius}" fill="${colors[group.indexOf(p.country||p.group)%colors.length]}" opacity=".65" stroke="#fff"><title>${E(p.name)} · x ${n(p.x)} · y ${n(p.y)} · z ${n(p.z)} · 시총 ${n(p.size)}</title></circle>`;});
+  const P=(x,y,z)=>project3d(x,y,z,yaw,.48,zoom);
+  let b='';
+  for(let j=0;j<5;j++){const t=j/4;for(const pair of [[[t-.5,-.5,0],[t-.5,.5,0]],[[-.5,t-.5,0],[.5,t-.5,0]]]){const [a,z]=pair.map(v=>P(...v));b+=`<line x1="${a[0]}" y1="${a[1]}" x2="${z[0]}" y2="${z[1]}" class="grid-line"/>`;}}
+  const origin=P(-.5,-.5,0);[[.5,-.5,0],[-.5,.5,0],[-.5,-.5,1]].forEach((v,i)=>{const end=P(...v);b+=`<line x1="${origin[0]}" y1="${origin[1]}" x2="${end[0]}" y2="${end[1]}" stroke="#71889b"/><text x="${end[0]}" y="${end[1]+(i===1?38:-22)}" text-anchor="middle" class="axis">${E([c.x_label,c.y_label,c.z_label][i])}</text>`;
+   for(let j=0;j<3;j++){const t=j/2,q=[-.5,-.5,0];q[i]+=t;const p=P(...q);b+=`<text data-3d-tick="${i}" x="${p[0]+(i===2?-9:j===0?(i===0?28:-28):0)}" y="${p[1]+(i===2?4:j===0&&i===0?32:16)}" text-anchor="${i===2?'end':'middle'}" class="axis">${n(ranges[i][0]+t*(ranges[i][1]-ranges[i][0]))}</text>`;}
+  });
+  b+=group.map((g,i)=>`<text x="${25+i%5*170}" y="${24+Math.floor(i/5)*20}" fill="${colors[i%colors.length]}" class="chart-legend">● ${E(g||'미분류')}</text>`).join('');
+  pts.map(p=>({p,xy:project(p)})).sort((a,b)=>a.xy[2]-b.xy[2]).forEach(({p,xy})=>{const radius=p.size?4+15*Math.sqrt(p.size/max):4;b+=`<circle data-point="${E(p.name)}" cx="${xy[0]}" cy="${xy[1]}" r="${radius}" fill="${colors[group.indexOf(p.country||p.group)%colors.length]}" opacity="${.55+(xy[2]+.71)/1.42*.4}" stroke="#fff"><title>${E(p.name)} · x ${n(p.x)} · y ${n(p.y)} · z ${n(p.z)} · 시총 ${n(p.size)}</title></circle>`;});
   b+=`<text x="25" y="450" class="axis">${ranges.map((r,i)=>`${['X','Y','Z'][i]} ${n(r[0])} ~ ${n(r[1])}`).join(' · ')} · 원 크기=시총, 없는 경우 동일 크기</text>`;
   return svg(b,c.title,900,480,'data-chart-type="scatter3d"');
  }
@@ -86,15 +94,16 @@
   const a=points.filter(p=>finite(p[1]));if(!a.length)return empty();const W=310,H=115,[lo,hi]=range(a.map(p=>p[1])),t0=Date.parse(a[0][0]),t1=Date.parse(a.at(-1)[0]),X=p=>10+(Date.parse(p[0])-t0)/Math.max(1,t1-t0)*290,Y=p=>14+(hi-p[1])/(hi-lo)*72;
   return svg(`<polyline points="${a.map(p=>`${X(p)},${Y(p)}`).join(' ')}" fill="none" stroke="#287c96" stroke-width="2"/><text x="10" y="108" class="axis">${a[0][0].slice(0,7)}</text><text x="300" y="108" text-anchor="end" class="axis">${a.at(-1)[0].slice(0,7)}</text>`,title,W,H,'data-chart-type="spark"');
  }
- function hologram(c,yaw=.6){
+ function hologram(c,yaw=.6,zoom=1){
+  const project=(x,y,z)=>project3d(x,y,z,yaw,.48,zoom);
   const rows=c.rows.filter(r=>['cognition','acceleration','fragility'].every(k=>finite(r.z[k])));if(!rows.length)return empty();
-  const clamp=v=>Math.max(-3,Math.min(3,v)),P=r=>project3d(clamp(r.z.cognition)/6,clamp(r.z.acceleration)/6,(clamp(r.z.fragility)+3)/6,yaw);
-  const corners=[[-.5,-.5,0],[.5,-.5,0],[.5,.5,0],[-.5,.5,0]].map(p=>project3d(...p,yaw));
+  const clamp=v=>Math.max(-3,Math.min(3,v)),P=r=>project(clamp(r.z.cognition)/6,clamp(r.z.acceleration)/6,(clamp(r.z.fragility)+3)/6,yaw);
+  const corners=[[-.5,-.5,0],[.5,-.5,0],[.5,.5,0],[-.5,.5,0]].map(p=>project(...p,yaw));
   let b=`<polygon points="${corners.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="#eef3f7" stroke="#aab8c4"/>`;
-  [[0,0,'자기강화 가속','#e9d5d7'],[0,-.5,'건전 추세','#d8e8dd'],[-.5,0,'관성 과열','#efe3cd'],[-.5,-.5,'균형·잠복','#d9e3ee']].forEach(([x,z,label,color])=>{const q=[[x,z,0],[x+.5,z,0],[x+.5,z+.5,0],[x,z+.5,0]].map(p=>project3d(...p,yaw)),at=project3d(x+.25,z+.25,0,yaw);b+=`<polygon data-holo-quadrant="${label}" points="${q.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="${color}" stroke="#c0cbd2"/><text x="${at[0]}" y="${at[1]}" text-anchor="middle" class="axis">${label}</text>`;});
-  const origin=project3d(0,0,0,yaw);[[.5,0,0],[0,.5,0],[0,0,1]].forEach((p,i)=>{const end=project3d(...p,yaw);b+=`<line x1="${origin[0]}" y1="${origin[1]}" x2="${end[0]}" y2="${end[1]}" stroke="#718597"/><text x="${end[0]}" y="${end[1]-15}" text-anchor="middle" class="axis">${['X 인지 게인','깊이 Z 초지수성','높이 Y 취약성'][i]}</text>`;});
+  [[0,0,'자기강화 가속','#e9d5d7'],[0,-.5,'건전 추세','#d8e8dd'],[-.5,0,'관성 과열','#efe3cd'],[-.5,-.5,'균형·잠복','#d9e3ee']].forEach(([x,z,label,color])=>{const q=[[x,z,0],[x+.5,z,0],[x+.5,z+.5,0],[x,z+.5,0]].map(p=>project(...p,yaw)),at=project(x+.25,z+.25,0,yaw);b+=`<polygon data-holo-quadrant="${label}" points="${q.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="${color}" stroke="#c0cbd2"/><text x="${at[0]}" y="${at[1]}" text-anchor="middle" class="axis">${label}</text>`;});
+  const origin=project(0,0,0,yaw);[[.5,0,0],[0,.5,0],[0,0,1]].forEach((p,i)=>{const end=project(...p,yaw);b+=`<line x1="${origin[0]}" y1="${origin[1]}" x2="${end[0]}" y2="${end[1]}" stroke="#718597"/><text x="${end[0]}" y="${end[1]-15}" text-anchor="middle" class="axis">${['X 인지 게인','깊이 Z 초지수성','높이 Y 취약성'][i]}</text>`;});
   b+=`<polyline data-holo-trajectory="1" points="${rows.map(r=>P(r).slice(0,2).join(',')).join(' ')}" fill="none" stroke="#7295a9" stroke-width="1.5"/>`;
-  const latest=rows.at(-1),top=P(latest),foot=project3d(clamp(latest.z.cognition)/6,clamp(latest.z.acceleration)/6,0,yaw);b+=`<line x1="${top[0]}" y1="${top[1]}" x2="${foot[0]}" y2="${foot[1]}" stroke="#b28325" stroke-dasharray="4 4"/>`;
+  const latest=rows.at(-1),top=P(latest),foot=project(clamp(latest.z.cognition)/6,clamp(latest.z.acceleration)/6,0,yaw);b+=`<line x1="${top[0]}" y1="${top[1]}" x2="${foot[0]}" y2="${foot[1]}" stroke="#b28325" stroke-dasharray="4 4"/>`;
   rows.forEach((r,i)=>{const p=P(r),v=r.z.volatility,color=finite(r.z.herding)?`hsl(${210-(clamp(r.z.herding)+3)*30} 58% 46%)`:'#9ea5ab',radius=finite(v)?3+(clamp(v)+3):3;b+=`<circle data-holo-date="${r.date}" cx="${p[0]}" cy="${p[1]}" r="${i===rows.length-1?10:radius}" fill="${i===rows.length-1?'#b28325':color}" opacity="${.3+.7*i/Math.max(1,rows.length-1)}"><title>${r.date} · ${c.axes.map(a=>a.name+' '+n(r.raw[a.key])+' '+a.unit).join(' · ')}</title></circle>`;});
   b+=`<text x="35" y="406" class="axis">좌표=36개월 z · 색=허딩(회색: 자료 부족) · 크기=60일 변동성</text><text x="35" y="430" class="axis">각 축 표시 범위 −3~+3z · 밝기=최근 · 황색=현재</text>`;
   return svg(b,c.title+' · 3D 궤적',900,450,'data-chart-type="hologram"');
@@ -192,5 +201,12 @@
   s.rows.forEach((r,i)=>{if(i%3===0||i===s.rows.length-1){const x=L+(i+.5)*bw,y=T+2*step+bar+16;body+=`<text x="${x}" y="${y}" transform="rotate(-40 ${x} ${y})" text-anchor="end" class="axis">${E(r[0].slice(2,7))}</text>`;}});
   body+=`<text x="${L}" y="${H-12}" class="axis">회색: 필수 입력 미산출 · 각 칸은 완료된 한 달</text>`;return svg(body,s.title,W,H,'data-chart-type="state-timeline"');
  }
- root.AnalysisCharts={line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,scanCandles,modelLeaderboard,lagCorrelation,shap,featureSelection,moeFan,moeTopology,stateTimeline,n,empty};
+ function bindLines(container){container.querySelectorAll('.analysis-line-wrap').forEach(wrap=>{
+  const chart=wrap.querySelector('svg'),output=wrap.querySelector('output');let cache=null,index=0;
+  const read=()=>{if(cache)return cache;const series=Array.from(chart.querySelectorAll('[data-observations]')).map(el=>({name:el.dataset.analysisSeries,axis:el.dataset.axis,points:new Map(JSON.parse(el.dataset.observations))})),dates=[...new Set(series.flatMap(s=>Array.from(s.points.keys())))].sort();return cache={series,dates,times:dates.map(Date.parse)};};
+  const show=i=>{const {series,dates}=read();index=Math.max(0,Math.min(dates.length-1,i));const date=dates[index],{times}=read(),x=72+(times[index]-times[0])/Math.max(86400000,times.at(-1)-times[0])*748,cursor=chart.querySelector('[data-analysis-cursor]');cursor.removeAttribute('hidden');cursor.setAttribute('x1',x);cursor.setAttribute('x2',x);output.textContent=date+' · '+series.map(s=>s.name+(s.axis==='right'?' (우축)':'')+': '+(s.points.has(date)?String(s.points.get(date)):'관측 없음')).join(' · ');};
+  chart.addEventListener('pointermove',e=>{const {times}=read(),box=chart.getBoundingClientRect(),ratio=Math.max(0,Math.min(1,((e.clientX-box.left)/box.width*900-72)/748)),t=times[0]+ratio*(times.at(-1)-times[0]);let lo=0,hi=times.length-1;while(lo<hi){const mid=(lo+hi)>>1;if(times[mid]<t)lo=mid+1;else hi=mid;}show(lo>0&&Math.abs(times[lo-1]-t)<Math.abs(times[lo]-t)?lo-1:lo);});
+  chart.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight','Home','End'].includes(e.key)){e.preventDefault();show(e.key==='Home'?0:e.key==='End'?Infinity:index+(e.key==='ArrowLeft'?-1:1));}});
+ });}
+ root.AnalysisCharts={bindLines,line,scatter,candles,grouped,surface,scatter3d,forecast,spark,hologram,radar,optionProfile,rebalancing,valuation,scanCandles,modelLeaderboard,lagCorrelation,shap,featureSelection,moeFan,moeTopology,stateTimeline,n,empty};
 })(typeof window==='undefined'?globalThis:window);

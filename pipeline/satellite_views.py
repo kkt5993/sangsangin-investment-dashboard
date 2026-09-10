@@ -6,7 +6,7 @@ from .store import ROOT
 from .satellite_data import unpack, registry, derived, site_signature, usable
 
 
-def images(arrays, scene):
+def images(arrays, scene, rgb_max=.3):
     from PIL import Image
     from affine import Affine
     from rasterio.transform import array_bounds, from_bounds
@@ -24,7 +24,9 @@ def images(arrays, scene):
     # Nearest-neighbour preserves masked pixels and the fixed NDVI interpretation.
     rgb = project(rgb,Resampling.nearest); ndvi = project(ndvi[None],Resampling.nearest)[0]
     valid_rgb=np.isfinite(rgb).all(axis=0)
-    rgb8=(np.clip(np.nan_to_num(rgb,nan=0),0,.3)/.3)**(1/2.2)
+    if not .1 <= rgb_max <= 1:
+        raise ValueError('Invalid fixed RGB display range')
+    rgb8=(np.clip(np.nan_to_num(rgb,nan=0),0,rgb_max)/rgb_max)**(1/2.2)
     rgb8=np.moveaxis(np.rint(rgb8*255).astype(np.uint8),0,2)
     rgb8=np.dstack([rgb8,valid_rgb.astype(np.uint8)*255])
     stops=np.array([-1,0,.3,.6,1]); colors=np.array([[34,95,160],[211,195,165],[210,207,109],[92,150,72],[16,80,50]])
@@ -47,11 +49,12 @@ def satellite_views(d,obj):
             file=d.resource(scene['raw_file']);content=file.read_bytes()
             if hashlib.sha256(content).hexdigest()!=scene['sha256']:raise ValueError('Satellite raw checksum mismatch')
             with np.load(io.BytesIO(content),allow_pickle=False) as f:arrays={k:f[k] for k in f.files}
-            output,bounds,stats=images(arrays,scene)
+            rgb_max=site.get('rgb_reflectance_max',.3)
+            output,bounds,stats=images(arrays,scene,rgb_max)
             public=dict(id=scene['id'],captured_at=scene['captured_at'],retrieved_at=scene['retrieved_at'],source=scene['source'],
                 bounds_mercator=bounds,clear_fraction=scene['clear_fraction'],coverage=scene['coverage'],
                 core_clear_fraction=scene['core_clear_fraction'],point_clear_fraction=scene['point_clear_fraction'],
-                native_resolution_m=10,classification_resolution_m=20,**stats,images={})
+                native_resolution_m=10,classification_resolution_m=20,rgb_reflectance_max=rgb_max,**stats,images={})
             for kind,content in output.items():
                 relative='data/satellite/'+site['id']+'-'+kind+'.png';path=ROOT/'docs'/relative
                 path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(content)
@@ -66,8 +69,8 @@ def satellite_views(d,obj):
     obj['sections'].append(dict(type='satellite',title='위성 현장 · RGB / NDVI',group='위성 현장',sites=sites,
         retrieved_at=raw['retrieved_at'],observation_cutoff=raw['observation_cutoff'],registry_reviewed_at=spec['reviewed_at'],
         location_count=sum(s['location_status']=='reviewed' for s in sites),image_count=sum(s['scene'] is not None for s in sites),
-        attribution='Contains modified Copernicus Sentinel data ('+years+') · Earth Search / Element84 · © OpenStreetMap contributors (ODbL1.0) · Natural Earth',
-        note='각 시설 주변 4×4km의 최근60일·최대12개 후보 중 유효 화소70% 이상, 중심1km 맑은 화소85% 이상인 최신 확보 영상입니다. 촬영일은 시설마다 다릅니다. NDVI는 식생 지수로, 건설 진척률·가동률·실적 추정값이 아닙니다. 구름·그림자·눈·결측 화소는 제외합니다.'))
+        attribution='Contains modified Copernicus Sentinel data ('+years+') · Earth Search / Element84 · © OpenStreetMap contributors (ODbL1.0) · Natural Earth · 위치별 추가 출처는 시설 상세 참조',
+        note='각 시설 주변 4×4km의 최근60일·최대36개 후보 중 유효 화소70% 이상, 중심1km 맑은 화소85% 이상인 최신 확보 영상입니다. 촬영일은 시설마다 다릅니다. NDVI는 식생 지수로, 건설 진척률·가동률·실적 추정값이 아닙니다. 구름·그림자·눈·결측 화소는 제외합니다.'))
     obj['missing']=[x.replace('위성 시설 관측·','') for x in obj['missing']]
     pending=[s['name'] for s in sites if s['location_status']!='reviewed']
     if pending:obj['missing'].append('위성 관측 위치 대조 중: '+', '.join(pending)+'. 해당 시설 슬롯은 보존하며 미확인 좌표의 영상은 표시하지 않습니다.')

@@ -2,18 +2,27 @@
 
 원본 보존 `dragonglass.js`의 시설 칩, 평면 지도,400/560/760px 크기, 위치 이동/확대, 촬영일 카드,RGB/NDVI 전환, 시설 Entity 이동을 대조했다. 원본 사이트 요청은 추가하지 않았다. 원본 좌표·영상·수치를 재배포하지 않고 공식 시설 자료와 독립 좌표 근거를 대조하여 새 Sentinel 관측을 수집했다.
 
-현재22시설 슬롯을 모두 유지한다. 14곳에 실제 영상이 있고8곳은 관측 구역을 확인 중이다. 일부 원본 좌표가 실제 시설과 떨어져 있어 임의 좌표로 영상을 채우지 않는다. 원본 Esri 전 지구 위성 배경은 아직 없으며, 현재 지도는 로컬 해안선과 실제 확보한 관측 장면을 사용한다. 이 차이를 완성으로 표시하지 않는다.
+현재22시설 슬롯을 모두 유지한다. 22곳의 관측 기준점과 실제 영상을 연결했다. 최신 영상 확보 수와 촬영일은 공개 위성 화면의 결과를 기준으로 한다. 일부 원본 좌표가 실제 시설과 떨어져 있어 임의 좌표로 영상을 채우지 않는다. 원본 Esri 전 지구 위성 배경은 아직 없으며, 현재 지도는 로컬 해안선과 실제 확보한 관측 장면을 사용한다. 이 차이를 완성으로 표시하지 않는다.
 
 ## 시설 정의
 
 `config/satellite_sites.json`이 동결된 위치 검토 원장이다. 회사/정부의 공식 시설명·주소/지역, 좌표 출처, 관측 범위, 검토일을 구분한다. 대부분 좌표는 공식 주소와 대조한 OpenStreetMap 시설 객체 대표점으로, 공식 측량점이나 법적 부지 경계가 아니다. Colossus1은 [FCC 공시9쪽](https://docs.fcc.gov/public/attachments/DOC-420685A1.pdf)의 xAI Memphis Gateway 위경도를 십진도로 변환했다. 같은 회사의 Colossus2를 혼합하지 않는다.
 
-| 상태 | 시설 |
+| 관측 기준점 | 위치 근거와 범위 |
 |---|---|
-| 관측 연결14 | TSMC Arizona, Samsung Taylor, Micron Boise, Stargate Abilene, TSMC Hsinchu 본사/Fab12A, JASM Kumamoto, ASML Veldhoven, Tesla Texas/Fremont, Starbase 발사 시설, Cape Canaveral SLC-40, Vogtle, Meta Hyperion, xAI Colossus1 |
-| 위치 대조8 | SK hynix M15X, Samsung Pyeongtaek, Intel Ohio/Magdeburg, Vandenberg SLC-4E, Sabine Pass LNG, Ghawar 유전, Permian 분지 |
+| 기존14시설 | 공식 주소·OSM 시설 객체, xAI Colossus1은 FCC 공시 좌표 |
+| Samsung Pyeongtaek | 삼성 공식 캠퍼스 내 복지1동 매장 지도 좌표. 개별 P1~P5 팹 중심이 아님 |
+| SK hynix M15X | 공식 청주4공장 주소·M15X 배치와 장소 지도상의 기존 M15 공장 대조. 기존 팹 주변4km로 인접 M15X를 포함한 캠퍼스 관측; M15X의 공식 측량점이 아님 |
+| Intel Ohio One | Umbra의 공개 Intel Ohio One 메타데이터 `sceneCenterPointLla`. 대용량 SAR 영상은 다운로드하지 않음 |
+| Intel Magdeburg | 시의회 DS0471/25 부록1의 Eulenberg 계획 구역과 OSM Eulenberg 지형 기준점 대조 |
+| Vandenberg SLC-4E | SpaceX Falcon 사용자 안내서 PDF73쪽(인쇄62쪽)의 발사대 위경도 |
+| Sabine Pass LNG | Cheniere 공식 주소 페이지에서 연결한 지도 장소 핀. 지도 화면 중심과 구분 |
+| Ghawar 권역 | Aramco 공식 Uthmaniyah 가스 처리 시설과 OSM 산업부지 대표점, USGS 지질 구역 대조 |
+| Permian 분지 | NASA ISS013-E-26488의 Yates 유전 사진 중심30.9°N,101.9°W. 위성 직하점·머신러닝 추정점과 구분 |
 
-국내 M15X와 평택은 주변 다른 공장·도심을 대신 사용하지 않는다. Ghawar/Permian은 넓은 지리적 영역이므로 대표 관측 구역을 먼저 정의해야 한다. Cape/Vandenberg는 상업 발사 시설 주변을 관측하며 기지 전체를 대표하지 않는다. Intel Magdeburg는 [2025-07-24 공식 발표](https://www.intel.de/content/www/de/de/newsroom/news/corporate/lip-bu-tan-steps-in-the-right-direction.html)의 계획 중단을 기록하며 가동 공장으로 표시하지 않는다.
+Ghawar/Permian의4km 관측은 명시한 시설·구역의 표면 영상이며 유전·분지 전체를 대표하는 표본이 아니다. 유정 수, 생산량, 매장량으로 확대 해석하지 않는다. NASA와 Umbra의 과거 촬영 자료는 위치 근거로만 사용하며 실제 표시 영상은 별도로 확보한 Sentinel-2의 촬영일을 따른다. 각 좌표의 직접 출처는 시설 상세와 위치 원장에 보존한다.
+
+Cape/Vandenberg는 상업 발사 시설 주변이며 기지 전체가 아니다. Intel Magdeburg는 [2025-07-24 공식 발표](https://www.intel.de/content/www/de/de/newsroom/news/corporate/lip-bu-tan-steps-in-the-right-direction.html)의 독일 계획 중단을 반영해 계획 부지로 표시한다.
 
 OSM 조회는 설치 시 소수의 이름을 한 PC·한 스레드에서1초 이상 간격으로 대조하고 응답을 로컬 저장했다. [Nominatim 정책](https://operations.osmfoundation.org/policies/nominatim/)에 맞추며, 정기 수집/방문자 검색/자동완성 서비스에 연결하지 않는다. 지도에 OSM 기여자·ODbL 출처를 표시한다. 시설 공식 자료는 각 원장 항목에 직접 링크한다.
 
@@ -21,13 +30,13 @@ OSM 조회는 설치 시 소수의 이름을 한 PC·한 스레드에서1초 이
 
 [Earth Search](https://github.com/Element84/earth-search/blob/main/README.md)의 `sentinel-2-c1-l2a` STAC을 사용한다. 유료·인증·S3 requester-pays 경로를 사용하지 않고 공개 HTTPS COG만 읽는다.
 
-- 검증 위치 주변 최근60일·최대12개 후보를 촬영시각 역순으로 확인한다. 전 세계 모든 후보를 검색한 절대 최신 영상이라고 주장하지 않는다.
+- 검증 위치 주변 최근60일·최대36개 후보를 촬영시각 역순으로 확인한다. 전 세계 모든 후보를 검색한 절대 최신 영상이라고 주장하지 않는다.
 - 현장 중심의 UTM10m 격자400×400, 즉4×4km 정사각 창을 읽는다. 경계가 타일 밖으로 나가면 그 후보를 제외한다.
 - 장면 전체 cloud-cover만으로 통과시키지 않고 구역의 SCL을 먼저 읽는다. 관측 범위98% 이상, 맑은 분류70% 이상, 최종 유효 NDVI70% 이상을 요구한다. 또한 시설 중심1×1km의 맑은 분류85% 이상과 기준점100×100m의95% 이상을 요구해 공장 위에만 구름이 걸린 장면을 제외한다.
 - 적합한 새 후보가 없거나 수집에 실패하면 이전 관측을 `stale`로 유지한다. 촬영시각·원래 확보시각은 변경하지 않는다. 위치 원장이 바뀌면 서명이 다른 이전 영상은 표시하지 않는다.
-- 같은 시설·촬영 장면·위치 서명은 이전 로컬 원밴드를 상속한다. 새 배열만NPZ로 저장하고 SHA256으로 검증한다. 검색 결과와 계산에 사용한 밴드 메타데이터도 로컬에 남긴다.
+- 같은 시설·촬영 장면·위치 서명은 이전 로컬 원밴드를 상속한다. 새 배열만NPZ로 저장하고 SHA256으로 검증한다. 검색 캐시 키에 관측 위치·범위 서명과 후보 상한을 포함해 좌표 수정 후 과거 검색 결과가 잘못 재사용되지 않도록 한다. 검색 결과와 계산에 사용한 밴드 메타데이터도 로컬에 남긴다.
 
-COG의 전체 파일을 읽는 경로를 차단했다. Rasterio의 [사용자 opener](https://rasterio.readthedocs.io/en/stable/topics/vsi.html)가 HTTP Range를 요청하며206응답·정확한 Content-Range·요청 크기를 확인한다. 전체200응답은 본문을 읽지 않고 거부한다. 요청당4MiB, 실행당192MiB전송 한도다. 이는 PC 저장한도와 별개이며 PC 전체 원자료/실행파일512MiB를 계속 검사한다. 14시설의 원자료/조사 기록과 품질 대조 과정에 보존한 장면은 약16.7MiB다.
+COG의 전체 파일을 읽는 경로를 차단했다. Rasterio의 [사용자 opener](https://rasterio.readthedocs.io/en/stable/topics/vsi.html)가 HTTP Range를 요청하며206응답·정확한 Content-Range·요청 크기를 확인한다. 전체200응답은 본문을 읽지 않고 거부한다. 요청당4MiB, 실행당192MiB전송 한도다. 이는 PC 저장한도와 별개이며 PC 전체 원자료/실행파일512MiB를 계속 검사한다. 정기 조회는 후보 상한 내에서 맑은 장면을 찾으면 중단한다. 저장·전송량은 로컬 실행 기록으로 확인한다.
 
 ## RGB와 NDVI
 
@@ -39,7 +48,7 @@ COG의 전체 파일을 읽는 경로를 차단했다. Rasterio의 [사용자 op
 
 [SCL 분류표](https://custom-scripts.sentinel-hub.com/custom-scripts/sentinel-2/scene-classification/)의4(식생),5(비식생),6(물)만 통과시킨다. SCL0/1/2/3/7/8/9/10/11은 결측·결함·그림자·미분류·구름·눈으로 제외한다. SCL은20m에서10m 격자로 최근접 대응한다. 원밴드 nodata, 음의red/NIR, 분모1e−6 이하는 NDVI 결측이다. DN 보정 전 비율, 구름을0으로 채운 평균을 사용하지 않는다.
 
-RGB는 보정된B04/B03/B02를0~0.3 고정 반사도 범위와1/2.2감마로 표시한다. 장면마다 대비를 맞추는 자동 스트레치는 사용하지 않는다. NDVI 색 범위는−1~+1고정이다. 통계는 원래 UTM10m 창의 유효 화소에서 계산한다. 식생비율은 NDVI≥0.3이라는 팀 표시용 임계값이며 식생 면적의 검증된 정답이 아니다.
+RGB는 보정된B04/B03/B02를 기본0~0.3 고정 반사도 범위와1/2.2감마로 표시한다. Ghawar의 밝은 사막은0~0.65 고정 범위를 사용해 지형이 흰색으로 잘리는 현상을 줄였다. 이 시설별 표시 범위는 원장·상세에 명시하고 시점마다 유지하며, NDVI와 원래 반사도 통계는 바꾸지 않는다. 장면마다 대비를 맞추는 자동 스트레치는 사용하지 않는다. NDVI 색 범위는−1~+1고정이다. 통계는 원래 UTM10m 창의 유효 화소에서 계산한다. 식생비율은 NDVI≥0.3이라는 팀 표시용 임계값이며 식생 면적의 검증된 정답이 아니다.
 
 화면용 PNG는 EPSG:3857로 최근접 재투영한400×400 RGBA다. 지도 위치와 이미지 경계를 같은 투영으로 맞추고 북쪽을 위로 둔다. 제외 화소는 투명하며 화면 바탕색으로 보인다. PNG의 촬영ID·시각·원자료 링크·이미지 해시/크기를 파생 JSON에 포함한다. 공개 파일만 열 때 원본 사이트나 위성 제공처로 요청하지 않는다. 외부 지도/원자료 링크는 사용자가 선택할 때 연다.
 

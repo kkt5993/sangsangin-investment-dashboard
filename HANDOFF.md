@@ -149,3 +149,10 @@ config/sec_ownership_reviews.json은공개SEC원문/색인에서검토한사실8
 공개COG 사용자opener로206/ContentRange/4MiB요청·192MiB실행전송한도,전체200응답본문거부. 4×4km/400×400/10m원밴드·20mSCL,band별scale+offset후NDVI,음수/분모0/구름제외. 전체70%/coverage98%에추가로중심1km85%·100m95%검사. QA에서Taylor/JASM/Meta공장위구름 발견해이전맑은장면으로교체. 14장면촬영2026-08-23~09-09,가격09-08과별개. 이전관측상속·위치서명변경시미표시·주간시도실패시stale. 건설진척/가동률미추정. 전체Esri배경미구현;로컬해안선과실제장면표시.
 
 refresh의staging→공개복사에PNG가누락되는경로를수정하고회귀검사추가. rasterio1.5.1/affine3.0.1/click8.5.0설치,기존Pillow12.2.0선언. 원자료빈티지20260909T234733Z(부모20260909T232154Z),PC캐시약147.12MiB/512(새배포패키지전),공개JSON7.733MiB/8·PNG7.312MiB/24. 160전체Python+신규게시1검사=161,운영/위성24검사통과,2검증기·3JS·18구문·69SVG래스터·28PNG해시/품질확인. 브라우저QA/원본사이트추가요청0. 새게시run 20260910T001619Z;실제배포완료는runtime/state.json. 목표계속진행:8시설/전지구배경,KR옵션,SEC13F/연속수집,직접NI·OP/PIT,본사/교역,PDF추출/팀DB,RS/모멘텀/ETF기간계약 등REFERENCE_PARITY 남은범위를진행한다.
+
+
+위성22곳 후속(2026-09-10): 남은8기준점을 대조해22/22 실제 RGB/NDVI를 확보했다. 평택은삼성캠퍼스복지1동공식지도,청주M15X는공식4공장주소/배치와기존M15지도기준점(개별M15X중심아님),Ohio는Umbra 공개METADATA sceneCenterPointLla(3754bytes만,대형SAR미다운로드),Magdeburg는시의회DS0471/25계획도/EulenbergOSM지형점·중단계획부지,Vandenberg는SpaceX안내서PDF73쪽발사대,Sabine은Cheniere공식지도장소핀. Ghawar는Uthmaniyah가스처리시설,Permian은NASA Yates사진중심의4km한정관측이다. 유전/분지전체생산·매장량대표로표시하지않는다. 공식PDF/좌표/검색응답은private satellite_research에보존.
+
+후보12개로Magdeburg맑은장면누락을확인해60일최대36개로확장,조회캐시에위치/범위서명·후보상한을포함했다. 청주출입구대신캠퍼스내기존M15시설기준점으로확정하고9/8영상·공식배치대조. Ghawar RGB0~0.3에서대부분사막이잘려고정0~0.65로표시,원장/상세에노출하고NDVI/통계불변시험통과. 품질70%/중심1km85%/100m95%기준유지,22촬영일8/13~9/9. 8새원밴드만추가,raw빈티지20260910T002037Z(부모20260909T234733Z).
+
+검사163Python·두자료검증기·3JS·18구문·69SVG래스터·44PNG해시통과,신규8RGB와Ghawar보정RGB/NDVI육안확인. 원본사이트추가요청0·브라우저QA없음. PC약193.04MiB/512(게시패키지전),공개JSON약7.743MiB/8·PNG약11.694MiB/24. 게시run 20260910T004737Z;성공상태는runtime/state.json. 전체목표는계속:전지구위성배경·KR옵션·SEC13F/연속수집·해외직접NI/OP/PIT·관계망/본사/교역·PDF추출/팀DB·RS/모멘텀/ETF등최종기간계약. 다음은쉽게검증가능한RS/모멘텀/ETF원본계약부터보존소스와대조가능하다.

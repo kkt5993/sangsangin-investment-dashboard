@@ -22,7 +22,7 @@ API = 'https://earth-search.aws.element84.com/v1'
 COLLECTION = 'sentinel-2-c1-l2a'
 HOST = 'e84-earth-search-sentinel-data.s3.us-west-2.amazonaws.com'
 BANDS = ('red', 'green', 'blue', 'nir', 'scl')
-MAX_CANDIDATES = 12
+MAX_CANDIDATES = 36
 MODEL_SPEC = 1
 SIDE_M = 4000
 PIXELS = 400
@@ -208,7 +208,7 @@ def derived(arrays, assets):
 
 
 def search(site, base, now):
-    key = base/'satellite_search'/(site['id']+'.json.gz')
+    key = base/'satellite_search'/(site['id']+'-'+site_signature(site)[:16]+'-c'+str(MAX_CANDIDATES)+'.json.gz')
     if key.exists(): return unpack(key)
     # A bbox search followed by actual raster boundary checking avoids city-centre images.
     dy = .03; dx = dy/math.cos(math.radians(site['lat']))

@@ -33,6 +33,34 @@ class Session:
 
 
 class SatelliteTests(unittest.TestCase):
+    def test_desert_rgb_exposure_does_not_change_ndvi_or_statistics(self):
+        from pipeline.satellite_views import images
+        a={k:np.full((4,4),4000,dtype=np.uint16) for k in sat.BANDS[:-1]}
+        a['nir'][:]=5000;a['scl']=np.full((4,4),5,np.uint8)
+        assets={k:{'raster:bands':[dict(scale=.0001,offset=-.1,nodata=0)]} for k in sat.BANDS[:-1]}
+        scene=dict(assets=assets,crs='EPSG:32639',transform=[10,0,330000,0,-10,2800000],width=4,height=4)
+        standard,bounds,stats=images(a,scene)
+        desert,new_bounds,new_stats=images(a,scene,.65)
+        self.assertNotEqual(standard['rgb'],desert['rgb'])
+        self.assertEqual(standard['ndvi'],desert['ndvi'])
+        self.assertEqual((bounds,stats),(new_bounds,new_stats))
+        with self.assertRaises(ValueError):images(a,scene,0)
+
+    def test_search_cache_changes_with_observation_location_and_candidate_limit(self):
+        site=dict(id='ST_TEST',lat=35,lon=125,scope='fixture')
+        response=SimpleNamespace(raise_for_status=lambda:None,
+            raw=SimpleNamespace(read=lambda *a,**kw:b'{"features":[]}'))
+        with tempfile.TemporaryDirectory() as folder, patch.object(sat.requests,'get') as get, patch.object(sat,'budget'):
+            get.return_value.__enter__.return_value=response
+            now=datetime(2026,9,10,tzinfo=timezone.utc);base=Path(folder)
+            sat.search(site,base,now);sat.search(site,base,now)
+            self.assertEqual(get.call_count,1)
+            sat.search(dict(site,lon=126),base,now)
+            self.assertEqual(get.call_count,2)
+            with patch.object(sat,'MAX_CANDIDATES',12):sat.search(site,base,now)
+            self.assertEqual(get.call_count,3)
+            self.assertEqual(len(list((base/'satellite_search').glob('*.json.gz'))),3)
+
     def test_cloud_over_factory_rejected_despite_clear_surroundings(self):
         scl=np.full((400,400),5,dtype=np.uint8)
         self.assertTrue(sat.usable(sat.quality(scl)))

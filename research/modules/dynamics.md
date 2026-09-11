@@ -5,7 +5,7 @@
 
 **부분 구현** · 가격 기준 2026-09-10. S&P500 / KOSPI / NASDAQ / NVIDIA / Microsoft / Apple / Alphabet / Amazon / Meta / Broadcom / Tesla / Netflix / Palantir / 삼성전자 / SK하이닉스 / LG에너지솔루션 / 삼성바이오로직스 / 현대차.
 
-- 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [dynamics_model.py](../../pipeline/dynamics_model.py) · [dynamics-views.js](../../docs/dynamics-views.js)
+- 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [dynamics_model.py](../../pipeline/dynamics_model.py) · [dynamics-views.js](../../docs/dynamics-views.js) · [dynamics-export.js](../../docs/dynamics-export.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/dynamics.json)
 - 계산/자료 계약: 가격만으로 β·α·∇τ·확장창z·취약성·목표노출을 계산합니다. 전일 신호, 결측 시점, 드리프트 후 거래량과 명시적 비용 가정을 분리합니다. 지수의 노출/성과는 실제 매매상품이 아닌 가상 비교입니다.
 - 남은 범위: 원본 확장창 최소표본·0분산 세부 처리/가격정정 빈티지 동등성은 미검증입니다. 팀 설정과 실제 가용 이력을 표시합니다. / 비용은 사용자가 선택하는 가정이며 실제 스프레드·차입조건·시장충격·현금이자·세금과 과거 실시간 데이터 빈티지를 재현하지 않습니다. / 결측 이후 연속 유효 구간만 성과를 비교합니다. 일부 종목은 전체22년 이력이 없으며 과거 월말 신호가 당시 발표된 투자판단이라는 보증은 없습니다.

@@ -406,3 +406,10 @@ attention_data/attention_views/attention-views.js/config으로수집·Entity360�
 사용자 요청으로 다른 디자인 작업의 최종8c0adfd(흰 배경/나란한 공간·레이더/넓은 화면5+5 주도주/비교2열)을 확인하고 현재 기능 stage에 반영했다. 디자인 작업에서 이미 main/Vercel에 반영했으므로 중복 병합하지 않았다. 최신 디자인을 포함해340Python·두자료검증기·3JS모음·177JS/MJS구문 통과(130.244초). Edge1440/1024/390 각각18대상×4가정72/위상643/원장17284행·차트좌표·65음영·표면 유효셀·CSV·재생/정지/초기화/화면이탈·디자인 주도주10개·가로넘침0/오류0/외부요청0 검증, 데스크톱/모바일 이미지 확인. 원가격 기반18대상5지표/72전체성과·비용 독립 재계산 일치, 다른22JSON 불변.
 
 원본 사이트/새 데이터 수집/모델/새 AI세션 요청0. raw20260911T024219Z·가격9/10 유지(KOSPI실제9/9), stage20260911T034033Z. 계산은 기존 평일08/18전체빌드에 연결. 정본DYNAMICS_CONTRACT.md 및private runtime/dynamics-source-verification/build-verification/browser-qa/validation.json. 실제 게시 commit은dynamics-publication.json/state.json 확인. 전체goal미완: 수식/전체캡처·선택링크공유, 원자료결측/PIT·실제비용과REFERENCE_PARITY의나머지 세부기능 계속.
+
+
+2026-09-11 시장 역학 내보내기 후속: 보존 원본 app.js 1340~1390의 캡처가 전체 페이지가 아니라 수식+현재3D표면 PNG임을 재확인했다. dynamics-export.js는 현재SVG/계산식/종목/실제가격일·최신신호일·표면기간/단위를 2배PNG로 저장한다. 현재카메라/기간/결측면/따뜻한색을 보존하고 실제팀계산 후방차분·21일·확장252·전일노출을 설명한다. 과거표면의표식은‘선택 시점’, 마지막은‘최신’으로 정정했다. 별도전체페이지 캡처가 원본요구라는 이전기록은폐기한다.
+
+종목링크는 동일origin/하위경로의 ?dynamics=정확한티커#dynamics. 미등록값/다른모듈은 적용하지않고 기존임의쿼리를복사하지않는다. 링크는 열때 최신데이터이며 과거빈티지/카메라/비용가정 고정링크가 아님을표시. 클립보드거부시 직접복사입력, 저장실패후버튼복원, 탭/종목이탈시작업취소와Blob해제. 메시지외부전송/추가수집/원본사이트/새AI세션0. 기존27공개JSON바이트불변, 모든가격/계산/모델/정기08/18파이프라인불변. 최신디자인8c0adfd 유지.
+
+검증: Edge1440/1024/390 각각18링크, 데스크톱18PNG/태블릿2PNG/모바일2PNG 실제파일시그니처·1800px폭·그려진종목/수식/각날짜·과거표식·표면좌표불변·클립보드거부·toBlob실패·변환중이탈·URL해제 확인. 오류/외부요청/문서가로넘침0, 삼성전자390PNG한글·수식·기울기와기간 육안확인. 정확한최종전체회귀결과는runtime/dynamics-export-validation.json,브라우저결과dynamics-export-browser-qa.json. stage20260911T040404Z/가격data_run20260911T034033Z/raw20260911T024219Z. 실제게시commit은dynamics-export-publication.json/state.json 확인. 정본DYNAMICS_CONTRACT.md/REFERENCE_PARITY,전체goal미완이며나머지세부기능계속.

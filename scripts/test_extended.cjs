@@ -3,6 +3,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 require('./test_decisions.cjs');
 require('./test_dragon_research.cjs');
+require('./test_dragon_signals.cjs');
 require('./test_chart_readability.cjs');
 const relationChecks=require('./test_relations.cjs');
 const overviewChecks=require('./test_overview.cjs');
@@ -23,7 +24,7 @@ const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','sauron-views','trade-views','chain-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','dragon-research','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','sauron-views','trade-views','chain-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','dragon-research','dragon-signals','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
 tradeChecks(context,data);
 chainChecks(context,data);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
@@ -73,7 +74,7 @@ function interactiveContainer(){
  const box=interactive.boxes[0],scenario=data.dragonglass.sections.find(s=>s.type==='scenario');
  assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='KR').beta*-10+'"'));
  box.market.value='US';box.shock.value='-20';box.shock.fire('input');assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='US').beta*-20+'"'));
- interactive.select.value='all';interactive.select.fire('change');assert(interactive.innerHTML.includes('주목 종목')&&interactive.innerHTML.includes('data-scenario='),'all view survives repaint');
+ interactive.select.value='all';interactive.select.fire('change');assert(interactive.innerHTML.includes('지금 주목 · 신호·관계·근거')&&interactive.innerHTML.includes('data-scenario='),'all view survives repaint');
  context.location.hash='#discovery';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='discovery'));
  const db=interactive.discoveries[0],di=data.discovery.sections[0].items,shown=()=>[...db.output.innerHTML.matchAll(/data-discovery-symbol="([^"]+)"/g)].map(m=>m[1]);
  assert.equal(shown().length,Math.min(30,di.filter(r=>r.market==='US').length));

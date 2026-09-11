@@ -197,4 +197,11 @@ def extend(d,objects,ranks):
     from .chain_views import views as chain_views
     chain_views(d,objects['globe'])
     digest_views(d,objects,ranks,news)
+    from .dragon_signals import views as dragon_signal_views
+    dragon_signal_views(objects,ranks)
+    from .digest import module_summaries
+    for s in objects["ask_digest"]["sections"]:
+        if s["type"]=="digestmodules":
+            for row in module_summaries({"dragonglass":objects["dragonglass"]}):
+                s["items"]=[row if r["module"]=="dragonglass" else r for r in s["items"]]
     return objects

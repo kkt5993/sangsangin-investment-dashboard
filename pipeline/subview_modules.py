@@ -203,6 +203,8 @@ def extend(d,objects,ranks):
     clinical_views(d,objects["dragonglass"])
     from .guru_views import views as guru_views
     guru_views(d,objects["dragonglass"])
+    from .dragon_operations import views as operation_views
+    operation_views(d,objects)
     from .digest import module_summaries
     for s in objects["ask_digest"]["sections"]:
         if s["type"]=="digestmodules":

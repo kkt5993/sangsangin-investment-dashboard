@@ -357,3 +357,10 @@ raw20260911T001009Z(부모20260910T222302Z),가격9/10유지. 공식API수집11�
 raw20260911T005706Z(부모20260911T004356Z),가격2026-09-10. status.supplemental_vintages.guru_identifiers와섹션별실제source_vintage를보존. 기존08/18refresh의guru_data뒤에식별자수집연결. 원본사이트0요청/용량검사0/새AI세션0.306Python·두자료검증기·3JS회귀·171JS/MJS구문통과(149.95초). Edge1440/1024/390전체57기업/73포지션·GOOGL/GOOG/NVDA세클릭·옵션표시·4동시신호불변통과. 첫390검수에서기존종목select가393px까지넘침을확인해Entity360에한정해min-width0/width100%적용후전체브라우저재통과,오류0/외부요청0/가로넘침0·이미지육안확인. 최종runtime/guru-identity-browser-qa.json(3행)이정본이며diagnostic파일은검수증거로사용하지않는다.
 
 정본GURU_CONTRACT.md,private guru-identity-collection/source-verification/build-verification/validation.json. 게시후보run20260911T010319Z,실제커밋/배포는state.json과guru-identity-publication.json확인. 전체goal미완:유니버스밖종목·미대응식별자·최신/연속13F·구루16인관리/뉴스·기타REFERENCE_PARITY세부기능계속.
+
+
+데이터 소스·현황판 후속(2026-09-11): dragon_operations.py/dragon-operations.js로19소스5분류의카드·상태집계·날짜/단위원장·필터/검색과23모듈기준일/생성시각/이동을연결. RSS7/임상/13F/FIGI/위성/지진/궤도/교역/기업프로필/거시제공처를명시적으로투영하며private설정/키/원문오류본문은읽거나게시하지않음. SEC검토공시6법인을자동조회정상으로표시하지않음. 소스별시도/성공/관측일구분·날짜만있는거시수집시간미확인·일부실패이전값있어도오류·USGS1h/궤도2h코드캐시를평일08/18주기와구분.
+
+현황은관계객체39/관계36/공식팀문서22/화면신호기업15/시설22/국가객체0/인사이트null. Entity360701과객체분모다름. 원본7계열공통건수축/관측일순서/4기간/원장구조를구현하며이력은이전게시JSON+당일KST관측만보존. 첫1일이며과거원본수치소급0. 타이머는08/18KST평일예정안내이고PC실행/배포성공보증이아님;탭이탈해제검사. 소스화면필터는수집설정변경아님. 미연결30전체소스/원본인사이트버스/키/실시간PC상태/인증제어API는DRAGON_OPERATIONS_CONTRACT.md와REFERENCE_PARITY에남김.
+
+309Python·두자료검증기·3JS회귀·172JS/MJS구문통과(152.760초). Edge1440/1024/390에서19소스날짜/계열수·5분류/5상태/검색/빈결과·23모듈/7계열/4기간·RS왕복·예정KST/타이머0복귀·가로넘침0/오류0/외부요청0통과. 390현황/소스이미지육안확인. 기존legacy journal가져오기의1MB와500건제한잔여를제거;최종JS회귀및구문재통과. 원본사이트/신규외부수집/모델호출0,용량검사0,가격Overview바이트동일. raw빈티지20260911T005706Z/가격2026-09-10유지. 게시후보run20260911T012438Z;실제커밋/배포는runtime/state.json,operations-publication.json및operations-browser-qa/validation/build-verification.json확인. 전체goal미완이며REFERENCE_PARITY잔여작업계속.

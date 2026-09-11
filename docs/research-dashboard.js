@@ -67,6 +67,7 @@
  }
  function section(s,i,st){
   if(s.type==='gurus')return heading(s.title)+root.GuruViews.render(s,i);
+  if(['dragonsources','dragonstatus'].includes(s.type))return heading(s.title)+root.DragonOperations.render(s,i);
   if(s.type==='clinical')return heading(s.title)+root.ClinicalViews.render(s,i);
   if(['dragonfocus','dragontriggers'].includes(s.type))return heading(s.title)+root.DragonSignals.render(s,i);
   if(s.type==='dragonresearch')return heading(s.title)+root.DragonResearch.render(s,i);
@@ -192,6 +193,7 @@
   root.DragonSignals?.bind(container,d,navigate);
   root.ClinicalViews?.bind(container,d,navigate);
   root.GuruViews?.bind(container,d,navigate);
+  root.DragonOperations?.bind(container,d,navigate);
   root.NetworkViews?.bind(container,d,m.id==='dragonglass'?navigate:null);
   root.TradeViews?.bind(container,d,st);root.SauronViews?.bind(container,d,st);root.ChainViews?.bind(container,d,st);
   root.DecisionLedger?.bind(container,d,navigate,st);
@@ -233,7 +235,7 @@
   const show=()=>{container.querySelector('#journal-list').innerHTML=entries.map((a,i)=>`<article class="panel"><small>${E(a.date)}</small><h3>${E(a.title)}</h3><p class="note-body">${E(a.body)}</p><button data-edit-note="${i}">수정</button> <button data-delete-note="${i}">삭제</button></article>`).join('');container.querySelectorAll('[data-delete-note]').forEach(b=>b.addEventListener('click',()=>{entries.splice(+b.dataset.deleteNote,1);save();show();}));container.querySelectorAll('[data-edit-note]').forEach(b=>b.addEventListener('click',()=>{const i=+b.dataset.editNote,a=entries[i];container.querySelector('#journal-title').value=a.title;container.querySelector('#journal-body').value=a.body;container.querySelector('#save-note').dataset.edit=String(i);}));};
   container.querySelector('#save-note').addEventListener('click',e=>{const title=container.querySelector('#journal-title').value.trim(),body=container.querySelector('#journal-body').value.trim();if(!title||!body){status('제목과 근거를 입력하세요.');return;}const entry={title,body,date:new Date().toISOString()};if(e.target.dataset.edit!==undefined){entries[+e.target.dataset.edit]=entry;delete e.target.dataset.edit;}else entries.unshift(entry);if(save())status('이 브라우저에 저장했습니다.');container.querySelector('#journal-title').value='';container.querySelector('#journal-body').value='';show();});
   container.querySelector('#export-notes').addEventListener('click',()=>{const url=URL.createObjectURL(new Blob([JSON.stringify(entries,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=id+'-journal.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);});
-  container.querySelector('#import-notes').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;if(file.size>1e6){status('1 MB 이하 JSON만 가져올 수 있습니다.');return;}try{const data=JSON.parse(await file.text());if(!Array.isArray(data)||data.length>500||data.some(a=>!a||typeof a.title!=='string'||typeof a.body!=='string'||a.title.length>160||a.body.length>12000))throw Error();entries=data.map(a=>({title:a.title,body:a.body,date:typeof a.date==='string'?a.date:new Date().toISOString()})).concat(entries);save();show();status('기존 기록에 가져온 기록을 추가했습니다.');}catch{status('기록 JSON 형식이 올바르지 않습니다.');}});show();
+  container.querySelector('#import-notes').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const data=JSON.parse(await file.text());if(!Array.isArray(data)||data.some(a=>!a||typeof a.title!=='string'||typeof a.body!=='string'||a.title.length>160||a.body.length>12000))throw Error();entries=data.map(a=>({title:a.title,body:a.body,date:typeof a.date==='string'?a.date:new Date().toISOString()})).concat(entries);save();show();status('기존 기록에 가져온 기록을 추가했습니다.');}catch{status('기록 JSON 형식이 올바르지 않습니다.');}});show();
  }
  async function render(container,m){const token=++request;container.innerHTML=`<h1>${E(m.title)}</h1><p role="status">PC에서 계산한 스냅샷을 불러옵니다…</p>`;try{if(!cache.has(m.id)){const r=await fetch(`data/${m.id}.json`);if(!r.ok)throw Error();const d=await r.json();if(d.schema_version!==2||d.module!==m.id)throw Error();cache.set(m.id,d);}if(token!==request||location.hash.slice(1)!==m.id)return;paint(container,m,cache.get(m.id));}catch{if(token!==request)return;container.innerHTML=`<h1>${E(m.title)}</h1><p role="alert">데이터를 불러오지 못했습니다. 잠시 후 다시 시도하세요.</p><button id="retry-research">다시 불러오기</button>`;container.querySelector('#retry-research')?.addEventListener('click',()=>render(container,m));}}
  root.ResearchDashboard={render,cancel:()=>{request++;root.ResearchNotes?.dispose();root.RelationViews?.dispose();root.SatelliteViews?.dispose();root.TradeViews?.dispose();root.SauronViews?.dispose();root.ChainViews?.dispose();},section};

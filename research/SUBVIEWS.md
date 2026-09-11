@@ -10,7 +10,7 @@
 | MAXIMUS | 추가 지수 | 연결 | 1 |  |
 | MAXIMUS | 방법론 | 연결 | 2 |  |
 | DRAGONGLASS | 관계 지도 | 연결 | 1 |  |
-| DRAGONGLASS | 지금 주목 | 연결 | 2 |  |
+| DRAGONGLASS | 지금 주목 | 연결 | 3 |  |
 | DRAGONGLASS | 위성 현장 | 연결 | 1 |  |
 | DRAGONGLASS | Entity 360 | 연결 | 2 |  |
 | DRAGONGLASS | 시나리오 | 연결 | 1 |  |

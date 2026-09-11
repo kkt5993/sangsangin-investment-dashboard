@@ -14,13 +14,14 @@ def cli(config):
 def package_site(site,dest,project=None):
     site=Path(site).resolve();dest=Path(dest).resolve()
     if not (site/'index.html').exists():raise ValueError('Public site index is missing')
-    from .public_assets import pdf_assets,ocr_assets
+    from .public_assets import pdf_assets,ocr_assets,font_assets
     pdf_assets(site,ROOT/'config/pdfjs_vendor.json')
     ocr_binary=ocr_assets(site,ROOT/'config/ocr_vendor.json')
+    font_binary=font_assets(site,ROOT/'config/ui_font_vendor.json')
     files=[p for p in site.rglob('*') if p.is_file()]
     allowed={'.html','.css','.js','.mjs','.bcmap','.pfb','.ttf','.json','.svg','.png','.ico','.txt',''}
     for p in files:
-        if p.is_symlink() or not p.resolve().is_relative_to(site) or (p.suffix not in allowed and p not in ocr_binary) or p.name.startswith('.env'):raise ValueError('Unexpected public file')
+        if p.is_symlink() or not p.resolve().is_relative_to(site) or (p.suffix not in allowed and p not in ocr_binary and p not in font_binary) or p.name.startswith('.env'):raise ValueError('Unexpected public file')
     budget(sum(p.stat().st_size for p in files))
     static=dest/'.vercel/output/static'
     if static.exists():raise ValueError('Deployment package already exists')

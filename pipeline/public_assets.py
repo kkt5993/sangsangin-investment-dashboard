@@ -33,3 +33,22 @@ def ocr_assets(site,manifest):
         if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()):raise ValueError('Unexpected OCR runtime path')
         if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('OCR runtime integrity mismatch: '+name)
     return {p for p in files.values() if p.suffix=='.gz'}
+
+
+def font_assets(site,manifest):
+    """Permit only the pinned UI font and its redistribution license."""
+    site=Path(site);root=site/'assets/fonts'
+    if not root.exists():
+        css=site/'experience.css'
+        if css.is_file() and 'assets/fonts/' in css.read_text(encoding='utf8'):raise ValueError('Missing UI font')
+        return set()
+    data=json.loads(Path(manifest).read_text(encoding='utf8'))
+    if (data['name'],data['license'])!=('Pretendard Variable','OFL-1.1'):raise ValueError('Unexpected UI font/license')
+    expected={'assets/fonts/PretendardVariable.woff2','assets/fonts/OFL.txt'}
+    entries={r['path']:r for r in data['files']};files={p.relative_to(site).as_posix():p for p in root.rglob('*') if p.is_file()}
+    if len(entries)!=len(data['files']) or set(entries)!=expected or set(files)!=expected:raise ValueError('Missing or unlisted UI font asset')
+    if sum(p.stat().st_size for p in files.values())>3*1024*1024:raise ValueError('UI font size exceeded')
+    for name,p in files.items():
+        if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()):raise ValueError('Unexpected UI font path')
+        if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('UI font integrity mismatch: '+name)
+    return {p for p in files.values() if p.suffix=='.woff2'}

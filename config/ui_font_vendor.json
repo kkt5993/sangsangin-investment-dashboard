@@ -1,0 +1,17 @@
+{
+  "name": "Pretendard Variable",
+  "license": "OFL-1.1",
+  "source": "https://github.com/orioncactus/pretendard/tree/main/packages/pretendard/dist/web/variable/woff2",
+  "files": [
+    {
+      "path": "assets/fonts/OFL.txt",
+      "bytes": 4418,
+      "sha256": "d31ddd9f2bed32fd7e302a205cf2380ba0de6529152d239ef99cfb6f261bfc04"
+    },
+    {
+      "path": "assets/fonts/PretendardVariable.woff2",
+      "bytes": 2057688,
+      "sha256": "9599f12fd42fc0bce1cd50b47a0c022e108d7aa64dd0d1bb0ed44f3282d900b4"
+    }
+  ]
+}

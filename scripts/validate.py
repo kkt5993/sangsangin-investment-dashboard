@@ -6,20 +6,21 @@ import math
 import html
 import unicodedata
 import sys
-from urllib.parse import unquote
+from urllib.parse import unquote,urlsplit
 from datetime import date
 from html.parser import HTMLParser
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
-from pipeline.public_assets import pdf_assets,ocr_assets
+from pipeline.public_assets import pdf_assets,ocr_assets,font_assets
+font_binary=font_assets(ROOT/'docs',ROOT/'config/ui_font_vendor.json')
 pdf_binary=pdf_assets(ROOT/'docs',ROOT/'config/pdfjs_vendor.json')|ocr_assets(ROOT/'docs',ROOT/'config/ocr_vendor.json')
 errors=[]
 class Links(HTMLParser):
     def handle_starttag(self,tag,attrs):
         for key,value in attrs:
             if key in ('src','href') and value and not value.startswith(('http:','https:','#','data:','mailto:')):
-                if not (ROOT/'docs'/value.split('#')[0]).is_file():errors.append('Missing asset '+value)
+                if not (ROOT/'docs'/unquote(urlsplit(value).path)).is_file():errors.append('Missing asset '+value)
 
 Links().feed((ROOT/'docs/index.html').read_text(encoding='utf-8'))
 payload=(ROOT/'docs/modules.js').read_text(encoding='utf-8')
@@ -32,7 +33,7 @@ for m in mods:
 for path in ROOT.rglob('*'):
     if not path.is_file() or any(p in path.parts for p in ['.git','__pycache__','.venv','node_modules']):continue
     assert path.suffix not in {'.pdf','.mp4','.duckdb','.key','.pem'},str(path)
-    if path in pdf_binary:continue
+    if path in pdf_binary or path in font_binary:continue
     if path.suffix=='.png':
         from PIL import Image
         assert path.parent==ROOT/'docs/data/satellite' and re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',path.name)

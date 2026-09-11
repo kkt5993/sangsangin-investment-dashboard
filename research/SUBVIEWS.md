@@ -15,7 +15,7 @@
 | DRAGONGLASS | Entity 360 | 연결 | 2 |  |
 | DRAGONGLASS | 시나리오 | 연결 | 1 |  |
 | DRAGONGLASS | 결정 원장 | 연결 | 1 |  |
-| DRAGONGLASS | 트리거·촉매 | 연결 | 1 |  |
+| DRAGONGLASS | 트리거·촉매 | 연결 | 2 |  |
 | DRAGONGLASS | 리서치 | 연결 | 1 |  |
 | DRAGONGLASS | 데이터 소스 | 연결 | 1 |  |
 | DRAGONGLASS | 현황판 | 연결 | 2 |  |

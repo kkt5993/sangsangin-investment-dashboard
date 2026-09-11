@@ -123,3 +123,5 @@ PEAD는 공식 S&P100 주식101개 발표 자료에서48후보를 계산해 기�
 DRAGONGLASS 리서치는 공식 근거의 URL 중복 제거·문서 카드·출처/연결/검색 필터와 Entity360 이동을 제공합니다. 이 브라우저의 PRINCIPIUM 기록·첨부도 읽기 전용으로 불러옵니다. [리서치 연결 계약](research/DRAGON_RESEARCH_CONTRACT.md)에 날짜·개인 자료·원본 대비 남은 범위를 기록했습니다.
 
 DRAGONGLASS 지금 주목·트리거는 주도주/발굴 동시관측,모듈별 위험근거,지정학 제목,6테마,3개월 자산추세와 촬영일 원장을 연결합니다. 미확보 신호와 원본 전체점수의 차이는 [신호 계약](research/DRAGON_SIGNALS_CONTRACT.md)에 명시했습니다.
+
+DRAGONGLASS 트리거의 임상 등록부는 비만·GLP-1/Lilly/UnitedHealth3범위의 모집 중·전체상태3상·최근 갱신5연구와 원문을 제공합니다. [조회 정의·갱신 계약](research/CLINICAL_CONTRACT.md)에 원본 검색식과의 차이를 기록했습니다.

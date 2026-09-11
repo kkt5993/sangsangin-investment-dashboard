@@ -104,6 +104,6 @@ def views(objects,ranks):
         position=next((i for i,s in enumerate(dragon['sections']) if s.get('group')==new['group']),len(dragon['sections']))
         dragon['sections']=[s for s in dragon['sections'] if not(s.get('group')==new['group'] and s['type'] in ['table','dragonfocus','dragontriggers'])]
         dragon['sections'].insert(position,new)
-    gap='지금 주목·트리거는 주도주/발굴·공식 근거·촬영일을 연결합니다. 전체 뉴스량/감성/관심급등·13F·정량 투자뷰·원본 live는 미확보이며 완전한 합성점수와 임상 모집 로그는 미산출입니다.'
+    gap='지금 주목·트리거는 주도주/발굴·공식 근거·촬영일을 연결합니다. 전체 뉴스량/감성/관심급등·13F·정량 투자뷰·원본 live는 미확보이며 완전한 합성점수는 미산출입니다.'
     if gap not in dragon['missing']:dragon['missing'].append(gap)
     return dragon

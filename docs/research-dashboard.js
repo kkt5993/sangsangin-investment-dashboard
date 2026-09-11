@@ -66,6 +66,7 @@
    `<p class="quiet">YTD 연초 관측이1월10일까지 없으면 미산출합니다. 상승은 가격 > MA50 > MA200, 하락은 가격 < MA50 < MA200이며 동률·나머지는 중립입니다. 자료 부족은 별도로 미산출합니다.</p><ul>${s.rows.map(r=>`<li><a href="${E(r.source?.startsWith('https://finance.yahoo.com/quote/')?r.source:'#')}" target="_blank" rel="noopener noreferrer">${E(r.name)} · ${E(r.symbol)} 가격 출처 ↗</a></li>`).join('')}</ul></details></div>`;
  }
  function section(s,i,st){
+  if(s.type==='clinical')return heading(s.title)+root.ClinicalViews.render(s,i);
   if(['dragonfocus','dragontriggers'].includes(s.type))return heading(s.title)+root.DragonSignals.render(s,i);
   if(s.type==='dragonresearch')return heading(s.title)+root.DragonResearch.render(s,i);
   if(s.type==='strategycards')return heading(s.title)+root.StrategyCards.render(s,i);
@@ -188,6 +189,7 @@
   const navigate=(group,selection)=>{st.group=group;Object.assign(st,selection);paint(container,m,d);};
   root.DragonResearch?.bind(container,d,navigate);
   root.DragonSignals?.bind(container,d,navigate);
+  root.ClinicalViews?.bind(container,d,navigate);
   root.NetworkViews?.bind(container,d,m.id==='dragonglass'?navigate:null);
   root.TradeViews?.bind(container,d,st);root.SauronViews?.bind(container,d,st);root.ChainViews?.bind(container,d,st);
   root.DecisionLedger?.bind(container,d,navigate,st);

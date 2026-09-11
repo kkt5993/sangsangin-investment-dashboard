@@ -92,6 +92,7 @@ def collect(parent,base,as_of,env,config,log):
     run('pipeline.sauron_data')
     run('pipeline.clinical_data')
     run('pipeline.guru_data')
+    run('pipeline.guru_identifiers')
     run('pipeline.chain_data')
     if config.get('allow_krx_auth'):run('pipeline.krx_reconcile','--allow-krx-auth')
     current=Data(as_of,base.name)

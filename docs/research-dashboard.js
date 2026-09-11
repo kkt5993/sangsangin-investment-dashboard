@@ -191,7 +191,7 @@
   root.DragonResearch?.bind(container,d,navigate);
   root.DragonSignals?.bind(container,d,navigate);
   root.ClinicalViews?.bind(container,d,navigate);
-  root.GuruViews?.bind(container,d);
+  root.GuruViews?.bind(container,d,navigate);
   root.NetworkViews?.bind(container,d,m.id==='dragonglass'?navigate:null);
   root.TradeViews?.bind(container,d,st);root.SauronViews?.bind(container,d,st);root.ChainViews?.bind(container,d,st);
   root.DecisionLedger?.bind(container,d,navigate,st);

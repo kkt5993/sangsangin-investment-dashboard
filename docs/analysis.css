@@ -86,3 +86,5 @@
 .analysis-section .chart-viewport .axis{font-size:16px}[data-holo-canvas] .axis{font-size:16px}
 
 .projection-pan{display:flex;gap:8px;margin-top:8px}.projection-pan button{min-height:44px;padding:7px 12px;border:1px solid #afc4d0;border-radius:6px;background:white;color:#214b64;font-size:12px;cursor:pointer}@media(min-width:1100px){.projection-pan{display:none}}@media print{.projection-pan{display:none}}
+
+[data-entities] .analysis-controls label{min-width:0}[data-entity-select]{width:100%;min-width:0}

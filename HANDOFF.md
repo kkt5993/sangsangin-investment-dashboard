@@ -348,3 +348,12 @@ raw20260911T001009Z(부모20260910T222302Z),가격9/10유지. 공식API수집11�
 새raw20260911T004356Z(부모20260911T001009Z),가격2026-09-10/Overview바이트불변. 새source별vintage만status.supplemental_vintages.guru에표시,가격status.vintage는유지. 신호+3은CUSIP기업대응/분기시차검증전보류하며기존4동시신호불변. 확인공시는최신전체조회아님. 코드정기08/18에연결,private runtime/sec-contact.json의email필요(질문응답대기);없으면0요청,403시같은설정재요청보류·24h정상/오류캐시·신규accession만수집·이전자료보존. 원본사이트0요청/용량검사없음.
 
 299Python·두자료검증기·3JS회귀·171JS/MJS구문통과. Edge1440/1024/390에서6카드/18필터조합/235원문행·검색/빈값/옵션·NT/0원/단위차이·탭왕복·가로넘침0/오류0/외부요청0검사,390px이미지육안확인. 정본research/GURU_CONTRACT.md 및runtime/guru-source-verification/guru-browser-qa/guru-validation.json,게시후보20260911T004834Z. 실제게시완료는runtime/state.json과guru-publication.json을확인한다. 전체goal미완:13F연속과거/최신확인/기업대응/구루뉴스16인관리·전체뉴스감성/관심도·정량뷰·나머지관계등은계속구현대상.
+
+
+13F 식별자 후속: guru_identifiers.py는OpenFIGI 공식공개API의CUSIP/exchCodeUS를5개씩3초간격조회. 공식iShares기존CSV에CUSIP없음을확인하고초기5진단응답재사용+148개/30배치=153개관측을확보(140단일/13미확보). 30일정상/7일미확보캐시·실패이전성공시각/원자료보존·401/403/429후속중단·1시간오류백오프. 재실행0요청. 동일CUSIP다중FIGI는거부,티커정확일치와주식종류구분자변환만사용,기업명유사도0. 기업주식/ADR/REIT/NYregistered/MLP와SH만허용하며ETP/폐쇄형펀드제외.
+
+현재57기업73포지션을Entity360에연결. 카드/표의기업버튼·티커검색→기업상세,기업상세에서6법인중해당포지션·보고/접수일·비중/수량/금액·CUSIP/FIGI조회시각과양쪽원문제공. AlphabetA/C분리,PUT/CALL은기초종목연결일뿐주식보유로전환하지않음. 매핑조회시각은보고시점PIT티커보증아님. 최신전체SEC/분기시차가미검증이라+3보류·기존4동시신호유지. 기존235원문/173합산포지션/가격Overview불변.
+
+raw20260911T005706Z(부모20260911T004356Z),가격2026-09-10. status.supplemental_vintages.guru_identifiers와섹션별실제source_vintage를보존. 기존08/18refresh의guru_data뒤에식별자수집연결. 원본사이트0요청/용량검사0/새AI세션0.306Python·두자료검증기·3JS회귀·171JS/MJS구문통과(149.95초). Edge1440/1024/390전체57기업/73포지션·GOOGL/GOOG/NVDA세클릭·옵션표시·4동시신호불변통과. 첫390검수에서기존종목select가393px까지넘침을확인해Entity360에한정해min-width0/width100%적용후전체브라우저재통과,오류0/외부요청0/가로넘침0·이미지육안확인. 최종runtime/guru-identity-browser-qa.json(3행)이정본이며diagnostic파일은검수증거로사용하지않는다.
+
+정본GURU_CONTRACT.md,private guru-identity-collection/source-verification/build-verification/validation.json. 게시후보run20260911T010319Z,실제커밋/배포는state.json과guru-identity-publication.json확인. 전체goal미완:유니버스밖종목·미대응식별자·최신/연속13F·구루16인관리/뉴스·기타REFERENCE_PARITY세부기능계속.

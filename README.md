@@ -126,4 +126,4 @@ DRAGONGLASS 지금 주목·트리거는 주도주/발굴 동시관측,모듈별 
 
 DRAGONGLASS 트리거의 임상 등록부는 비만·GLP-1/Lilly/UnitedHealth3범위의 모집 중·전체상태3상·최근 갱신5연구와 원문을 제공합니다. [조회 정의·갱신 계약](research/CLINICAL_CONTRACT.md)에 원본 검색식과의 차이를 기록했습니다.
 
-DRAGONGLASS 스마트머니는6개 보고 법인의 SEC 13F 보유·상위6포지션·검색/옵션 필터·전체 원장과 공시 접수일을 표시합니다. [13F 계약](research/GURU_CONTRACT.md)에 보고 주체 변경·날짜·단위 검산·직접조회 상태와 신호 보류 범위를 명시했습니다.
+DRAGONGLASS 스마트머니는6개 보고 법인의 SEC 13F 보유·상위6포지션·검색/옵션 필터·전체 원장과 공시 접수일을 표시합니다. OpenFIGI CUSIP 대응으로 확인된57기업의73포지션을 Entity360과 연결하고 옵션 기초종목을 구분합니다. [13F 계약](research/GURU_CONTRACT.md)에 보고 주체 변경·날짜·단위 검산·직접조회 상태와 신호 보류 범위를 명시했습니다.

@@ -17,6 +17,7 @@
   const Y=(v,a='left')=>{const [lo,hi]=a==='right'?rr:lr;return T+(hi-v)/(hi-lo)*(H-T-B);};
   let body=(Array.isArray(c.bands)?c.bands:[]).filter(b=>finite(b.low)&&finite(b.high)&&b.high>b.low).map(b=>{const top=Math.max(T,Y(b.high)),bottom=Math.min(H-B,Y(b.low));return bottom>top?`<rect data-value-band="${b.low}:${b.high}" x="${L}" y="${top}" width="${W-L-R}" height="${bottom-top}" fill="${E(b.color||'#e4eee8')}"/>`:'';}).join('');
   body+=(c.zones||[]).map(z=>{const a=Math.max(L,X(z.start)),b=Math.min(W-R,X(z.end));return b>a?`<rect data-time-zone="${E(z.kind)}" x="${a}" y="${T}" width="${b-a}" height="${H-T-B}" fill="${z.kind==='high'?'#e1efe8':'#f3e4e9'}"/>`:'';}).join('');
+  if(finite(c.shade_above))body+=series[0].points.filter(p=>p[1]>=c.shade_above).map(p=>`<rect data-risk-band="${E(p[0])}" x="${Math.max(L,Math.min(W-R-4,X(p[0])-2))}" y="${T}" width="4" height="${H-T-B}" fill="#e6bec8" opacity=".45"/>`).join('');
   for(let i=0;i<6;i++){let v=lr[0]+(lr[1]-lr[0])*i/5,y=Y(v);body+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" class="grid-line"/><text x="${L-8}" y="${y+4}" text-anchor="end" class="axis">${n(v)}</text>`;if(vals('right').length)body+=`<text x="${W-R+8}" y="${y+4}" class="axis">${n(rr[0]+(rr[1]-rr[0])*i/5)}</text>`;}
   for(let i=0;i<6;i++){const date=new Date(t0+(t1-t0)*i/5).toISOString().slice(0,10);body+=`<text x="${X(date)}" y="${H-24}" text-anchor="middle" class="axis">${c.date_format==='day'?date.slice(5):date.slice(0,7)}</text>`;}
   body+=(c.guides||[]).map(v=>`<line data-guide="${v}" x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" class="reference-line" stroke-dasharray="5 5"/>`).join('');
@@ -33,7 +34,7 @@
   let b=`<line x1="${X(0)}" x2="${X(0)}" y1="${T}" y2="${H-B}" class="reference-line"/><line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" class="reference-line"/>`;
   for(let i=0;i<5;i++){const x=xl+(xh-xl)*i/4,y=yl+(yh-yl)*i/4;b+=`<text x="${X(x)}" y="${H-B+20}" text-anchor="middle" class="axis">${n(x)}</text><text x="${L-12}" y="${Y(y)+4}" text-anchor="end" class="axis">${n(y)}</text>`;}
   if(c.trajectory)b+=`<polyline points="${pts.map(p=>`${X(p.x)},${Y(p.y)}`).join(' ')}" fill="none" stroke="#a1acb8"/>`;
-  pts.forEach((p,i)=>{b+=`<circle data-point="${E(p.name)}" cx="${X(p.x)}" cy="${Y(p.y)}" r="${i===pts.length-1?7:3.5}" fill="${colors[Math.floor(i/6)%colors.length]}" opacity=".8"><title>${E(p.name)} · x ${n(p.x)} · y ${n(p.y)}</title></circle>`;});
+  pts.forEach((p,i)=>{b+=`<circle data-point="${E(p.name)}" cx="${X(p.x)}" cy="${Y(p.y)}" r="${i===pts.length-1?7:3.5}" fill="${c.risk_colors?(p.value>=65?'#b86375':p.value>=45?'#ba983c':'#398373'):colors[Math.floor(i/6)%colors.length]}" opacity=".8"><title>${E(p.name)} · x ${n(p.x)} · y ${n(p.y)}${c.risk_colors?' · 취약성 '+n(p.value):''}</title></circle>`;});
   b+=`<text x="${W/2}" y="${H-6}" text-anchor="middle" class="axis">${E(c.x_label)}</text><text transform="translate(18 ${H/2}) rotate(-90)" text-anchor="middle" class="axis">${E(c.y_label)}</text>`;
   return `<div class="chart-viewport">${svg(b,c.title,W,H,'data-chart-type="scatter"')}</div>`;
  }
@@ -66,11 +67,11 @@
  }
  function surface(c,yaw=-.65,count=null,zoom=1,tilt=.48){
   const surf=c.values.slice(0,count||c.values.length),nt=surf.length,nw=c.windows.length;if(nt<2)return empty();
-  const vals=surf.flat().filter(finite),lo=Math.max(0,Math.min(...vals)),hi=Math.max(lo+.1,...vals),P=(i,t,z)=>project3d(i/(nw-1)-.5,t/(nt-1)-.5,(z-lo)/(hi-lo),yaw,tilt,zoom);
+  const vals=surf.flat().filter(finite);if(!vals.length)return empty();const lo=Math.max(0,Math.min(...vals)),hi=Math.max(lo+.1,...vals),P=(i,t,z)=>project3d(i/(nw-1)-.5,t/(nt-1)-.5,(z-lo)/(hi-lo),yaw,tilt,zoom);
   let quads=[];for(let t=0;t<nt-1;t++)for(let k=0;k<nw-1;k++){const z=[surf[t][k],surf[t][k+1],surf[t+1][k+1],surf[t+1][k]];if(!z.every(finite))continue;const p=[P(k,t,z[0]),P(k+1,t,z[1]),P(k+1,t+1,z[2]),P(k,t+1,z[3])];quads.push({p,t,k,z:z.reduce((a,b)=>a+b)/4,depth:p.reduce((a,b)=>a+b[2],0)});}
   quads.sort((a,b)=>a.depth-b.depth);let b=spatialFrame((x,y,z)=>project3d(x,y,z,yaw,tilt,zoom))+quads.map(q=>`<polygon data-surface-cell="${q.t}:${q.k}" points="${q.p.map(p=>p.slice(0,2).join(',')).join(' ')}" fill="hsl(${222+(q.z-lo)/(hi-lo)*38} 55% ${79-(q.z-lo)/(hi-lo)*29}%)" stroke="#ffffff55" stroke-width=".5"><title>${E(c.dates[q.t])} → ${E(c.dates[q.t+1])} · ${c.windows[q.k]}D~${c.windows[q.k+1]}D · 네 꼭짓점 평균 변동성 ${n(q.z)}%</title></polygon>`).join('');
   c.windows.forEach((w,i)=>{let p=P(i,0,lo);b+=`<text x="${p[0]}" y="${p[1]+21}" text-anchor="middle" class="axis">${w}D</text>`;});
-  const current=P(nw-1,nt-1,surf[nt-1][nw-1]),floor=P(nw-1,nt-1,lo);b+=`<line x1="${floor[0]}" y1="${floor[1]}" x2="${current[0]}" y2="${current[1]}" stroke="#ba812d" stroke-width="2"/><circle cx="${current[0]}" cy="${current[1]}" r="5" fill="#c08a32"/><text x="${current[0]+10}" y="${current[1]-8}" class="axis">현재</text>`;
+  if(finite(surf[nt-1][nw-1])){const current=P(nw-1,nt-1,surf[nt-1][nw-1]),floor=P(nw-1,nt-1,lo);b+=`<line x1="${floor[0]}" y1="${floor[1]}" x2="${current[0]}" y2="${current[1]}" stroke="#ba812d" stroke-width="2"/><circle cx="${current[0]}" cy="${current[1]}" r="5" fill="#c08a32"/><text x="${current[0]+10}" y="${current[1]-8}" class="axis">현재</text>`;}
   b+=`<text x="30" y="30" class="axis">Z: 변동성 ${n(lo)} ~ ${n(hi)}%</text><text x="30" y="425" class="axis">X: 룩백 기간 · Y: ${c.dates[0]} → ${c.dates[nt-1]}</text>`;
   return svg(b,'기간 × 시간 × 변동성',900,450,'data-chart-type="surface"');
  }

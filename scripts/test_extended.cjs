@@ -29,8 +29,9 @@ const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','sauron-views','trade-views','chain-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','dragon-research','dragon-signals','clinical-views','guru-views','dragon-operations','attention-views','company-news','quant-screens','relation-discovery','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','sauron-views','trade-views','chain-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','dragon-research','dragon-signals','clinical-views','guru-views','dragon-operations','attention-views','company-news','quant-screens','dynamics-views','relation-discovery','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
 require('./test_quant_screens.cjs')(context,data);
+require('./test_dynamics.cjs')(context,data);
 tradeChecks(context,data);
 chainChecks(context,data);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
@@ -132,7 +133,7 @@ function interactiveContainer(){
  for(const h of holos){assert.equal(h.rows.length,36);assert(A.hologram(h).includes('data-holo-trajectory'));assert(A.radar(h).includes('data-radar-date'));assert.notEqual(A.hologram(h,0),A.hologram(h,1));}
  assert.equal(data.regime.sections.find(s=>s.type==='industry').items.length,39);
  for(const g of ['PM 키 게이지','금리·성장','크로스에셋 속보','CTA 시스템 트렌드','매크로 z-score','다이버전스·실적'])assert(data.pm_weekend.sections.some(s=>s.group===g),g);
- const dyn=data.dynamics.sections[0];assert.equal(dyn.surface.windows.length,8);assert.equal(dyn.phase.length,60);assert(A.surface(dyn.surface).includes('data-chart-type="surface"'));
+ const dyn=data.dynamics.sections[0];assert.equal(dyn.surface.windows.length,8);assert.equal(dyn.phase.length,36);assert(A.surface(dyn.surface).includes('data-chart-type="surface"'));
  const watch=data.watch.sections[0];assert.equal(watch.candles.length,120);assert.equal(watch.weekly.length,52);assert.equal((A.candles(watch).match(/data-volume="1"/g)||[]).length,120);
  assert(data.watch.sections.some(s=>s.pattern&&A.candles(s).includes('data-pattern="1"')),'geometric candidates have overlays');
  const ml=data.ml.sections.find(s=>s.type==='ml');assert(A.forecast(ml).includes('data-interval="90"'));assert(A.forecast(ml).includes('data-interval="68"'));assert(A.forecast(ml).includes('data-prediction="1"'));

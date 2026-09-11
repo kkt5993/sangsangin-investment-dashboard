@@ -60,28 +60,9 @@ def multiasset(d):
     return module('multiasset',d.as_of,'21자산 수익률·37자산 스캐너를 계산합니다. FX는 표시 환율의 변화율, 선물은 제공처 연속선물 가격입니다. 자산배분은 월 리밸런싱 역변동성 기준모형(63일, 편도 5bp)입니다.',sections,[('자산',len(rows)),('스캐너',len(scans))],missing=['원본의 ML 자산배분 모델·가중치가 없어 기준모형을 구분해 제공합니다.'])
 
 def dynamics(d):
-    sections=[]
-    for s,n in [(s,n) for _,s,n in INDICES]+DYNAMICS_STOCKS:
-        p=d.price(s);r=p.pct_change(fill_method=None)
-        if len(p)<300:continue
-        vol=r.rolling(21).std(ddof=0);beta=r.rolling(21).mean()/vol*np.sqrt(252);alpha=beta-beta.shift(5)
-        tau=r.diff().abs().rolling(21).std(ddof=0)/r.abs().rolling(21).mean()
-        a=expanding_z(tau)-.5*expanding_z(beta)-.5*expanding_z(alpha)
-        risk=100/(1+np.exp(-a.clip(-50,50)));exposure=(.15/(vol*np.sqrt(252))).clip(0,1.5)*(1-.6*risk/100)
-        f=pd.DataFrame(dict(beta=beta,alpha=alpha,tau=tau,risk=risk,exposure=exposure,px=p)).dropna()
-        if f.empty:continue
-        m=observed_resample(f).tail(144);ph=m.tail(60)
-        dates=ph.index;windows=[5,10,20,40,60,90,120,180]
-        surf=observed_resample(pd.DataFrame({w:r.rolling(w).std(ddof=0)*np.sqrt(252)*100 for w in windows})).reindex(dates)
-        b=r.loc[f.index];model=exposure.shift(1).loc[f.index]*b;model=model.dropna();b=b.reindex(model.index)
-        section=dict(type='dynamics',title=n,group=n,symbol=s,current=clean_json(f.iloc[-1].to_dict()),date=str(f.index[-1].date()),
-            surface=dict(windows=windows,dates=[str(x.date()) for x in dates],values=surf.values.tolist()),
-            phase=[dict(x=number(x.beta),y=number(x.tau),value=number(x.risk),name=str(t.date())) for t,x in ph.iterrows()],
-            charts=[curve('붕괴 취약성 · 가격', [('위험 점수',ph.risk,'left'),('가격',ph.px,'right')],'0–100','가격',[65],[0,100]),
-                    curve('노출 조절 vs Buy & Hold', [('노출 조절',observed_resample((1+model).cumprod())*100,'left'),('Buy & Hold',observed_resample((1+b).cumprod())*100,'left')],'시작=100')],
-            stats=[dict(name='노출 조절',**performance(model)),dict(name='Buy & Hold',**performance(b))])
-        sections.append(section)
-    return module('dynamics',d.as_of,'공개된 β·α·τ·취약성·노출 공식을 구현했습니다. 21일·5일·expanding 252일, 모집단 표준편차를 사용합니다. 표면은 8개 기간의 연환산 변동성, 위상공간은 β×τ입니다. 백테스트는 전일 노출을 적용하며 비용·차입금리는 0입니다. 취약성은 통계적 점수이며 붕괴 확률이 아닙니다.',sections,[('대상',len(sections)),('표면 창',8)],'operational')
+    from .dynamics_model import build
+    return build(d)
+
 
 def candle_section(d,s,name,group=None,annotation=None):
     f=d.frames.get(s);p=d.price(s)

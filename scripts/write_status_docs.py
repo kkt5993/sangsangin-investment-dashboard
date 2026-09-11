@@ -9,7 +9,7 @@ modules=json.loads((ROOT/'docs/modules.js').read_text(encoding='utf8').removepre
 meta=load(ROOT/'docs/data/status.json')
 CODE={
  'rs':'market_modules.py · build.py · analytics.py · universe.py','momentum':'build.py · analytics.py · universe.py · momentum_highs.py · us100_data.py',
- 'etfmon':'etf_details.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
+ 'etfmon':'etf_details.py','multiasset':'market_modules.py','dynamics':'market_modules.py · dynamics_model.py · dynamics-views.js','watch':'market_modules.py · patterns.py',
  'regime':'macro_modules.py','risk':'macro_modules.py · option_analytics.py','pm_weekend':'macro_modules.py','geoecon':'macro_modules.py',
  'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'discovery.py · financial_modules.py','strategies':'financial_modules.py',
  'quant':'quant_modules.py · quant_screens.py · quant-screens.js','ml':'ml_models.py · ml_features.py · ml_ensemble.py · ml_transformer.py · ml_views.py','maximus':'maximus_model.py · maximus_features.py · maximus_moe.py · maximus_views.py',

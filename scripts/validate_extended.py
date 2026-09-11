@@ -452,9 +452,11 @@ def section(s,cutoff,module):
         assert s['training_end']<=cutoff and len(s['dates'])<=120 and s['dates']==sorted(set(s['dates']))
         for r in s['rows']:assert len(r['points'])==len(s['dates']) and all(math.isfinite(p[0]) and 0<=p[1]<=1 for p in r['points'])
     if kind=='dynamics':
-        a=s['surface'];assert a['windows']==[5,10,20,40,60,90,120,180];assert len(a['dates'])==len(a['values']);assert all(len(r)==8 for r in a['values']);assert a['dates'][-1]<=cutoff
-        assert 0<=s['current']['risk']<=100 and 0<=s['current']['exposure']<=1.5
-        for c in s['charts']:section(c,cutoff,module)
+        from pipeline.dynamics_validation import verify_section
+        verify_section(s,cutoff)
+        if not s.get('pending'):
+            for c in s['charts']:
+                if c:section(c,cutoff,module)
     if kind=='candles':
         for key in ['candles','weekly']:
             a=s[key];assert [x[0] for x in a]==sorted(set(x[0] for x in a));assert a[-1][0]<=cutoff

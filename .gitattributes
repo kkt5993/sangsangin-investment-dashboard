@@ -1,3 +1,5 @@
 # Keep upstream PDF.js, CMap, font and license bytes equal to their pinned hashes.
 docs/vendor/pdfjs/** -text -whitespace
 docs/vendor/ocr/** -text -whitespace
+# Keep the UI font and OFL license identical to the verified asset manifest.
+docs/assets/fonts/** -text -whitespace

@@ -413,3 +413,12 @@ attention_data/attention_views/attention-views.js/config으로수집·Entity360�
 종목링크는 동일origin/하위경로의 ?dynamics=정확한티커#dynamics. 미등록값/다른모듈은 적용하지않고 기존임의쿼리를복사하지않는다. 링크는 열때 최신데이터이며 과거빈티지/카메라/비용가정 고정링크가 아님을표시. 클립보드거부시 직접복사입력, 저장실패후버튼복원, 탭/종목이탈시작업취소와Blob해제. 메시지외부전송/추가수집/원본사이트/새AI세션0. 기존27공개JSON바이트불변, 모든가격/계산/모델/정기08/18파이프라인불변. 최신디자인8c0adfd 유지.
 
 검증: Edge1440/1024/390 각각18링크, 데스크톱18PNG/태블릿2PNG/모바일2PNG 실제파일시그니처·1800px폭·그려진종목/수식/각날짜·과거표식·표면좌표불변·클립보드거부·toBlob실패·변환중이탈·URL해제 확인. 오류/외부요청/문서가로넘침0, 삼성전자390PNG한글·수식·기울기와기간 육안확인. 정확한최종전체회귀결과는runtime/dynamics-export-validation.json,브라우저결과dynamics-export-browser-qa.json. stage20260911T040404Z/가격data_run20260911T034033Z/raw20260911T024219Z. 실제게시commit은dynamics-export-publication.json/state.json 확인. 정본DYNAMICS_CONTRACT.md/REFERENCE_PARITY,전체goal미완이며나머지세부기능계속.
+
+
+2026-09-11 기업 뉴스 제목 톤: ProsusAI/finbert revision4556d13015211d73dccd3fdd39d39232506f3e43/6파일SHA 고정. 가중치는private models/finbert에만저장, 공개는config/news_tone.json·코드·직접산출확률. 영문 Yahoo RSS의356정규화고유제목을CPU4/16배치·eval/inference_mode로40.298초분류,즉시재실행모델로드0·356캐시재사용. 두번초기환경실패(huggingface-hub버전/torchvision NMS)를명시적으로수정후동일빈티지 --retry;전역환경변경없음. 전용tools/news-tone-dependencies에hub0.36.0/tokenizers0.22.1/torchvision0.26.0+cpu설치,requirements/모델계약에기록.
+
+news_tone.py는모델+제목해시재사용·파일해시검증·로컬전용읽기·weights_only,영문범위/512토큰모델범위초과미분류(저장한도아님),오류이전값보존/1h백오프. 기존08/18 company_news뒤분류연결;정기실행에서모델다운로드0. 최근7UTC일/가격일이하필터후피드내중복제목제거·P긍정−P부정평균,전체유효분류/신선피드/평균>0에별도1점. 기업별호재/악재·수익률/전체기업감성·PIT아님을명시. 기사별3확률/라벨·계산시각·토큰,기업카드/상세/양수음수미분류필터·트리거·로컬분류소스카드(총22)연결.
+
+23피드·381게시기사/317URL·23피드분류완료·15양수·7규칙중5연결·16동시신호카드. 가격/관계/관심도등23JSON불변. raw20260911T041510Z(부모20260911T024219Z),가격9/10유지;모델계산04:20UTC,기사원자료는기존02:42빈티지. source_vintage와tone_source_vintage/status.supplemental_vintages.news_tone분리. stage20260911T042425Z. 추가뉴스/원본사이트/외부추론API/새AI세션0.
+
+검증: 6개추가Python검사(캐시/수정/실패/확률/부분집계/미래기사/날짜시차1점),전체346Python·두자료검증기·3JS모음·구문통과(151.01초). Edge1440/1024/390각23피드/381라벨·확률·평균·필터·펼침/23기업상세·5규칙·소스22·가로넘침0/오류0/외부요청0,390이미지검수. 원문/캐시381값전수일치,12제목별도batch+float64softmax재계산최대오차1.41e-7/3라벨포함,비영문·602토큰미분류검사. runtime/news-tone-collection/reuse/build-verification/source-verification/browser-qa/validation.json,실제게시는news-tone-publication.json/state.json. 정본NEWS_TONE_CONTRACT.md. 전체goal미완:다중제공처/전체기업·기업별문맥감성·정량투자뷰·최신연속13F·전체관계/팀DB등REFERENCE_PARITY계속.

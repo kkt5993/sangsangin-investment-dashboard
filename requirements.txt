@@ -23,3 +23,8 @@ Pillow==12.2.0
 
 # Synthetic PDF fixtures for the browser parser and extraction checks.
 PyMuPDF==1.26.4
+
+# Local, pinned English financial headline classification; no hosted inference.
+transformers==4.57.1
+huggingface_hub==0.36.0
+safetensors==0.6.2

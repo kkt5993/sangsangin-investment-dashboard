@@ -267,7 +267,11 @@ def section(s,cutoff,module):
         assert s['as_of']==cutoff and s['settings']['days']==7 and s['settings']['volume_threshold']==8
         assert len({r['symbol'] for r in s['items']})==len(s['items'])
         for r in s['items']:
-            assert r['tone'] is None and r['observed_count']==len(r['items'])==len({a['url'] for a in r['items']})
+            assert r['observed_count']==len(r['items'])==len({a['url'] for a in r['items']})
+            if 'tone_summary' in r:
+                from pipeline.news_tone import verify_summary
+                verify_summary(r)
+            else:assert r['tone'] is None
             assert r['volume_hit']==(r['available'] and r['observed_count']>=8)
             assert not r['error'] or not r['available']
             for a in r['items']:

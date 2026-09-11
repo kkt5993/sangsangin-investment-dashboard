@@ -33,6 +33,7 @@ for(const file of ['charts','analysis-charts','network-views','sauron-views','tr
 require('./test_quant_screens.cjs')(context,data);
 require('./test_dynamics.cjs')(context,data);
 require('./test_dynamics_export.cjs');
+require('./test_news_tone.cjs');
 tradeChecks(context,data);
 chainChecks(context,data);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}

@@ -77,6 +77,13 @@ def sources(d, dragon, now):
             checked=company_news.get('collection',{}).get('attempted_at'),retrieved=min(dates,default=None),observed=max(latest,default=None),
             error=any(r.get('error') for r in records),count=len(dates),vintage=company_news.get('source_vintage'),
             detail='기업 피드별 관측 기사. 가장 오래된 성공 수집과 가장 최근 포함 기사 발행일을 구분합니다. 전체 뉴스량·기업 감성은 아닙니다.'))
+    if company_news and company_news.get('tone_collection'):
+        model=company_news['tone_collection'];tones=[r['tone_summary'] for r in company_news['items'] if r.get('tone_summary',{}).get('available')]
+        rows.append(row('news-tone','FinBERT · 로컬 제목 분류','뉴스·정책','https://huggingface.co/ProsusAI/finbert',24,now,
+            checked=company_news.get('computed_at'),retrieved=max([r['analyzed_at'] for r in tones],default=None),observed=max(latest,default=None),
+            state='current' if records and all(r.get('tone_summary',{}).get('complete') for r in records) else 'waiting',
+            error=model.get('status')=='error',count=len(tones),vintage=company_news.get('tone_source_vintage'),
+            detail='PC에서 영문 제목을 분류하고 동일 제목/모델 결과를 재사용합니다. 외부 추론 API 호출 없음. 기업별 투자방향/수익률이 아닌 연결 제목 전체의 톤입니다.'))
     satellite = packet('satellite_collection.json.gz'); sites = satellite.get('sites', [])
     captures = [r['scene']['captured_at'] for r in sites if r.get('scene')]
     rows.append(row('sentinel', 'Sentinel-2 · Earth Search', '위성·위치', 'https://earth-search.aws.element84.com/v1', 168, now,

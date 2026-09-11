@@ -42,6 +42,10 @@ def monitor(dragon,discovery,ranks):
         if r.get('available') and r.get('volume_hit'):
             add(r['symbol'],'volume',f"기업 피드 뉴스 {r['observed_count']}건",r['latest'][:10],
                 f"Yahoo Finance RSS 연결 기사 · UTC {r['start']}~{r['end']} · 성공 수집 {r['retrieved_at']} · 전체 뉴스량/감성 아님",weight=1)
+        tone=r.get('tone_summary',{})
+        if r.get('available') and tone.get('positive_hit'):
+            add(r['symbol'],'tone',f"연결 제목 톤 {tone['score']:+.3f}",r['latest'][:10],
+                f"FinBERT · 중복 제목 제외 {tone['classified']}개 · P긍정−P부정 평균 · 계산 {tone['analyzed_at']} · 기업별 방향/수익률 신호 아님",weight=1)
     rows=[]
     known={e['symbol'] for e in entities}
     for symbol,items in signals.items():
@@ -53,8 +57,8 @@ def monitor(dragon,discovery,ranks):
             for h in hits:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='기업 상세 가격일이 오래되거나 미래임'))
             continue
         for h in hits:
-            if h['id'] not in ['attention','volume'] and h['date']!=e['date']:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='기업 상세 가격일 '+e['date']+'과 불일치'))
-        hits=[h for h in hits if h['id'] in ['attention','volume'] or h['date']==e['date']]
+            if h['id'] not in ['attention','volume','tone'] and h['date']!=e['date']:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='기업 상세 가격일 '+e['date']+'과 불일치'))
+        hits=[h for h in hits if h['id'] in ['attention','volume','tone'] or h['date']==e['date']]
         related=[r for r in docs if r['kind']=='official' and any(t['id']==e['id'] for t in r['targets'])]
         edges=[r for r in graph.get('links',[]) if e['id'] in [r['source'],r['target']]]
         suppliers=[];customers=[]
@@ -109,8 +113,11 @@ def views(objects,ranks):
     news=section(dragon,'companynews').get('items',[]);news_available=sum(bool(r.get('available')) for r in news)
     if news_available:
         next(r for r in rules if r['id']=='volume').update(name='기업 피드 뉴스8건',status='연결 · RSS 표본',basis=f'최근7일 실제 관측 기사8건 이상 · Yahoo Finance RSS {news_available}/{len(news)}피드 · 전체 뉴스량이 아닌 관측 하한')
-    common=dict(rules=rules,as_of=asof,coverage=dict(entities=len(section(dragon,'entities').get('entities',[])),candidates=len(rows),leaders=sum(any(h['id']=='leaders' for h in r['hits']) for r in rows),discovery=sum(any(h['id']=='discovery' for h in r['hits']) for r in rows),discovery_input=len(section(objects['discovery'],'discovery').get('items',[])),attention=available,attention_expected=len(attention),news=news_available,news_expected=len(news),rules_available=2+bool(available)+bool(news_available),rules_total=7),excluded=rejected,
-       scope=f'확인된 주도주·발굴·문서 관심도·기업 피드 관측을 합산합니다. 신호들은 독립 확률이 아닙니다. 미확보 {5-bool(available)-bool(news_available)}항목을0점으로 확정하지 않으며 전체 점수와 원본 live·기대수익은 미산출입니다. 기술신호는 가격일을 맞추고 문서 열람·뉴스는 별도 UTC 관측/발행일·수집 시각을 표시합니다. 과거 시점 백테스트에 쓰지 않습니다.')
+    tone_available=sum(bool(r.get('available') and r.get('tone_summary',{}).get('complete')) for r in news)
+    if tone_available:
+        next(r for r in rules if r['id']=='tone').update(name='연결 제목 톤 양수',status='연결 · 영문 제목 모델',basis=f'FinBERT P긍정−P부정 평균>0 · 완전 분류된 신선한 {tone_available}/{len(news)}피드 · 전체 기업 감성/수익률 아님')
+    common=dict(rules=rules,as_of=asof,coverage=dict(entities=len(section(dragon,'entities').get('entities',[])),candidates=len(rows),leaders=sum(any(h['id']=='leaders' for h in r['hits']) for r in rows),discovery=sum(any(h['id']=='discovery' for h in r['hits']) for r in rows),discovery_input=len(section(objects['discovery'],'discovery').get('items',[])),attention=available,attention_expected=len(attention),news=news_available,news_expected=len(news),tone=tone_available,rules_available=2+bool(available)+bool(news_available)+bool(tone_available),rules_total=7),excluded=rejected,
+       scope=f'확인된 주도주·발굴·문서 관심도·기업 피드 관측·연결 제목 톤을 합산합니다. 신호들은 독립 확률이 아닙니다. 미확보 {5-bool(available)-bool(news_available)-bool(tone_available)}항목을0점으로 확정하지 않으며 전체 점수와 원본 live·기대수익은 미산출입니다. 기술신호는 가격일을 맞추고 문서 열람·뉴스는 별도 UTC 관측/발행일·수집 시각을 표시합니다. 과거 시점 백테스트에 쓰지 않습니다.')
     focus=dict(type='dragonfocus',title='지금 주목 · 신호·관계·근거',group='지금 주목',items=rows[:15],**common,
         risk=deepcopy(section(digest,'digestrisk').get('items',[])),themes=themes,cross=cross,radar=radar(objects['geoecon'],asof),
         ranking='확인된 신호 가중합 우선, 동점은 관계수×2.2+공식 문서수×6, 마지막은 객체 ID 순. 원본 전체 점수 순위와 다릅니다.')
@@ -120,6 +127,6 @@ def views(objects,ranks):
         dragon['sections']=[s for s in dragon['sections'] if not(s.get('group')==new['group'] and s['type'] in ['table','dragonfocus','dragontriggers'])]
         dragon['sections'].insert(position,new)
     dragon['missing']=[m for m in dragon['missing'] if not m.startswith('지금 주목·트리거는')]
-    gap='지금 주목·트리거는 주도주/발굴·공식 근거·촬영일·문서 관심도·기업 RSS 표본을 연결합니다. 전체 뉴스량/감성·13F 최신·정량 투자뷰·원본 live는 미확보이며 완전한 합성점수는 미산출입니다.'
+    gap='지금 주목·트리거는 주도주/발굴·공식 근거·촬영일·문서 관심도·기업 RSS 표본을 연결합니다. 전체 뉴스량/기업별 감성·13F 최신·정량 투자뷰·원본 live는 미확보이며 완전한 합성점수는 미산출입니다.'
     if gap not in dragon['missing']:dragon['missing'].append(gap)
     return dragon

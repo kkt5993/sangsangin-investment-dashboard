@@ -1,4 +1,4 @@
-# Images & Words (주간 기록)
+# 주간 기록
 
 <!-- implementation:start -->
 ## 현재 팀 구현

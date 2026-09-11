@@ -1,4 +1,4 @@
-# ask_digest
+# 시장 요약
 
 <!-- implementation:start -->
 ## 현재 팀 구현
@@ -17,7 +17,7 @@
 아래는 원본을 학습하며 작성한 설계 가이드다. 초기의 “필요/미확인” 표현은 위 현재 구현 상태를 우선해 읽는다.
 <!-- implementation:end -->
 
-ASK ARAGORN이 참고할 사이트 데이터 요약. 현재 index.json에 포함되어 ETC 탭에도 노출된다.
+시장 요약이 참고할 사이트 데이터 요약. 현재 index.json에 포함되어 ETC 탭에도 노출된다.
 
 ## 구현 순서
 

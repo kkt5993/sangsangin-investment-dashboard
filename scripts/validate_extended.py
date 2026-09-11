@@ -235,6 +235,8 @@ def section(s,cutoff,module):
         for r in s['rows']:assert r['date'][:7]<cutoff[:7] and all(v is None or math.isfinite(v) and v>=0 for k,v in r.items() if k!='date')
     if kind=='relationlab':
         nodes={r['id']:r for r in s['nodes']};edges={r['id']:r for r in s['links']}
+        window=s.get('correlation_window')
+        if window:assert window['months']==3 and window['minimum']==45 and window['start']<window['end']==cutoff
         assert len(nodes)==len(s['nodes']) and len(edges)==len(s['links'])
         for n in nodes.values():
             assert len(n['position'])==3 and all(math.isfinite(v) for v in n['position'])
@@ -242,7 +244,9 @@ def section(s,cutoff,module):
         for e in edges.values():
             assert e['source'] in nodes and e['target'] in nodes and e['source']!=e['target'] and 1<=e['weight']<=3
             assert e['relation'] in s['parameters']['transfer'] and e['basis'] and e['evidence']
-            if e['relation']=='correlated':assert e['observations']>=200 and e['start']<e['end']<=cutoff and -1<=e['corr']<=1
+            if e['relation']=='correlated':
+                assert e['observations']>=(window['minimum'] if window else 200) and e['start']<e['end']<=cutoff and -1<=e['corr']<=1
+                if window:assert e['start']>window['start'] and abs(e['corr'])>=.6
             else:assert e['url'].startswith('https://')
         assert len(s['scenarios'])==8 and len({r['id'] for r in s['scenarios']})==8
         for scenario in s['scenarios']:
@@ -259,6 +263,39 @@ def section(s,cutoff,module):
         assert len(set(p['ids']))==count and len(raw)==length*2 and len(obs)==length and len(p['diagonal_valid'])==count
         assert p['window']<=252 and p['minimum']==200 and (p['end'] is None or p['end']<=cutoff)
         for (value,),n in zip(struct.iter_unpack('<h',raw),obs):assert value==32767 or -10000<=value<=10000 and 200<=n<=252
+    if kind=='companynews':
+        assert s['as_of']==cutoff and s['settings']['days']==7 and s['settings']['volume_threshold']==8
+        assert len({r['symbol'] for r in s['items']})==len(s['items'])
+        for r in s['items']:
+            assert r['tone'] is None and r['observed_count']==len(r['items'])==len({a['url'] for a in r['items']})
+            assert r['volume_hit']==(r['available'] and r['observed_count']>=8)
+            assert not r['error'] or not r['available']
+            for a in r['items']:
+                assert r['start']<=a['published_at'][:10]<=r['end']==cutoff and a['title'] and a['url'].startswith('https://')
+                assert a['first_seen_at']<=a['last_seen_at']<=s['computed_at']
+            assert r['latest']==max([a['published_at'] for a in r['items']],default=None)
+    if kind=='relationdiscovery':
+        from statsmodels.stats.multitest import multipletests
+        assert s['period_start']<s['period_end']==cutoff and s['settings']['lags']==[1,3,5]
+        symbols={r['symbol']:r for r in s['universe']};assert len(symbols)==s['coverage']['priced']
+        assert len(s['pairs'])==len(symbols)*(len(symbols)-1)//2
+        for r in s['pairs']:
+            assert r['a']!=r['b'] and r['a'] in symbols and r['b'] in symbols
+            if r['corr'] is not None:assert -1<=r['corr']<=1 and r['observations']>=45 and s['period_start']<r['start']<=r['end']<=cutoff
+        assert all(not r['relations'] and abs(r['corr'])>=.6 for r in s['hidden'])
+        assert len({(r['lead'],r['follow'],r['lag']) for r in s['tests']})==s['coverage']['tests']
+        for r in s['tests']:
+            assert r['lead']!=r['follow'] and symbols[r['lead']]['market']==symbols[r['follow']]['market']==r['market']
+            assert r['lag'] in [1,3,5]
+            if r['p'] is not None:assert r['observations']>=45 and 0<=r['p']<=r['q']<=1 and r['f']>=0 and s['period_start']<r['start']<=r['end']<=cutoff
+            assert r['candidate']==(r['corr'] is not None and abs(r['corr'])>=.25 and r['edge']>=.1)
+            assert r['screen_pass']==(r['candidate'] and r['q'] is not None and r['q']<=.1)
+        valid=[r for r in s['tests'] if r['p'] is not None];assert len(valid)==s['coverage']['valid_tests']
+        if valid:
+            q=multipletests([r['p'] for r in valid],method='fdr_by')[1]
+            assert all(abs(r['q']-v)<1e-12 for r,v in zip(valid,q))
+        assert len({(r['lead'],r['follow']) for r in s['leadlag']})==len(s['leadlag'])==s['coverage']['candidates']
+        assert all(r in s['tests'] and r['candidate'] for r in s['leadlag'])
     if kind=='digestbrief':assert len(s['horizons'])==3 and s['headline'] and s['note']
     if kind=='digesttrends':
         assert [p['id'] for p in s['panels']]==['short','mid','long']

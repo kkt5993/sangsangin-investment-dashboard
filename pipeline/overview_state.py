@@ -91,7 +91,7 @@ def states(d):
     observations.update(momentum=spy,overheat=heat,concentration=spy,speculation=high,valuation=wil,complacency=vix)
     values=pd.DataFrame(series,index=index);z=values.apply(history_z);z['complacency']=-z.complacency
     result=[]
-    for id,title,keys in [('tesseract','TESSERACT · 세계의6축 상태',['growth','inflation','liquidity','profits','rate','momentum']),('crowding','CROWDING · 시장 쏠림5축',['overheat','concentration','speculation','valuation','complacency'])]:
+    for id,title,keys in [('tesseract','거시 국면 · 세계의6축 상태',['growth','inflation','liquidity','profits','rate','momentum']),('crowding','시장 쏠림 · 시장 쏠림5축',['overheat','concentration','speculation','valuation','complacency'])]:
         rows=[]
         for t in index[-36:]:
             provenance={k:dict(period=str(observations[k].at[t,'period'].date()) if pd.notna(observations[k].at[t,'period']) else None,available=str(observations[k].at[t,'available'].date()) if pd.notna(observations[k].at[t,'available']) else None) for k in keys}

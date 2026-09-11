@@ -15,7 +15,7 @@ module.exports=(async()=>{
  await box.querySelector('[data-sat-focus="'+site.id+'"]').fire('click');assert(box.querySelector('[data-sat-detail]').innerHTML.includes(site.name));assert(box.querySelector('[data-sat-map]').innerHTML.includes('확대 14'));
  const mode=box.querySelector('[data-sat-mode]');mode.value='ndvi';await mode.fire('change');assert(box.querySelector('[data-sat-detail]').innerHTML.includes(site.id+'-ndvi.png'));
  const card=box.querySelector('[data-sat-card="'+site.id+'"]'),toggle=card.querySelector('[data-sat-toggle]'),img=card.querySelector('[data-sat-image]');await toggle.fire('click');assert.equal(img.src,site.scene.images.ndvi.path);await toggle.fire('click');assert.equal(img.src,site.scene.images.rgb.path);
- await card.querySelector('[data-sat-open]').fire('click');assert.equal(nav.at(-1)[0],'Entity 360');assert.equal(nav.at(-1)[1].facility,site.id);
+ await card.querySelector('[data-sat-open]').fire('click');assert.equal(nav.at(-1)[0],'기업 상세');assert.equal(nav.at(-1)[1].facility,site.id);
  const surface=box.querySelector('[data-sat-map]');await surface.events.keydown[0]({target:surface,key:'-',preventDefault(){}});assert(surface.innerHTML.includes('확대 13'));
  surface.getBoundingClientRect=()=>({width:1000});surface.events.pointerdown[0]({target:surface,clientX:100,clientY:100,pointerId:1});const before=surface.innerHTML;surface.events.pointermove[0]({clientX:160,clientY:140});assert.notEqual(surface.innerHTML,before);surface.events.pointerup[0]({});
  await box.querySelector('[data-sat-size]').fire('click');assert(surface.innerHTML.includes('height="760"'));await box.querySelector('[data-sat-reset]').fire('click');assert(surface.innerHTML.includes('확대 '+V.fit(s,base).zoom));

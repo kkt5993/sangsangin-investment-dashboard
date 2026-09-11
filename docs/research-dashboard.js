@@ -64,6 +64,8 @@
  function section(s,i,st){
   if(s.type==='gurus')return heading(s.title)+root.GuruViews.render(s,i);
   if(s.type==='attention')return heading(s.title)+root.AttentionViews.render(s,i);
+  if(s.type==='relationdiscovery')return heading(s.title)+root.RelationDiscovery.render(s,i);
+  if(s.type==='companynews')return heading(s.title)+root.CompanyNews.render(s,i);
   if(['dragonsources','dragonstatus'].includes(s.type))return heading(s.title)+root.DragonOperations.render(s,i);
   if(s.type==='clinical')return heading(s.title)+root.ClinicalViews.render(s,i);
   if(['dragonfocus','dragontriggers'].includes(s.type))return heading(s.title)+root.DragonSignals.render(s,i);
@@ -158,7 +160,7 @@
   if(!st.initialized){st.group=groups.length?({geoecon:'주목 상황',risk:'리스크 콕핏'}[m.id]||groups[0]):'all';st.initialized=true;}
   const label={operational:'계산·화면 연결',partial:'부분 구현 · 실데이터',blocked:'추가 데이터 필요'}[d.status]||d.status;
   const excluded=(d.price_quality?.vendor_ohlc_exclusions||[]).filter(r=>r.date<=d.as_of);
-  container.innerHTML=`<p class="eyebrow">SANGSANGIN / ${E(m.id.toUpperCase())}</p><div class="title-row"><div><h1>${E(m.title)}</h1><p class="lead">${E(m.purpose)}</p></div><span class="count-badge">${E(label)}</span></div><div class="data-meta"><span>가격 기준 <b>${E(d.as_of)}</b></span><a href="data/${E(m.id)}.json" download>계산 결과 JSON ↓</a></div><p class="scope-note">${E(d.method_note)}</p>${excluded.length?`<details class="scope-note" data-price-exclusions><summary>가격 공급처의 OHLC 불일치 ${excluded.length}개 관측 제외</summary><p>시가·종가가 고가·저가 범위를 벗어나거나 OHLC가 유효하지 않은 주식·ETF 일봉은 캔들·기술지표 계산에서 제외합니다. 원자료는 PC에 보존하며 가격을 임의로 수정하지 않습니다. 종가만 사용하는 수익률 계산은 공급처의 보고 종가를 사용합니다. 캔들·기술지표의 실제 관측일은 별도로 확인하세요.</p><p>${excluded.map(r=>E(r.symbol)+' · '+E(r.date)).join(' / ')}</p></details>`:''}`+
+  container.innerHTML=`<p class="eyebrow">SANGSANGIN / ${E(m.title)}</p><div class="title-row"><div><h1>${E(m.title)}</h1><p class="lead">${E(m.purpose)}</p></div><span class="count-badge">${E(label)}</span></div><div class="data-meta"><span>가격 기준 <b>${E(d.as_of)}</b></span><a href="data/${E(m.id)}.json" download>계산 결과 JSON ↓</a></div><p class="scope-note">${E(d.method_note)}</p>${excluded.length?`<details class="scope-note" data-price-exclusions><summary>가격 공급처의 OHLC 불일치 ${excluded.length}개 관측 제외</summary><p>시가·종가가 고가·저가 범위를 벗어나거나 OHLC가 유효하지 않은 주식·ETF 일봉은 캔들·기술지표 계산에서 제외합니다. 원자료는 PC에 보존하며 가격을 임의로 수정하지 않습니다. 종가만 사용하는 수익률 계산은 공급처의 보고 종가를 사용합니다. 캔들·기술지표의 실제 관측일은 별도로 확인하세요.</p><p>${excluded.map(r=>E(r.symbol)+' · '+E(r.date)).join(' / ')}</p></details>`:''}`+
    (d.missing.length?`<details class="method-details"><summary>이 탭의 구현 범위와 남은 항목 (${d.missing.length})</summary><ul>${d.missing.map(t=>`<li>${E(t)}</li>`).join('')}</ul></details>`:'')+
    `<div class="kpi-grid">${(d.cards||[]).map(([label,value])=>`<article class="kpi"><small>${E(label)}</small><strong>${num(value)}</strong></article>`).join('')}</div>`+
    `<div class="subview-tabs" role="tablist" aria-label="세부 화면">${(d.subviews||[]).map(v=>`<button type="button" role="tab" data-subview="${E(v.name)}" aria-selected="${st.group===v.name}" ${v.status==='pending'?'disabled':''} title="${E(v.reason||'')}">${E(v.name)} <small>${v.status==='pending'?'미연결':v.sections+'개'}</small></button>`).join('')}</div>`+
@@ -192,6 +194,8 @@
   root.GuruViews?.bind(container,d,navigate);
   root.DragonOperations?.bind(container,d,navigate);
   root.AttentionViews?.bind(container,d,navigate);
+  root.RelationDiscovery?.bind(container,d,navigate);
+  root.CompanyNews?.bind(container,d,navigate);
   root.NetworkViews?.bind(container,d,m.id==='dragonglass'?navigate:null);
   root.TradeViews?.bind(container,d,st);root.SauronViews?.bind(container,d,st);root.ChainViews?.bind(container,d,st);
   root.DecisionLedger?.bind(container,d,navigate,st);

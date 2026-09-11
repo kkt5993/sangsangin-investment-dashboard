@@ -41,7 +41,7 @@ def views(d,obj):
     position=next((i for i,s in enumerate(obj['sections']) if s.get('group')=='리서치'),len(obj['sections']))
     obj['sections']=[s for s in obj['sections'] if not(s.get('group')=='리서치' and s['type'] in ['library','dragonresearch'])]
     obj['sections'].insert(position,dict(type='dragonresearch',title='리서치 · 공식 근거와 팀 기록',group='리서치',items=rows,
-        scope='공식 원문은 링크와 검토한 근거를 연결합니다. 개인 PRINCIPIUM 기록·첨부는 사용자가 불러올 때 이 브라우저에서만 읽습니다. 검토일은 발표일이나 자동 갱신일이 아닙니다.',
+        scope='공식 원문은 링크와 검토한 근거를 연결합니다. 개인 리서치 자료실 기록·첨부는 사용자가 불러올 때 이 브라우저에서만 읽습니다. 검토일은 발표일이나 자동 갱신일이 아닙니다.',
         coverage=dict(official=sum(r['kind']=='official' for r in rows),team=sum(r['kind']=='team' for r in rows),linked=sum(bool(r['targets']) for r in rows))))
-    gap='리서치 카탈로그는 팀의 공개 검토 자료와 이 브라우저의 PRINCIPIUM 기록을 연결합니다. 원본의 비공개 리포트·투자 기대수익과 전체 167편을 복제하지 않으며, 자동 투자뷰 추론·팀 공유 저장소는 미연결입니다.'
+    gap='리서치 카탈로그는 팀의 공개 검토 자료와 이 브라우저의 리서치 자료실 기록을 연결합니다. 원본의 비공개 리포트·투자 기대수익과 전체 167편을 복제하지 않으며, 자동 투자뷰 추론·팀 공유 저장소는 미연결입니다.'
     if gap not in obj['missing']:obj['missing'].append(gap)

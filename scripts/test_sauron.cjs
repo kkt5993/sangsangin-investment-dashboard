@@ -32,5 +32,5 @@ module.exports=(async()=>{
  const section=JSON.parse(fs.readFileSync(path.join(root,'docs/data/globe.json'),'utf8')).sections.find(s=>s.type==='sauron'),html=V.render(section,0);
  assert.equal((html.match(/data-sau-layer=/g)||[]).length,3);assert.equal((html.match(/data-sau-style=/g)||[]).length,6);assert.equal((html.match(/data-sau-control=/g)||[]).length,11);
  const escaped=JSON.parse(JSON.stringify(section));escaped.sites[0].name='<img src=x onerror=alert(1)>';assert(!V.render(escaped,0).includes('<img'));
- console.log('PASS: SAURON',samples,'independent orbit vectors, max TEME error',maxError,'km; coordinates, stale/failed positions, UI contract and escaping.');
+ console.log('PASS: 위성·지구관측',samples,'independent orbit vectors, max TEME error',maxError,'km; coordinates, stale/failed positions, UI contract and escaping.');
 })();

@@ -69,6 +69,14 @@ def sources(d, dragon, now):
             checked=attention.get('collection', {}).get('attempted_at'), retrieved=min(dates, default=None), observed=min(ends, default=None),
             error=bool(attention.get('collection', {}).get('errors')), count=len(dates), vintage=attention.get('source_vintage'),
             detail='영문 기업 문서 직접 user 열람. 가장 오래된 성공 수집·UTC 관측일을 표시합니다. 뉴스량·고유 투자자 수가 아닙니다.'))
+    company_news = section(dragon, 'companynews')
+    if company_news:
+        records=company_news.get('items',[]);dates=[r['retrieved_at'] for r in records if r.get('retrieved_at')]
+        latest=[r['latest'] for r in records if r.get('latest')]
+        rows.append(row('company-news','Yahoo Finance · 기업 RSS','뉴스·정책','https://finance.yahoo.com/',24,now,
+            checked=company_news.get('collection',{}).get('attempted_at'),retrieved=min(dates,default=None),observed=max(latest,default=None),
+            error=any(r.get('error') for r in records),count=len(dates),vintage=company_news.get('source_vintage'),
+            detail='기업 피드별 관측 기사. 가장 오래된 성공 수집과 가장 최근 포함 기사 발행일을 구분합니다. 전체 뉴스량·기업 감성은 아닙니다.'))
     satellite = packet('satellite_collection.json.gz'); sites = satellite.get('sites', [])
     captures = [r['scene']['captured_at'] for r in sites if r.get('scene')]
     rows.append(row('sentinel', 'Sentinel-2 · Earth Search', '위성·위치', 'https://earth-search.aws.element84.com/v1', 168, now,

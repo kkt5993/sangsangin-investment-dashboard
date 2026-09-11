@@ -64,9 +64,9 @@ def satellite_views(d,obj):
         sites.append(s)
     obj['sections']=[s for s in obj['sections'] if s['type'] not in ['satellite','facilitydetail']]
     index=next(i for i,s in enumerate(obj['sections']) if s['type']=='entities')
-    obj['sections'].insert(index,dict(type='facilitydetail',title='시설 Entity · 위치와 관측 근거',group='Entity 360'))
+    obj['sections'].insert(index,dict(type='facilitydetail',title='시설 Entity · 위치와 관측 근거',group='기업 상세'))
     years=', '.join(sorted({s['scene']['captured_at'][:4] for s in sites if s['scene']}))
-    obj['sections'].append(dict(type='satellite',title='위성 현장 · RGB / NDVI',group='위성 현장',sites=sites,
+    obj['sections'].append(dict(type='satellite',title='위성사진 · RGB / NDVI',group='위성사진',sites=sites,
         retrieved_at=raw['retrieved_at'],observation_cutoff=raw['observation_cutoff'],registry_reviewed_at=spec['reviewed_at'],
         location_count=sum(s['location_status']=='reviewed' for s in sites),image_count=sum(s['scene'] is not None for s in sites),
         basemap=dict(provider='NASA GIBS',layer='BlueMarble_ShadedRelief_Bathymetry',observation_month='2004-08',native_resolution_m=500,max_native_zoom=8,source='https://worldview.earthdata.nasa.gov/',dynamic=False),

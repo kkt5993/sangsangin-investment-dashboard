@@ -1,4 +1,4 @@
-# 💸 글로벌 ETF 큐레이션
+# ETF 분석
 
 <!-- implementation:start -->
 ## 현재 팀 구현

@@ -1,0 +1,96 @@
+{
+  "companies": [
+    {
+      "symbol": "000660.KS",
+      "name": "SK하이닉스"
+    },
+    {
+      "symbol": "005930.KS",
+      "name": "삼성전자"
+    },
+    {
+      "symbol": "AMAT",
+      "name": "Applied Materials"
+    },
+    {
+      "symbol": "AMD",
+      "name": "AMD"
+    },
+    {
+      "symbol": "AMZN",
+      "name": "Amazon"
+    },
+    {
+      "symbol": "ASML",
+      "name": "ASML"
+    },
+    {
+      "symbol": "CEG",
+      "name": "Constellation Energy"
+    },
+    {
+      "symbol": "CVX",
+      "name": "Chevron"
+    },
+    {
+      "symbol": "ETN",
+      "name": "Eaton"
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet"
+    },
+    {
+      "symbol": "INTC",
+      "name": "Intel"
+    },
+    {
+      "symbol": "ISRG",
+      "name": "Intuitive Surgical"
+    },
+    {
+      "symbol": "JPM",
+      "name": "JPMorgan Chase"
+    },
+    {
+      "symbol": "KLAC",
+      "name": "KLA"
+    },
+    {
+      "symbol": "LLY",
+      "name": "Eli Lilly"
+    },
+    {
+      "symbol": "LMT",
+      "name": "Lockheed Martin"
+    },
+    {
+      "symbol": "MRVL",
+      "name": "Marvell"
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft"
+    },
+    {
+      "symbol": "MU",
+      "name": "Micron"
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA"
+    },
+    {
+      "symbol": "QCOM",
+      "name": "Qualcomm"
+    },
+    {
+      "symbol": "TSM",
+      "name": "TSMC ADR"
+    },
+    {
+      "symbol": "VRT",
+      "name": "Vertiv"
+    }
+  ]
+}

@@ -122,7 +122,7 @@ def dragon_views(d,obj,ranks,news,events):
     from .financial_modules import financial_rows
     from .relation_views import companies
     from .attention_data import settings as attention_settings
-    obj["sections"]=[s for s in obj["sections"] if s.get("group")!="Entity 360" and s["type"]!="journal"]
+    obj["sections"]=[s for s in obj["sections"] if s.get("group")!="기업 상세" and s["type"]!="journal"]
     attention_companies=[dict(symbol=p['symbol'],name=p['title']) for p in attention_settings()['pages']]
     obj["sections"] += [entity_view(d,ranks,financial_rows(d),events,extra=companies()+attention_companies),dict(type="decisions",title="결정 원장",group="결정 원장")]
     for s in obj['sections']:
@@ -135,9 +135,9 @@ def dragon_views(d,obj,ranks,news,events):
         previous=rsi(p).iloc[-2];signal='RSI70 상향돌파' if previous<70<=a['rsi'] else 'RSI30 하향돌파' if previous>30>=a['rsi'] else '52주 고점 1% 이내' if a['high52']>=-1 else None
         if signal:alerts.append([a['name'],a['symbol'],signal,a['rs'],a['rsi'],a['as_of']])
     sources=[[k,m.get('name',k),m.get('source','FRED'),str(d.mac(k).index[-1].date()),m.get('unit'),m.get('retrieved_at','')[:10]] for k,m in d.macro_meta.items() if len(d.mac(k))]
-    obj['sections'] += [dict(table('주목 종목 · 시장별 RS 상위15',['종목','시장','업종','RS','1W %','1M %','52주 고점 대비 %'],[[a['name'],a['market'],a['sector'],a['rs'],a['r1w'],a['r1m'],a['high52']] for a in leaders]),group='지금 주목'),dict(type='scenario',title='시장 충격 민감도 · 역사 Beta 선형 추정',group='시나리오',rows=scenarios),dict(table('가격 트리거 · 현재 관측 조건',['종목','코드','조건','RS','RSI','가격일'],alerts),group='트리거·촉매'),dict(type='library',title='팀 방법론·최근 원문 링크',group='리서치',items=LIBRARY+news[:12]),dict(table('거시 데이터 원장',['계열','지표','제공처','관측일','단위','수집일'],sources),group='데이터 소스'),dict(table('가격 수집·보정 현황',['항목','값'],[['가격 시계열',len(d.frames)],['거시 시계열',len(d.macro)],['재무 캐시',len(d.fund)],['KRX 보정 관측',d.correction_meta['corrected']],['KRX 격리 관측',d.correction_meta['quarantined']]]),group='현황판'),dict(type='text',title='관계와 충격 추정의 정의',group='방법론',text='관계 지도는 공식 시장/업종 소속이다. 시나리오는 최근252개 공통 일 수익률 Beta×사용자가 가정한 시장 충격으로 계산하며 인과 전파나 확정 손익이 아니다. 가격 트리거는 관측 조건이고 외부 알림·자동 주문을 발생시키지 않는다. Entity 360은 현재 공식 유니버스의 가격·재무·실적 일정을 연결한다. 결정 원장은 가설·확신도·촉매·무효화·비중과 제안/실행/청산을 기록하며 실행 기록만 포트폴리오 민감도에 집계한다.')]
+    obj['sections'] += [dict(table('주목 종목 · 시장별 RS 상위15',['종목','시장','업종','RS','1W %','1M %','52주 고점 대비 %'],[[a['name'],a['market'],a['sector'],a['rs'],a['r1w'],a['r1m'],a['high52']] for a in leaders]),group='지금 주목'),dict(type='scenario',title='시장 충격 민감도 · 역사 Beta 선형 추정',group='시나리오',rows=scenarios),dict(table('가격 트리거 · 현재 관측 조건',['종목','코드','조건','RS','RSI','가격일'],alerts),group='트리거·촉매'),dict(type='library',title='팀 방법론·최근 원문 링크',group='리서치',items=LIBRARY+news[:12]),dict(table('거시 데이터 원장',['계열','지표','제공처','관측일','단위','수집일'],sources),group='데이터 소스'),dict(table('가격 수집·보정 현황',['항목','값'],[['가격 시계열',len(d.frames)],['거시 시계열',len(d.macro)],['재무 캐시',len(d.fund)],['KRX 보정 관측',d.correction_meta['corrected']],['KRX 격리 관측',d.correction_meta['quarantined']]]),group='현황판'),dict(type='text',title='관계와 충격 추정의 정의',group='방법론',text='관계 지도는 공식 시장/업종 소속이다. 시나리오는 최근252개 공통 일 수익률 Beta×사용자가 가정한 시장 충격으로 계산하며 인과 전파나 확정 손익이 아니다. 가격 트리거는 관측 조건이고 외부 알림·자동 주문을 발생시키지 않는다. 기업 상세은 현재 공식 유니버스의 가격·재무·실적 일정을 연결한다. 결정 원장은 가설·확신도·촉매·무효화·비중과 제안/실행/청산을 기록하며 실행 기록만 포트폴리오 민감도에 집계한다.')]
     obj['method_note']+=' 지금 주목·트리거·데이터 소스·현황판·방법론과 Beta 기반 선형 시나리오를 연결했습니다.'
-    obj['missing']=['위성 현장은 시설별 좌표·실관측 시계열이 없어 남아 있습니다. 시나리오는 원본의 공급망 인과 전파 엔진과 다릅니다. 결정 원장은 구조화된 브라우저 로컬 기록이며 팀 공용 DB가 아닙니다. 원본의 관계 기반 프리모템·군집 진단은 후속 대상입니다.']
+    obj['missing']=['위성사진은 시설별 좌표·실관측 시계열이 없어 남아 있습니다. 시나리오는 원본의 공급망 인과 전파 엔진과 다릅니다. 결정 원장은 구조화된 브라우저 로컬 기록이며 팀 공용 DB가 아닙니다. 원본의 관계 기반 프리모템·군집 진단은 후속 대상입니다.']
 
 def extend(d,objects,ranks):
     from .earnings_details import earnings_detail_views
@@ -188,6 +188,8 @@ def extend(d,objects,ranks):
     from .digest import digest_views
     from .relation_views import relation_views
     relation_views(d,objects['dragonglass'])
+    from .relation_discovery import views as relation_discovery_views
+    relation_discovery_views(d,objects['dragonglass'])
     from .satellite_views import satellite_views
     satellite_views(d,objects['dragonglass'])
     from .dragon_research import views as dragon_research_views
@@ -202,6 +204,8 @@ def extend(d,objects,ranks):
     from .dragon_signals import views as dragon_signal_views
     from .attention_views import views as attention_views
     attention_views(d,objects['dragonglass'])
+    from .company_news import views as company_news_views
+    company_news_views(d,objects['dragonglass'])
     dragon_signal_views(objects,ranks)
     from .clinical_views import views as clinical_views
     clinical_views(d,objects["dragonglass"])

@@ -1,4 +1,4 @@
-# Quant Hedge (Multi Quant)
+# 퀀트전략
 
 <!-- implementation:start -->
 ## 현재 팀 구현

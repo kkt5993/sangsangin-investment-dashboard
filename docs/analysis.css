@@ -90,3 +90,5 @@
 [data-entities] .analysis-controls label{min-width:0}[data-entity-select]{width:100%;min-width:0}
 
 [data-dragon-ops] svg{width:100%;height:auto}[data-dragon-ops] .panel{min-width:0}[data-dragon-ops] dd{margin:0 0 .65rem;overflow-wrap:anywhere}[data-dragon-ops] dt{font-size:.8rem;color:var(--muted,#667085)}[data-dragon-ops] select,[data-dragon-ops] input{min-width:0;max-width:100%}[data-dragon-ops] .analysis-controls label{min-width:0}[data-dragon-ops] .ops-source h3{overflow-wrap:anywhere}
+
+[data-attention] svg,[data-entity-attention] svg{width:100%;height:auto}[data-attention] .panel{min-width:0}[data-attention] input{min-width:0;max-width:100%}[data-attention] p,[data-entity-attention] p{overflow-wrap:anywhere}

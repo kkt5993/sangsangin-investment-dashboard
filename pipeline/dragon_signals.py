@@ -33,6 +33,11 @@ def monitor(dragon,discovery,ranks):
             add(r['symbol'],'leaders',f'{market} RS 상위{i+1}',r.get('as_of'),f"RS {r.get('rs')} · 표본 내 상대순위")
     for r in section(discovery,'discovery').get('items',[]):
         add(r['symbol'],'discovery','발굴 · '+r['bucket'],r.get('price_date'),' / '.join(r.get('reasons',[])))
+    for r in section(dragon,'attention').get('items',[]):
+        if r.get('fresh') and r.get('spike'):
+            m=r['metrics']
+            add(r['symbol'],'attention',f"문서 관심도 +{m['change']:.1f}%",m['end'],
+                f"영문 위키백과 최근7일 {m['recent']} / 직전7일 {m['previous']}열람 · 수집 {r['retrieved_at']} · 뉴스 감성/과거 시점 신호가 아님")
     rows=[]
     known={e['symbol'] for e in entities}
     for symbol,items in signals.items():
@@ -44,8 +49,8 @@ def monitor(dragon,discovery,ranks):
             for h in hits:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='Entity360 가격일이 오래되거나 미래임'))
             continue
         for h in hits:
-            if h['date']!=e['date']:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='Entity360 가격일 '+e['date']+'과 불일치'))
-        hits=[h for h in hits if h['date']==e['date']]
+            if h['id']!='attention' and h['date']!=e['date']:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='Entity360 가격일 '+e['date']+'과 불일치'))
+        hits=[h for h in hits if h['id']=='attention' or h['date']==e['date']]
         related=[r for r in docs if r['kind']=='official' and any(t['id']==e['id'] for t in r['targets'])]
         edges=[r for r in graph.get('links',[]) if e['id'] in [r['source'],r['target']]]
         suppliers=[];customers=[]
@@ -94,8 +99,11 @@ def views(objects,ranks):
         if not captured or captured[:10]>asof:continue
         log.append(dict(id=s['id'],date=captured,title=s['name'],kind='위성 촬영',detail='촬영일 기준 · 가동률·건설 진척 신호가 아님',url=scene.get('source','')))
     log.sort(key=lambda r:(r['date'],r['id']),reverse=True)
-    common=dict(rules=deepcopy(RULES),as_of=asof,coverage=dict(entities=len(section(dragon,'entities').get('entities',[])),candidates=len(rows),leaders=sum(any(h['id']=='leaders' for h in r['hits']) for r in rows),discovery=sum(any(h['id']=='discovery' for h in r['hits']) for r in rows),discovery_input=len(section(objects['discovery'],'discovery').get('items',[])),rules_available=2,rules_total=7),excluded=rejected,
-       scope='확인된 주도주·발굴 신호만 합산합니다. 두 신호는 서로 독립인 확률이 아닙니다. 미확보5항목을0점으로 확정하지 않으며 전체 점수와 원본 live·기대수익은 미산출입니다. 가격일이 동일하고 기준일로부터7일 이내인 관측만 결합합니다.')
+    attention=section(dragon,'attention').get('items',[]);available=sum(bool(r.get('fresh')) for r in attention);rules=deepcopy(RULES)
+    if available:
+        rule=next(r for r in rules if r['id']=='attention');rule.update(status='연결 · 지정문서 표본',basis=f'영문 위키백과 {available}/{len(attention)}문서 · 최근7일/직전7일 +40% 이상 · 투자자 관심/뉴스 감성이 아님')
+    common=dict(rules=rules,as_of=asof,coverage=dict(entities=len(section(dragon,'entities').get('entities',[])),candidates=len(rows),leaders=sum(any(h['id']=='leaders' for h in r['hits']) for r in rows),discovery=sum(any(h['id']=='discovery' for h in r['hits']) for r in rows),discovery_input=len(section(objects['discovery'],'discovery').get('items',[])),attention=available,attention_expected=len(attention),rules_available=2+bool(available),rules_total=7),excluded=rejected,
+       scope=f'확인된 주도주·발굴과 가용 문서 관심도만 합산합니다. 신호들은 독립 확률이 아닙니다. 미확보 {5-bool(available)}항목을0점으로 확정하지 않으며 전체 점수와 원본 live·기대수익은 미산출입니다. 기술신호는 가격일을 맞추고 문서 열람은 별도 UTC 관측일·수집 시각을 표시합니다. 과거 시점 백테스트에 쓰지 않습니다.')
     focus=dict(type='dragonfocus',title='지금 주목 · 신호·관계·근거',group='지금 주목',items=rows[:15],**common,
         risk=deepcopy(section(digest,'digestrisk').get('items',[])),themes=themes,cross=cross,radar=radar(objects['geoecon'],asof),
         ranking='확인된 신호 가중합 우선, 동점은 관계수×2.2+공식 문서수×6, 마지막은 객체 ID 순. 원본 전체 점수 순위와 다릅니다.')

@@ -48,7 +48,8 @@ def prices(parent,base,as_of,members=None,now=None):
     logging.getLogger('yfinance').setLevel(logging.CRITICAL)
     now=now or datetime.now(ZoneInfo('UTC'))
     from .catalog import DETAIL_PRICES
-    wanted=universe_symbols(members or parent.members)|set(DETAIL_PRICES)
+    from .attention_data import settings as attention_settings
+    wanted=universe_symbols(members or parent.members)|set(DETAIL_PRICES)|{p['symbol'] for p in attention_settings()['pages']}
     # Newly disclosed constituents get one bounded 3-year history. Subsequent
     # runs add only changed bars. Unavailable tickers remain explicit coverage gaps.
     additions=sorted(wanted-set(parent.frames))[:25]

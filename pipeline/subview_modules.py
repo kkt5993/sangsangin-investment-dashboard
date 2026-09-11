@@ -121,8 +121,10 @@ def dragon_views(d,obj,ranks,news,events):
     from .entities import entity_view, sensitivity
     from .financial_modules import financial_rows
     from .relation_views import companies
+    from .attention_data import settings as attention_settings
     obj["sections"]=[s for s in obj["sections"] if s.get("group")!="Entity 360" and s["type"]!="journal"]
-    obj["sections"] += [entity_view(d,ranks,financial_rows(d),events,extra=companies()),dict(type="decisions",title="결정 원장",group="결정 원장")]
+    attention_companies=[dict(symbol=p['symbol'],name=p['title']) for p in attention_settings()['pages']]
+    obj["sections"] += [entity_view(d,ranks,financial_rows(d),events,extra=companies()+attention_companies),dict(type="decisions",title="결정 원장",group="결정 원장")]
     for s in obj['sections']:
         if s['type']=='journal':s['group']='결정 원장'
     leaders=[dict(a,market=m) for m in ['KR','US'] for a in ranks[m]['leaders']];scenarios=[];alerts=[]
@@ -198,6 +200,8 @@ def extend(d,objects,ranks):
     chain_views(d,objects['globe'])
     digest_views(d,objects,ranks,news)
     from .dragon_signals import views as dragon_signal_views
+    from .attention_views import views as attention_views
+    attention_views(d,objects['dragonglass'])
     dragon_signal_views(objects,ranks)
     from .clinical_views import views as clinical_views
     clinical_views(d,objects["dragonglass"])

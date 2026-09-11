@@ -13,6 +13,11 @@ class DragonSignalsTests(unittest.TestCase):
  def test_radar_inclusive_seven_days_and_no_future(self):
   geo={'sections':[dict(type='geosituations',topics=[dict(id='t',name='theme',category='macro',articles=['a','b','c','d'])],news=[dict(id=k,date=dt,title=k,url='https://example.org/',source='s') for k,dt in [('a','2026-09-04'),('b','2026-09-03'),('c','2026-09-11'),('d','2026-09-10')]])]}
   rows=radar(geo,'2026-09-10');self.assertEqual(rows[0]['count'],2);self.assertEqual([r['title'] for r in rows[0]['articles']],['d','a'])
+ def test_attention_uses_its_observation_day_and_has_no_duplicate_weight(self):
+  d,x,r=self.fixture();item=dict(symbol='A',fresh=True,spike=True,retrieved_at='2026-09-11T00:00:00Z',metrics=dict(change=40,recent=140,previous=100,end='2026-09-09'))
+  d['sections'].append(dict(type='attention',items=[item,copy.deepcopy(item)]));rows,rejected=monitor(d,x,r);a=next(r for r in rows if r['symbol']=='A');self.assertEqual(a['observed_score'],6);self.assertEqual(len(a['hits']),3);self.assertIsNone(a['total_score'])
+  for it in d['sections'][-1]['items']:it['fresh']=False
+  rows,_=monitor(d,x,r);self.assertEqual(next(r for r in rows if r['symbol']=='A')['observed_score'],4)
  def test_cross_asset_uses_three_month_column_and_stable_ties(self):
   digest=dict(as_of='2026-09-10',sections=[dict(type='table',group='크로스에셋',columns=['그룹','이름','심볼','실제 가격일','1W %','3M %'],rows=[['g',s,s,dt,999,v] for s,dt,v in [('B','2026-09-10',3),('A','2026-09-10',3),('C','2026-09-10',-2),('D','2026-09-11',80),('E','2026-09-10',None)]])])
   p=cross_assets(digest);self.assertEqual(p['available'],3);self.assertEqual(p['expected'],5);self.assertEqual([x['symbol'] for x in p['leaders']],['A','B','C']);self.assertEqual(p['laggards'][0]['value'],-2)

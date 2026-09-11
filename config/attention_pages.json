@@ -1,0 +1,17 @@
+{
+  "project": "en.wikipedia.org",
+  "reviewed_at": "2026-09-11",
+  "definition": "영문 위키백과의 지정 기업 문서 직접 열람. 리디렉션·다른 언어 문서·고유 방문자 수는 합산하지 않음.",
+  "pages": [
+    {"symbol":"NVDA","title":"Nvidia","pageid":39120,"wikidata":"Q182477"},
+    {"symbol":"AMD","title":"AMD","pageid":2400,"wikidata":"Q128896"},
+    {"symbol":"TSM","title":"TSMC","pageid":463574,"wikidata":"Q713418"},
+    {"symbol":"INTC","title":"Intel","pageid":14617,"wikidata":"Q248"},
+    {"symbol":"000660.KS","title":"SK Hynix","pageid":2806550,"wikidata":"Q370719"},
+    {"symbol":"005930.KS","title":"Samsung Electronics","pageid":46445426,"wikidata":"Q20718"},
+    {"symbol":"MU","title":"Micron Technology","pageid":487445,"wikidata":"Q1197548"},
+    {"symbol":"ASML","title":"ASML","pageid":2875651,"wikidata":"Q297879"},
+    {"symbol":"MSFT","title":"Microsoft","pageid":19001,"wikidata":"Q2283"},
+    {"symbol":"AMZN","title":"Amazon (company)","pageid":90451,"wikidata":"Q3884"}
+  ]
+}

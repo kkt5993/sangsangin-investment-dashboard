@@ -61,6 +61,14 @@ def sources(d, dragon, now):
         checked=identifiers.get('collection', {}).get('attempted_at'), retrieved=min(dates, default=None), count=len(mappings),
         error=bool(identifiers.get('collection', {}).get('errors')), vintage=guru.get('identifiers', {}).get('source_vintage'),
         detail='정상 매핑 30일·미대응 7일 캐시. 성공/미대응 식별자의 가장 오래된 확인 시각을 표시합니다. CUSIP 건수이며 기업 수와 다릅니다.'))
+    attention = section(dragon, 'attention')
+    if attention:
+        records = attention.get('items', []); dates = [r['retrieved_at'] for r in records if r.get('retrieved_at')]
+        ends = [r['metrics']['end'] for r in records if r.get('metrics', {}).get('end')]
+        rows.append(row('wikimedia', 'Wikimedia · 기업 문서 관심도', '뉴스·정책', 'https://doc.wikimedia.org/generated-data-platform/aqs/analytics-api/', 24, now,
+            checked=attention.get('collection', {}).get('attempted_at'), retrieved=min(dates, default=None), observed=min(ends, default=None),
+            error=bool(attention.get('collection', {}).get('errors')), count=len(dates), vintage=attention.get('source_vintage'),
+            detail='영문 기업 문서 직접 user 열람. 가장 오래된 성공 수집·UTC 관측일을 표시합니다. 뉴스량·고유 투자자 수가 아닙니다.'))
     satellite = packet('satellite_collection.json.gz'); sites = satellite.get('sites', [])
     captures = [r['scene']['captured_at'] for r in sites if r.get('scene')]
     rows.append(row('sentinel', 'Sentinel-2 · Earth Search', '위성·위치', 'https://earth-search.aws.element84.com/v1', 168, now,

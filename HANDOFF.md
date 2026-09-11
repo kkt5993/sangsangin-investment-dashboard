@@ -364,3 +364,12 @@ raw20260911T005706Z(부모20260911T004356Z),가격2026-09-10. status.supplementa
 현황은관계객체39/관계36/공식팀문서22/화면신호기업15/시설22/국가객체0/인사이트null. Entity360701과객체분모다름. 원본7계열공통건수축/관측일순서/4기간/원장구조를구현하며이력은이전게시JSON+당일KST관측만보존. 첫1일이며과거원본수치소급0. 타이머는08/18KST평일예정안내이고PC실행/배포성공보증이아님;탭이탈해제검사. 소스화면필터는수집설정변경아님. 미연결30전체소스/원본인사이트버스/키/실시간PC상태/인증제어API는DRAGON_OPERATIONS_CONTRACT.md와REFERENCE_PARITY에남김.
 
 309Python·두자료검증기·3JS회귀·172JS/MJS구문통과(152.760초). Edge1440/1024/390에서19소스날짜/계열수·5분류/5상태/검색/빈결과·23모듈/7계열/4기간·RS왕복·예정KST/타이머0복귀·가로넘침0/오류0/외부요청0통과. 390현황/소스이미지육안확인. 기존legacy journal가져오기의1MB와500건제한잔여를제거;최종JS회귀및구문재통과. 원본사이트/신규외부수집/모델호출0,용량검사0,가격Overview바이트동일. raw빈티지20260911T005706Z/가격2026-09-10유지. 게시후보run20260911T012438Z;실제커밋/배포는runtime/state.json,operations-publication.json및operations-browser-qa/validation/build-verification.json확인. 전체goal미완이며REFERENCE_PARITY잔여작업계속.
+
+
+기업 관심도 후속(2026-09-11): 원본attn10기업의영문Wikipedia기업문서구조를대조하고MediaWiki제목API1회로정규제목/pageid/Wikidata확인(ASMLHolding→ASML). WikipediaPageviews all-access/user 일별UTC를초기60일/이후7일겹침정정으로수집. NVIDIA초기61일probe재사용+나머지9요청=10문서601일관측;재실행0요청. 관련API공식문서검토는별도. 최근7일9/3~9/9 vs직전7일8/27~9/2,10가용/+40%0문서. 원본비교기간미공개로팀규칙명시,전체뉴스/검색/고유투자자/감성아님.
+
+attention_data/attention_views/attention-views.js/config으로수집·Entity360·지금주목10카드/60일선/전체일원장/검색/원문·트리거+2를연결. 단위/project/title/agent/UTC/중복/정수검사,결측0채움금지,분모0신호가용false,14일완전/가격일이전3일내/성공72h내/최근오류없음조건. 가격기술신호는동일가격일,열람은별도관측일/성공일. 미래정보PIT/백테스트에쓰지않음. 현재급등0으로가짜신호없음,연결규칙3/7·기존4동시신호유지. 전체점수/live/기대수익null유지. Source운영카드Wikimedia추가20개.24h캐시/1초간격/1h오류backoff/401403429중단/실패이전성공보존/용량검사0. 기존08/18refresh에수집/가격/계산연결.
+
+첫브라우저검사에서ASML에Entity없음을발견. ASML1종목가격history를기존수집기로받아3년752일·USD·OHLC유효확인. 실제마지막9/9를9/10으로늘리지않음. ASML추가관찰(공식S&P500편입아님),Entity702·원장702상관재계산(합집합252일창/ASML245유효관측). 공식700+TSMC/ASML2. 가격추가갱신대상에attention_pages를포함. 재무/일정미확보는비움. 기존13F57기업73포지션유지,가격Overview바이트동일.
+
+최종314Python·두자료검증기·3JS회귀·173JS/MJS구문통과. Edge1440/1024/390에서10문서/601원장/각60점·기간수치·검색/빈값·모든Entity이동/원문/신호3규칙/기존4합류·Wikimedia소스·가로넘침0/오류0/외부요청0통과.390이미지육안확인. 초기수치검증에서ASML대각관측수를무조건252라고둔검사전제를245로정정(전체시장합집합창에비거래일포함),source시각원장확인. raw20260911T013531Z(부모20260911T005706Z),가격기준9/10. 최종게시후보run20260911T014736Z. 정본ATTENTION_CONTRACT.md;실제배포는state.json/attention-publication.json과attention-validation/browser-qa/build-verification/asml-verification확인. 원본사이트추가0,새AI세션0. 전체goal미완:전체기업뉴스/감성/정량뷰·13F연속/관계확장·REFERENCE_PARITY잔여계속.

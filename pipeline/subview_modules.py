@@ -123,9 +123,10 @@ def dragon_views(d,obj,ranks,news,events):
     from .relation_views import companies
     from .attention_data import settings as attention_settings
     from .company_news import settings as news_settings
+    from .company_fundamentals import entity_events
     obj["sections"]=[s for s in obj["sections"] if s.get("group")!="기업 상세" and s["type"]!="journal"]
     attention_companies=[dict(symbol=p['symbol'],name=p['title']) for p in attention_settings()['pages']]
-    obj["sections"] += [entity_view(d,ranks,financial_rows(d),events,extra=companies()+attention_companies+news_settings()),dict(type="decisions",title="결정 원장",group="결정 원장")]
+    obj["sections"] += [entity_view(d,ranks,financial_rows(d,extra=news_settings()),entity_events(d,events),extra=companies()+attention_companies+news_settings()),dict(type="decisions",title="결정 원장",group="결정 원장")]
     for s in obj['sections']:
         if s['type']=='journal':s['group']='결정 원장'
     leaders=[dict(a,market=m) for m in ['KR','US'] for a in ranks[m]['leaders']];scenarios=[];alerts=[]

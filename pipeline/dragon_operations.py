@@ -35,6 +35,15 @@ def sources(d, dragon, now):
     def packet(name):
         p = d.resource(name)
         return read(p) if p.exists() else {}
+    company_financial=packet('company_financial/collection.json.gz')
+    for kind,label,cadence in [('financial','기업 재무·EPS 추정',168),('calendar','기업 실적 예정일',72)]:
+        records=[r for r in company_financial.get('rows',[]) if r['kind']==kind]
+        if not records:continue
+        dates=[r['retrieved_at'] for r in records if r.get('retrieved_at')]
+        failed=sum(r['status'] in ['missing','retained','backoff'] or bool(r.get('partial')) for r in records)
+        rows.append(row('company-'+kind,'Yahoo Finance · '+label,'기업 재무·일정','https://finance.yahoo.com/',cadence,now,
+            checked=company_financial.get('checked_at'),retrieved=min(dates,default=None),count=len(dates),error=bool(failed),
+            detail=f'수집 대상 {len(records)}기업 중 보존 자료 {len(dates)}기업 · 최근 미확보/부분/실패 {failed}기업. 가장 오래된 조회 시각을 표시합니다. 재무는 최신 수정 자료이며 예정일은 확정 공시가 아닙니다. 새 조회는 캐시 만료 기업만 수행합니다.'))
     news = packet('news.json.gz')
     for i, feed in enumerate(news.get('sources', [])):
         items = [r for r in news.get('items', []) if r['source'] == feed['name']]

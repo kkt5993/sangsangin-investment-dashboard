@@ -14,9 +14,11 @@ def statement_series(f,field):
     if field not in f.index:return pd.Series(dtype=float)
     s=pd.to_numeric(f.loc[field],errors='coerce');s.index=pd.to_datetime(s.index);return s.dropna().sort_index()
 
-def financial_rows(d):
+def financial_rows(d,extra=None):
     rows=[];official_sectors={m['symbol']:m['sector'] for k in ['kr_sectors','us_largecap'] for m in d.members.get(k,{}).get('members',[])}
-    for m in reference_stocks():
+    targets={r['symbol']:r for r in reference_stocks()}
+    for r in extra or []:targets.setdefault(r['symbol'],dict(symbol=r['symbol'],name=r['name'],market='KR' if r['symbol'].endswith(('.KS','.KQ')) else 'US',sector='추가 관찰'))
+    for m in targets.values():
         s=m['symbol'];raw=d.fund.get(s);price=d.stats(s)
         if not raw or not price:continue
         info=raw.get('info',{});annual=frame(raw.get('annual_income'));quarter=frame(raw.get('quarterly_income'));est=frame(raw.get('earnings_estimate'));rev=frame(raw.get('revenue_estimate'))

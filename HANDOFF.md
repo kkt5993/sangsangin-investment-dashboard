@@ -433,3 +433,12 @@ Nasdaq 디렉터리1회로ALAB/ARM/CRWV/ENTG/NBIS의공식종목명·TestIssue=N
 전체347Python·두자료검증기·3JS모음·전체JS구문통과134.03초. Edge1440/1024/390 각각40피드/625항목·기사확률/기간·40기업이동·6공식식별/5신규상세·5신호규칙/27양수·빈뉴스/미산출필터·707행렬새6종목디코드·가로넘침0/오류0/외부요청0확인. 최초QA가미분류0개를가정한오류는Hanmi0기사의미산출1개를확인후데이터기반기대로정정했으며UI를가용으로조작하지않음. 코드/수치수정없이최종설명문서만동기화.
 
 raw20260911T043351Z(부모20260911T041510Z),stage20260911T044500Z,가격9/10. runtime/news-universe-source-verification/build-verification/browser-qa/validation.json과실제게시는news-universe-publication.json/state.json. COMPANY_NEWS_CONTRACT.md/RELATION_CONTRACT.md정본. 최신디자인8c0adfd유지·용량검사0.전체goal미완:비기업20객체뉴스/다중제공처/기업문맥감성·신규기업재무일정·정량뷰/관계확장/연속13F/PIT및REFERENCE_PARITY계속.
+
+
+2026-09-11 기업 재무·일정 보완: company_fundamentals.py로뉴스40기업의재무7일/미국상장37기업일정3일캐시를기존08/18 refresh에연결했다. 기존acquire재사용16재무+12일정=28조회작업(HTTP요청수아님),재무24/일정25캐시재사용. 즉시재실행0조회. 신규응답/실패시도는private company_financial,유효재무는fundamentals,시간대있는일정은company_events에저장. 기존PEAD/events/company_events중최신일정을기업상세에병합,다른이벤트필드보존. 실패/빈값은이전자료유지/1h백오프,기존완전재무에부분실패를덮어쓰지않음. 용량검사/새모델/원본사이트요청/새AI세션0.
+
+뉴스40모두재무연결(ARM은기존캐시도활용),37일정자료·36기업향후90일예정(AVGO는기간내예정없음),한국3예정실적미수집. 707Entity중77개의재무/일정필드만갱신,가격·RS·민감도·관계/뉴스/관심도보존. 금융정보추가가공식업종/지수편입을뜻하지않음. 실적 연간·분기 상세197→213기업(신규16),NI/OP/매출3막대·연간4/분기최대8·원통화원장·KRW조원/기타각통화bn유지. 세계NI Top20/미국10기업추정등다른실적패널은불변. 데이터소스재무/일정2카드추가24개,가장오래된조회/보유/오류수를표시.
+
+원자료213기업5291재무값·기간/통화전수일치,40기업금융요약·37일정/90일컷오프독립대조,다른22JSON바이트불변. 6새단위검사포함353Python·두자료검증기·3JS모음·전체JS구문통과128.146초. Edge1440/1024/390 각각40기업재무/예정·40기업연간/분기3차트1067막대좌표/단위·213선택목록·검색/빈결과·새소스2·가로넘침0/오류0/외부요청0확인. ASML390분기EUR단위3패널육안확인. 한국일정/전체707재무·직접NI/OP컨센서스/PIT등미완.
+
+raw20260911T050000Z(부모20260911T043351Z),stage20260911T050337Z,가격9/10유지. 정본COMPANY_FINANCIAL_CONTRACT.md, runtime/company-financial-collection/reuse/build-verification/source-verification/browser-qa/validation.json. 실제게시commit은company-financial-publication.json/state.json확인. 최신디자인보존;전체goal는REFERENCE_PARITY범위를계속수행한다.

@@ -142,9 +142,11 @@ def actual_cards(d,names):
 
 def earnings_detail_views(d,obj):
     names={r['symbol']:r['name'] for r in reference_stocks()};global_data=global_rows(d,names)
+    from .company_news import settings as news_settings
+    actual_names={**{r['symbol']:r['name'] for r in news_settings()},**names}
     obj['sections'] += [dict(type='earningsglobal',title='글로벌 순이익 · 표본 Top20',group='글로벌 순이익',**global_data),
         dict(type='earningsestimates',title='삼성전자·SK하이닉스 추정 검증',group='국내 추정 상세',market='KR',cards=korean_cards(d,names)),
         dict(type='earningsestimates',title='미국 10기업 · 실적과 추정',group='미국 추정 상세',market='US',cards=us_cards(d,names)),
-        dict(type='earningsactual',title='기업별 연간·분기 실적',group='연간·분기 상세',cards=actual_cards(d,names))]
+        dict(type='earningsactual',title='기업별 연간·분기 실적',group='연간·분기 상세',cards=actual_cards(d,actual_names))]
     obj['method_note']+=' 글로벌 비교와 미국 상세의 미래 NI는 실제 NI에 EPS 컨센서스 성장률을 적용한 근사이며 직접 NI 컨센서스가 아닙니다. 매출은 직접 추정입니다. 제공처 회계기간·통화·전년 매출을 대조하고 불일치는 미산출합니다. 한국 상세는 QuantiWise OP/지배 NI, 억원→조원 변환과 기준일을 표시합니다. 가격일과 재무 조회일은 다르며 과거 시점 자료 빈티지가 아닙니다.'
     obj['missing']=['해외 직접 영업이익·순이익 컨센서스, 과거 발표 당시 빈티지, 한국 증권사별 원문 보고서 검증은 남아 있습니다. 글로벌 Top20은 현재 수집 기업 표본의 최근 실제 NI 순위이며 세계 전체 순위가 아닙니다.']

@@ -19,6 +19,8 @@ def companies():
         for r in t['members']:records.setdefault(r['symbol'],dict(symbol=r['symbol'],name=r['name']))
     from .power_relations import settings as power_settings
     for r in power_settings()["companies"]:records.setdefault(r["symbol"],dict(r))
+    from .relation_universe import settings as universe_settings
+    for r in universe_settings()["companies"]:records.setdefault(r["symbol"],dict(symbol=r["symbol"],name=r["name"]))
     return list(records.values())
 
 
@@ -96,6 +98,10 @@ def relation_views(d,obj):
         hubs=centrality(graph),portfolio_correlations=correlation_pack(d,entity_section['entities']),
         parameters=dict(transfer={k:list(v) for k,v in TRANSFER.items()},edge_weight_formula='(.7+.1×weight)×.9',minimum=.03,centrality_minimum=.05,breadth_minimum=.12,ranking_minimum=.06,max_hops=3),
         note='관계 존재는 공시·기업 사업 설명으로 확인했습니다. 전달계수·일차 충격은 별도의 시나리오 가정이며 인과 효과·주가 변화율·발생확률이 아닙니다. 실현 상관은 기본 전파에서 제외하고 선택할 때 음의 부호도 보존합니다.')
+    from .relation_universe import coverage
+    lab['universe_coverage']=coverage(lab)
+    aliases={r['symbol']:r['aliases'] for r in lab['universe_coverage']['companies']}
+    for n in lab['nodes']:n['aliases']=aliases.get(n.get('symbol'),[])
     for s in obj['sections']:
         if s['type']=='graph':s['group']='공식 분류'
         if s['type']=='scenario':s['group']='시장 Beta 민감도'

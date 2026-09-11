@@ -1,0 +1,1708 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-09-11T06:01:29.201158+00:00",
+  "reference_objects": 159,
+  "reference_priced_count": 136,
+  "companies": [
+    {
+      "symbol": "000660.KS",
+      "name": "SK하이닉스",
+      "aliases": [
+        "HYNIX"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "SK하이닉스",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "005930.KS",
+      "name": "삼성전자",
+      "aliases": [
+        "SEC"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "삼성전자",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "007340.KS",
+      "name": "DN오토모티브",
+      "aliases": [
+        "007340"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "DN오토모티브",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "007660.KS",
+      "name": "이수페타시스",
+      "aliases": [
+        "007660"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "이수페타시스",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "008930.KS",
+      "name": "한미사이언스",
+      "aliases": [
+        "008930"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "한미사이언스",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "009150.KS",
+      "name": "삼성전기",
+      "aliases": [
+        "009150"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "삼성전기",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "010060.KS",
+      "name": "OCI홀딩스",
+      "aliases": [
+        "010060"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "OCI홀딩스",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "018260.KS",
+      "name": "삼성에스디에스",
+      "aliases": [
+        "018260"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "삼성에스디에스",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "042700.KS",
+      "name": "한미반도체",
+      "aliases": [
+        "042700",
+        "HANMI"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "한미반도체",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "066570.KS",
+      "name": "LG전자",
+      "aliases": [
+        "066570"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "LG전자",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "069960.KS",
+      "name": "현대백화점",
+      "aliases": [
+        "069960"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "현대백화점",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "073240.KS",
+      "name": "금호타이어",
+      "aliases": [
+        "073240"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "금호타이어",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "078930.KS",
+      "name": "GS",
+      "aliases": [
+        "078930"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "GS",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "086790.KS",
+      "name": "하나금융지주",
+      "aliases": [
+        "086790"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "하나금융지주",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "093370.KS",
+      "name": "후성",
+      "aliases": [
+        "093370"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "후성",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "161890.KS",
+      "name": "한국콜마",
+      "aliases": [
+        "161890"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "한국콜마",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "483650.KS",
+      "name": "달바글로벌",
+      "aliases": [
+        "483650"
+      ],
+      "identity": {
+        "source": "https://data.krx.co.kr/",
+        "as_of": "2026-09-08",
+        "name": "달바글로벌",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "KR"
+    },
+    {
+      "symbol": "A",
+      "name": "AGILENT TECHNOLOGIES INC",
+      "aliases": [
+        "A"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "AGILENT TECHNOLOGIES INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "AAPL",
+      "name": "APPLE",
+      "aliases": [
+        "AAPL",
+        "APPLEINC"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "APPLE",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ALAB",
+      "name": "Astera Labs",
+      "aliases": [
+        "ALAB"
+      ],
+      "identity": {
+        "source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "as_of": "2026-09-11",
+        "name": "Astera Labs, Inc. - Common Stock",
+        "method": "공식 상장·법인 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ALB",
+      "name": "ALBEMARLE CORP",
+      "aliases": [
+        "ALB"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ALBEMARLE CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ALL",
+      "name": "ALLSTATE CORP",
+      "aliases": [
+        "ALL"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ALLSTATE CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ALLE",
+      "name": "ALLEGION PLC",
+      "aliases": [
+        "ALLE"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ALLEGION PLC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "AMAT",
+      "name": "APPLIED MATERIAL INC",
+      "aliases": [
+        "AMAT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "APPLIED MATERIAL INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "AMD",
+      "name": "ADVANCED MICRO DEVICES",
+      "aliases": [
+        "AMD"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ADVANCED MICRO DEVICES",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "AME",
+      "name": "AMETEK INC",
+      "aliases": [
+        "AME"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "AMETEK INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "AMZN",
+      "name": "AMAZON.COM INC",
+      "aliases": [
+        "AMZN"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "AMAZON.COM INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ANET",
+      "name": "ARISTA NETWORKS",
+      "aliases": [
+        "ANET"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ARISTA NETWORKS",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "APO",
+      "name": "APOLLO GLOBAL MANAGEMENT",
+      "aliases": [
+        "APO"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "APOLLO GLOBAL MANAGEMENT",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "APP",
+      "name": "APPLOVIN CLASS A",
+      "aliases": [
+        "APP"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "APPLOVIN CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ARM",
+      "name": "Arm",
+      "aliases": [
+        "ARM"
+      ],
+      "identity": {
+        "source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "as_of": "2026-09-11",
+        "name": "Arm Holdings plc - American Depositary Shares",
+        "method": "공식 상장·법인 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ASML",
+      "name": "ASML",
+      "aliases": [
+        "ASML"
+      ],
+      "identity": {
+        "source": "https://www.asml.com/en/company/governance",
+        "as_of": "2026-09-11",
+        "name": "ASML",
+        "method": "기존 검토 미국 상장 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "AVGO",
+      "name": "BROADCOM INC",
+      "aliases": [
+        "AVGO"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "BROADCOM INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "AXP",
+      "name": "AMERICAN EXPRESS",
+      "aliases": [
+        "AMERICANEXPR"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "AMERICAN EXPRESS",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "BAC",
+      "name": "BANK OF AMERICA",
+      "aliases": [
+        "BANKOFAMERCO"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "BANK OF AMERICA",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "BAX",
+      "name": "BAXTER INTERNATIONAL",
+      "aliases": [
+        "BAX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "BAXTER INTERNATIONAL",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "BRK-B",
+      "name": "BERKSHIRE HATHAWAY INC CLASS B",
+      "aliases": [
+        "BRK"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "BERKSHIRE HATHAWAY INC CLASS B",
+        "method": "B주 관찰 · 원본 클래스 미표기"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "BX",
+      "name": "BLACKSTONE",
+      "aliases": [
+        "BX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "BLACKSTONE",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CAT",
+      "name": "CATERPILLAR INC",
+      "aliases": [
+        "CAT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CATERPILLAR INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CB",
+      "name": "CHUBB",
+      "aliases": [
+        "CHUBBLIMITED"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CHUBB",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CDNS",
+      "name": "CADENCE DESIGN SYSTEMS",
+      "aliases": [
+        "CDNS"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CADENCE DESIGN SYSTEMS",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CDW",
+      "name": "CDW",
+      "aliases": [
+        "CDWCORP"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CDW",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CEG",
+      "name": "CONSTELLATION ENERGY CORP",
+      "aliases": [
+        "CEG"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CONSTELLATION ENERGY CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CIEN",
+      "name": "CIENA",
+      "aliases": [
+        "CIEN"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CIENA",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "COHR",
+      "name": "COHERENT",
+      "aliases": [
+        "COHR"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "COHERENT",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "COIN",
+      "name": "COINBASE GLOBAL INC CLASS A",
+      "aliases": [
+        "COIN"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "COINBASE GLOBAL INC CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "COP",
+      "name": "CONOCOPHILLIPS",
+      "aliases": [
+        "COP"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CONOCOPHILLIPS",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "COST",
+      "name": "COSTCO WHOLESALE CORP",
+      "aliases": [
+        "COST"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "COSTCO WHOLESALE CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CRWD",
+      "name": "CROWDSTRIKE HOLDINGS CLASS A",
+      "aliases": [
+        "CRWD"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CROWDSTRIKE HOLDINGS CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CRWV",
+      "name": "CoreWeave",
+      "aliases": [
+        "CRWV"
+      ],
+      "identity": {
+        "source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "as_of": "2026-09-11",
+        "name": "CoreWeave, Inc. - Class A Common Stock",
+        "method": "공식 상장·법인 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "CVX",
+      "name": "CHEVRON",
+      "aliases": [
+        "CHEVRONCORPO",
+        "CVX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "CHEVRON",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "DDOG",
+      "name": "DATADOG INC CLASS A",
+      "aliases": [
+        "DDOG"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "DATADOG INC CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "DELL",
+      "name": "DELL TECHNOLOGIES INC CLASS C",
+      "aliases": [
+        "DELL"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "DELL TECHNOLOGIES INC CLASS C",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "DLR",
+      "name": "DIGITAL REALTY TRUST REIT",
+      "aliases": [
+        "DLR"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "DIGITAL REALTY TRUST REIT",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "DVA",
+      "name": "DAVITA INC",
+      "aliases": [
+        "DAVITAINC"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "DAVITA INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ENTG",
+      "name": "Entegris",
+      "aliases": [
+        "ENTG"
+      ],
+      "identity": {
+        "source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "as_of": "2026-09-11",
+        "name": "Entegris, Inc. - Common Stock",
+        "method": "공식 상장·법인 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "EQIX",
+      "name": "EQUINIX REIT",
+      "aliases": [
+        "EQIX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "EQUINIX REIT",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ETN",
+      "name": "EATON PLC",
+      "aliases": [
+        "ETN"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "EATON PLC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "FCX",
+      "name": "FREEPORT MCMORAN INC",
+      "aliases": [
+        "FCX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "FREEPORT MCMORAN INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "FTNT",
+      "name": "FORTINET",
+      "aliases": [
+        "FTNT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "FORTINET",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "GE",
+      "name": "GE AEROSPACE",
+      "aliases": [
+        "GE"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "GE AEROSPACE",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "GEV",
+      "name": "GE VERNOVA",
+      "aliases": [
+        "GEV"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "GE VERNOVA",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "GL",
+      "name": "GLOBE LIFE",
+      "aliases": [
+        "GL"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "GLOBE LIFE",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "ALPHABET CLASS A",
+      "aliases": [
+        "GOOGL"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ALPHABET CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "GS",
+      "name": "GOLDMAN SACHS GROUP",
+      "aliases": [
+        "GS"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "GOLDMAN SACHS GROUP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "HOOD",
+      "name": "ROBINHOOD MARKETS CLASS A",
+      "aliases": [
+        "HOOD"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ROBINHOOD MARKETS CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "HPE",
+      "name": "HEWLETT PACKARD ENTERPRISE",
+      "aliases": [
+        "HPE"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "HEWLETT PACKARD ENTERPRISE",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "INTC",
+      "name": "INTEL CORPORATION",
+      "aliases": [
+        "INTC"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "INTEL CORPORATION",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ISRG",
+      "name": "INTUITIVE SURGICAL",
+      "aliases": [
+        "ISRG"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "INTUITIVE SURGICAL",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "JBHT",
+      "name": "JB HUNT TRANSPORT SERVICES",
+      "aliases": [
+        "JBHT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "JB HUNT TRANSPORT SERVICES",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "JPM",
+      "name": "JPMORGAN CHASE & CO",
+      "aliases": [
+        "JPM"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "JPMORGAN CHASE & CO",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "KHC",
+      "name": "KRAFT HEINZ",
+      "aliases": [
+        "KRAFTHEINZCO"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "KRAFT HEINZ",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "KKR",
+      "name": "KKR AND CO INC",
+      "aliases": [
+        "KKR"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "KKR AND CO INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "KLAC",
+      "name": "KLA",
+      "aliases": [
+        "KLAC"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "KLA",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "KO",
+      "name": "COCA-COLA",
+      "aliases": [
+        "COCACOLACO"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "COCA-COLA",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "LHX",
+      "name": "L3HARRIS TECHNOLOGIES",
+      "aliases": [
+        "LHX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "L3HARRIS TECHNOLOGIES",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "LITE",
+      "name": "LUMENTUM HOLDINGS",
+      "aliases": [
+        "LITE"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "LUMENTUM HOLDINGS",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "LLY",
+      "name": "ELI LILLY",
+      "aliases": [
+        "LLY"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ELI LILLY",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "LMT",
+      "name": "LOCKHEED MARTIN CORP",
+      "aliases": [
+        "LMT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "LOCKHEED MARTIN CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "LRCX",
+      "name": "LAM RESEARCH",
+      "aliases": [
+        "LRCX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "LAM RESEARCH",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "MA",
+      "name": "MASTERCARD CLASS A",
+      "aliases": [
+        "MA"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "MASTERCARD CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "MCO",
+      "name": "MOODYS CORP",
+      "aliases": [
+        "MOODYSCORP"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "MOODYS CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "META",
+      "name": "META PLATFORMS CLASS A",
+      "aliases": [
+        "META"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "META PLATFORMS CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "MRVL",
+      "name": "MARVELL TECHNOLOGY",
+      "aliases": [
+        "MRVL"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "MARVELL TECHNOLOGY",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "MSFT",
+      "name": "MICROSOFT",
+      "aliases": [
+        "MSFT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "MICROSOFT",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "MU",
+      "name": "MICRON TECHNOLOGY",
+      "aliases": [
+        "MU"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "MICRON TECHNOLOGY",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "NBIS",
+      "name": "Nebius Group",
+      "aliases": [
+        "NBIS"
+      ],
+      "identity": {
+        "source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "as_of": "2026-09-11",
+        "name": "Nebius Group N.V. - Class A Ordinary Shares",
+        "method": "공식 상장·법인 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "NEE",
+      "name": "NEXTERA ENERGY",
+      "aliases": [
+        "NEE"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "NEXTERA ENERGY",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "NEM",
+      "name": "NEWMONT",
+      "aliases": [
+        "NEM"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "NEWMONT",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "aliases": [
+        "NVDA"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "NVIDIA",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "ORCL",
+      "name": "ORACLE",
+      "aliases": [
+        "ORCL"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "ORACLE",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "OXY",
+      "name": "OCCIDENTAL PETROLEUM CORP",
+      "aliases": [
+        "OCCIDENTALPE"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "OCCIDENTAL PETROLEUM CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "PLTR",
+      "name": "PALANTIR TECHNOLOGIES CLASS A",
+      "aliases": [
+        "PLTR"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "PALANTIR TECHNOLOGIES CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "PWR",
+      "name": "QUANTA SERVICES INC",
+      "aliases": [
+        "PWR"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "QUANTA SERVICES INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "QCOM",
+      "name": "QUALCOMM",
+      "aliases": [
+        "QCOM"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "QUALCOMM",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "RTX",
+      "name": "RTX",
+      "aliases": [
+        "RTX"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "RTX",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "SMCI",
+      "name": "SUPER MICRO COMPUTER INC",
+      "aliases": [
+        "SMCI"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "SUPER MICRO COMPUTER INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "SNPS",
+      "name": "SYNOPSYS",
+      "aliases": [
+        "SNPS"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "SYNOPSYS",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "TER",
+      "name": "TERADYNE",
+      "aliases": [
+        "TER"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "TERADYNE",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "TSLA",
+      "name": "TESLA INC",
+      "aliases": [
+        "TSLA"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "TESLA INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "TSM",
+      "name": "TSMC ADR",
+      "aliases": [
+        "TSM"
+      ],
+      "identity": {
+        "source": "https://investor.tsmc.com/english/faq",
+        "as_of": "2026-09-11",
+        "name": "TSMC ADR",
+        "method": "기존 검토 ADR 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "UNH",
+      "name": "UNITEDHEALTH GROUP INC",
+      "aliases": [
+        "UNH"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "UNITEDHEALTH GROUP INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "V",
+      "name": "VISA CLASS A",
+      "aliases": [
+        "V"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "VISA CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "VRT",
+      "name": "VERTIV HOLDINGS CLASS A",
+      "aliases": [
+        "VRT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "VERTIV HOLDINGS CLASS A",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "VST",
+      "name": "VISTRA",
+      "aliases": [
+        "VST"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "VISTRA",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "WMT",
+      "name": "WALMART INC",
+      "aliases": [
+        "WMT"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "WALMART INC",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    },
+    {
+      "symbol": "XOM",
+      "name": "EXXONMOBIL HOLDINGS CORP",
+      "aliases": [
+        "XOM"
+      ],
+      "identity": {
+        "source": "https://www.ishares.com/us/products/239726/ishares-core-s-p-500-etf/latest-holdings.csv",
+        "as_of": "2026-09-04",
+        "name": "EXXONMOBIL HOLDINGS CORP",
+        "method": "공식 구성 자료 종목 식별"
+      },
+      "market": "US"
+    }
+  ],
+  "unresolved": [
+    {
+      "alias": "TEL",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "SU",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "AMKR",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "BESI",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "ASMI",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "SHINETSU",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "MOD",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "NVT",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "ABB",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "TLN",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "OKLO",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "SMR",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "RKLB",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "LUNR",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "ASTS",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "OWL",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "222800",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "024850",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "IREN",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "033790",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "089860",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "181710",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "NU",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "010170",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "NVO",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "323280",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "DUOL",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "319400",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "ROKU",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "079940",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "SNOW",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "RBLX",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "019210",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "045100",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "SPOT",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "009155",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "SHOP",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "MELI",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "330860",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "058470",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "STM",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "TEM",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "039030",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "NTRA",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "INSMED",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "STMICROELECT",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "FOXCORP",
+      "reason": "종목 클래스 미확정"
+    },
+    {
+      "alias": "YPFSOCIEDADA",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    },
+    {
+      "alias": "BBBFOODSINC",
+      "reason": "거래소·종목 식별 또는 기업 상세·가격 연결 필요"
+    }
+  ],
+  "note": "원본 연구표기와 공식 종목 식별을 대조한 관찰 목록. 원본 가격136기업의 정확한 구성·과거 정보시점 또는 전체 사업관계를 확보했다는 뜻이 아니다. BRK는 공식 B주를 관찰하며 원본 클래스 동등성은 미확인이다."
+}

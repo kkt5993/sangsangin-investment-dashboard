@@ -27,6 +27,18 @@ class RelationViewTests(unittest.TestCase):
             i=p['ids'].index(name);self.assertEqual(corr[i*(i-1)//2],32767)
         self.assertEqual(p['window'],252);self.assertLessEqual(p['end'],DataFixture.as_of)
         self.assertFalse(p['diagonal_valid'][p['ids'].index('flat')]);self.assertTrue(p['diagonal_valid'][0])
+    def test_missing_quote_preserved_on_native_market_calendar(self):
+        class Missing(DataFixture):
+            def price(self,symbol):
+                p=super().price(symbol)
+                return p.drop(p.index[-6]) if symbol=='A' else p
+        d=Missing();p=correlation_pack(d,[dict(id=s,symbol=s) for s in ['A','B']])
+        counts=np.frombuffer(base64.b64decode(p['counts']),dtype='uint8')
+        self.assertEqual(list(counts),[250]);self.assertEqual(p['diagonal'],[250,252])
+        aligned=pd.concat({'A':d.price('A'),'B':d.price('B')},axis=1).pct_change(fill_method=None).tail(252)
+        expected=aligned.A.corr(aligned.B)
+        value=np.frombuffer(base64.b64decode(p['correlations']),dtype='<i2')[0]/10000
+        self.assertAlmostEqual(value,expected,delta=.00005)
     def test_empty_pack(self):
         p=correlation_pack(DataFixture(),[]);self.assertEqual(p['correlations'],'');self.assertEqual(p['window'],0);self.assertIsNone(p['end'])
         p=correlation_pack(DataFixture(),[dict(id='missing',symbol='missing')]);self.assertEqual(p['diagonal'],[0])

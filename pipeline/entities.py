@@ -5,7 +5,8 @@ from .financial_modules import frame
 
 
 def sensitivity(price, benchmark):
-    aligned = pd.concat({'stock': price, 'market': benchmark}, axis=1).dropna()
+    # Preserve benchmark sessions with missing stock prices before daily returns.
+    aligned = pd.concat({'stock': price, 'market': benchmark}, axis=1).sort_index()
     r = aligned.pct_change(fill_method=None).dropna().tail(252)
     if len(r) < 200 or r.market.var() <= 0:
         return None
@@ -50,6 +51,8 @@ def entity_view(d, ranks, financial, events, extra=None):
         if f:
             entity['financial'] = {k: f[k] for k in ['financial_currency', 'financial_as_of', 'report_date',
                                                      'margin', 'net_income', 'eps1', 'eps2', 'estimate_currency']}
+        identity=next((r for r in extra or [] if r['symbol']==symbol and r.get('identity_source')),None)
+        if identity:entity['identity']={k:identity[k] for k in ['identity_source','identity_name','identity_checked_at']}
         entities.append(entity)
     return dict(type='entities', title='기업 상세 · 공식 유니버스와 추가 사업 관찰', group='기업 상세', entities=entities,extra_symbols=additions,
                 coverage={k: dict(available=v['available'], expected=v['expected'], membership_as_of=v['membership_as_of']) for k,v in ranks.items()})

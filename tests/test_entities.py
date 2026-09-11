@@ -17,7 +17,9 @@ class EntityTests(unittest.TestCase):
         self.assertEqual(result['end'], str(dates[-1].date()))
         # Both legs must have identical start/end dates when a quote is missing.
         sparse = market.drop(dates[-2])
-        expected = pd.concat([stock, sparse], axis=1).dropna().pct_change(fill_method=None).dropna().tail(252)
+        expected = pd.concat([stock, sparse], axis=1).pct_change(fill_method=None).dropna().tail(252)
+        self.assertNotIn(dates[-1], expected.index)
+        self.assertNotIn(dates[-2], expected.index)
         self.assertAlmostEqual(sensitivity(stock, sparse)['beta'], expected.iloc[:,0].cov(expected.iloc[:,1])/expected.iloc[:,1].var(), places=5)
 
     def test_missing_history_or_constant_benchmark(self):

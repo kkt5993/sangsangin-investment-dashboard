@@ -9,6 +9,24 @@
       "name": "삼성전자"
     },
     {
+      "symbol": "008930.KS",
+      "name": "한미사이언스",
+      "identity_source": "https://englishdart.fss.or.kr/dsbc001/selectPopup.ax?selectKey=00161426",
+      "identity_name": "Hanmi Science Co.,Ltd",
+      "identity_checked_at": "2026-09-11T04:33:52.471408+00:00"
+    },
+    {
+      "symbol": "AAPL",
+      "name": "Apple"
+    },
+    {
+      "symbol": "ALAB",
+      "name": "Astera Labs",
+      "identity_source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+      "identity_name": "Astera Labs, Inc. - Common Stock",
+      "identity_checked_at": "2026-09-11T04:33:52.471408+00:00"
+    },
+    {
       "symbol": "AMAT",
       "name": "Applied Materials"
     },
@@ -21,24 +39,61 @@
       "name": "Amazon"
     },
     {
+      "symbol": "ARM",
+      "name": "Arm",
+      "identity_source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+      "identity_name": "Arm Holdings plc - American Depositary Shares",
+      "identity_checked_at": "2026-09-11T04:33:52.471408+00:00"
+    },
+    {
       "symbol": "ASML",
       "name": "ASML"
+    },
+    {
+      "symbol": "AVGO",
+      "name": "Broadcom"
     },
     {
       "symbol": "CEG",
       "name": "Constellation Energy"
     },
     {
+      "symbol": "COHR",
+      "name": "Coherent"
+    },
+    {
+      "symbol": "CRWV",
+      "name": "CoreWeave",
+      "identity_source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+      "identity_name": "CoreWeave, Inc. - Class A Common Stock",
+      "identity_checked_at": "2026-09-11T04:33:52.471408+00:00"
+    },
+    {
       "symbol": "CVX",
       "name": "Chevron"
+    },
+    {
+      "symbol": "ENTG",
+      "name": "Entegris",
+      "identity_source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+      "identity_name": "Entegris, Inc. - Common Stock",
+      "identity_checked_at": "2026-09-11T04:33:52.471408+00:00"
     },
     {
       "symbol": "ETN",
       "name": "Eaton"
     },
     {
+      "symbol": "GEV",
+      "name": "GE Vernova"
+    },
+    {
       "symbol": "GOOGL",
       "name": "Alphabet"
+    },
+    {
+      "symbol": "HOOD",
+      "name": "Robinhood Markets"
     },
     {
       "symbol": "INTC",
@@ -65,6 +120,14 @@
       "name": "Lockheed Martin"
     },
     {
+      "symbol": "LRCX",
+      "name": "Lam Research"
+    },
+    {
+      "symbol": "META",
+      "name": "Meta Platforms"
+    },
+    {
       "symbol": "MRVL",
       "name": "Marvell"
     },
@@ -77,12 +140,31 @@
       "name": "Micron"
     },
     {
+      "symbol": "NBIS",
+      "name": "Nebius Group",
+      "identity_source": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+      "identity_name": "Nebius Group N.V. - Class A Ordinary Shares",
+      "identity_checked_at": "2026-09-11T04:33:52.471408+00:00"
+    },
+    {
       "symbol": "NVDA",
       "name": "NVIDIA"
     },
     {
+      "symbol": "PLTR",
+      "name": "Palantir"
+    },
+    {
       "symbol": "QCOM",
       "name": "Qualcomm"
+    },
+    {
+      "symbol": "TER",
+      "name": "Teradyne"
+    },
+    {
+      "symbol": "TSLA",
+      "name": "Tesla"
     },
     {
       "symbol": "TSM",
@@ -91,6 +173,10 @@
     {
       "symbol": "VRT",
       "name": "Vertiv"
+    },
+    {
+      "symbol": "XOM",
+      "name": "Exxon Mobil"
     }
   ]
 }

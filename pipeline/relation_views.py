@@ -36,9 +36,13 @@ def presets():
 def correlation_pack(d,entities):
     """Compact lower triangle; latest252 union dates, minimum200 pair observations."""
     ids=sorted(e['id'] for e in entities);lookup={e['id']:e['symbol'] for e in entities};returns={};end=pd.Timestamp(d.as_of)
+    calendars={k:d.price(k).index for k in ['^KS11','SPY']}
     for id in ids:
         p=d.price(lookup[id]).loc[:end]
-        if len(p) and (end-p.index[-1]).days<=7:returns[id]=p.pct_change(fill_method=None).loc[end-pd.Timedelta(days=370):]
+        if len(p) and (end-p.index[-1]).days<=7:
+            native=calendars['^KS11' if lookup[id].endswith(('.KS','.KQ')) else 'SPY'].union(p.index)
+            p=p.reindex(native[(native>=p.index[0])&(native<=p.index[-1])])
+            returns[id]=p.pct_change(fill_method=None).loc[end-pd.Timedelta(days=370):]
     f=pd.DataFrame(returns).replace([np.inf,-np.inf],np.nan).sort_index().tail(252).reindex(columns=ids)
     mask=f.notna().to_numpy(dtype=np.int16);counts=mask.T@mask
     c=f.corr(min_periods=200).to_numpy();tri=np.tril_indices(len(ids),-1);values=c[tri]
@@ -46,7 +50,7 @@ def correlation_pack(d,entities):
     count_bytes=counts[tri].astype('uint8')
     return dict(ids=ids,correlations=base64.b64encode(packed.tobytes()).decode(),counts=base64.b64encode(count_bytes.tobytes()).decode(),diagonal=counts.diagonal().tolist(),diagonal_valid=np.isfinite(np.diag(c)).tolist(),
         start=str(f.index[0].date()) if len(f) else None,end=str(f.index[-1].date()) if len(f) else None,window=len(f),minimum=200,scale=10000,missing=32767,
-        note='최근252개 공통 달력의 거래 관측일 창, 쌍별 최소200개. 아래삼각 Int16 little-endian/10000,32767은결측. 관측 수는Uint8. 반올림오차 최대0.00005. 통화별 현지 수익률 상관입니다.')
+        note='각 시장 달력에서 누락일을 보존해 일 수익률을 계산한 뒤 최근252개 공통 달력의 거래 관측일 창, 쌍별 최소200개. 아래삼각 Int16 little-endian/10000,32767은결측. 관측 수는Uint8. 반올림오차 최대0.00005. 통화별 현지 수익률 상관입니다.')
 
 
 def graph_data(d,entity_section):

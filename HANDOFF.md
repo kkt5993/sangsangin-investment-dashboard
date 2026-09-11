@@ -422,3 +422,14 @@ news_tone.py는모델+제목해시재사용·파일해시검증·로컬전용읽
 23피드·381게시기사/317URL·23피드분류완료·15양수·7규칙중5연결·16동시신호카드. 가격/관계/관심도등23JSON불변. raw20260911T041510Z(부모20260911T024219Z),가격9/10유지;모델계산04:20UTC,기사원자료는기존02:42빈티지. source_vintage와tone_source_vintage/status.supplemental_vintages.news_tone분리. stage20260911T042425Z. 추가뉴스/원본사이트/외부추론API/새AI세션0.
 
 검증: 6개추가Python검사(캐시/수정/실패/확률/부분집계/미래기사/날짜시차1점),전체346Python·두자료검증기·3JS모음·구문통과(151.01초). Edge1440/1024/390각23피드/381라벨·확률·평균·필터·펼침/23기업상세·5규칙·소스22·가로넘침0/오류0/외부요청0,390이미지검수. 원문/캐시381값전수일치,12제목별도batch+float64softmax재계산최대오차1.41e-7/3라벨포함,비영문·602토큰미분류검사. runtime/news-tone-collection/reuse/build-verification/source-verification/browser-qa/validation.json,실제게시는news-tone-publication.json/state.json. 정본NEWS_TONE_CONTRACT.md. 전체goal미완:다중제공처/전체기업·기업별문맥감성·정량투자뷰·최신연속13F·전체관계/팀DB등REFERENCE_PARITY계속.
+
+
+2026-09-11 기업 뉴스 범위 확대: 보존된54개 뉴스 객체를 회사34/테마·국가·정책·지정학20으로 구분했다. 회사34를 모두 설정에 포함하고 기존팀6기업을 유지해40피드. 새17개 RSS만 수집, 재실행0요청. 39피드에서 기준일9/10이하7UTC일625피드항목, 한미사이언스는 기간내0건/톤미산출·뉴스신호없음. 기업별 관측 합계를 고유 전체뉴스량으로 표시하지 않는다. FinBERT 신규231고유제목33.324초·기존356재사용,27피드양수·5/7연결·16합류, 모델/원본사이트/새AI세션 추가0.
+
+Nasdaq 디렉터리1회로ALAB/ARM/CRWV/ENTG/NBIS의공식종목명·TestIssue=N/ETF=N 확인, DART로008930 식별. 기존Hanmi는KOSPI200이며중복추가안함. 신규미국5Entity→공식700+추가7=707. 지수편입/업종확정으로간주하지않고추가관찰/RS·재무·예정실적미확보유지.4가격history(ALAB621/CRWV365/ENTG753/NBIS473)초기수집·ARM/Hanmi기존재사용,뉴스설정종목의가격유지갱신을08/18 incremental에추가. 상장확인URL/시각/공식종목명 표시.
+
+민감도의concat.dropna.pct_change를결측보존후수익률계산으로수정해누락전후의다일압축제거. 원장상관도종목별시장달력으로먼저reindex후일수익률계산·합집합252창/최소200유지.707Beta전수독립검산,기존200개값변경.249571쌍관측수전수·5648쌍상관독립검산통과.공식유니버스/관계발견/30사업링크/관심도및다른23JSON불변. 단위현지통화·관측일/누락개수명시,시장휴일을무조건공통휴일로치환안함.
+
+전체347Python·두자료검증기·3JS모음·전체JS구문통과134.03초. Edge1440/1024/390 각각40피드/625항목·기사확률/기간·40기업이동·6공식식별/5신규상세·5신호규칙/27양수·빈뉴스/미산출필터·707행렬새6종목디코드·가로넘침0/오류0/외부요청0확인. 최초QA가미분류0개를가정한오류는Hanmi0기사의미산출1개를확인후데이터기반기대로정정했으며UI를가용으로조작하지않음. 코드/수치수정없이최종설명문서만동기화.
+
+raw20260911T043351Z(부모20260911T041510Z),stage20260911T044500Z,가격9/10. runtime/news-universe-source-verification/build-verification/browser-qa/validation.json과실제게시는news-universe-publication.json/state.json. COMPANY_NEWS_CONTRACT.md/RELATION_CONTRACT.md정본. 최신디자인8c0adfd유지·용량검사0.전체goal미완:비기업20객체뉴스/다중제공처/기업문맥감성·신규기업재무일정·정량뷰/관계확장/연속13F/PIT및REFERENCE_PARITY계속.

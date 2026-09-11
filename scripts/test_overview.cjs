@@ -10,7 +10,7 @@ async function checks(){
  for(const panel of data.panels){const before=JSON.stringify(panel),roles=Object.fromEntries(panel.axes.map(a=>[a.role,a.key])),domains=V.spatialDomain(panel);
   ['x','z','y'].forEach((role,i)=>{const values=panel.rows.map(r=>r.z[roles[role]]).filter(Number.isFinite),[lo,hi]=domains[i];assert(lo<Math.min(0,...values)&&hi>Math.max(0,...values),'no axis clipping');assert((Math.max(...values)-Math.min(...values))/(hi-lo)>.65,'actual observations occupy most of each axis');});
   assert.equal((V.hologram(panel).match(/data-state-tick=/g)||[]).length,15,'numeric ticks on all three axes');assert.equal(JSON.stringify(panel),before,'display fitting cannot mutate source data');
-  for(const label of V.hologram(panel).matchAll(/<text[^>]* x="([^"]+)" y="([^"]+)"/g)){assert(+label[1]>=0&&+label[1]<=1100&&+label[2]>=18&&+label[2]<=706,'default view retains every axis label inside the stage');}
+  for(const label of V.hologram(panel).matchAll(/<text[^>]* x="([^"]+)" y="([^"]+)"/g)){assert(+label[1]>=0&&+label[1]<=1100&&+label[2]>=18&&+label[2]<=546,'default view retains every axis label inside the stage');}
  }
  const extreme=structuredClone(p);extreme.rows[0].z.growth=8;extreme.rows[1].z.growth=12;assert(V.spatialDomain(extreme)[0][1]>12,'outliers are retained instead of clipped at the former 2.2z boundary');
  const flat=structuredClone(p);for(const row of flat.rows)for(const key of Object.keys(row.z))row.z[key]=0;assert(!/NaN|undefined|Infinity/.test(V.hologram(flat)),'constant axes remain finite');

@@ -12,9 +12,9 @@
   return ['x','z','y'].map(role=>{const values=p.rows.map(r=>r.z[roles[role]]).filter(valid);let lo=Math.min(0,...values),hi=Math.max(0,...values);const pad=Math.max((hi-lo)*.12,.025);return [lo-pad,hi+pad];});
  }
  function hologram(p,yaw=.6,zoom=1,pitch=.38){
-  const W=1100,H=720,roles=Object.fromEntries(p.axes.map(a=>[a.role,a.key])),domains=spatialDomain(p),keys=[roles.x,roles.z,roles.y],normalize=(v,i)=>(v-domains[i][0])/(domains[i][1]-domains[i][0])*2-1;
+  const W=1100,H=560,roles=Object.fromEntries(p.axes.map(a=>[a.role,a.key])),domains=spatialDomain(p),keys=[roles.x,roles.z,roles.y],normalize=(v,i)=>(v-domains[i][0])/(domains[i][1]-domains[i][0])*2-1;
   const origin=domains.map((_,i)=>normalize(0,i)),floorY=origin[2];
-  const P=(x,z,y)=>{const rx=x*Math.cos(yaw)-z*Math.sin(yaw),rz=x*Math.sin(yaw)+z*Math.cos(yaw),depth=rz*Math.cos(pitch)+y*Math.sin(pitch),scale=6/(6-depth);return [W/2+rx*275*zoom*scale,295+(rz*190*Math.sin(pitch)-y*200*Math.cos(pitch))*zoom*scale,depth];};
+  const P=(x,z,y)=>{const rx=x*Math.cos(yaw)-z*Math.sin(yaw),rz=x*Math.sin(yaw)+z*Math.cos(yaw),depth=rz*Math.cos(pitch)+y*Math.sin(pitch),scale=6/(6-depth);return [W/2+rx*275*zoom*scale,235+(rz*145*Math.sin(pitch)-y*150*Math.cos(pitch))*zoom*scale,depth];};
   const point=r=>keys.every(k=>valid(r.z[k]))?P(...keys.map((k,i)=>normalize(r.z[k],i))):null;
   const poly=vertices=>vertices.map(v=>P(...v).slice(0,2).join(',')).join(' '),id='glass-'+p.id;
   const paint=root.AnalysisCharts.orbPaint(p.rows.map(r=>color(r.z[roles.color])),id);
@@ -36,7 +36,7 @@
   return svg(b,p.title+' · 36개월3D 궤적',W,H);
  }
  function radar(p,rotation=0,zoom=1,tilt=.46){
-  const W=400,H=460,cx=200,base=322,gap=54,R=111*zoom,n=p.axes.length,angle=i=>-Math.PI/2+i*2*Math.PI/n+rotation;
+  const W=400,H=360,cx=200,base=250,gap=60,R=111*zoom,n=p.axes.length,angle=i=>-Math.PI/2+i*2*Math.PI/n+rotation;
   const P=(i,z,level)=>{const r=Math.max(4,(clip(z,-2,2)+2)/4*R);return [cx+Math.cos(angle(i))*r,base-level*gap+Math.sin(angle(i))*r*tilt];};
   const material=root.AnalysisCharts.orbPaint(times,'radar-'+p.id);let b=material.defs+'<defs>'+times.map((c,i)=>`<linearGradient id="radar-glass-${p.id}-${i}" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".1"/><stop offset=".45" stop-color="${c}" stop-opacity=".12"/><stop offset="1" stop-color="${c}" stop-opacity=".18"/></linearGradient>`).join('')+'</defs>';for(const z of [0,1,2])b+=`<polygon points="${p.axes.map((a,i)=>P(i,z,0).join(',')).join(' ')}" fill="none" stroke="#bccbd8"/>`;
   p.axes.forEach((a,i)=>{const at=P(i,2,0),label=P(i,2.6,0);b+=`<line x1="${cx}" y1="${base}" x2="${at[0]}" y2="${at[1]}" stroke="#c7d3de"/><text x="${label[0]}" y="${label[1]+(Math.sin(angle(i))<0?-9:18)}" text-anchor="middle" fill="#385a70" font-size="14">${E(a.name)}</text>`;});
@@ -48,7 +48,7 @@
    points.forEach(pt=>{if(pt)b+=`<circle cx="${pt[0]}" cy="${pt[1]}" r="3" fill="${material.fills[j]}" stroke="white" stroke-width=".7"/>`;});
    b+=`<text x="15" y="${base-level*gap-12}" style="fill:${times[j]}" font-size="13">${E(m.label)}</text>`;
   });
-  b+=`<text x="20" y="444" fill="#526d81" font-size="14">${n}축 × 4시점 · 위=과거 / 아래=현재 · 반경 −2~+2z</text>`;
+  b+=`<text x="20" y="343" fill="#526d81" font-size="14">${n}축 × 4시점 · 위=과거 / 아래=현재 · 반경 −2~+2z</text>`;
   return svg(b,p.title+' · 4시점 적층 레이더',W,H);
  }
  function wormhole(l,phase=.6,zoom=1,tilt=.47,columns=2){

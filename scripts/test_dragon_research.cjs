@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
+const c=vm.createContext({window:{},URL});vm.runInContext(fs.readFileSync(path.join(__dirname,'../docs/dragon-research.js'),'utf8'),c);
+const R=c.window.DragonResearch,row={id:'a',kind:'official',title:'<script>bad</script>',source:'source',date:'2026-09-09',date_kind:'근거 검토일',url:'javascript:alert(1)',core:'core',evidence:['<img src=x onerror=bad>'],targets:[{id:'stock:NVDA',name:'NVIDIA',entity:true}]};
+const html=R.card(row);assert(!html.includes('<script>'));assert(!html.includes('javascript:'));assert(html.includes('data-dr-entity="stock:NVDA"'));assert(html.includes('&lt;img'));
+assert.equal(R.filter([row],'linked','nvidia').length,1);assert.equal(R.filter([row],'team','').length,0);
+const e={id:'n1',module:'principium',title:'local',source:'author',date:'2026-09-10',core:'private text',ideas:'',evidence:'',actions:'',invalidates:'',url:'',keywords:['nvda','stock:NVDA','NVDA'],attachments:[],direction:'상승',horizon:'3M',confidence:3};
+const book={entries:[e,{...e,id:'deleted',deleted_at:'2026-09-11'},{...e,id:'iw',module:'iw'}]},before=JSON.stringify(book);
+const local=R.localRows(book,[{id:'stock:NVDA',symbol:'NVDA',name:'NVIDIA'}]);assert.equal(local.length,1);assert.equal(local[0].targets.length,1);assert.equal(local[0].direction,'상승');assert.equal(JSON.stringify(book),before);
+console.log('PASS: research URL safety, escaping, filters, exact entity links, private/deleted record boundaries and immutable reads.');

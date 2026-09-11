@@ -1,7 +1,7 @@
 /* Local decision records and dated entity cards. No orders or remote writes. */
 (function(root){
  'use strict';
- const KEY='sangsangin-decisions-v2',LEGACY='sangsangin-journal-v1-dragonglass',LIMIT=500,BYTES=2*1024*1024;
+ const KEY='sangsangin-decisions-v2',LEGACY='sangsangin-journal-v1-dragonglass';
  const E=v=>root.ResearchCharts.esc(v??''),N=v=>typeof v==='number'&&Number.isFinite(v)?root.AnalysisCharts.n(v):'—';
  const now=()=>new Date().toISOString(),uid=()=>root.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
  const fail=m=>{throw Error(m);};
@@ -22,21 +22,18 @@
   return out;
  }
  function decode(raw){
-  if(raw.length>BYTES)fail('원장 JSON은 2MiB 이하만 읽을 수 있습니다.');
-  const a=JSON.parse(raw);if(!a||a.version!==2||!Array.isArray(a.entries)||a.entries.length>LIMIT||typeof a.revision!=='string')fail('지원하지 않는 원장 형식입니다.');
+  const a=JSON.parse(raw);if(!a||a.version!==2||!Array.isArray(a.entries)||typeof a.revision!=='string')fail('지원하지 않는 원장 형식입니다.');
   const entries=a.entries.map(validate);if(new Set(entries.map(a=>a.id)).size!==entries.length)fail('중복된 결정 ID가 있습니다.');return {version:2,revision:a.revision,entries};
  }
  function legacyRecords(a){
-  if(!Array.isArray(a)||a.length>LIMIT)fail('이전 메모는 최대 500건입니다.');
+  if(!Array.isArray(a))fail('이전 메모 형식을 확인하세요.');
   return a.map(r=>{const t=now();return validate({id:uid(),object_id:'',name:text(r.title,160,true),thesis:text(r.body,12000,true),catalyst:'',invalidate:'',direction:null,conviction:null,horizon:null,size:null,status:'제안',created_at:date(r.date)?r.date:t,updated_at:t,closed_at:null,deleted_at:null,history:[{at:t,action:'이전 메모 가져오기'}],upside:null,downside:null,probability:null});});
  }
  function store(storage){
   let original=null,book;
   const reload=()=>{original=storage.getItem(KEY);book=original===null?{version:2,revision:'',entries:[]}:decode(original);return book.entries;};reload();
   const write=entries=>{
-   if(entries.length>LIMIT)fail('원장은 휴지통 포함 최대 500건입니다.');
    const next={version:2,revision:uid(),entries:entries.map(validate)},raw=JSON.stringify(next);
-   if(new TextEncoder().encode(raw).length>BYTES)fail('원장 저장 한도 2MiB를 초과했습니다.');
    if(storage.getItem(KEY)!==original)fail('다른 창에서 원장이 바뀌었습니다. 새로 읽은 뒤 다시 저장하세요.');
    storage.setItem(KEY,raw);original=raw;book=next;return book.entries;
   };
@@ -58,7 +55,6 @@
     return history(r,t,{activate:'실행 상태 기록',close:'청산 상태 기록',reopen:'실행 재개',delete:'휴지통 이동',restore:'복원'}[action]);
    });},
    import(raw){
-    if(new TextEncoder().encode(raw).length>BYTES)fail('가져올 파일은 2MiB 이하여야 합니다.');
     const parsed=JSON.parse(raw),isLegacy=Array.isArray(parsed),incoming=isLegacy?legacyRecords(parsed):decode(raw).entries;
     const next=book.entries.map(r=>({...r}));let added=0;
     for(let r of incoming){if(isLegacy&&next.some(a=>a.name===r.name&&a.thesis===r.thesis&&a.created_at===r.created_at))continue;const existing=next.find(a=>a.id===r.id);if(existing&&JSON.stringify(existing)===JSON.stringify(r))continue;if(existing)r={...r,id:uid(),history:[...r.history,{at:now(),action:'ID 충돌 사본 가져오기'}].slice(-50)};next.push(r);added++;}
@@ -101,7 +97,7 @@
   container.querySelectorAll('[data-entities]').forEach(box=>{
    const search=box.querySelector('[data-entity-search]'),market=box.querySelector('[data-entity-market]'),select=box.querySelector('[data-entity-select]');
    const show=()=>{const e=entities.find(e=>e.id===select.value);if(!e){box.querySelector('[data-entity-body]').innerHTML='<p>검색 조건에 해당하는 종목이 없습니다.</p>';return;}ui.entity=e.id;const f=e.financial,b=e.sensitivity,linked=vault?vault.entries().filter(r=>!r.deleted_at&&r.object_id===e.id):[];
-    box.querySelector('[data-entity-body]').innerHTML=`<article class="panel"><div class="title-row"><h2>${E(e.name)} · ${E(e.symbol)}</h2><button data-entity-decision>이 종목으로 결정 기록</button></div><p>${E(e.market)} → ${E(e.sector)} → ${E(e.name)} · ${e.rs_universe==='추가 사업 관찰'?'사업 관찰 추가 · 공식 업종 미확보':'공식 업종 소속'}</p><div class="kpi-grid">${['1W %','1M %','3M %','YTD %','1Y %'].map((k,i)=>`<div class="kpi"><small>${k}</small><strong>${N(e.returns[i])}</strong></div>`).join('')}</div><p>RS ${N(e.rs)} (${E(e.rs_universe)} 단면) · RSI14 ${N(e.rsi)} · 52주 고점 대비 ${N(e.high52)}% · 가격 ${E(e.date)}</p>${root.AnalysisCharts.line({title:e.name+' · 3개월 조정가격',left:'시작=100',date_format:'day',series:[{name:e.name,axis:'left',points:e.curve}]})}<p class="quiet">64거래일에서 최대14개 시점을 표시했습니다. 배당·분할 조정가격 기준입니다.</p>${root.RelationViews?.entityNotes(e.id,lab)||''}<h3>시장 민감도</h3><p>${b?'Beta '+N(b.beta)+' · R² '+N(b.r2)+' · '+b.observations+'개 공통 일 수익률 ('+E(b.start)+' ~ '+E(b.end)+')':'공통 관측 200개 이상 또는 벤치마크 변동 부족으로 미산출'} · 벤치마크 ${E(e.benchmark)}</p><h3>재무·추정 관측</h3>${f?`<p>최근 연간 순이익 ${N(f.net_income)} ${E(f.financial_currency)} · 결산일 ${E(f.report_date)}<br>영업이익률 ${N(f.margin)}% · FY1/FY2 EPS ${N(f.eps1)} / ${N(f.eps2)} ${E(f.estimate_currency)}<br>재무 수집 ${E(f.financial_as_of)}</p>`:'<p>현재 재무 수집 범위에 포함되지 않습니다.</p>'}<h3>예정 촉매 · 가격 기준일 다음90일</h3><p>${e.upcoming.length?e.upcoming.map(t=>'실적 예정 '+E(stamp(t))).join('<br>'):'확인된 향후90일 실적 일정이 없습니다.'}</p><small>일정 수집 ${E(stamp(e.events_retrieved))} · 제공처 예정일은 변경될 수 있습니다.</small><h3>연결된 결정 ${linked.length}건</h3>${linked.map(r=>`<p>${E(r.direction||'미지정')} · ${E(r.status)} · ${N(r.size)}% · ${E(r.thesis)}</p>`).join('')}<p><a href="https://finance.yahoo.com/quote/${encodeURIComponent(e.symbol)}/" target="_blank" rel="noopener noreferrer">시세·재무 제공처 ↗</a> · ${e.rs_universe==='추가 사업 관찰'?'공식 유니버스 외 추가 관찰':'업종은 공식 KRX/IVV 구성자료'}</p></article>`;
+    box.querySelector('[data-entity-body]').innerHTML=`<article class="panel"><div class="title-row"><h2>${E(e.name)} · ${E(e.symbol)}</h2><button data-entity-decision>이 종목으로 결정 기록</button></div><p>${E(e.market)} → ${E(e.sector)} → ${E(e.name)} · ${e.rs_universe==='추가 사업 관찰'?'사업 관찰 추가 · 공식 업종 미확보':'공식 업종 소속'}</p><div class="kpi-grid">${['1W %','1M %','3M %','YTD %','1Y %'].map((k,i)=>`<div class="kpi"><small>${k}</small><strong>${N(e.returns[i])}</strong></div>`).join('')}</div><p>RS ${N(e.rs)} (${E(e.rs_universe)} 단면) · RSI14 ${N(e.rsi)} · 52주 고점 대비 ${N(e.high52)}% · 가격 ${E(e.date)}</p>${root.AnalysisCharts.line({title:e.name+' · 3개월 조정가격',left:'시작=100',date_format:'day',series:[{name:e.name,axis:'left',points:e.curve}]})}<p class="quiet">64거래일에서 최대14개 시점을 표시했습니다. 배당·분할 조정가격 기준입니다.</p>${root.RelationViews?.entityNotes(e.id,lab)||''}${root.GuruViews?.entityNotes(e)||''}<h3>시장 민감도</h3><p>${b?'Beta '+N(b.beta)+' · R² '+N(b.r2)+' · '+b.observations+'개 공통 일 수익률 ('+E(b.start)+' ~ '+E(b.end)+')':'공통 관측 200개 이상 또는 벤치마크 변동 부족으로 미산출'} · 벤치마크 ${E(e.benchmark)}</p><h3>재무·추정 관측</h3>${f?`<p>최근 연간 순이익 ${N(f.net_income)} ${E(f.financial_currency)} · 결산일 ${E(f.report_date)}<br>영업이익률 ${N(f.margin)}% · FY1/FY2 EPS ${N(f.eps1)} / ${N(f.eps2)} ${E(f.estimate_currency)}<br>재무 수집 ${E(f.financial_as_of)}</p>`:'<p>현재 재무 수집 범위에 포함되지 않습니다.</p>'}<h3>예정 촉매 · 가격 기준일 다음90일</h3><p>${e.upcoming.length?e.upcoming.map(t=>'실적 예정 '+E(stamp(t))).join('<br>'):'확인된 향후90일 실적 일정이 없습니다.'}</p><small>일정 수집 ${E(stamp(e.events_retrieved))} · 제공처 예정일은 변경될 수 있습니다.</small><h3>연결된 결정 ${linked.length}건</h3>${linked.map(r=>`<p>${E(r.direction||'미지정')} · ${E(r.status)} · ${N(r.size)}% · ${E(r.thesis)}</p>`).join('')}<p><a href="https://finance.yahoo.com/quote/${encodeURIComponent(e.symbol)}/" target="_blank" rel="noopener noreferrer">시세·재무 제공처 ↗</a> · ${e.rs_universe==='추가 사업 관찰'?'공식 유니버스 외 추가 관찰':'업종은 공식 KRX/IVV 구성자료'}</p></article>`;
     box.querySelector('[data-entity-relation]')?.addEventListener('click',()=>navigate('관계 지도',{relationNode:e.id}));
     box.querySelector('[data-entity-decision]').addEventListener('click',()=>navigate('결정 원장',{decisionObject:e.id}));
    };
@@ -136,7 +132,7 @@
      else {vault.action(id,act);status('상태 변경을 저장했습니다.');}
      repaint();
     }catch(e){status('저장하지 못했습니다: '+e.message);}}));
-    body.querySelector('[data-ledger-import]').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>BYTES)fail('파일은 2MiB 이하여야 합니다.');const count=vault.import(await file.text());status(count+'건을 가져왔습니다. 기존 ID 충돌은 별도 사본으로 보존합니다.');repaint();}catch(error){status('가져오지 못했습니다: '+error.message);}});
+    body.querySelector('[data-ledger-import]').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;try{const count=vault.import(await file.text());status(count+'건을 가져왔습니다. 기존 ID 충돌은 별도 사본으로 보존합니다.');repaint();}catch(error){status('가져오지 못했습니다: '+error.message);}});
    };repaint();
   });
  }

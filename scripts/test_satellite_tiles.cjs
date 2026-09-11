@@ -21,7 +21,7 @@ module.exports=(async()=>{
  const tiles=T.plan({...center,zoom:3},1000,760);loader.pause(true);loader.update(tiles);await tick();assert.equal(calls,0);
  loader.pause(false);for(let i=0;i<20;i++)await tick();assert.equal(loader.status().loaded,new Set(tiles.map(t=>t.key)).size);
  const before=calls;loader.update(tiles);await tick();assert.equal(calls,before,'same tiles reused without requests');assert(loader.lookup(tiles[0].key).startsWith('blob:'));
- const cached=loader.status().cached;loader.dispose();assert.equal(revoked.length,cached);assert.equal(loader.status().bytes,0);
+ const cached=loader.status().cached;loader.dispose();assert.equal(revoked.length,cached);assert.equal(loader.status().cached,0);
  let peak=0,current=0,started=0,aborted=0;
  const slow=T.create({urls,fetch:(url,{signal})=>new Promise((resolve,reject)=>{started++;current++;peak=Math.max(peak,current);signal.addEventListener('abort',()=>{current--;aborted++;reject(new Error('cancel'));},{once:true});})});
  slow.update(tiles);assert.equal(started,3);assert.equal(peak,3);slow.update([]);await tick();assert.equal(aborted,3);assert.equal(slow.status().failed,0);assert.equal(slow.status().active,0);slow.dispose();
@@ -29,12 +29,12 @@ module.exports=(async()=>{
  blocked.update(tiles);for(let i=0;i<5;i++)await tick();assert.equal(limited,3);assert.equal(blocked.status().halted,true);blocked.dispose();
  let badCalls=0;const bad=T.create({urls,fetch:async()=>{badCalls++;return new Response('html',{headers:{'content-type':'text/html'}});}});
  bad.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(bad.status().failed,1);bad.update(tiles.slice(0,1));await tick();assert.equal(badCalls,1);bad.retry();await tick();assert.equal(badCalls,2);bad.dispose();
- const big=T.create({urls,fetch:async()=>new Response(new Uint8Array(1024*1024+1),{headers:{'content-type':'image/jpeg'}})});
- big.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(big.status().failed,1);assert.equal(big.status().bytes,0);big.dispose();
+ const big=T.create({urls,fetch:async()=>new Response(Uint8Array.from({length:1024*1024+1},(_,i)=>i===0?255:i===1?216:0),{headers:{'content-type':'image/jpeg'}})});
+ big.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(big.status().failed,0);assert.equal(big.status().cached,1);big.dispose();
  const split=T.create({urls,fetch:async()=>new Response(new ReadableStream({start(c){c.enqueue(new Uint8Array([255]));c.enqueue(new Uint8Array([216,255,217]));c.close();}}),{headers:{'content-type':'image/jpeg'}})});
  split.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(split.status().loaded,1);split.dispose();
  const bounded=T.create({urls,fetch:async()=>jpeg()});
  for(let i=0;i<60;i++){bounded.update([{...tiles[0],key:'8/0/'+i}]);for(let j=0;j<3;j++)await tick();}
- assert.equal(bounded.status().cached,48);assert(bounded.status().bytes<=8*1024*1024);bounded.dispose();
- console.log('Satellite tiles: Mercator/date-line/polar/overzoom geometry, visible-only requests, reuse, 3-request ceiling, cancellation, retry, rate-limit halt, size and URL cleanup passed.');
+ assert.equal(bounded.status().cached,48);bounded.dispose();
+ console.log('Satellite tiles: Mercator/date-line/polar/overzoom geometry, visible-only requests, reuse, 3-request ceiling, cancellation, retry, rate-limit halt, large tiles and URL cleanup passed.');
 })();

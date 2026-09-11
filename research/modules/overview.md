@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**계산·화면 연결** · 가격 기준 2026-09-08. 6/5축 원단위와 z·36시점 궤적/회전·4층 레이더·시총50표본/주도주10·현황.
+**계산·화면 연결** · 가격 기준 2026-09-10. 6/5축 원단위와 z·36시점 궤적/회전·4층 레이더·시총50표본/주도주10·현황.
 
 - 계산: [overview_state.py](../../pipeline/overview_state.py) · [화면](../../docs/overview-views.js) · [결과](../../docs/data/overview_state.json)
 - [축·단위·발표 시차·표본 계산 계약](../OVERVIEW_CONTRACT.md)

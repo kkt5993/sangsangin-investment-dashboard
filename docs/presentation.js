@@ -26,6 +26,7 @@
  function install(){
   if(!root.document||!root.MutationObserver)return;
   for(const sheet of root.document.styleSheets){try{rules(sheet.cssRules);}catch{/* Cross-origin media styles are not controlled by this application. */}}
+  root.document.addEventListener('load',event=>{if(event.target.tagName==='LINK'&&event.target.rel==='stylesheet'){try{rules(event.target.sheet.cssRules);}catch{}}},true);
   tree(root.document.body);
   new root.MutationObserver(records=>{for(const record of records){if(record.type==='attributes')elementColors(record.target);else for(const node of record.addedNodes)if(node.nodeType===1)tree(node);}}).observe(root.document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['style','fill','stroke','stop-color','flood-color','color']});
  }

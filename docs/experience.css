@@ -136,3 +136,12 @@ main svg { font-family:inherit!important; font-variant-numeric:tabular-nums; }
 .scene-direct .relation-svg [data-rnode]:focus circle,.scene-direct .relation-svg [data-rnode]:hover circle { stroke:hsl(32 24.00% 38.04% / 1.0000); stroke-width:3; }
 
 ::selection{background:#e2dbc9;color:#322f2a}
+
+/* The integrated geospatial scene shares the white reading surface. */
+.sauron-stage{background:#faf9f6;color:#322f2a;border-color:#dfdcd5}
+.sauron-canvas{filter:sepia(1) saturate(.18)}
+.sauron-hud,.sauron-sensors{background:#ffffffed;border:1px solid #dfdcd5;box-shadow:0 8px 30px #3933290a}
+.sauron-stage button{background:#fff;color:#48443c;border-color:#d5d0c6}
+.sauron-stage button[aria-pressed=true]{background:#e9e5db;border-color:#9c9079}
+.sauron-hud-title small,.sauron-sensors small,.sauron-help,.sauron-loading{color:#6b655a}
+.sauron-attribution{background:#ffffffed}.sauron-attribution a,.sauron-stage .cesium-widget-credits a{color:#665a45}

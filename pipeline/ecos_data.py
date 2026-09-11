@@ -4,7 +4,7 @@ import argparse,time
 import pandas as pd
 import requests
 from .store import DATA,read_json,write_json,digest
-from .acquire import stamp,budget
+from .acquire import stamp
 SERIES=[('KR_CPI','901Y009','M','0','한국 CPI'),('KR_LEAD','901Y067','M','I16E','한국 선행 순환변동치'),
  ('KR_COIN','901Y067','M','I16D','한국 동행 순환변동치'),('KR_BASE','722Y001','D','0101000','한국 기준금리'),
  ('KR_3Y','817Y002','D','010200000','국고채 3년'),('KR_10Y','817Y002','D','010210000','국고채 10년'),
@@ -32,7 +32,7 @@ def main():
             if not rows:raise ValueError('No ECOS observations')
             f=pd.DataFrame(rows);dates=f.TIME.map(lambda v:period_date(v,freq))
             out=pd.DataFrame({'observation_date':dates,symbol:pd.to_numeric(f.DATA_VALUE,errors='coerce')}).dropna().sort_values('observation_date')
-            budget(len(out)*40);out.to_csv(file,index=False)
+            out.to_csv(file,index=False)
             m['instruments'][symbol]=dict(status='ok',source='https://ecos.bok.or.kr/',name=name,unit=f.UNIT_NAME.iloc[0],frequency=freq,stat_code=stat,item_code=item,sha256=digest(file),retrieved_at=stamp())
             print('ECOS',symbol,len(out),flush=True)
         except Exception as e:m['instruments'][symbol]=dict(status='error',error_type=type(e).__name__);print('ECOS',symbol,type(e).__name__,flush=True)

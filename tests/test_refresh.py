@@ -4,7 +4,7 @@ from pathlib import Path
 from unittest.mock import patch
 import numpy as np
 import pandas as pd
-from pipeline.cache import make_patch,apply_patch_frame,chain
+from pipeline.cache import make_patch,apply_patch_frame,chain,audit_vendor_bars,valid_ohlc
 from pipeline.incremental import completed_date,valid_frame,universe_symbols
 from pipeline.refresh import price_cutoff,publish,prune_staging
 from pipeline.subview_modules import event_returns
@@ -18,6 +18,38 @@ def prices(n=12):
     return f
 
 class RefreshTests(unittest.TestCase):
+    def test_inconsistent_equity_bars_are_flagged_without_rewriting_raw_prices(self):
+        raw=prices();raw.loc[raw.index[-1],'open']=raw.high.iloc[-1]+1;before=raw.copy(deep=True)
+        excluded=audit_vendor_bars({'TRGP':raw},str(raw.index[-1].date()))
+        pd.testing.assert_frame_equal(raw,before)
+        pd.testing.assert_frame_equal(raw.loc[valid_ohlc(raw)],raw.iloc[:-1])
+        self.assertEqual([(r['symbol'],r['date']) for r in excluded],[('TRGP',str(raw.index[-1].date()))])
+        fixed=raw.copy();fixed.loc[fixed.index[-1],'open']=fixed.close.iloc[-1]
+        excluded=audit_vendor_bars({'TRGP':fixed},str(raw.index[-1].date()))
+        self.assertEqual(excluded,[]);self.assertTrue(valid_ohlc(fixed).all())
+
+    def test_vendor_bar_exclusion_preserves_krx_and_settlement_paths_and_cutoff(self):
+        raw=prices();raw.loc[raw.index[-1],'open']=raw.high.iloc[-1]+1
+        exempt=['005930.KS','123456.KQ','^SPX','CL=F','EURUSD=X','BTC-USD']
+        excluded=audit_vendor_bars({s:raw for s in exempt},str(raw.index[-1].date()))
+        self.assertEqual(excluded,[])
+        excluded=audit_vendor_bars({'TRGP':raw},str(raw.index[-2].date()))
+        self.assertEqual(excluded,[])
+
+    def test_candles_and_technical_indicators_exclude_bad_bars_keep_reported_closes(self):
+        from types import SimpleNamespace
+        from pipeline.market_modules import candle_section
+        from pipeline.technical_scan import indicators
+        raw=prices(300);raw.loc[raw.index[-1],'open']=raw.high.iloc[-1]+1;before=raw.copy(deep=True)
+        d=SimpleNamespace(frames={'TRGP':raw},price=lambda _:raw.adjusted_close)
+        result=candle_section(d,'TRGP','TRGP');technical=indicators(raw)
+        self.assertEqual(len(result['candles']),120);self.assertEqual(len(result['weekly']),52)
+        self.assertEqual(result['candles'][-1][0],str(raw.index[-2].date()))
+        self.assertEqual(result['weekly'][-1][0],str(raw.index[-2].date()))
+        self.assertEqual(result['excluded_bars'],[str(raw.index[-1].date())])
+        self.assertEqual(technical['frame'].index[-1],raw.index[-2])
+        self.assertEqual(d.price('TRGP').index[-1],raw.index[-1]);pd.testing.assert_frame_equal(raw,before)
+
     def test_vercel_checks_saved_session_before_upload_without_logging_identity(self):
         with tempfile.TemporaryDirectory() as tmp,patch('pipeline.vercel_deploy.cli',return_value=['node','vercel']),patch('pipeline.vercel_deploy.package_site') as package,patch('pipeline.vercel_deploy.subprocess.run') as run:
             run.side_effect=[CompletedProcess([],0,'private-account-name',''),CompletedProcess([],0,'https://example.vercel.app','')]

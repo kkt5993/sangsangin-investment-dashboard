@@ -51,6 +51,22 @@ def apply_patch_frame(old,patch):
     if 'volume' in out:out['volume']*=scale.get('volume',1)
     out=out.drop(index=out.index.intersection(new.index));return pd.concat([out,new]).sort_index()
 
+def valid_ohlc(frame):
+    values=frame[['open','high','low','close']]
+    return np.isfinite(values).all(axis=1)&(frame.low<=frame[['open','close']].min(axis=1))&(frame.high>=frame[['open','close']].max(axis=1))
+
+
+def audit_vendor_bars(frames,as_of):
+    """Report unusable equity/ETF candles separately from reported close prices."""
+    excluded=[]
+    for symbol,frame in frames.items():
+        f=frame.loc[:as_of]
+        if not symbol.startswith('^') and not symbol.endswith(('.KS','.KQ','=F','=X','-USD')) and {'open','high','low','close'}<=set(f):
+            bad=~valid_ohlc(f)
+            excluded.extend(dict(symbol=symbol,date=str(t.date()),reason='Vendor OHLC range mismatch',source='Yahoo Finance') for t in f.index[bad])
+    return excluded
+
+
 def load_into(d,data_root,vintage):
     d.bases=chain(data_root,vintage);d.base=d.bases[-1];d.vintage=vintage;d.corrections=[];d.macro_meta={}
     corrections={};correction_hashes=[]
@@ -98,7 +114,8 @@ def load_into(d,data_root,vintage):
             f=unpack(path) if path.suffix=='.gz' else read_json(path)
             if f.get('status')=='ok':d.fund[f['symbol']]=f
     d.frames={s:f.loc[:d.as_of] for s,f in d.frames.items() if len(f.loc[:d.as_of]) and (pd.Timestamp(d.as_of)-f.loc[:d.as_of].index[-1]).days<=7}
+    d.vendor_ohlc_exclusions=audit_vendor_bars(d.frames,d.as_of)
     d.corrections=list(corrections.values())
     import hashlib
     sha=correction_hashes[0] if len(correction_hashes)==1 else hashlib.sha256(''.join(correction_hashes).encode()).hexdigest()
-    d.correction_meta=dict(source='KRX official OHLC reconciliation',sha256=sha,corrected=sum(c['status']=='corrected' for c in d.corrections),quarantined=sum(c['status']=='quarantined' for c in d.corrections))
+    d.correction_meta=dict(source='KRX official OHLC reconciliation',sha256=sha,corrected=sum(c['status']=='corrected' for c in d.corrections),quarantined=sum(c['status']=='quarantined' for c in d.corrections),vendor_ohlc_exclusions=d.vendor_ohlc_exclusions)

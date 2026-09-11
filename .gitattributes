@@ -3,3 +3,5 @@ docs/vendor/pdfjs/** -text -whitespace
 docs/vendor/ocr/** -text -whitespace
 # Keep the UI font and OFL license identical to the verified asset manifest.
 docs/assets/fonts/** -text -whitespace
+docs/vendor/cesium/** -text -whitespace
+docs/vendor/satellite/** -text -whitespace

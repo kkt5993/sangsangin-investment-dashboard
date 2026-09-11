@@ -1,7 +1,6 @@
 """Macro regimes and risk monitors with explicit units and observation dates."""
 import numpy as np
 import pandas as pd
-from scipy.stats import kendalltau
 from .engine import *
 from .catalog import MACRO
 
@@ -40,43 +39,16 @@ def regimes(d):
         sections.append(curve(title,[(title,s.loc[cutoff:],'left')],unit,guides=[0] if unit!='가격비' else []))
     return module('regime',d.as_of,'미국 성장=산업생산 YoY, 한국 성장=동행지수 순환변동치−100. 성장·CPI YoY의 3개월 방향으로 4국면을 구분합니다. 발표된 최신 빈티지의 관측월이며 과거 실시간 판정 기록은 아닙니다. 국면 전이 표는 관측빈도입니다.',sections,cards,missing=['원본의 경기모델 가중치·Soros 복합점수·밸류에이션 모델은 별도 검증이 필요합니다.'])
 
-def csd_score(p):
-    r=p.pct_change().dropna().tail(252)
-    if len(r)<126:return None,{}
-    indicators={'분산':r.rolling(21).var(),'자기상관':r.rolling(21).apply(lambda a:pd.Series(a).autocorr(1),raw=True),'왜도 절댓값':r.rolling(21).skew().abs()}
-    values={}
-    for name,s in indicators.items():
-        a=s.dropna().tail(63);values[name]=number(kendalltau(np.arange(len(a)),a).statistic) if len(a)>20 else None
-    good=[v for v in values.values() if v is not None]
-    return number(50*(1+np.mean(good))) if good else None,values
-
 def risk(d):
     sections=[];cards=[]
-    for market,s in [('US','^GSPC'),('KR','^KS11')]:
-        p=d.price(s,False);r=p.pct_change();score,details=csd_score(p)
-        if len(p)<253:continue
-        cards.extend([(market+' CSD 점수',score),(market+' 실현변동성 21D %',number(r.tail(21).std()*np.sqrt(252)*100))])
-        sections.extend([table(market+' 조기경보',['지표','Kendall 추세 τ'],[[k,v] for k,v in details.items()]),
-            curve(market+' 변동성 · 시장', [('21D 연환산 변동성',r.rolling(21).std()*np.sqrt(252)*100,'left'),('지수',p,'right')],'변동성 %','가격지수')])
     vix=d.price('^VIX',False);vix3=d.price('^VIX3M',False)
     sections.extend([curve('VIX 기간구조', [('VIX',vix.tail(756),'left'),('VIX3M',vix3.tail(756),'left')],'변동성 지수'),
         curve('SKEW · 하이일드 스프레드', [('SKEW',d.price('^SKEW',False).tail(756),'left'),('HY OAS',d.mac('BAMLH0A0HYM2').tail(756),'right')],'SKEW','OAS %'),
         curve('쏠림 · 동일가중/시총가중', [('RSP/SPY',ratio(d,'RSP','SPY').tail(756),'left')],'가격비'),
         curve('국내 신용 스프레드', [('AA− 회사채−국고채 3Y',(d.mac('KR_AA')-d.mac('KR_3Y')).tail(756),'left')],'%p')])
-    weights={'SPY':.4,'QQQ':.1,'IEF':.2,'TLT':.1,'GLD':.1,'HYG':.1};prices=pd.concat({s:d.monthly(s) for s in weights},axis=1).dropna();r=prices.pct_change().dropna().tail(120)
-    if len(r)>24:
-        book=r.mul(pd.Series(weights)).sum(axis=1);wealth=(1+book).cumprod();q95=book.quantile(.05);q99=book.quantile(.01)
-        cards.extend([('모형 장부 1M VaR95 %',number(-q95*100)),('1M CVaR95 %',number(-book[book<=q95].mean()*100))])
-        hist,edges=np.histogram(book*100,bins=20)
-        sections.extend([bars('모형 장부 비중',[(s,w*100) for s,w in weights.items()]),bars('120개월 손익 분포',[(f'{edges[i]:.1f} ~ {edges[i+1]:.1f}%',int(v)) for i,v in enumerate(hist)],'회'),
-            curve('고정 비중 장부 · 누적성과 및 낙폭', [('누적',wealth*100,'left'),('낙폭',(wealth/wealth.cummax()-1)*100,'right')],'시작=100','낙폭 %'),
-            table('리스크 콕핏',['항목','값'],[['VaR95 · 1M %',number(-q95*100)],['VaR99 · 1M %',number(-q99*100)],['CVaR95 · 1M %',number(-book[book<=q95].mean()*100)],['HHI',sum(w*w for w in weights.values())],['유효 자산 수',1/sum(w*w for w in weights.values())],['월 관측 수',len(book)]])])
-        betas={s:np.cov(r[s],r.SPY,ddof=1)[0,1]/r.SPY.var(ddof=1) for s in weights}
-        beta=sum(weights[s]*betas[s] for s in weights)
-        sections.append(bars('선형 스트레스 · SPY 충격 가정',[(f'SPY {shock:+d}%',beta*shock) for shock in [-10,-20,-30,10]]))
     from .option_analytics import option_sections
     sections+=option_sections(d)
-    return module('risk',d.as_of,'US·KR 조기경보와 변동성·신용·쏠림을 계산합니다. CSD는 21일 분산·자기상관·왜도의 최근 63일 Kendall 추세 평균을 0–100으로 바꾼 진단점수입니다. 콕핏은 표시된 고정 비중 모형 장부의 120개월 역사 위험입니다. 옵션은 3개 만기의 OI·IV로 계산한 콜 + / 풋 − 부호 가정 GEX이며 실제 딜러 보유 포지션이 아닙니다.',sections,cards,
+    return module('risk',d.as_of,'US·KR 조기경보와 변동성·신용·쏠림을 계산합니다. 옵션은 수집 당시 현물·OI·IV로 계산한 콜 + / 풋 − 부호 가정 GEX입니다. ETF별 원장에 7~50일·행사가 ±15% 전체 제공 범위와 기존 제한만기를 구분합니다. 현재 종가로 과거 옵션을 재평가하지 않으며 실제 딜러 보유 포지션이 아닙니다.',sections,cards,
         missing=['전체 만기 딜러 포지션 및 레버리지 ETF 실제 순유입 원장은 연결되지 않았습니다. 옵션 IV를 고정한 가격 시나리오는 변동성 곡면 변화를 반영하지 않습니다.','원본 CSD 임계값의 예측력, 실제 포트폴리오 스트레스와 회복력은 미검증입니다.'])
 
 def weekend(d):

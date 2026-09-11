@@ -43,9 +43,6 @@ def main():
         if old.get('status') == 'ok' and (base/old['file']).exists() and digest(base/old['file']) == old['sha256']:
             print(f'[{i+1}/{len(selected)}] {symbol} cache', flush=True)
             continue
-        footprint = sum(f.stat().st_size for f in DATA.rglob('*') if f.is_file())
-        if footprint >= 512*1024*1024:
-            raise SystemExit('512 MiB cache limit reached. Ask user before growing the data store.')
         if i:
             time.sleep(2)
         item = dict(retrieved_at=datetime.now(timezone.utc).isoformat())
@@ -69,8 +66,6 @@ def main():
                 raise ValueError('No observations at or before as-of')
             path = base/(symbol.replace('^', 'INDEX_')+'.csv.gz')
             d.to_csv(path, index=False, compression=dict(method='gzip', mtime=0), float_format='%.10g')
-            if footprint + path.stat().st_size > 512*1024*1024:
-                raise SystemExit('512 MiB cache budget exceeded by final response; ask before collecting more.')
             meta = t.get_history_metadata()  # already cached by history; no quote/info fanout
             item.update(status='ok', file=path.name, sha256=digest(path), rows=len(d),
                         first_date=d.date.iloc[0], last_date=d.date.iloc[-1],

@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 월별 국면 / 미국 경제국면 / 한국 시장국면 / 시장국면 / 국면별 성과 / 국면 전이 / 밸류에이션 / 실적 이벤트 / 거시 발표 달력 / 산업별 핵심지표 / Soros 재귀성.
+**부분 구현** · 가격 기준 2026-09-10. 월별 국면 / 미국 경제국면 / 한국 시장국면 / 시장국면 / 국면별 성과 / 국면 전이 / 밸류에이션 / 실적 이벤트 / 거시 발표 달력 / 산업별 핵심지표 / Soros 재귀성.
 
 - 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [reflexivity.py](../../pipeline/reflexivity.py) · [industry_details.py](../../pipeline/industry_details.py) · [valuation.py](../../pipeline/valuation.py) · [calendar_data.py](../../pipeline/calendar_data.py) · [kr_calendar.py](../../pipeline/kr_calendar.py) · [calendar_views.py](../../pipeline/calendar_views.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/regime.json)

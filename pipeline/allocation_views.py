@@ -119,6 +119,16 @@ def allocation_views(d,obj):
         signals[r['origin']]=signal
     simulations={k:simulate(prices,w) for k,w in targets.items()}
     performance_rows=[[label,*[performance(a[0]).get(k) for k in ['cagr','vol','sharpe','mdd']]] for label,a in simulations.items()]
+    # Publish the exact target used by this view so the cockpit cannot use a
+    # separate, hard-coded portfolio. Percentages share the UI's precision.
+    current=targets['ML 국면'][last['origin']]
+    obj['allocation_book']=clean_json(dict(schema_version=1,label='ML 국면',as_of=d.as_of,
+        origin=last['origin'],target=last['target'],model_vintage=model['vintage'],
+        expected_vol_pct=vols['ML 국면']*100,
+        weights=[dict(symbol=s,name=n,group=g,weight_pct=number(current.get(s,0)*100)) for s,n,g in UNIVERSE],
+        performance=[dict(strategy=k,start=str(a[0].index[0].date()),end=str(a[0].index[-1].date()),
+                          **performance(a[0])) for k,a in simulations.items() if len(a[0])],
+        cost_bps=10,sharpe_rf=0,performance_months=len(targets['ML 국면'])))
     histories={k:pd.DataFrame(w).T.fillna(0) for k,w in targets.items()}
     group_names=list(CAPS);wh=histories['ML 국면'].tail(12).iloc[::-1]
     group_history=[[str((pd.Timestamp(t)+pd.offsets.MonthEnd(1)).date())[:7],*[number(row[[s for s in row.index if GROUPS[s]==g]].sum()*100) for g in group_names]] for t,row in wh.iterrows()]

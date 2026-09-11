@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 지수 / 매크로 / 종목 / 추가 지수 / 방법론.
+**부분 구현** · 가격 기준 2026-09-10. 지수 / 매크로 / 종목 / 추가 지수 / 방법론.
 
 - 계산 코드: [maximus_model.py](../../pipeline/maximus_model.py) · [maximus_features.py](../../pipeline/maximus_features.py) · [maximus_moe.py](../../pipeline/maximus_moe.py) · [maximus_views.py](../../pipeline/maximus_views.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/maximus.json)

@@ -69,6 +69,6 @@ class EarningsDetailTests(unittest.TestCase):
             def get_info(self):return dict(financialCurrency='USD',lastFiscalYearEnd=10,private='omit')
             def get_income_stmt(self,**kwargs):return pd.DataFrame()
             get_earnings_estimate=get_revenue_estimate=get_earnings_history=get_income_stmt
-        with tempfile.TemporaryDirectory() as temp,patch('pipeline.acquire.yf.Ticker',return_value=T()),patch('pipeline.acquire.time.sleep'),patch('pipeline.acquire.budget'):
+        with tempfile.TemporaryDirectory() as temp,patch('pipeline.acquire.yf.Ticker',return_value=T()),patch('pipeline.acquire.time.sleep'):
             collect_fundamentals(Path(temp),symbols=['TEST']);out=json.loads(gzip.decompress((Path(temp)/'fundamentals/TEST.json.gz').read_bytes()))
             self.assertEqual(out['estimate_periods'],[dict(period='0y',endDate='2027-01-31')]);self.assertNotIn('private',out['info']);self.assertEqual(out['info']['lastFiscalYearEnd'],10)

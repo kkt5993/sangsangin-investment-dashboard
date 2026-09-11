@@ -27,7 +27,13 @@ Overview는 TESSERACT6축·CROWDING5축의36시점 궤적, 4시점 적층 레이
 python -m http.server 8769 --bind 127.0.0.1 --directory docs
 ```
 
+SAURON은 22시설·USGS 지진·CelesTrak 궤도 요소를 Cesium 3D 지구본에 연결합니다. 카메라·투어·3개 레이어·6개 색상 효과·지명 검색과 관측 원장을 제공합니다. [SAURON 계약](research/SAURON_CONTRACT.md)에 자료 시각, SGP4 계산, 배경 선택과 요청 제한을 기록했습니다.
+
+밸류체인 유니버스는20개 그룹·53개 업종의151기업을 탐색합니다. 업종별 표·기업/도시 선택·151기업의105도시/행정 대표점, 공식 주소11기업과 시가총액, 공시 공급 관계 및 기업 생산·서비스·실제 물류 근거를 표시합니다. 소재국 교역은 별도 참고 스위치로 구분하며 근거 문서의 변경을30일마다 확인합니다. [기업 탐색 계약](research/CHAIN_UNIVERSE_CONTRACT.md)에 도시·통화·갱신 주기와 전체 공급/물류 근거의 남은 범위를 기록했습니다.
+
 ## 로컬 수집과 계산
+
+지구본의 국가 교역은 UN Comtrade45개 통계지역의 연간 총수출을 지도와 원장에 연결합니다. 수출 방향·금액별 곡선·국가 검색·정확한 USD와 분모를 표시하고 PC에서30일마다 재확인합니다. [교역 계약](research/TRADE_CONTRACT.md)에 통계지역·결측·참조연도와 기업별 밸류체인의 남은 범위를 기록했습니다.
 
 Python 3.13과 [requirements.txt](requirements.txt)의 환경을 사용합니다. 원자료는 형제 폴더 sangsangin-investment-data에 저장합니다. SANGSANGIN_DATA_DIR로 경로를 바꿀 수 있습니다. 사용자가 승인한 실행 시간은 **한국시간 평일 오전8시·오후6시**입니다. 이 PC와 Codex 앱이 실행 중이어야 합니다. 예약은 Codex 앱의 자동화에서 관리하며, 아래 명령은 예약과 수동 실행이 공통으로 사용합니다.
 
@@ -52,6 +58,7 @@ python -m pipeline.options_data --as-of 2026-09-08
 python -m pipeline.ecos_data --key-file '<로컬 ECOS 키 설정 파일>' --as-of 2026-09-08
 python -m pipeline.local_consensus '<로컬 qw_consensus.duckdb>' --as-of 2026-09-08
 python -m pipeline.krx_reconcile --allow-krx-auth --as-of 2026-09-08
+python -m pipeline.risk_signals_data --allow-krx-auth --as-of 2026-09-08
 python -m pipeline.oecd_data --as-of 2026-09-08
 # 아래 계산은 네트워크를 사용하지 않음
 python -m pipeline.ml_models --as-of 2026-09-08
@@ -60,7 +67,7 @@ python -m pipeline.allocation_model --as-of 2026-09-08
 python -m pipeline.build_all --as-of 2026-09-08
 ```
 
-기본 누적 로컬 한도는 사용자 승인에 따라 **512 MiB**입니다. 전체 가격 복사 대신 부모 빈티지와 변경분을 저장하고, 수정주가 배당 계수는 검증 후 적용합니다. 비균일 정정·분할·기존 OHLC 부족 시에만 해당 종목의 전체 역사를 다시 받습니다. 원자료·인증·실행 로그는 저장소 밖에 두고 코드·문서·작은 계산 결과만 게시합니다.
+사용자 요청(2026-09-11)에 따라 누적 저장 용량 검사와 상한 차단을 제거했습니다. 수집·계산·검증·반복 확인은 기존 코드로 수행하고 캐시를 재사용합니다. 전체 가격 복사 대신 부모 빈티지와 변경분을 저장하고, 수정주가 배당 계수는 검증 후 적용합니다. 비균일 정정·분할·기존 OHLC 부족 시에만 해당 종목의 전체 역사를 다시 받습니다. 원자료·인증·실행 로그는 저장소 밖에 두고 코드·문서·작은 계산 결과만 게시합니다.
 
 ## 검증
 
@@ -77,9 +84,11 @@ node scripts/test_extended.cjs
 
 날짜, 학습 타깃 만기, OHLC, 행렬·그래프 무결성과 SVG 구조를 검사합니다. 대표 SVG는 브라우저 없이 래스터화해 확인합니다. 전체 브라우저 동작·픽셀 동일성 검사를 완료했다는 의미는 아닙니다.
 
-PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하며 백업 JSON으로 이동합니다. 저장 범위·이전 메모 가져오기·한도는 [로컬 리서치 가이드](research/LOCAL_RESEARCH.md)를 참조하세요.
+PRINCIPIUM·IW·ASK의 글과 PDF/이미지 첨부는 브라우저에 저장하며 백업 JSON으로 이동합니다. 저장 범위·이전 메모 가져오기는 [로컬 리서치 가이드](research/LOCAL_RESEARCH.md)를 참조하세요.
 
 PDF는 제목·저자·페이지별 본문을 읽고 원문 페이지를 근거에 인용할 수 있습니다. 본문 검색·TXT 내보내기·첨부 포함 백업과 기존 기록 보존을 연결했습니다. [PDF 처리 범위와 검증](research/PDF_EXTRACTION.md)에 파서·OCR 비교와 페이지 재사용, 처리 한도 및 요약의 남은 범위를 표시합니다.
+
+리스크의 신호등은 미국12·한국7개 지표, 선제위험은 CSD·변동성 군집4진단을 제공합니다. 공식 KRX VKOSPI·코스피 순매수 금액과 SF Fed 뉴스감성을 PC에서 갱신하며, [신호등 계산 계약](research/RISK_SIGNALS_CONTRACT.md)에 단위·관측일·팀 임계값과 원본의 미공개 범위를 기록했습니다.
 
 ## 학습 출처
 
@@ -93,7 +102,7 @@ IW는15개월 복기와14주 연대기·보존 차트를 제공합니다. ASK는
 
 국면의 거시 발표 달력은 한국은행 통계·정책회의, 국가데이터처 보도계획과 미국10개 출처를 함께 표시합니다. 국가·7/30/90일·통계분류·검색, 미표기 시각과 수집실패 이전일정을 [달력 계약](research/CALENDAR_CONTRACT.md)에 따라 구분합니다.
 
-위성 관측은 [시설·보정·용량 계약](research/SATELLITE_CONTRACT.md)에 따라 공개 Sentinel-2의4km 구역만 읽습니다. 화면은 보정한 RGB/NDVI와 촬영일을 표시하며 건설 진척률·가동률로 해석하지 않습니다.
+위성 관측은 [시설·보정·갱신 계약](research/SATELLITE_CONTRACT.md)에 따라 공개 Sentinel-2의4km 구역만 읽습니다. 화면은 보정한 RGB/NDVI와 촬영일을 표시하며 건설 진척률·가동률로 해석하지 않습니다.
 
 RS는 KOSPI200 주도주·한국/미국 강약8종목 표·고정5Y축, 모멘텀은 강8/약8의3M/6M쌍을 제공합니다. ETF9분류의 통합 비교표·관측주기·금액 환산·배당락일 원장은 [ETF 계약](research/ETF_CONTRACT.md)에 따라 갱신합니다.
 
@@ -106,3 +115,17 @@ RS는 KOSPI200 주도주·한국/미국 강약8종목 표·고정5Y축, 모멘�
 전략의 턴어라운드는 공식 대상의 연간3개년 이익 반등·가격 조건·44점 카드와 상세 근거를 제공합니다. 페어는 미국9쌍/한국4쌍을252회귀·120관측 z로 계산하며 [전략 카드 계약](research/STRATEGY_CARD_CONTRACT.md)에 표본·점수·검정의 범위를 기록했습니다.
 
 PEAD는 공식 S&P100 주식101개 발표 자료에서48후보를 계산해 기본12개 가격 카드·전체보기·검색·발표/EPS/가격 원장을 제공합니다. 표시구간 변화에는 발표5달력일 전 가격이 포함되므로 실제 D0 이후 수익과 분리하며, [PEAD 계약](research/PEAD_CONTRACT.md)에 선별·시간·정기 갱신을 기록했습니다.
+
+미국 옵션은 [범위·시각·갱신 계약](research/OPTIONS_CONTRACT.md)에 따라 보존 관측과 현재 참고 종가를 분리합니다. 자동수집 권한 확인 전 Cboe 추가 수집은 기본 비활성화하며, 기존 자료의 날짜를 유지합니다. 새7~50일·±15% 범위는 로컬 검산 단계이고 게시 자료는 이전 첫3만기 표본입니다.
+
+리스크 콕핏은 자산배분의 ML 국면33개 목표비중을 공유해120개월 VaR/CVaR·변동성·낙폭·집중도,9요인 노출,5개 충격 가정,배분/지수 ML 신뢰도를 계산합니다. 비중·충격 기여·ML 분모 원장을 제공하며, [콕핏 계약](research/RISK_COCKPIT_CONTRACT.md)에 고정 장부와 동적 OOS의 차이·팀 스트레스 가정·월말 정렬을 명시했습니다.
+
+DRAGONGLASS 리서치는 공식 근거의 URL 중복 제거·문서 카드·출처/연결/검색 필터와 Entity360 이동을 제공합니다. 이 브라우저의 PRINCIPIUM 기록·첨부도 읽기 전용으로 불러옵니다. [리서치 연결 계약](research/DRAGON_RESEARCH_CONTRACT.md)에 날짜·개인 자료·원본 대비 남은 범위를 기록했습니다.
+
+DRAGONGLASS 지금 주목·트리거는 주도주/발굴 동시관측,모듈별 위험근거,지정학 제목,6테마,3개월 자산추세와 촬영일 원장을 연결합니다. 미확보 신호와 원본 전체점수의 차이는 [신호 계약](research/DRAGON_SIGNALS_CONTRACT.md)에 명시했습니다.
+
+DRAGONGLASS 트리거의 임상 등록부는 비만·GLP-1/Lilly/UnitedHealth3범위의 모집 중·전체상태3상·최근 갱신5연구와 원문을 제공합니다. [조회 정의·갱신 계약](research/CLINICAL_CONTRACT.md)에 원본 검색식과의 차이를 기록했습니다.
+
+DRAGONGLASS 스마트머니는6개 보고 법인의 SEC 13F 보유·상위6포지션·검색/옵션 필터·전체 원장과 공시 접수일을 표시합니다. OpenFIGI CUSIP 대응으로 확인된57기업의73포지션을 Entity360과 연결하고 옵션 기초종목을 구분합니다. [13F 계약](research/GURU_CONTRACT.md)에 보고 주체 변경·날짜·단위 검산·직접조회 상태와 신호 보류 범위를 명시했습니다.
+
+DRAGONGLASS 데이터 소스·현황판은 수집 근거와 모듈별 날짜, 게시일별 7계열 원장, 평일08/18시 다음 예정시각을 제공합니다. 관측일과 성공 수집/조회 시각을 구분하며 [운영 현황 계약](research/DRAGON_OPERATIONS_CONTRACT.md)에 아직 연결되지 않은 소스와 실시간 제어 범위를 기록했습니다.

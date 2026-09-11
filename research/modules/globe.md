@@ -3,14 +3,14 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 종합.
+**부분 구현** · 가격 기준 2026-09-10. 국가 교역 / 기업 국가 탐색 / 밸류체인 유니버스 / SAURON.
 
-- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py)
+- 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py) · [trade_data.py](../../pipeline/trade_data.py) · [trade_views.py](../../pipeline/trade_views.py) · [trade-views.js](../../docs/trade-views.js) · [sauron_data.py](../../pipeline/sauron_data.py) · [sauron_views.py](../../pipeline/sauron_views.py) · [sauron-views.js](../../docs/sauron-views.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/globe.json)
-- 계산/자료 계약: 정사영 지구본을 회전하며 국가와 기업을 탐색합니다. 기업 소재국은 수집된 공급자 메타데이터, 업종은 공개 카탈로그·공식 시장분류입니다. 지도 점은 국가 집계 위치이며 본사 좌표가 아닙니다.
-- 남은 범위: UN Comtrade 품목·교역량·물류 경로를 수집하지 않아 무역선이나 금액을 생성하지 않았습니다.
+- 계산/자료 계약: 국가 교역은 UN Comtrade 연간 상품 총수출(HS TOTAL)을 국가·통계지역 사이의 구면 곡선으로 표시합니다. 화살표는 수출 방향이며 선 굵기는 금액의 로그 척도입니다. 금액은 기업 매출·특정 품목이나 실제 선박 항로가 아닙니다. 모든 지역은 같은 연도이며, 비교 가능성을 위해 실행 연도보다2년 전 자료를30일마다 재확인합니다. 들어오는 선도 상대국의 수출 보고값으로, 선택국 수입 통계와 다를 수 있습니다. 기존 기업 표는 수집된 재무 표본의 소재국 탐색입니다.
+- 남은 범위: UN 자료가 없는 국가·통계지역/방향은 미확보로 표시하며 거울 수입이나 추정값으로 채우지 않습니다. / SAURON의 Google 실사3D는 별도 키가 필요합니다. Wikipedia 지명은 문서 대표 좌표이며 주소 검색과 다릅니다. 지진은 PC 수집 시점의 관측이고 위성 위치는 궤도 모델 계산입니다. / 밸류체인 유니버스의53개 업종·151기업 탐색에 공식 주소와 기업별 사업·생산·운송 근거를 추가했습니다. 지도 점은 도시·행정구역 대표 좌표이며 본사 건물이나 선박 항적이 아닙니다. 전체 기업의 공식 본사·공급·물류·경쟁우위 근거는 계속 수집하며 소재국 총수출은 별도 국가 맥락입니다.
 
-연결된 하위 그룹: 공통.
+연결된 하위 그룹: 밸류체인 유니버스, 국가 교역, 기업 국가 탐색, SAURON.
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 

@@ -19,7 +19,7 @@
   return out.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
  }
  async function extract(blob,options={}){
-  if(!blob||blob.size<5||blob.size>25*2**20)throw Error('PDF는 파일당25MiB 이하만 읽을 수 있습니다.');
+  if(!blob||blob.size<5)throw Error('PDF 파일 형식을 확인하세요.');
   const buffer=await blob.arrayBuffer();if(String.fromCharCode(...new Uint8Array(buffer,0,5))!=='%PDF-')throw Error('PDF 파일 형식을 확인하세요.');
   const hash=await root.crypto.subtle.digest('SHA-256',buffer),file_id=Array.from(new Uint8Array(hash),v=>v.toString(16).padStart(2,'0')).join('');
   const mode=options.mode||'text',language=options.language||'kor+eng',layout=options.layout||'single',O=options.ocr||root.PDFOCR;

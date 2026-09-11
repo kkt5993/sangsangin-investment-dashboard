@@ -5,6 +5,7 @@ from .engine import *
 from .catalog import MULTI,SCAN_EXTRA,INDICES,DYNAMICS_STOCKS,etfs
 from .patterns import candidates
 from .analytics import rs_percentiles
+from .cache import valid_ohlc
 
 def rankings(d,universes=None):
     out={}
@@ -85,6 +86,9 @@ def dynamics(d):
 def candle_section(d,s,name,group=None,annotation=None):
     f=d.frames.get(s);p=d.price(s)
     if f is None or not all(k in f for k in ['open','high','low','volume']):return None
+    valid=valid_ohlc(f);excluded=[str(t.date()) for t in f.index[~valid]];f=f.loc[valid]
+    if f.empty:return None
+    if excluded:annotation=(annotation or '')+' · OHLC 불일치 일봉 제외: '+', '.join(excluded)+' · 종가 기준 '+str(p.index[-1].date())+' / 캔들·기술 기준 '+str(f.index[-1].date())
     allf=f.copy();ratio=allf.adjusted_close/allf.close
     for k in ['open','high','low','close']:allf[k]=allf[k]*ratio
     weekly=allf.resample('W-FRI').agg({'open':'first','high':'max','low':'min','close':'last','volume':'sum'}).dropna().tail(52)
@@ -92,7 +96,7 @@ def candle_section(d,s,name,group=None,annotation=None):
     if len(weekly) and weekly.index[-1]>allf.index[-1]:weekly=weekly.rename(index={weekly.index[-1]:allf.index[-1]})
     f=f.tail(120).copy();ratio=f.adjusted_close/f.close
     candles=[[str(t.date()),*[number(row[k]*ratio.loc[t]) for k in ['open','high','low','close']],number(row.volume)] for t,row in f.iterrows()]
-    return dict(type='candles',title=name,group=group,candles=candles,annotation=annotation,
+    return dict(type='candles',title=name,group=group,candles=candles,annotation=annotation,excluded_bars=excluded,bar_as_of=str(f.index[-1].date()),
         weekly=[[str(t.date()),*[number(row[k]) for k in ['open','high','low','close','volume']]] for t,row in weekly.iterrows()],
         lines=[dict(name=f'MA{n}',points=points(p.rolling(n).mean().reindex(f.index))) for n in [20,50,200]])
 

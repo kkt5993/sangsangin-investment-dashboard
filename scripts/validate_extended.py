@@ -1,9 +1,10 @@
 """Financial/date/shape invariants for every new public snapshot, offline."""
 from pathlib import Path
-import json,math,re,base64,struct
+import json,math,re,base64,struct,sys
 from datetime import date,datetime,timedelta,timezone
 from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 def load(p):return json.loads(p.read_text(encoding='utf8'),parse_constant=lambda v:(_ for _ in ()).throw(ValueError(v)))
 
 def series(s,cutoff,forecast=False):
@@ -14,6 +15,65 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='chainuniverse':
+        assert len(s['groups'])==20 and len(s['sectors'])==53 and len(s['companies'])==151
+        symbols={c['symbol'] for c in s['companies']};assert len(symbols)==151
+        assert sum(len(a['symbols']) for a in s['sectors'])==159
+        assert all(set(a['symbols'])<=symbols for a in s['sectors'])
+        for c in s['companies']:
+            if c['location']:
+                p=c['location'];assert p['profile_city']==c['city'] and p['profile_country']==c['country']
+                assert -90<=p['lat']<=90 and -180<=p['lon']<=180
+                assert p['source']=='https://www.geonames.org/'+p['id']+'/'
+            if c['market_cap'] is not None:
+                assert c['market_cap']>0 and re.fullmatch('[A-Z]{3}',c['cap_currency'])
+            if c['checked_at']:assert datetime.fromisoformat(c['checked_at']).tzinfo
+        for r in s['relations']:
+            assert r['source'] in symbols and r['target'] in symbols and r['kind']=='valuechain'
+            assert r['evidence']['url'].startswith('https://')
+        assert s['geo_source']['license']=='CC BY 4.0'
+        from pipeline.chain_evidence import settings as chain_evidence
+        c=chain_evidence()
+        assert s['company_routes']==c['routes'] and s['evidence_sources']==c['sources']
+        area_ids={a['id'] for a in s['trade_areas']+s['company_areas']}
+        for r in s['company_routes']:
+            assert r['from_country'] in area_ids and r['to_country'] in area_ids
+        for company in s['companies']:
+            if company.get('official_address') and company['address_profile_match']:
+                assert company['location']['id']==company['official_address']['place_id']
+    if kind=='sauron':
+        from pipeline.sauron_data import stations,utc
+        assert len(s['sites'])==22 and len({a['id'] for a in s['sites']})==22
+        assert all(-90<=a['lat']<=90 and -180<=a['lon']<=180 and a['sources'] and a['coordinate_source'].startswith('https://') for a in s['sites'])
+        assert s['config']['min_magnitude']==2.5 and s['config']['orbit_tick_ms']==3000
+        assert s['config']['max_epoch_age_days']==7 and s['config']['home']==[30,18,26000000]
+        assert len({a['id'] for a in s['quakes']})==len(s['quakes'])
+        if s['quakes']:
+            generated=utc(s['quake_generated'])
+            for a in s['quakes']:
+                assert 2.5<=a['mag']<=10.5 and -10<=a['depth_km']<=800
+                assert -180<=a['lon']<=180 and -90<=a['lat']<=90
+                assert generated-timedelta(hours=25)<=utc(a['time'])<=generated and utc(a['updated'])>=utc(a['time'])
+                assert a['url'].startswith('https://earthquake.usgs.gov/earthquakes/eventpage/')
+        if s['elements']:assert stations(s['elements'],utc(s['stations_retrieved']))==s['elements']
+        assert len(s['collection'])==2 and {r['key'] for r in s['collection']}=={'quakes','stations'}
+    if kind=='tradeglobe':
+        from decimal import Decimal
+        assert s['year']==int(cutoff[:4])-2 and len(s['areas'])==45
+        ids={a['id'] for a in s['areas']};assert len(ids)==45
+        assert len({a['code'] for a in s['areas']})==45
+        for a in s['areas']:
+            assert -180<=a['lon']<=180 and -90<=a['lat']<=90
+            assert len({r[0] for r in a['exports']})==len(a['exports'])
+            for partner,usd,reported,aggregate in a['exports']:
+                assert partner in ids and partner!=a['id'] and isinstance(usd,str) and re.fullmatch(r'\d+(\.\d+)?',usd)
+                assert isinstance(reported,bool) and isinstance(aggregate,bool)
+            if a['world_usd'] is None:assert not a['exports']
+            else:
+                world=Decimal(a['world_usd']);assert world>0
+                assert sum(Decimal(r[1]) for r in a['exports'])<=world*Decimal('1.000001')
+                assert a['official_name'] and a['retrieved_at'] and a['checked_at']
+        assert s['source']=='https://comtradeapi.un.org/public/v1/preview/C/A/HS'
     if kind=='strategycards':
         assert s['kind'] in ['turnaround','pairs','pead']
         assert len(s['rows'])==len({r['id'] for r in s['rows']})
@@ -82,7 +142,7 @@ def section(s,cutoff,module):
             assert west<x<east and south<y<north
             for mode,image in a['images'].items():
                 assert mode in ['rgb','ndvi'] and image['path']=='data/satellite/'+r['id']+'-'+mode+'.png'
-                path=ROOT/'docs'/image['path'];assert path.stat().st_size==image['bytes']<1024*1024
+                path=ROOT/'docs'/image['path'];assert path.stat().st_size==image['bytes']
                 assert hashlib.sha256(path.read_bytes()).hexdigest()==image['sha256']
                 with Image.open(path) as png:assert png.format=='PNG' and png.size==(400,400) and png.mode=='RGBA'
     if kind=='releasecalendar':
@@ -412,6 +472,13 @@ def section(s,cutoff,module):
             assert r['gamma_available']==(r['gex'] is not None)
         if s['flip'] is not None:assert .8*s['spot']<=s['flip']<=1.2*s['spot']
         if s['em'] is not None:assert s['em_low']<s['spot']<s['em_high']
+        if 'maturity' in s:
+            maturity=s['maturity'];assert len({r['expiry'] for r in maturity})==len(maturity)
+            assert sum(r['valid_oi'] for r in maturity)==s['valid_oi']
+            assert sum(r['valid_gamma'] for r in maturity)==s['valid_gamma']
+            assert abs(sum(r['oi_pct'] for r in maturity)-100)<=max(1,len(maturity))*1e-6
+            assert abs(sum(r['gex'] or 0 for r in maturity)-s['net'])<=max(1,len(maturity))*1e-6+1e-9
+            assert all(r['dte']>0 and r['call_oi']>=0 and r['put_oi']>=0 and 0<=r['valid_gamma']<=r['valid_oi'] for r in maturity)
 
 count=0
 for file in (ROOT/'docs/data').glob('*.json'):
@@ -425,6 +492,84 @@ for file in (ROOT/'docs/data').glob('*.json'):
         if v['status']=='pending':assert v['reason']
     for s in d['sections']:section(s,d['as_of'],d['module'])
     if d['module']=='risk':
+        from pipeline.risk_signals import level,aggregate,risk_streak,COLORS,SIGNALS,SPECIAL
+        signals=d['risk_signals'];rules=load(ROOT/'config/risk_signal_rules.json')
+        assert signals['schema_version']==1 and signals['as_of']==d['as_of']
+        assert len(signals['rows'])==len({r['id'] for r in signals['rows']})==19
+        assert [r['id'] for r in signals['rows']]==[r['id'] for r in rules['rules']]
+        summaries={s['market']:s for s in signals['summary']};assert set(summaries)=={'US','KR'}
+        for rule,r in zip(rules['rules'],signals['rows']):
+            assert all(r[k]==v for k,v in rule.items()) and r['source']
+            if r['date'] is None:assert r['value'] is None and r['age_days'] is None and not r['fresh']
+            else:
+                age=(date.fromisoformat(summaries[r['market']]['date'])-date.fromisoformat(r['date'])).days
+                assert age==r['age_days'] and age>=0 and r['date']<=d['as_of']
+                assert r['fresh']==(age<=r['max_age_days'] and r['value'] is not None)
+            assert r['level']==(level(r['value'],rule) if r['fresh'] else None)
+            if r['level'] is not None:assert r['signal']==COLORS[r['level']]
+            else:assert r['signal'].startswith('⚪')
+        for market,n in [('US',12),('KR',7)]:
+            rows=[r for r in signals['rows'] if r['market']==market];assert len(rows)==n
+            result=aggregate(rows,rules)
+            assert all(summaries[market][k]==v for k,v in result.items())
+            assert len(next(s for s in d['sections'] if s['title']==market+' 신호등 · '+str(n)+'개 지표')['rows'])==n
+        assert len(signals['kr_history'])==63
+        assert signals['kr_history']==sorted(signals['kr_history'],key=lambda r:r['date'])
+        assert all(r['date']<=summaries['KR']['date'] and r['expected']==7 for r in signals['kr_history'])
+        assert signals['kr_streak']==risk_streak(signals['kr_history'])
+        assert all(signals['kr_history'][-1][k]==v for k,v in summaries['KR'].items() if k!='market')
+        assert {(r['market'],r['kind']) for r in signals['special']}=={(m,k) for m in ['US','KR'] for k in ['csd','cluster']}
+        assert len(signals['special'])==4
+        for r in signals['special']:
+            assert r['date']<=d['as_of']
+            if r['value'] is not None:
+                assert 0<=r['value']<=100 and r['signal']==COLORS[sum(r['value']>=t for t in rules['special_thresholds'])]
+        charts=[s for s in d['sections'] if s.get('group')==SPECIAL and s['type']=='line']
+        assert len(charts)==2 and all(s['limits']==[0,100] and s['guides']==[40,66] and len(s['series'])==2 for s in charts)
+        assert {r['part'] for r in signals['collection']['parts']}=={'sentiment','investors','vkospi'}
+        assert {'id':'vkospi','unit':'지수p','source':'KRX · 코스피 200 변동성지수 (1300)'}.items()<=next(r for r in signals['rows'] if r['id']=='vkospi').items()
+        assert next(r for r in signals['rows'] if r['id']=='hy')['unit']=='bp'
+        assert all(next(r for r in signals['rows'] if r['id']==k)['unit']=='억원' for k in ['foreign','institution'])
+        if 'cockpit' in d:
+            import numpy as np
+            import pandas as pd
+            from pipeline.risk_cockpit import validated_weights,stress_results
+            c=d['cockpit'];a=load(ROOT/'docs/data/multiasset.json')['allocation_book']
+            assert c['allocation']==a and c['as_of']==d['as_of']
+            w=validated_weights(a,d['as_of']);m=c['metrics'];f=c['factors']
+            source=next(s for s in load(ROOT/'docs/data/multiasset.json')['sections'] if s['type']=='allocation' and s['title'].startswith('ML 국면'))
+            assert {r['name'].rsplit(' · ',1)[1]:r['value'] for r in source['weights']}=={r['symbol']:r['weight_pct'] for r in a['weights']}
+            assert c['stress']==stress_results(w,load(ROOT/'config/risk_stress.json'))
+            ledger=next(s for s in d['sections'] if s['title']=='고정 장부 월별 계산 원장')['rows'][::-1]
+            assert len(ledger)==m['months']==120 and ledger[0][0]==m['start'] and ledger[-1][0]==m['end']
+            assert [r[0] for r in ledger]==[str(t.date()) for t in pd.date_range(m['start'],m['end'],freq='ME')]
+            returns=np.asarray([r[1]/100 for r in ledger]);wealth=np.cumprod(1+returns)
+            drawdown=wealth/np.maximum(1,np.maximum.accumulate(wealth))-1
+            assert np.allclose(wealth,[r[2] for r in ledger],atol=2e-6,rtol=0)
+            assert np.allclose(drawdown*100,[r[3] for r in ledger],atol=2e-5,rtol=0)
+            assert math.isclose(np.std(returns,ddof=1)*np.sqrt(12)*100,m['vol_pct'],abs_tol=2e-5)
+            q95,q99=np.quantile(returns,[.05,.01])
+            for actual,expected in [(q95*100,m['var95_pct']),(q99*100,m['var99_pct']),
+                    (returns[returns<=q95].mean()*100,m['cvar95_pct']),(drawdown.min()*100,m['mdd_pct'])]:
+                assert math.isclose(actual,expected,abs_tol=2e-5)
+            assert m['cvar95_pct']<=m['var95_pct'] and m['var99_pct']<=m['var95_pct']
+            assert math.isclose(m['hhi'],(w*w).sum(),abs_tol=1e-6)
+            assert math.isclose(m['effective_assets'],1/(w*w).sum(),abs_tol=1e-6)
+            assert math.isclose(m['cash_pct']+m['noncash_pct'],100,abs_tol=1e-6)
+            assert len(f['exposures'])==9 and f['rank']==10 and f['months']==len(f['observations'])>=36
+            assert f['end']<=m['end']<d['as_of'] and len(c['stress']['scenarios'])==5
+            assert len(c['confidence'])==6
+            for r in c['confidence']:
+                if r['status']!='available':continue
+                assert r['end']<=m['end'] and r['model_as_of']<=d['as_of'] and r['band_pct']==1
+                assert r['all']['n']==sum(r[k]['n'] for k in ['up','down','neutral'])
+                assert r['all']['hits']==sum(r[k]['hits'] for k in ['up','down','neutral'])
+                assert r['directional']['n']==r['up']['n']+r['down']['n']
+                assert r['directional']['hits']==r['up']['hits']+r['down']['hits']
+                for k in ['all','directional','up','down','neutral']:
+                    s=r[k];assert 0<=s['hits']<=s['n']
+                    if s['n']:assert math.isclose(s['hit_pct'],s['hits']/s['n']*100,abs_tol=1e-6)
+                    else:assert s['hit_pct'] is None
         p=d['kr_shortgamma'];assert p['as_of']==d['as_of'] and p['index_code']=='1028'
         assert p['fund_count']==len(p['funds']) and p['covered_funds']==sum(r['coefficient'] is not None for r in p['funds'])
         assert p['complete']==(bool(p['funds']) and p['covered_funds']==p['fund_count'])

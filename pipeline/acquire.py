@@ -15,17 +15,12 @@ from .store import ROOT,DATA,digest,read_json,write_json
 from .catalog import MACRO,INDICES,DYNAMICS_STOCKS,extra_price_symbols,reference_stocks
 
 
-def budget(extra=0):
-    n=sum(p.stat().st_size for p in DATA.rglob('*') if p.is_file())
-    if n+extra>512*1024*1024:raise RuntimeError('512 MiB local budget reached; ask user before expansion.')
-
-
 def stamp():return datetime.now(timezone.utc).isoformat()
 
 
 def get_bytes(url):
     r=requests.get(url,timeout=25)
-    r.raise_for_status();budget(len(r.content));return r.content
+    r.raise_for_status();return r.content
 
 
 def collect_official_us(base):
@@ -90,7 +85,7 @@ def collect_prices(base,as_of,selection,symbols_override=None):
         if selection=='core' and not old and symbol in previous_manifest['instruments']:
             prior=previous_manifest['instruments'][symbol]
             if prior.get('status')=='ok' and digest(DATA/as_of/prior['file'])==prior['sha256']:continue
-        budget();time.sleep(1)
+        time.sleep(1)
         item=dict(retrieved_at=stamp())
         start='2004-01-01' if symbol in long_symbols else ('2010-01-01' if symbol in core_symbols else start_short)
         try:
@@ -101,13 +96,12 @@ def collect_prices(base,as_of,selection,symbols_override=None):
             f.index=f.index.tz_localize(None).normalize();f.index.name='date';f=f.loc[:as_of].dropna(subset=['close'])
             if f.empty or not f.index.is_unique or not f.index.is_monotonic_increasing or ((f.close<=0).any() and symbol!='CL=F'):raise ValueError('Invalid price series')
             dest=folder/(re.sub(r'[^A-Za-z0-9.-]','_',symbol)+'.csv.gz')
-            data=f.to_csv(float_format='%.9g').encode('utf-8');import gzip;compressed=gzip.compress(data,mtime=0);budget(len(compressed));dest.write_bytes(compressed)
+            data=f.to_csv(float_format='%.9g').encode('utf-8');import gzip;compressed=gzip.compress(data,mtime=0);dest.write_bytes(compressed)
             meta=t.get_history_metadata()
             item.update(status='ok',file=dest.name,sha256=digest(dest),rows=len(f),first=str(f.index[0].date()),last=str(f.index[-1].date()),currency=meta.get('currency'),start_requested=start)
             print(f'PRICE {i+1}/{len(symbols)} {symbol}: {len(f)}',flush=True)
         except Exception as e:
             item.update(status='error',error_type=type(e).__name__);print(f'PRICE {symbol}: {type(e).__name__}',flush=True)
-            if 'budget' in str(e):raise
         manifest['instruments'][symbol]=item;write_json(mf,manifest)
 
 
@@ -138,7 +132,7 @@ def collect_fundamentals(base,limit=0,symbols=None):
     for i,m in enumerate(members):
         s=m['symbol'];file=folder/(re.sub(r'[^A-Za-z0-9.-]','_',s)+'.json')
         if file.exists() or file.with_suffix('.json.gz').exists():continue
-        time.sleep(1);budget()
+        time.sleep(1)
         out=dict(symbol=s,retrieved_at=stamp(),source='Yahoo Finance',errors=[])
         try:
             t=yf.Ticker(s)

@@ -2,6 +2,11 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 require('./test_decisions.cjs');
+require('./test_dragon_research.cjs');
+require('./test_dragon_signals.cjs');
+require('./test_clinical.cjs');
+require('./test_guru.cjs');
+require('./test_dragon_operations.cjs');
 require('./test_chart_readability.cjs');
 require('./test_presentation.cjs');
 const relationChecks=require('./test_relations.cjs');
@@ -12,6 +17,9 @@ const ownershipChecks=require('./test_ownership.cjs');
 const strategyChecks=require('./test_strategy_cards.cjs');
 const calendarChecks=require('./test_calendar.cjs');
 const satelliteChecks=require('./test_satellite.cjs');
+const tradeChecks=require('./test_trade.cjs');
+const chainChecks=require('./test_chain.cjs');
+const sauronChecks=require('./test_sauron.cjs');
 const satelliteTileChecks=require('./test_satellite_tiles.cjs');
 const pdfChecks=require('./test_notebook_pdf.cjs');
 const ocrChecks=require('./test_pdf_ocr.cjs');
@@ -20,7 +28,9 @@ const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','sauron-views','trade-views','chain-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','dragon-research','dragon-signals','clinical-views','guru-views','dragon-operations','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+tradeChecks(context,data);
+chainChecks(context,data);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}
 // Minimal event targets exercise the actual tab and scenario callbacks offline.
 function interactiveContainer(){
@@ -42,7 +52,7 @@ function interactiveContainer(){
  return c;
 }
 (async()=>{
- await relationChecks;await overviewChecks;await geoChecks;await earningsChecks;await ownershipChecks;await strategyChecks;await calendarChecks;await satelliteChecks;await satelliteTileChecks;await researchChecks;await pdfChecks;await ocrChecks;
+ await sauronChecks;await relationChecks;await overviewChecks;await geoChecks;await earningsChecks;await ownershipChecks;await strategyChecks;await calendarChecks;await satelliteChecks;await satelliteTileChecks;await researchChecks;await pdfChecks;await ocrChecks;
  let count=0;
  for(const m of modules){const d=data[m.id];if(d?.schema_version!==2)continue;const c=container();context.location.hash='#'+m.id;await context.window.ResearchDashboard.render(c,m);
   assert(c.innerHTML.includes('<h1>'),m.id);assert(!c.innerHTML.includes('role="alert"'),m.id);assert(!/\b(NaN|Infinity|undefined)\b|\[object Object\]/.test(c.innerHTML),m.id+' invalid rendering');assert(c.innerHTML.includes('data/'+m.id+'.json'),m.id);
@@ -68,7 +78,7 @@ function interactiveContainer(){
  const box=interactive.boxes[0],scenario=data.dragonglass.sections.find(s=>s.type==='scenario');
  assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='KR').beta*-10+'"'));
  box.market.value='US';box.shock.value='-20';box.shock.fire('input');assert(box.output.innerHTML.includes('data-bar-value="'+scenario.rows.find(r=>r.market==='US').beta*-20+'"'));
- interactive.select.value='all';interactive.select.fire('change');assert(interactive.innerHTML.includes('주목 종목')&&interactive.innerHTML.includes('data-scenario='),'all view survives repaint');
+ interactive.select.value='all';interactive.select.fire('change');assert(interactive.innerHTML.includes('지금 주목 · 신호·관계·근거')&&interactive.innerHTML.includes('data-scenario='),'all view survives repaint');
  context.location.hash='#discovery';await context.window.ResearchDashboard.render(interactive,modules.find(m=>m.id==='discovery'));
  const db=interactive.discoveries[0],di=data.discovery.sections[0].items,shown=()=>[...db.output.innerHTML.matchAll(/data-discovery-symbol="([^"]+)"/g)].map(m=>m[1]);
  assert.equal(shown().length,Math.min(30,di.filter(r=>r.market==='US').length));

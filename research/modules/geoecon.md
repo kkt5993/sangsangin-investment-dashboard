@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 주목 상황 / 지역 모니터 / 복합지표 / 키워드 트렌드 / 시장 지표 / 뉴스 원장 / 인과·영향 모델 / GPR 세부.
+**부분 구현** · 가격 기준 2026-09-10. 주목 상황 / 지역 모니터 / 복합지표 / 키워드 트렌드 / 시장 지표 / 뉴스 원장 / 인과·영향 모델 / GPR 세부.
 
 - 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [events_data.py](../../pipeline/events_data.py) · [geoecon_views.py](../../pipeline/geoecon_views.py) · [gpr_data.py](../../pipeline/gpr_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/geoecon.json)

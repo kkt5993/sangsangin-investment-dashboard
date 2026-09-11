@@ -1,0 +1,1378 @@
+{
+  "schema": 1,
+  "scope": "연구용 업종별 기업 표본; 공식 GICS·KRX 업종이나 시가총액 순위가 아님",
+  "groups": [
+    {
+      "id": 1,
+      "name": "Compute & AI Silicon"
+    },
+    {
+      "id": 2,
+      "name": "Semi Equipment & Materials"
+    },
+    {
+      "id": 3,
+      "name": "Robotics & Automation"
+    },
+    {
+      "id": 4,
+      "name": "Cloud & Software"
+    },
+    {
+      "id": 5,
+      "name": "Platform & Internet"
+    },
+    {
+      "id": 6,
+      "name": "Media & Entertainment"
+    },
+    {
+      "id": 7,
+      "name": "Gaming & Interactive"
+    },
+    {
+      "id": 8,
+      "name": "Culture, Society & Lifestyle"
+    },
+    {
+      "id": 9,
+      "name": "Luxury & Brands"
+    },
+    {
+      "id": 10,
+      "name": "Mobility & EV"
+    },
+    {
+      "id": 11,
+      "name": "Battery & Materials"
+    },
+    {
+      "id": 12,
+      "name": "Telecom & Networking"
+    },
+    {
+      "id": 13,
+      "name": "Healthcare & Pharma"
+    },
+    {
+      "id": 14,
+      "name": "Finance & Payments"
+    },
+    {
+      "id": 15,
+      "name": "Consumer & Retail"
+    },
+    {
+      "id": 16,
+      "name": "Food & Beverage"
+    },
+    {
+      "id": 17,
+      "name": "Energy & Materials"
+    },
+    {
+      "id": 18,
+      "name": "Industrial & Energy"
+    },
+    {
+      "id": 19,
+      "name": "Korea Champions"
+    },
+    {
+      "id": 20,
+      "name": "Frontier & Resource Champions"
+    }
+  ],
+  "sectors": [
+    {
+      "id": "sector-01",
+      "group": 1,
+      "name": "AI 반도체 · 컴퓨팅",
+      "symbols": [
+        "NVDA",
+        "AVGO",
+        "AMD"
+      ]
+    },
+    {
+      "id": "sector-02",
+      "group": 1,
+      "name": "파운드리",
+      "symbols": [
+        "TSM",
+        "005930.KS",
+        "INTC"
+      ]
+    },
+    {
+      "id": "sector-03",
+      "group": 1,
+      "name": "메모리",
+      "symbols": [
+        "000660.KS",
+        "005930.KS",
+        "MU"
+      ]
+    },
+    {
+      "id": "sector-04",
+      "group": 1,
+      "name": "아날로그·전력 반도체",
+      "symbols": [
+        "TXN",
+        "ADI",
+        "IFX.DE"
+      ]
+    },
+    {
+      "id": "sector-05",
+      "group": 2,
+      "name": "반도체 장비",
+      "symbols": [
+        "ASML",
+        "AMAT",
+        "8035.T"
+      ]
+    },
+    {
+      "id": "sector-06",
+      "group": 2,
+      "name": "검사·계측 / 소재",
+      "symbols": [
+        "KLAC",
+        "6920.T",
+        "4063.T"
+      ]
+    },
+    {
+      "id": "sector-07",
+      "group": 2,
+      "name": "테스트 / 후공정",
+      "symbols": [
+        "6857.T",
+        "ASX",
+        "TER"
+      ]
+    },
+    {
+      "id": "sector-08",
+      "group": 2,
+      "name": "장비 — 식각·세정·후공정",
+      "symbols": [
+        "LRCX",
+        "6146.T",
+        "7735.T"
+      ]
+    },
+    {
+      "id": "sector-09",
+      "group": 2,
+      "name": "수동소자·부품 (MLCC)",
+      "symbols": [
+        "6981.T",
+        "6762.T",
+        "APH"
+      ]
+    },
+    {
+      "id": "sector-10",
+      "group": 3,
+      "name": "산업 자동화",
+      "symbols": [
+        "6861.T",
+        "SIE.DE",
+        "ABBNY"
+      ]
+    },
+    {
+      "id": "sector-11",
+      "group": 3,
+      "name": "로봇 / 수술로봇",
+      "symbols": [
+        "ISRG",
+        "6954.T",
+        "6506.T"
+      ]
+    },
+    {
+      "id": "sector-12",
+      "group": 4,
+      "name": "하이퍼스케일 클라우드",
+      "symbols": [
+        "MSFT",
+        "AMZN",
+        "GOOGL"
+      ]
+    },
+    {
+      "id": "sector-13",
+      "group": 4,
+      "name": "엔터프라이즈 SW",
+      "symbols": [
+        "SAP",
+        "CRM",
+        "NOW"
+      ]
+    },
+    {
+      "id": "sector-14",
+      "group": 4,
+      "name": "사이버보안 / EDA",
+      "symbols": [
+        "PANW",
+        "CRWD",
+        "SNPS"
+      ]
+    },
+    {
+      "id": "sector-15",
+      "group": 4,
+      "name": "데이터·엔터프라이즈 SW II",
+      "symbols": [
+        "ORCL",
+        "ADBE",
+        "INTU"
+      ]
+    },
+    {
+      "id": "sector-16",
+      "group": 5,
+      "name": "플랫폼 / 소셜",
+      "symbols": [
+        "META",
+        "AAPL",
+        "NFLX"
+      ]
+    },
+    {
+      "id": "sector-17",
+      "group": 6,
+      "name": "미디어 / 콘텐츠 IP",
+      "symbols": [
+        "DIS",
+        "NFLX",
+        "SPOT"
+      ]
+    },
+    {
+      "id": "sector-18",
+      "group": 7,
+      "name": "게임 / 인터랙티브",
+      "symbols": [
+        "7974.T",
+        "SONY",
+        "SE"
+      ]
+    },
+    {
+      "id": "sector-19",
+      "group": 8,
+      "name": "스포츠웨어·스트리트 컬처",
+      "symbols": [
+        "NKE",
+        "ADS.DE",
+        "LULU"
+      ]
+    },
+    {
+      "id": "sector-20",
+      "group": 8,
+      "name": "글로벌 패션 (SPA)",
+      "symbols": [
+        "ITX.MC",
+        "9983.T",
+        "HM-B.ST"
+      ]
+    },
+    {
+      "id": "sector-21",
+      "group": 8,
+      "name": "음악 IP·라이브 엔터",
+      "symbols": [
+        "UMG.AS",
+        "LYV",
+        "352820.KS"
+      ]
+    },
+    {
+      "id": "sector-22",
+      "group": 8,
+      "name": "경험·여행·호스피탈리티",
+      "symbols": [
+        "BKNG",
+        "ABNB",
+        "MAR"
+      ]
+    },
+    {
+      "id": "sector-23",
+      "group": 8,
+      "name": "소셜·크리에이터 컬처",
+      "symbols": [
+        "RDDT",
+        "PINS",
+        "SNAP"
+      ]
+    },
+    {
+      "id": "sector-24",
+      "group": 9,
+      "name": "럭셔리",
+      "symbols": [
+        "MC.PA",
+        "RMS.PA",
+        "CFR.SW"
+      ]
+    },
+    {
+      "id": "sector-25",
+      "group": 9,
+      "name": "프리미엄 모빌리티 / 스포츠카",
+      "symbols": [
+        "RACE",
+        "P911.DE",
+        "TM"
+      ]
+    },
+    {
+      "id": "sector-26",
+      "group": 10,
+      "name": "전기차 / 자율주행",
+      "symbols": [
+        "TSLA",
+        "1211.HK",
+        "RACE"
+      ]
+    },
+    {
+      "id": "sector-27",
+      "group": 10,
+      "name": "프리미엄 자동차 OEM",
+      "symbols": [
+        "MBG.DE",
+        "BMW.DE",
+        "VOW3.DE"
+      ]
+    },
+    {
+      "id": "sector-28",
+      "group": 11,
+      "name": "배터리 셀",
+      "symbols": [
+        "373220.KS",
+        "300750.SZ",
+        "006400.KS"
+      ]
+    },
+    {
+      "id": "sector-29",
+      "group": 12,
+      "name": "네트워킹 장비",
+      "symbols": [
+        "ANET",
+        "CSCO",
+        "ERIC"
+      ]
+    },
+    {
+      "id": "sector-30",
+      "group": 12,
+      "name": "통신 SoC / IP",
+      "symbols": [
+        "QCOM",
+        "ARM",
+        "2454.TW"
+      ]
+    },
+    {
+      "id": "sector-31",
+      "group": 13,
+      "name": "비만·대사 (GLP-1)",
+      "symbols": [
+        "LLY",
+        "NVO",
+        "ROP.SW"
+      ]
+    },
+    {
+      "id": "sector-32",
+      "group": 13,
+      "name": "빅파마 / 면역항암",
+      "symbols": [
+        "JNJ",
+        "AZN",
+        "NVS"
+      ]
+    },
+    {
+      "id": "sector-33",
+      "group": 13,
+      "name": "의료기기 / 생명과학",
+      "symbols": [
+        "TMO",
+        "NVO",
+        "MDT"
+      ]
+    },
+    {
+      "id": "sector-34",
+      "group": 13,
+      "name": "유럽 빅파마",
+      "symbols": [
+        "NVO",
+        "SNY",
+        "BAYN.DE"
+      ]
+    },
+    {
+      "id": "sector-35",
+      "group": 13,
+      "name": "헬스 서비스·빅파마 II",
+      "symbols": [
+        "UNH",
+        "MRK",
+        "ABBV"
+      ]
+    },
+    {
+      "id": "sector-36",
+      "group": 14,
+      "name": "결제 네트워크",
+      "symbols": [
+        "V",
+        "MA",
+        "AXP"
+      ]
+    },
+    {
+      "id": "sector-37",
+      "group": 14,
+      "name": "자산운용 / 은행 / 보험",
+      "symbols": [
+        "BRK-B",
+        "JPM",
+        "BLK"
+      ]
+    },
+    {
+      "id": "sector-38",
+      "group": 14,
+      "name": "거래소 / 금융데이터",
+      "symbols": [
+        "SPGI",
+        "V",
+        "LSEG.L"
+      ]
+    },
+    {
+      "id": "sector-39",
+      "group": 15,
+      "name": "소비재 브랜드",
+      "symbols": [
+        "PG",
+        "NESN.SW",
+        "OR.PA"
+      ]
+    },
+    {
+      "id": "sector-40",
+      "group": 15,
+      "name": "리테일 / 이커머스",
+      "symbols": [
+        "WMT",
+        "COST",
+        "AMZN"
+      ]
+    },
+    {
+      "id": "sector-41",
+      "group": 16,
+      "name": "음료 / 식음료",
+      "symbols": [
+        "KO",
+        "NESN.SW",
+        "MCD"
+      ]
+    },
+    {
+      "id": "sector-42",
+      "group": 17,
+      "name": "에너지 / 원자재",
+      "symbols": [
+        "XOM",
+        "SHEL",
+        "LIN"
+      ]
+    },
+    {
+      "id": "sector-43",
+      "group": 18,
+      "name": "항공우주·방산",
+      "symbols": [
+        "LMT",
+        "RTX",
+        "SAF.PA"
+      ]
+    },
+    {
+      "id": "sector-44",
+      "group": 18,
+      "name": "전력 인프라 / 에너지",
+      "symbols": [
+        "GEV",
+        "SU.PA",
+        "CCJ"
+      ]
+    },
+    {
+      "id": "sector-45",
+      "group": 18,
+      "name": "건설기계 / 자본재",
+      "symbols": [
+        "CAT",
+        "6301.T",
+        "ATCO-A.ST"
+      ]
+    },
+    {
+      "id": "sector-46",
+      "group": 18,
+      "name": "특수소재·산업가스",
+      "symbols": [
+        "AI.PA",
+        "SIKA.SW",
+        "GLW"
+      ]
+    },
+    {
+      "id": "sector-47",
+      "group": 18,
+      "name": "항공우주 OEM (듀오폴리)",
+      "symbols": [
+        "AIR.PA",
+        "BA",
+        "GE"
+      ]
+    },
+    {
+      "id": "sector-48",
+      "group": 19,
+      "name": "한국 대표 (모빌리티·방산·소재)",
+      "symbols": [
+        "005380.KS",
+        "012450.KS",
+        "005490.KS"
+      ]
+    },
+    {
+      "id": "sector-49",
+      "group": 20,
+      "name": "글로벌 광산 (철광·자원)",
+      "symbols": [
+        "BHP",
+        "RIO",
+        "VALE"
+      ]
+    },
+    {
+      "id": "sector-50",
+      "group": 20,
+      "name": "인도 대표 (IT·금융·복합)",
+      "symbols": [
+        "RELIANCE.NS",
+        "TCS.NS",
+        "HDB"
+      ]
+    },
+    {
+      "id": "sector-51",
+      "group": 20,
+      "name": "중동 (에너지·금융)",
+      "symbols": [
+        "2222.SR",
+        "1120.SR",
+        "QNBK.QA"
+      ]
+    },
+    {
+      "id": "sector-52",
+      "group": 20,
+      "name": "중남미 대표 (테크·금융)",
+      "symbols": [
+        "MELI",
+        "NU",
+        "PBR"
+      ]
+    },
+    {
+      "id": "sector-53",
+      "group": 20,
+      "name": "호주 대표 (바이오·금융)",
+      "symbols": [
+        "CSL.AX",
+        "CBA.AX",
+        "MQG.AX"
+      ]
+    }
+  ],
+  "companies": [
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "AVGO",
+      "name": "Broadcom",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "AMD",
+      "name": "AMD",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "TSM",
+      "name": "TSMC",
+      "reference_country": "TW"
+    },
+    {
+      "symbol": "005930.KS",
+      "name": "Samsung Electronics",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "INTC",
+      "name": "Intel",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "000660.KS",
+      "name": "SK Hynix",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "MU",
+      "name": "Micron",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "TXN",
+      "name": "Texas Instruments",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ADI",
+      "name": "Analog Devices",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "IFX.DE",
+      "name": "Infineon",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "ASML",
+      "name": "ASML",
+      "reference_country": "NL"
+    },
+    {
+      "symbol": "AMAT",
+      "name": "Applied Materials",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "8035.T",
+      "name": "Tokyo Electron",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "KLAC",
+      "name": "KLA",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "6920.T",
+      "name": "Lasertec",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "4063.T",
+      "name": "Shin-Etsu Chemical",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "6857.T",
+      "name": "Advantest",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "ASX",
+      "name": "ASE Technology",
+      "reference_country": "TW"
+    },
+    {
+      "symbol": "TER",
+      "name": "Teradyne",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "LRCX",
+      "name": "Lam Research",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "6146.T",
+      "name": "Disco",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "7735.T",
+      "name": "SCREEN Holdings",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "6981.T",
+      "name": "Murata",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "6762.T",
+      "name": "TDK",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "APH",
+      "name": "Amphenol",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "6861.T",
+      "name": "Keyence",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "SIE.DE",
+      "name": "Siemens",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "ABBNY",
+      "name": "ABB",
+      "reference_country": "CH"
+    },
+    {
+      "symbol": "ISRG",
+      "name": "Intuitive Surgical",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "6954.T",
+      "name": "Fanuc",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "6506.T",
+      "name": "Yaskawa Electric",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "AMZN",
+      "name": "Amazon (AWS)",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet (Google)",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SAP",
+      "name": "SAP",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "CRM",
+      "name": "Salesforce",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "NOW",
+      "name": "ServiceNow",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "PANW",
+      "name": "Palo Alto Networks",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "CRWD",
+      "name": "CrowdStrike",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SNPS",
+      "name": "Synopsys",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ORCL",
+      "name": "Oracle",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ADBE",
+      "name": "Adobe",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "INTU",
+      "name": "Intuit",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "META",
+      "name": "Meta Platforms",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "AAPL",
+      "name": "Apple",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "NFLX",
+      "name": "Netflix",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "DIS",
+      "name": "Walt Disney",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SPOT",
+      "name": "Spotify",
+      "reference_country": "SE"
+    },
+    {
+      "symbol": "7974.T",
+      "name": "Nintendo",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "SONY",
+      "name": "Sony Group",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "SE",
+      "name": "Sea Limited",
+      "reference_country": "SG"
+    },
+    {
+      "symbol": "NKE",
+      "name": "Nike",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ADS.DE",
+      "name": "Adidas",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "LULU",
+      "name": "Lululemon",
+      "reference_country": "CA"
+    },
+    {
+      "symbol": "ITX.MC",
+      "name": "Inditex (Zara)",
+      "reference_country": "ES"
+    },
+    {
+      "symbol": "9983.T",
+      "name": "Fast Retailing (Uniqlo)",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "HM-B.ST",
+      "name": "H&M",
+      "reference_country": "SE"
+    },
+    {
+      "symbol": "UMG.AS",
+      "name": "Universal Music Group",
+      "reference_country": "NL"
+    },
+    {
+      "symbol": "LYV",
+      "name": "Live Nation",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "352820.KS",
+      "name": "HYBE",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "BKNG",
+      "name": "Booking Holdings",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ABNB",
+      "name": "Airbnb",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "MAR",
+      "name": "Marriott",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "RDDT",
+      "name": "Reddit",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "PINS",
+      "name": "Pinterest",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SNAP",
+      "name": "Snap",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "MC.PA",
+      "name": "LVMH",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "RMS.PA",
+      "name": "Hermès",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "CFR.SW",
+      "name": "Richemont",
+      "reference_country": "CH"
+    },
+    {
+      "symbol": "RACE",
+      "name": "Ferrari",
+      "reference_country": "IT"
+    },
+    {
+      "symbol": "P911.DE",
+      "name": "Porsche AG",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "TM",
+      "name": "Toyota Motor",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "TSLA",
+      "name": "Tesla",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "1211.HK",
+      "name": "BYD",
+      "reference_country": "CN"
+    },
+    {
+      "symbol": "MBG.DE",
+      "name": "Mercedes-Benz",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "BMW.DE",
+      "name": "BMW",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "VOW3.DE",
+      "name": "Volkswagen",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "373220.KS",
+      "name": "LG Energy Solution",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "300750.SZ",
+      "name": "CATL",
+      "reference_country": "CN"
+    },
+    {
+      "symbol": "006400.KS",
+      "name": "Samsung SDI",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "ANET",
+      "name": "Arista Networks",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "CSCO",
+      "name": "Cisco",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ERIC",
+      "name": "Ericsson",
+      "reference_country": "SE"
+    },
+    {
+      "symbol": "QCOM",
+      "name": "Qualcomm",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ARM",
+      "name": "ARM Holdings",
+      "reference_country": "UK"
+    },
+    {
+      "symbol": "2454.TW",
+      "name": "MediaTek",
+      "reference_country": "TW"
+    },
+    {
+      "symbol": "LLY",
+      "name": "Eli Lilly",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "NVO",
+      "name": "Novo Nordisk",
+      "reference_country": "DK"
+    },
+    {
+      "symbol": "ROP.SW",
+      "name": "Roche",
+      "reference_country": "CH",
+      "previous_symbol": "ROG.SW",
+      "symbol_effective_date": "2026-03-17",
+      "symbol_source": "https://www.roche.com/investors/updates/inv-update-2026-03-16"
+    },
+    {
+      "symbol": "JNJ",
+      "name": "Johnson & Johnson",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "AZN",
+      "name": "AstraZeneca",
+      "reference_country": "UK"
+    },
+    {
+      "symbol": "NVS",
+      "name": "Novartis",
+      "reference_country": "CH"
+    },
+    {
+      "symbol": "TMO",
+      "name": "Thermo Fisher",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "MDT",
+      "name": "Medtronic",
+      "reference_country": "IE"
+    },
+    {
+      "symbol": "SNY",
+      "name": "Sanofi",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "BAYN.DE",
+      "name": "Bayer",
+      "reference_country": "DE"
+    },
+    {
+      "symbol": "UNH",
+      "name": "UnitedHealth",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "MRK",
+      "name": "Merck",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "ABBV",
+      "name": "AbbVie",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "V",
+      "name": "Visa",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "MA",
+      "name": "Mastercard",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "AXP",
+      "name": "American Express",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "BRK-B",
+      "name": "Berkshire Hathaway",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "JPM",
+      "name": "JPMorgan Chase",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "BLK",
+      "name": "BlackRock",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SPGI",
+      "name": "S&P Global",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "LSEG.L",
+      "name": "London Stock Exchange",
+      "reference_country": "UK"
+    },
+    {
+      "symbol": "PG",
+      "name": "Procter & Gamble",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "NESN.SW",
+      "name": "Nestlé",
+      "reference_country": "CH"
+    },
+    {
+      "symbol": "OR.PA",
+      "name": "L'Oréal",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "WMT",
+      "name": "Walmart",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "COST",
+      "name": "Costco",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "KO",
+      "name": "Coca-Cola",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "MCD",
+      "name": "McDonald's",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "XOM",
+      "name": "Exxon Mobil",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SHEL",
+      "name": "Shell",
+      "reference_country": "UK"
+    },
+    {
+      "symbol": "LIN",
+      "name": "Linde",
+      "reference_country": "UK"
+    },
+    {
+      "symbol": "LMT",
+      "name": "Lockheed Martin",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "RTX",
+      "name": "RTX",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SAF.PA",
+      "name": "Safran",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "GEV",
+      "name": "GE Vernova",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "SU.PA",
+      "name": "Schneider Electric",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "CCJ",
+      "name": "Cameco",
+      "reference_country": "CA"
+    },
+    {
+      "symbol": "CAT",
+      "name": "Caterpillar",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "6301.T",
+      "name": "Komatsu",
+      "reference_country": "JP"
+    },
+    {
+      "symbol": "ATCO-A.ST",
+      "name": "Atlas Copco",
+      "reference_country": "SE"
+    },
+    {
+      "symbol": "AI.PA",
+      "name": "Air Liquide",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "SIKA.SW",
+      "name": "Sika",
+      "reference_country": "CH"
+    },
+    {
+      "symbol": "GLW",
+      "name": "Corning",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "AIR.PA",
+      "name": "Airbus",
+      "reference_country": "FR"
+    },
+    {
+      "symbol": "BA",
+      "name": "Boeing",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "GE",
+      "name": "GE Aerospace",
+      "reference_country": "US"
+    },
+    {
+      "symbol": "005380.KS",
+      "name": "Hyundai Motor",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "012450.KS",
+      "name": "Hanwha Aerospace",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "005490.KS",
+      "name": "POSCO Holdings",
+      "reference_country": "KR"
+    },
+    {
+      "symbol": "BHP",
+      "name": "BHP Group",
+      "reference_country": "AU"
+    },
+    {
+      "symbol": "RIO",
+      "name": "Rio Tinto",
+      "reference_country": "AU"
+    },
+    {
+      "symbol": "VALE",
+      "name": "Vale",
+      "reference_country": "BR"
+    },
+    {
+      "symbol": "RELIANCE.NS",
+      "name": "Reliance Industries",
+      "reference_country": "IN"
+    },
+    {
+      "symbol": "TCS.NS",
+      "name": "Tata Consultancy",
+      "reference_country": "IN"
+    },
+    {
+      "symbol": "HDB",
+      "name": "HDFC Bank",
+      "reference_country": "IN"
+    },
+    {
+      "symbol": "2222.SR",
+      "name": "Saudi Aramco",
+      "reference_country": "SA"
+    },
+    {
+      "symbol": "1120.SR",
+      "name": "Al Rajhi Bank",
+      "reference_country": "SA"
+    },
+    {
+      "symbol": "QNBK.QA",
+      "name": "Qatar National Bank",
+      "reference_country": "QA"
+    },
+    {
+      "symbol": "MELI",
+      "name": "MercadoLibre",
+      "reference_country": "AR"
+    },
+    {
+      "symbol": "NU",
+      "name": "Nu Holdings",
+      "reference_country": "BR"
+    },
+    {
+      "symbol": "PBR",
+      "name": "Petrobras",
+      "reference_country": "BR"
+    },
+    {
+      "symbol": "CSL.AX",
+      "name": "CSL",
+      "reference_country": "AU"
+    },
+    {
+      "symbol": "CBA.AX",
+      "name": "Commonwealth Bank",
+      "reference_country": "AU"
+    },
+    {
+      "symbol": "MQG.AX",
+      "name": "Macquarie Group",
+      "reference_country": "AU"
+    }
+  ]
+}

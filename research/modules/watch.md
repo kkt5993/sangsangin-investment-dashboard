@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. KR · 상승 패턴 / KR · 약세 추세 / US · 상승 패턴 / US · 약세 추세.
+**부분 구현** · 가격 기준 2026-09-10. KR · 상승 패턴 / KR · 약세 추세 / US · 상승 패턴 / US · 약세 추세.
 
 - 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [patterns.py](../../pipeline/patterns.py) · [technical_scan.py](../../pipeline/technical_scan.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/watch.json)

@@ -21,8 +21,9 @@ for key in ['risk','pm_weekend']:CODE[key]+=' · cot_data.py'
 CODE['regime']+=' · reflexivity.py · industry_details.py'
 CODE['regime']+=' · valuation.py · calendar_data.py · kr_calendar.py · calendar_views.py'
 CODE['pm_weekend']+=' · pm_details.py · gpr_data.py'
-CODE['risk']+=' · wagdog.py · kr_shortgamma.py · kr_shortgamma_data.py'
+CODE['risk']+=' · wagdog.py · kr_shortgamma.py · kr_shortgamma_data.py · risk_cockpit.py · risk_signals.py · risk_signals_data.py'
 CODE['geoecon']+=' · geoecon_views.py · gpr_data.py'
+CODE['globe']+=' · trade_data.py · trade_views.py · trade-views.js · sauron_data.py · sauron_views.py · sauron-views.js'
 CODE['earnings']+=' · earnings_details.py'
 CODE['strategies']+=' · sec_ownership.py · ownership_views.py · strategy_cards.py · pead.py · pead_data.py'
 for key in ['principium','iw','ask_digest']:CODE[key]+=' · public_assets.py · pdf-text.js · pdf-ocr.js · notebook-pdf.js · research-store.js'
@@ -33,11 +34,11 @@ for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_da
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
  'overview':('TESSERACT6축·CROWDING5축·36월3D·4시점 적층·주도주','6/5축 원단위와 z·36시점 궤적/회전·4층 레이더·시총50표본/주도주10·현황','원본 z 창/극단치 설정·세계 전체 시총50·역사 발표 빈티지 동등성 미확보'),
- 'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Vercel·평일08/18시 갱신·512MiB 변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
+ 'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Vercel·평일08/18시 갱신·변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
  'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','2기본지수+Nasdaq·6매크로·종목 캐시·10전문가/ADF/SIS/게이트·68/95팬·R/I·원장','지수 이익앵커·SEC/KR수급·일부 입력·부분월/임의 티커 서버·PIT 미연결'),
  'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','39객체·근거·3D/전파·8시나리오·701Entity·22시설RGB/NDVI·NASA배경·원장 프리모템/상관','전체255객체/581관계·고해상도 배경/지명·선행/후행·구루/사건·팀DB 미연결'),
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),
- 'globe':('지구본·국가/기업 탐색·교역 관계','로컬 지도 경계·정사영 회전·국가/기업 선택·수치표','본사 좌표·교역 경로/품목/금액은 미연결'),
+ 'globe':('밸류체인53세부업종·기업/도시·3종교역선·SAURON','UN45지역 연간 총수출·방향/금액별 곡선·회전/확대/검색·정확한USD/분모·30일갱신·기업소재국표·SAURON 3D/지진/SGP4/6효과/카메라/투어/검색','기업151개 본사/도시·공급/수출/물류 근거·Google 실사3D 키 미연결'),
  'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF 파서/선택 OCR·이미지·휴지통/백업','LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),
  'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이·주간 RSI/가격·성장/물가·한미13출처90일달력·국가/기간/분류검색','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
  'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약8표/8+6막대·15위표','공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
@@ -47,7 +48,7 @@ PARITY={
  'earnings':('US/KR 이익성장·글로벌 Top20 겹침막대·한국2/미국10 추정 상세·연간/분기 선택','보고 NI/OP/매출·국내 QuantiWise OP/지배NI·미국 EPS 연결 NI 근사/직접 매출·회계기간/통화 검사','해외 직접 NI/OP 컨센서스·역사 PIT·한국 증권사별 원문 미확보'),
  'growth':('FY1/FY2 3D: x영업이익성장 yYTD z영업이익률, 시총 크기','국내 두 3D 회전·확대·시총, 글로벌 EPS 별도 표','해외 영업이익 컨센서스 부족으로 글로벌 3D 전체 범위 차이'),
  'multiasset':('21자산4KPI·6군신호표·열지도/추세막대·실제지수·37자산 스캐너·배분/성과','12지표·90봉 스캐너, Boruta/앙상블/Markov/LSTM·33자산8그룹·96월성과/12월비중','74입력/제약/하이퍼파라미터는 팀 설정, 현재 수정 거시 빈티지의 OOS'),
- 'risk':('옵션 GEX/스팟곡선·VIX/SKEW·CSD·포트폴리오 위험','3ETF 만기 제한 GEX·OI PCR, CSD·곡선·VaR/CVaR·스트레스','딜러 실제 포지션·전 만기·실제 팀 포트폴리오 없음'),
+ 'risk':('US12/KR7 신호·CSD/군집4진단·옵션 GEX/스팟곡선·모델북 위험','19신호·KR63세션·공식 VKOSPI/수급·SF Fed 백분위·4진단/2보조곡선·33비중·120개월 위험·9요인·5가정','뉴스 분모/다단계 점수/기간은 팀 설정. 딜러 실제 포지션·전체 만기·실제 계좌 없음'),
  'watch':('KR/US 상승6·하락4, 일/주봉·MA·거래량·패턴 근거','5기하 패턴·피벗·120일/52주·MA·ADX/DI/MA4조건·12지표 점수','미공개 판정/ADX 합성 점수 동등성 미검증, 적합도는 성공확률 아님'),
  'ml':('3지수×1M/3M, 실제 막대/예측선·68/90%·적중점·z/확률/가격·OOS','6타깃·11모델+2앙상블·Shadow/강제변수·TreeSHAP·3패널 비교·장기/36월·24월표','CAPE/감성 등 일부 입력·원본 하이퍼파라미터·PIT 빈티지 동등성 미검증'),
  'quant':('Stat Arb·8팩터·BAB·TSMOM·단기반전 5뷰','페어 z 0/±2·상관/Hurst/공적분/반감기·요인/비중·후보','현재 단면 스크리닝, 역사 구성·모든 전략 비용 후 OOS 필요'),

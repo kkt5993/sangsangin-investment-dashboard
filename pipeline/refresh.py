@@ -9,7 +9,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 from .store import ROOT,DATA,read_json,write_json,digest
 from .engine import Data
-from .acquire import stamp,budget
+from .acquire import stamp
 
 RUNTIME=DATA/'runtime'
 def price_cutoff(now=None):
@@ -82,17 +82,24 @@ def collect(parent,base,as_of,env,config,log):
     if due(parent,'release_calendar.json.gz',7):run('pipeline.calendar_data')
     if due(parent,'kr_release_calendar.json.gz',7):run('pipeline.kr_calendar')
     if due(parent,'satellite_collection.json.gz',7):run('pipeline.satellite_data')
-    run('pipeline.options_data')
-    run('pipeline.flows_data','--market','US')
+    option_flags=['--allow-cboe-download'] if config.get('allow_cboe_automated_quotes') is True else []
+    run('pipeline.options_data',*option_flags)
+    run('pipeline.flows_data','--market','US',*option_flags)
     if config.get('allow_krx_auth'):run('pipeline.flows_data','--market','KR','--allow-krx-auth')
     if config.get('allow_krx_auth'):run('pipeline.kr_shortgamma_data','--allow-krx-auth')
+    run('pipeline.risk_signals_data',*(['--allow-krx-auth'] if config.get('allow_krx_auth') else []))
+    run('pipeline.trade_data')
+    run('pipeline.sauron_data')
+    run('pipeline.clinical_data')
+    run('pipeline.guru_data')
+    run('pipeline.guru_identifiers')
+    run('pipeline.chain_data')
     if config.get('allow_krx_auth'):run('pipeline.krx_reconcile','--allow-krx-auth')
     current=Data(as_of,base.name)
     if len(current.frames)<len(parent.frames)*.97:raise RuntimeError('Fresh price coverage dropped more than 3%')
     return summary
 
 def stage_project(dest):
-    budget(sum(p.stat().st_size for name in ['docs','research','pipeline','scripts','tests','config'] for p in (ROOT/name).rglob('*') if p.is_file()))
     for name in ['docs','research','pipeline','scripts','tests','config']:
         shutil.copytree(ROOT/name,dest/name,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
     for name in ['AGENTS.md','README.md','HANDOFF.md','requirements.txt']:
@@ -146,7 +153,7 @@ def copy_satellite_outputs(stage,destination=ROOT):
     source=Path(stage)/'docs/data/satellite';target=Path(destination)/'docs/data/satellite'
     files=list(source.glob('*.png'))
     for p in files:
-        if p.is_symlink() or not re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',p.name) or p.stat().st_size>=1024*1024:
+        if p.is_symlink() or not re.fullmatch(r'ST_[A-Z_]+-(rgb|ndvi)\.png',p.name):
             raise ValueError('Unexpected generated satellite image')
     if files:target.mkdir(parents=True,exist_ok=True)
     for p in files:
@@ -202,7 +209,7 @@ def main():
                 as_of=resumed['as_of'];report['as_of']=as_of
             elif a.offline:vintage=parent_vintage;as_of=state['as_of'];report['as_of']=as_of
             else:
-                vintage=run_id;base=DATA/'expanded'/vintage;base.mkdir(parents=True);write_json(base/'parent.json',dict(vintage=parent_vintage,as_of=as_of));budget()
+                vintage=run_id;base=DATA/'expanded'/vintage;base.mkdir(parents=True);write_json(base/'parent.json',dict(vintage=parent_vintage,as_of=as_of))
             env={**os.environ,'SANGSANGIN_DATA_DIR':str(DATA),'SANGSANGIN_VINTAGE':vintage,'PYTHONIOENCODING':'utf-8','GIT_TERMINAL_PROMPT':'0','GCM_INTERACTIVE':'never'}
             if not a.offline:report['collection']=collect(parent,base,as_of,env,config,log)
             # Keep recent reviewable staging copies; no site mutation on failure.

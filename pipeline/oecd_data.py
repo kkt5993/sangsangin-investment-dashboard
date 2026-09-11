@@ -2,7 +2,7 @@
 import argparse, io
 import pandas as pd
 import requests
-from .acquire import budget, stamp
+from .acquire import stamp
 from .store import data_base, read_json, write_json, digest
 
 AREAS={'USA':'미국','KOR':'한국','JPN':'일본','CHN':'중국'}
@@ -40,7 +40,7 @@ def collect(base,as_of,payload=None):
     for key,f in series.items():
         file=folder/(key+'.csv')
         if file.exists():raise ValueError('OECD immutable observation already exists')
-        encoded=f.to_csv(index=False).encode('utf-8');budget(len(encoded));file.write_bytes(encoded)
+        encoded=f.to_csv(index=False).encode('utf-8');file.write_bytes(encoded)
         manifest['instruments'][key]=dict(status='ok',name=AREAS[key.removeprefix('OECD_CLI_')]+' OECD 경기선행지수',unit='index, long-term average=100',frequency='M',source=URL,sha256=digest(file),retrieved_at=stamp(),last=str(f.observation_date.iloc[-1]),adjustment='amplitude adjusted',vintage_note='current revised observations; not historical release vintages')
     write_json(mf,manifest)
     write_json(base/'oecd_cli_collection.json',dict(retrieved_at=stamp(),as_of=as_of,source=URL,series={k:dict(rows=len(f),last=str(f.observation_date.iloc[-1])) for k,f in series.items()}))

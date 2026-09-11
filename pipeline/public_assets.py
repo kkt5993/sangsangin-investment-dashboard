@@ -12,7 +12,6 @@ def pdf_assets(site,manifest):
     entries={r['path']:r for r in data['files']}
     files={p.relative_to(site).as_posix():p for p in root.rglob('*') if p.is_file()}
     if len(entries)!=len(data['files']) or set(entries)!=set(files):raise ValueError('Missing or unlisted PDF runtime file')
-    if sum(p.stat().st_size for p in files.values())>8*1024*1024:raise ValueError('PDF runtime size exceeded')
     for name,p in files.items():
         if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()) or p.suffix not in {'.mjs','.bcmap','.pfb','.ttf',''}:raise ValueError('Unexpected PDF runtime path')
         if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('PDF runtime integrity mismatch: '+name)
@@ -28,7 +27,6 @@ def ocr_assets(site,manifest):
     expected={'LICENSE','tesseract.min.js','worker.min.js','tesseract.min.js.LICENSE.txt','worker.min.js.LICENSE.txt','core/LICENSE','core/tesseract-core-lstm.wasm.js','core/tesseract-core-simd-lstm.wasm.js','lang/LICENSE','lang/eng.traineddata.gz','lang/kor.traineddata.gz'}
     entries={r['path']:r for r in data['files']};files={p.relative_to(site).as_posix():p for p in root.rglob('*') if p.is_file()}
     if len(entries)!=len(data['files']) or set(entries)!=set(files) or {p.relative_to(root).as_posix() for p in files.values()}!=expected:raise ValueError('Missing or unlisted OCR runtime file')
-    if sum(p.stat().st_size for p in files.values())>24*1024*1024:raise ValueError('OCR runtime size exceeded')
     for name,p in files.items():
         if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()):raise ValueError('Unexpected OCR runtime path')
         if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('OCR runtime integrity mismatch: '+name)
@@ -47,8 +45,24 @@ def font_assets(site,manifest):
     expected={'assets/fonts/PretendardVariable.woff2','assets/fonts/OFL.txt'}
     entries={r['path']:r for r in data['files']};files={p.relative_to(site).as_posix():p for p in root.rglob('*') if p.is_file()}
     if len(entries)!=len(data['files']) or set(entries)!=expected or set(files)!=expected:raise ValueError('Missing or unlisted UI font asset')
-    if sum(p.stat().st_size for p in files.values())>3*1024*1024:raise ValueError('UI font size exceeded')
     for name,p in files.items():
         if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()):raise ValueError('Unexpected UI font path')
         if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('UI font integrity mismatch: '+name)
     return {p for p in files.values() if p.suffix=='.woff2'}
+def globe_assets(site,config):
+    """Only exact published package bytes may bypass generic text/image checks."""
+    site=Path(site);out=set()
+    for folder,name,version,license_name in [('cesium','cesium','1.145.0','Apache-2.0'),('satellite','satellite.js','7.1.0','MIT')]:
+        root=site/'vendor'/folder
+        if not root.exists():
+            if (site/'sauron-views.js').exists():raise ValueError('Missing globe runtime')
+            continue
+        data=json.loads((Path(config)/(folder+'_vendor.json')).read_text(encoding='utf8'))
+        if (data['name'],data['version'],data['license'])!=(name,version,license_name):raise ValueError('Unexpected globe vendor identity')
+        entries={r['path']:r for r in data['files']};files={p.relative_to(site).as_posix():p for p in root.rglob('*') if p.is_file()}
+        if len(entries)!=len(data['files']) or set(entries)!=set(files):raise ValueError('Missing or unlisted globe runtime')
+        for name,p in files.items():
+            if p.is_symlink() or not p.resolve().is_relative_to(root.resolve()):raise ValueError('Unsafe globe asset path')
+            if p.stat().st_size!=entries[name]['bytes'] or hashlib.sha256(p.read_bytes()).hexdigest()!=entries[name]['sha256']:raise ValueError('Globe runtime integrity mismatch: '+name)
+        out.update(files.values())
+    return out

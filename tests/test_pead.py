@@ -64,7 +64,7 @@ class PeadTests(unittest.TestCase):
             d.members['us100']['as_of']='2026-09-09';self.assertEqual(build(d)['rows'],[])
 
     def test_collector_reuses_good_pages_and_failed_fetch_keeps_prior(self):
-        with tempfile.TemporaryDirectory() as tmp,patch('pipeline.events_data.budget'):
+        with tempfile.TemporaryDirectory() as tmp:
             parent=Path(tmp)/'old';child=Path(tmp)/'new';child.mkdir();old=raw(retrieved='2026-09-01T00:00:00+00:00');save(parent/'events/A.json.gz',old)
             d=SimpleNamespace(as_of='2026-09-08',base=child,bases=[parent,child],members={'us100':{'members':[dict(symbol='A'),dict(symbol='B')]}})
             fail=Mock(side_effect=RuntimeError('fetch failed'));r=collect(d,fetch=fail,pause=lambda _:None,now='2026-09-10T00:00:00Z')

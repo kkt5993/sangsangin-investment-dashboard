@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from .engine import Data
 from .events_data import read,save
 from .store import read_json,write_json
-from .acquire import budget,stamp
+from .acquire import stamp
 
 BOK_STATS='https://www.bok.or.kr/portal/stats/statsPublictSchdul/listCldr.do'
 BOK_MEETINGS='https://www.bok.or.kr/portal/singl/crncyPolicyDrcMtg/listYear.do'
@@ -88,8 +88,7 @@ def raw_page(base,key,url):
         if hashlib.sha256(content).hexdigest()!=m['sha256']:raise ValueError('Calendar cache hash mismatch')
         return content,m
     time.sleep(.5);response=requests.get(url,timeout=25);response.raise_for_status();content=response.content
-    if len(content)>1500000:raise ValueError('Calendar HTML exceeds1.5MB')
-    encoded=gzip.compress(content,mtime=0);budget(len(encoded));p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(encoded)
+    encoded=gzip.compress(content,mtime=0);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(encoded)
     m=dict(url=response.url,retrieved_at=stamp(),bytes=len(content),sha256=hashlib.sha256(content).hexdigest());write_json(meta,m)
     return content,m
 

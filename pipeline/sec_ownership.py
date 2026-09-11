@@ -11,7 +11,7 @@ import requests
 from .engine import Data,number
 from .store import ROOT,read_json
 from .events_data import read,save
-from .acquire import budget,stamp
+from .acquire import stamp
 
 USER_AGENT='SangsanginResearch/1.0 https://github.com/kkt5993/sangsangin-investment-dashboard'
 SEC='https://www.sec.gov/Archives/edgar/data/'
@@ -28,7 +28,7 @@ def accepted_utc(value,index_time=False):
     except (ValueError,TypeError):return None
 
 def parse_ownership(blob,metadata):
-    if len(blob)>2*1024*1024 or b'<!DOCTYPE' in blob.upper() or b'<!ENTITY' in blob.upper():raise ValueError('Unsupported ownership XML')
+    if b'<!DOCTYPE' in blob.upper() or b'<!ENTITY' in blob.upper():raise ValueError('Unsupported ownership XML')
     root=ET.fromstring(blob)
     for e in root.iter():e.tag=e.tag.rsplit('}',1)[-1]
     if root.tag!='ownershipDocument':raise ValueError('Not ownership XML')
@@ -84,8 +84,7 @@ def fetch(session,url,base,filename):
     r=session.get(url,timeout=25)
     if r.status_code in [401,403,429]:raise AccessRefused('HTTP '+str(r.status_code))
     r.raise_for_status()
-    if len(r.content)>3*1024*1024:raise ValueError('Single SEC response exceeds3MiB')
-    encoded=gzip.compress(r.content,mtime=0);budget(len(encoded));p=base/filename;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(encoded)
+    encoded=gzip.compress(r.content,mtime=0);p=base/filename;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(encoded)
     return r.content
 
 def collect(d,max_filings=300):

@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-08. 턴어라운드 / 내부자 매수 / PEAD / 스탯아브 페어 / 실적 모멘텀.
+**부분 구현** · 가격 기준 2026-09-10. 턴어라운드 / 내부자 매수 / PEAD / 스탯아브 페어 / 실적 모멘텀.
 
 - 계산 코드: [financial_modules.py](../../pipeline/financial_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [events_data.py](../../pipeline/events_data.py) · [sec_ownership.py](../../pipeline/sec_ownership.py) · [ownership_views.py](../../pipeline/ownership_views.py) · [strategy_cards.py](../../pipeline/strategy_cards.py) · [pead.py](../../pipeline/pead.py) · [pead_data.py](../../pipeline/pead_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/strategies.json)

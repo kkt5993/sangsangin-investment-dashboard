@@ -3,7 +3,7 @@ import argparse,contextlib,io,gzip,json,time
 import numpy as np
 from .engine import Data,clean_json
 from .store import DATA
-from .acquire import stamp,budget
+from .acquire import stamp
 def main():
     p=argparse.ArgumentParser();p.add_argument('--as-of',default='2026-09-08');p.add_argument('--allow-krx-auth',action='store_true');a=p.parse_args()
     if not a.allow_krx_auth:p.error('Existing KRX account authorization is required.')
@@ -39,6 +39,6 @@ def main():
                         values={k:float(o[v])*factor for k,v in mapping.items()};values['adjusted_close']=float(row.adjusted_close/row.close*values['close'])
                         record.update(status='corrected',values=values,official={k:float(o[v]) for k,v in mapping.items()},split_scale=factor,reason='KRX OHLC with verified Yahoo split scale; dividend adjustment factor preserved')
                 corrections['records'].append(clean_json(record))
-            raw=json.dumps(corrections,ensure_ascii=False,allow_nan=False).encode();compressed=gzip.compress(raw,mtime=0);budget(len(compressed));dest.write_bytes(compressed);time.sleep(1)
+            raw=json.dumps(corrections,ensure_ascii=False,allow_nan=False).encode();compressed=gzip.compress(raw,mtime=0);dest.write_bytes(compressed);time.sleep(1)
     print('KRX reconciliation',len(corrections['records']),'rows; corrected',sum(r['status']=='corrected' for r in corrections['records']),'quarantined',sum(r['status']=='quarantined' for r in corrections['records']))
 if __name__=='__main__':main()

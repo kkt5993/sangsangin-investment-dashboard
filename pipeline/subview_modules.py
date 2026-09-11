@@ -167,6 +167,10 @@ def extend(d,objects,ranks):
         t=s['title'];s['group']='파생·옵션' if any(k in t for k in ['GEX','감마','옵션','VIX','SKEW']) else '신호등 US·KR' if any(k in t for k in ['조기경보','변동성 · 시장']) else '쏠림·신용' if any(k in t for k in ['쏠림','신용']) else '리스크 콕핏'
     from .allocation_views import allocation_views
     allocation_views(d,objects['multiasset'])
+    from .risk_cockpit import views as cockpit_views
+    cockpit_views(d,objects['risk'],objects['multiasset'])
+    from .risk_signals import views as risk_signal_views
+    risk_signal_views(d,objects['risk'])
     from .technical_scan import scanner_view
     objects['multiasset']['sections'][2]=scanner_view(d)
     for i,s in enumerate(objects['multiasset']['sections']):s['group']='자산 모니터' if i<2 else '패턴 스캐너' if i==2 else '자산배분'
@@ -184,5 +188,26 @@ def extend(d,objects,ranks):
     relation_views(d,objects['dragonglass'])
     from .satellite_views import satellite_views
     satellite_views(d,objects['dragonglass'])
+    from .dragon_research import views as dragon_research_views
+    dragon_research_views(d,objects['dragonglass'])
+    from .trade_views import views as trade_views
+    trade_views(d,objects['globe'])
+    from .sauron_views import views as sauron_views
+    sauron_views(d,objects['globe'])
+    from .chain_views import views as chain_views
+    chain_views(d,objects['globe'])
     digest_views(d,objects,ranks,news)
+    from .dragon_signals import views as dragon_signal_views
+    dragon_signal_views(objects,ranks)
+    from .clinical_views import views as clinical_views
+    clinical_views(d,objects["dragonglass"])
+    from .guru_views import views as guru_views
+    guru_views(d,objects["dragonglass"])
+    from .dragon_operations import views as operation_views
+    operation_views(d,objects)
+    from .digest import module_summaries
+    for s in objects["ask_digest"]["sections"]:
+        if s["type"]=="digestmodules":
+            for row in module_summaries({"dragonglass":objects["dragonglass"]}):
+                s["items"]=[row if r["module"]=="dragonglass" else r for r in s["items"]]
     return objects

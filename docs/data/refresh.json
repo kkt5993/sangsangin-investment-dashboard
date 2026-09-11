@@ -1,1 +1,1 @@
-{"run_id":"20260911T014736Z","as_of":"2026-09-10","vintage":"20260911T013531Z","status":"validated","mode":"implementation","completed_at":"2026-09-11T01:48:05.467701+00:00","scope":"Wikimedia company attention with dated Entity360 and trigger links","coverage":{"pages":10,"available":10,"spikes":0,"rules":3,"confluence":4,"points":601,"entities":702,"linked":10}}
+{"run_id":"20260911T020602Z","as_of":"2026-09-10","vintage":"20260911T013531Z","status":"validated","mode":"presentation","completed_at":"2026-09-11T02:06:08.691720+00:00","scope":"기능별 한국어 화면 이름 적용 · 기존 계산 자료 유지"}

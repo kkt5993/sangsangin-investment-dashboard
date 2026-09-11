@@ -79,6 +79,13 @@ def sources(d, dragon, now):
             error=bool(attention.get('collection', {}).get('errors')), count=len(dates), vintage=attention.get('source_vintage'),
             detail='영문 기업 문서 직접 user 열람. 가장 오래된 성공 수집·UTC 관측일을 표시합니다. 뉴스량·고유 투자자 수가 아닙니다.'))
     company_news = section(dragon, 'companynews')
+    topics=section(dragon,'topicnews')
+    if topics:
+        records=topics.get('items',[]);dates=[r['retrieved_at'] for r in records if r.get('data_available')]
+        rows.append(row('topic-news','GDELT · 주제 검색','뉴스·정책','https://www.gdeltproject.org/',24,now,
+            checked=topics.get('collection',{}).get('attempted_at'),retrieved=min(dates,default=None),count=len(dates),
+            error=topics.get('collection',{}).get('status') in ['error','access_refused'],vintage=topics.get('source_vintage'),
+            detail='20개 테마/국가/정책 검색. GDELT 색인 관측 시각은 RSS 발행일과 별개이며 합산하지 않습니다. 기존 RSS 제목 일치는 이 API 조회 성공으로 세지 않습니다. 실패 후1시간 유예·요청 간6초 간격.'))
     if company_news:
         records=company_news.get('items',[]);dates=[r['retrieved_at'] for r in records if r.get('retrieved_at')]
         latest=[r['latest'] for r in records if r.get('latest')]

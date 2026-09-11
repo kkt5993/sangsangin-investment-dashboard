@@ -87,6 +87,12 @@ def collect(d,classifier_factory=Classifier,now=None,spec=None,retry=False):
     if now.tzinfo is None:raise ValueError('Timezone required')
     source=d.resource(FEEDS);feeds=read(source) if source.exists() else {};path=d.resource(FILE);packet=read(path) if path.exists() else {'entries':{}}
     titles={key(a['title'],spec):text(a['title']) for r in feeds.get('feeds',{}).values() for a in r.get('items',[]) if text(a.get('title'))}
+    from .topic_news import FILE as TOPICS,local_articles,settings as topic_settings,matched
+    topic_path=d.resource(TOPICS);topics=read(topic_path) if topic_path.exists() else {}
+    extra=[a for r in topics.get('feeds',{}).values() for a in r.get('items',[])]
+    definitions=topic_settings()
+    extra += [a for a in local_articles(d) if any(matched(a['title'],r) for r in definitions)]
+    titles.update({key(a['title'],spec):text(a['title']) for a in extra if text(a.get('title'))})
     missing={k:v for k,v in titles.items() if not(valid(packet['entries'].get(k)) or packet['entries'].get(k,{}).get('available') is False)}
     report=dict(attempted_at=now.isoformat(),status='reused',classified=0,reused=len(titles)-len(missing),inputs=len(titles),model_fingerprint=fingerprint(spec))
     if not missing:return report

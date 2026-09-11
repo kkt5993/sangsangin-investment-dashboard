@@ -15,6 +15,10 @@ def series(s,cutoff,forecast=False):
 
 def section(s,cutoff,module):
     kind=s['type']
+    if kind=='topicnews':
+        from pipeline.topic_news import verify
+        assert s['as_of']==cutoff
+        verify(s)
     if kind=='chainuniverse':
         assert len(s['groups'])==20 and len(s['sectors'])==53 and len(s['companies'])==151
         symbols={c['symbol'] for c in s['companies']};assert len(symbols)==151

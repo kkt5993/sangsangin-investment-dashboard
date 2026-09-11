@@ -1,0 +1,293 @@
+{
+  "topics": [
+    {
+      "id": "nuclear",
+      "name": "원전·SMR",
+      "kind": "theme",
+      "query": "(\"nuclear power\" OR \"small modular reactor\" OR uranium) sourcelang:english",
+      "title_groups": [
+        [
+          "nuclear",
+          "uranium",
+          "SMR"
+        ]
+      ]
+    },
+    {
+      "id": "energy",
+      "name": "에너지 안보·LNG",
+      "kind": "theme",
+      "query": "(\"energy security\" OR \"liquefied natural gas\" OR LNG) sourcelang:english",
+      "title_groups": [
+        [
+          "energy security",
+          "LNG",
+          "natural gas"
+        ]
+      ]
+    },
+    {
+      "id": "geopolitics",
+      "name": "지정학·국제분쟁",
+      "kind": "theme",
+      "query": "(geopolitics OR sanctions OR \"armed conflict\") sourcelang:english",
+      "title_groups": [
+        [
+          "geopolitics",
+          "geopolitical",
+          "sanctions",
+          "armed conflict"
+        ]
+      ]
+    },
+    {
+      "id": "credit",
+      "name": "신용시장",
+      "kind": "theme",
+      "query": "(\"private credit\" OR \"credit spreads\" OR \"debt default\") sourcelang:english",
+      "title_groups": [
+        [
+          "private credit",
+          "credit spreads",
+          "debt default",
+          "credit risk"
+        ]
+      ]
+    },
+    {
+      "id": "trade_policy",
+      "name": "통상·규제",
+      "kind": "theme",
+      "query": "(tariffs OR \"trade policy\" OR regulation) sourcelang:english",
+      "title_groups": [
+        [
+          "tariff",
+          "tariffs",
+          "trade policy",
+          "regulation",
+          "regulatory"
+        ]
+      ]
+    },
+    {
+      "id": "humanoid",
+      "name": "휴머노이드",
+      "kind": "theme",
+      "query": "(\"humanoid robot\" OR \"humanoid robots\") sourcelang:english",
+      "title_groups": [
+        [
+          "humanoid",
+          "humanoids"
+        ]
+      ]
+    },
+    {
+      "id": "space",
+      "name": "우주·위성",
+      "kind": "theme",
+      "query": "(satellite OR spacecraft OR \"space launch\") sourcelang:english",
+      "title_groups": [
+        [
+          "satellite",
+          "satellites",
+          "spacecraft",
+          "space launch"
+        ]
+      ]
+    },
+    {
+      "id": "climate",
+      "name": "기후·자연재해",
+      "kind": "theme",
+      "query": "(earthquake OR hurricane OR flood OR \"climate change\") sourcelang:english",
+      "title_groups": [
+        [
+          "earthquake",
+          "hurricane",
+          "flood",
+          "flooding",
+          "climate"
+        ]
+      ]
+    },
+    {
+      "id": "china",
+      "name": "중국 경제",
+      "kind": "country",
+      "query": "China (economy OR trade OR policy OR manufacturing) sourcelang:english",
+      "title_groups": [
+        [
+          "China",
+          "Chinese"
+        ],
+        [
+          "economy",
+          "economic",
+          "trade",
+          "policy",
+          "manufacturing"
+        ]
+      ]
+    },
+    {
+      "id": "taiwan",
+      "name": "대만 경제",
+      "kind": "country",
+      "query": "Taiwan (economy OR semiconductor OR trade) sourcelang:english",
+      "title_groups": [
+        [
+          "Taiwan",
+          "Taiwanese"
+        ],
+        [
+          "economy",
+          "economic",
+          "semiconductor",
+          "trade"
+        ]
+      ]
+    },
+    {
+      "id": "taiwan_strait",
+      "name": "대만해협",
+      "kind": "geo",
+      "query": "\"Taiwan Strait\" sourcelang:english",
+      "title_groups": [
+        [
+          "Taiwan Strait"
+        ]
+      ]
+    },
+    {
+      "id": "middle_east",
+      "name": "중동 분쟁",
+      "kind": "geo",
+      "query": "(Iran OR Israel OR Gaza) (war OR conflict OR ceasefire) sourcelang:english",
+      "title_groups": [
+        [
+          "Iran",
+          "Israel",
+          "Gaza"
+        ],
+        [
+          "war",
+          "conflict",
+          "ceasefire"
+        ]
+      ]
+    },
+    {
+      "id": "ukraine",
+      "name": "우크라이나 전쟁",
+      "kind": "geo",
+      "query": "Ukraine (war OR Russia OR ceasefire) sourcelang:english",
+      "title_groups": [
+        [
+          "Ukraine",
+          "Ukrainian"
+        ],
+        [
+          "war",
+          "Russia",
+          "Russian",
+          "ceasefire"
+        ]
+      ]
+    },
+    {
+      "id": "south_china_sea",
+      "name": "남중국해",
+      "kind": "geo",
+      "query": "\"South China Sea\" sourcelang:english",
+      "title_groups": [
+        [
+          "South China Sea"
+        ]
+      ]
+    },
+    {
+      "id": "korean_peninsula",
+      "name": "한반도",
+      "kind": "geo",
+      "query": "(\"North Korea\" OR \"Korean Peninsula\") sourcelang:english",
+      "title_groups": [
+        [
+          "North Korea",
+          "Korean Peninsula"
+        ]
+      ]
+    },
+    {
+      "id": "fed",
+      "name": "미 연준",
+      "kind": "policy",
+      "query": "(\"Federal Reserve\" OR FOMC) sourcelang:english",
+      "title_groups": [
+        [
+          "Federal Reserve",
+          "FOMC",
+          "Fed rate",
+          "Fed rates"
+        ]
+      ]
+    },
+    {
+      "id": "treasury",
+      "name": "미 재무부",
+      "kind": "policy",
+      "query": "(\"US Treasury\" OR \"U.S. Treasury\" OR \"Treasury Department\") sourcelang:english",
+      "title_groups": [
+        [
+          "US Treasury",
+          "U.S. Treasury",
+          "Treasury Department"
+        ]
+      ]
+    },
+    {
+      "id": "us_china",
+      "name": "미중 통상·기술",
+      "kind": "policy",
+      "query": "China (\"export controls\" OR tariff OR semiconductor) sourcelang:english",
+      "title_groups": [
+        [
+          "China",
+          "Chinese"
+        ],
+        [
+          "export controls",
+          "tariff",
+          "tariffs",
+          "semiconductor"
+        ]
+      ]
+    },
+    {
+      "id": "us_debt",
+      "name": "미국 재정·부채",
+      "kind": "policy",
+      "query": "(\"US debt\" OR \"U.S. debt\" OR \"debt ceiling\" OR \"federal deficit\") sourcelang:english",
+      "title_groups": [
+        [
+          "US debt",
+          "U.S. debt",
+          "debt ceiling",
+          "federal deficit"
+        ]
+      ]
+    },
+    {
+      "id": "social",
+      "name": "인구·이민·소득분포",
+      "kind": "theme",
+      "query": "(demographics OR immigration OR inequality) sourcelang:english",
+      "title_groups": [
+        [
+          "demographics",
+          "immigration",
+          "inequality"
+        ]
+      ]
+    }
+  ]
+}

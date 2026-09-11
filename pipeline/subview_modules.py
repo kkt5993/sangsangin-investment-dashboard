@@ -208,6 +208,8 @@ def extend(d,objects,ranks):
     attention_views(d,objects['dragonglass'])
     from .company_news import views as company_news_views
     company_news_views(d,objects['dragonglass'])
+    from .topic_news import views as topic_news_views
+    topic_news_views(d,objects['dragonglass'])
     dragon_signal_views(objects,ranks)
     from .clinical_views import views as clinical_views
     clinical_views(d,objects["dragonglass"])

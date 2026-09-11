@@ -201,6 +201,8 @@ def extend(d,objects,ranks):
     dragon_signal_views(objects,ranks)
     from .clinical_views import views as clinical_views
     clinical_views(d,objects["dragonglass"])
+    from .guru_views import views as guru_views
+    guru_views(d,objects["dragonglass"])
     from .digest import module_summaries
     for s in objects["ask_digest"]["sections"]:
         if s["type"]=="digestmodules":

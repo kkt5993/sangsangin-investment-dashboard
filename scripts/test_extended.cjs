@@ -5,6 +5,7 @@ require('./test_decisions.cjs');
 require('./test_dragon_research.cjs');
 require('./test_dragon_signals.cjs');
 require('./test_clinical.cjs');
+require('./test_guru.cjs');
 require('./test_chart_readability.cjs');
 const relationChecks=require('./test_relations.cjs');
 const overviewChecks=require('./test_overview.cjs');
@@ -25,7 +26,7 @@ const root=path.join(__dirname,'..'),read=p=>fs.readFileSync(path.join(root,p),'
 const modules=JSON.parse(read('docs/modules.js').replace(/^const MODULES = /,'').trim().replace(/;$/,''));
 const data=Object.fromEntries(fs.readdirSync(path.join(root,'docs/data')).filter(n=>n.endsWith('.json')).map(n=>[n.slice(0,-5),JSON.parse(read('docs/data/'+n))]));
 let requests=0;const context=vm.createContext({window:{},location:{hash:''},console,fetch:async url=>{requests++;return {ok:true,json:async()=>data[path.basename(url,'.json')]};}});
-for(const file of ['charts','analysis-charts','network-views','sauron-views','trade-views','chain-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','dragon-research','dragon-signals','clinical-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
+for(const file of ['charts','analysis-charts','network-views','sauron-views','trade-views','chain-views','relation-views','decision-ledger','research-store','pdf-text','notebook-pdf','research-notes','geo-views','earnings-views','ownership-views','strategy-cards','calendar-views','satellite-views','dragon-research','dragon-signals','clinical-views','guru-views','research-dashboard'])vm.runInContext(read('docs/'+file+'.js'),context);
 tradeChecks(context,data);
 chainChecks(context,data);
 function container(){return {innerHTML:'',querySelectorAll(){return [];},querySelector(){return null;}};}

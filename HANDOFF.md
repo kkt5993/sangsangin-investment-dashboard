@@ -341,3 +341,10 @@ raw20260911T001009Z(부모20260910T222302Z),가격9/10유지. 공식API수집11�
 
 
 용량 검사 완전 제거 후속: 사용자 재지시에 따라 남아 있던 다운로드 응답·압축 해제·SEC XML·지도 타일·PDF/OCR 설치·위성 요청별/실행별 바이트 상한도 제거했다. 총용량 순회/저장 한도 없음. 형식·해시·HTTP Range 일치와 필요한 관측 구역 읽기, 요청 간격·캐시·실패 시 이전 자료 보존은 유지한다. 기존 크기 거부 테스트는 실제 대형 응답 허용·내용/프로토콜 검증으로 갱신했다. 전체 검사와 게시 결과는 runtime/no-size-validation.json 및 runtime/no-size-publication.json을 확인한다. 전체 세부탭 목표는 미완이며 이번 작업은 용량 검사 제거다.
+
+
+13F 후속: guru_data/guru_views/guru-views.js와6보고법인 설정을 추가했다. 원본6구루카드·상위6포지션 구조/보고일/원문과235행 전체원장·CUSIP/종류/PUTCALL검색을 연결했다. SEC 직접 Archives XML1요청403(이전submissions403) 후 중단; 브라우징으로 공식표6개를 확보해코드로파싱하고private보존. 최초95/1/89/15/8/27행→95/0/29/14/8/27포지션. Thiel0원placeholder·Scion2025-09-30지연·Pershing기존1336528 NT→모회사2026053범위를명시. Duquesne표합5210856/표지5210860=-4차이를유지하며보고금액의단위규모추가검토를표시,임의1000배보정없음. 나머지5합일치.
+
+새raw20260911T004356Z(부모20260911T001009Z),가격2026-09-10/Overview바이트불변. 새source별vintage만status.supplemental_vintages.guru에표시,가격status.vintage는유지. 신호+3은CUSIP기업대응/분기시차검증전보류하며기존4동시신호불변. 확인공시는최신전체조회아님. 코드정기08/18에연결,private runtime/sec-contact.json의email필요(질문응답대기);없으면0요청,403시같은설정재요청보류·24h정상/오류캐시·신규accession만수집·이전자료보존. 원본사이트0요청/용량검사없음.
+
+299Python·두자료검증기·3JS회귀·171JS/MJS구문통과. Edge1440/1024/390에서6카드/18필터조합/235원문행·검색/빈값/옵션·NT/0원/단위차이·탭왕복·가로넘침0/오류0/외부요청0검사,390px이미지육안확인. 정본research/GURU_CONTRACT.md 및runtime/guru-source-verification/guru-browser-qa/guru-validation.json,게시후보20260911T004834Z. 실제게시완료는runtime/state.json과guru-publication.json을확인한다. 전체goal미완:13F연속과거/최신확인/기업대응/구루뉴스16인관리·전체뉴스감성/관심도·정량뷰·나머지관계등은계속구현대상.

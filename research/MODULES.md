@@ -1,27 +1,27 @@
 # 화면별 구현 문서
 
-- [Summary](modules/overview.md) — 전체 모듈을 국면→주도→맥락→기회 순서로 요약하는 첫 화면. 별도의 예측 엔진이 아니라 모듈 스냅샷을 조합하는 진입점이다.
-- [At a Glance](modules/glance.md) — 설계 철학, 모듈 설명, 자동 운영, 데이터 소스, 학술적 배경을 한곳에 정리한 안내 화면.
-- [MAXIMUS](modules/maximus.md) — 지수·매크로·입력 종목의 1개월 예측을 수행하는 MoE 콘솔. 공개 캐시 결과와 실계산 서버가 분리되어 있다.
-- [DRAGONGLASS](modules/dragonglass.md) — 기업·산업·매크로·시설·정책을 객체와 관계로 연결한 온톨로지. 11개 서브탭에 그래프, 워치리스트, 위성, 시나리오, 의사결정 원장이 있다.
-- [ARAGORN MAP](modules/aragorn.md) — 주간 시장의 개념 지식그래프를 3D로 보고 하단에서 자산군 연간 수익률 퀼트를 비교한다.
-- [GLOBAL UNIVERSE](modules/globe.md) — 섹터별 기업과 밸류체인, 국가별 수출·물류 흐름을 지구본으로 탐색한다.
-- [PRINCIPIUM](modules/principium.md) — 논문(article)·기관보고서(report)·프라이머(primer)의 공개 요약 아카이브. 관리자 쓰기 기능은 인증이 필요하다.
-- [경제·시장 국면 (미국·한국)](modules/regime.md) — 미국·한국 경제 및 시장 국면, 월별 이력, 산업별 지표와 소로스 재귀성 엔진을 함께 보는 모듈.
-- [주간 상대강도 (RS)](modules/rs.md) — 국내·미국 페어의 3개월 수익률 차이를 공통 5년 분포에서 z-score로 비교한다.
-- [모멘텀 (섹터·절대·초과수익)](modules/momentum.md) — 국가·섹터·팩터의 절대 수익률과 벤치마크 초과수익으로 로테이션을 확인한다.
-- [종목 발굴 (변곡·가속)](modules/discovery.md) — 종목의 현재 높은 수준보다 개선·변곡·가속을 포착해 리서치 후보로 묶는다.
-- [🎯 전략 스캐너 (신규 알파)](modules/strategies.md) — 턴어라운드·기관/스마트머니·PEAD·상대가치 등 신규 알파 후보의 룰 기반 스캐너.
-- [실적 모멘텀 (대형주)](modules/earnings.md) — 미국·한국 대형주의 이익 성장과 가격 모멘텀, 전세계 순이익 순위 및 컨센서스 점검을 보여준다.
-- [글로벌 성장주 모니터링](modules/growth.md) — 여러 국가의 성장주를 FY1/FY2 영업이익 성장·YTD·영업이익률과 시가총액으로 비교한다.
-- [멀티에셋 모니터링](modules/multiasset.md) — 21개 자산 모니터, ML 국면 배분, 기술적 시그널 스캐너를 결합한 화면.
-- [멀티 위험지표 (선제위험·감마)](modules/risk.md) — 모델북 위험, 선제 취약성, 미국 옵션 감마, 한국 ETF 리밸런싱 프록시, 쏠림을 모니터링한다.
-- [워칭 차트 · 패턴 스캐너 (📈상승·📉하락)](modules/watch.md) — 한국·미국 상승/하락 차트패턴 후보를 그림과 근거 문장으로 보여준다.
-- [ML·DL 지수예측 (KOSPI·NASDAQ·S&P)](modules/ml.md) — KOSPI·NASDAQ·S&P500의 1M/3M 수익률 예측 및 6타깃 컴포짓을 주기적으로 발행한다.
-- [Quant Hedge (Multi Quant)](modules/quant.md) — StatArb·멀티팩터·BAB·TSMOM·단기 리버설 5개 퀀트 전략 후보를 제공한다.
-- [🌀 시장 속도·붕괴 취약성](modules/dynamics.md) — 가격의 추세 에너지·불안정성으로 방향이 아닌 보유 노출과 붕괴 취약성을 분석한다.
-- [Images & Words (주간 기록)](modules/iw.md) — 주간 코멘트 연대기와 국면·ML 그림을 묶은 기록 화면.
-- [PM 주말 브리프](modules/pm_weekend.md) — 주말에 거시·금리 분해·CTA·리스크선호·뉴스를 함께 읽는 PM 브리프.
-- [💸 글로벌 ETF 큐레이션](modules/etfmon.md) — 현금흐름 방식과 테마·자산군으로 ETF를 분류하고 총수익과 배당을 함께 비교한다.
-- [🌍 geo-economics](modules/geoecon.md) — 뉴스 키워드·감성·정책불확실성·유가·달러로 지경학 변화와 근거 뉴스를 연결한다.
-- [ask_digest](modules/ask_digest.md) — ASK ARAGORN이 참고할 사이트 데이터 요약. 현재 index.json에 포함되어 ETC 탭에도 노출된다.
+- [시장 종합](modules/overview.md) — 전체 모듈을 국면→주도→맥락→기회 순서로 요약하는 첫 화면. 별도의 예측 엔진이 아니라 모듈 스냅샷을 조합하는 진입점이다.
+- [이용 안내](modules/glance.md) — 설계 철학, 모듈 설명, 자동 운영, 데이터 소스, 학술적 배경을 한곳에 정리한 안내 화면.
+- [통합예측](modules/maximus.md) — 지수·매크로·입력 종목의 1개월 예측을 수행하는 MoE 콘솔. 공개 캐시 결과와 실계산 서버가 분리되어 있다.
+- [기업분석](modules/dragonglass.md) — 기업·산업·매크로·시설·정책을 객체와 관계로 연결한 온톨로지. 11개 서브탭에 그래프, 워치리스트, 위성, 시나리오, 의사결정 원장이 있다.
+- [업종·자산지도](modules/aragorn.md) — 주간 시장의 개념 지식그래프를 3D로 보고 하단에서 자산군 연간 수익률 퀼트를 비교한다.
+- [글로벌 공급망](modules/globe.md) — 섹터별 기업과 밸류체인, 국가별 수출·물류 흐름을 지구본으로 탐색한다.
+- [리서치 자료실](modules/principium.md) — 논문·리포트·프라이머를 읽고 PDF 페이지별 본문과 근거를 보관하는 리서치 아카이브. 새 기록은 이 브라우저에 저장한다.
+- [국면](modules/regime.md) — 미국·한국 경제 및 시장 국면, 월별 이력, 산업별 지표와 소로스 재귀성 엔진을 함께 보는 모듈.
+- [상대강도](modules/rs.md) — 국내·미국 페어의 3개월 수익률 차이를 공통 5년 분포에서 z-score로 비교한다.
+- [모멘텀](modules/momentum.md) — 국가·섹터·팩터의 절대 수익률과 벤치마크 초과수익으로 로테이션을 확인한다.
+- [종목 발굴](modules/discovery.md) — 종목의 현재 높은 수준보다 개선·변곡·가속을 포착해 리서치 후보로 묶는다.
+- [투자전략](modules/strategies.md) — 턴어라운드·기관/스마트머니·PEAD·상대가치 등 신규 알파 후보의 룰 기반 스캐너.
+- [실적·컨센서스](modules/earnings.md) — 미국·한국 대형주의 이익 성장과 가격 모멘텀, 전세계 순이익 순위 및 컨센서스 점검을 보여준다.
+- [성장 컨센서스](modules/growth.md) — 여러 국가의 성장주를 FY1/FY2 영업이익 성장·YTD·영업이익률과 시가총액으로 비교한다.
+- [자산배분](modules/multiasset.md) — 21개 자산 모니터, ML 국면 배분, 기술적 시그널 스캐너를 결합한 화면.
+- [수급·위험](modules/risk.md) — 모델북 위험, 선제 취약성, 미국 옵션 감마, 한국 ETF 리밸런싱 프록시, 쏠림을 모니터링한다.
+- [종목 차트](modules/watch.md) — 한국·미국 상승/하락 차트패턴 후보를 그림과 근거 문장으로 보여준다.
+- [지수예측](modules/ml.md) — KOSPI·NASDAQ·S&P500의 1M/3M 수익률 예측 및 6타깃 컴포짓을 주기적으로 발행한다.
+- [퀀트전략](modules/quant.md) — StatArb·멀티팩터·BAB·TSMOM·단기 리버설 5개 퀀트 전략 후보를 제공한다.
+- [시장 변동성](modules/dynamics.md) — 가격의 추세 에너지·불안정성으로 방향이 아닌 보유 노출과 붕괴 취약성을 분석한다.
+- [주간 기록](modules/iw.md) — 주간 코멘트 연대기와 국면·ML 그림을 묶은 기록 화면.
+- [주간 거시점검](modules/pm_weekend.md) — 주말에 거시·금리 분해·CTA·리스크선호·뉴스를 함께 읽는 PM 브리프.
+- [ETF 분석](modules/etfmon.md) — 현금흐름 방식과 테마·자산군으로 ETF를 분류하고 총수익과 배당을 함께 비교한다.
+- [지정학·경제](modules/geoecon.md) — 뉴스 키워드·감성·정책불확실성·유가·달러로 지경학 변화와 근거 뉴스를 연결한다.
+- [시장 요약](modules/ask_digest.md) — 시장 요약이 참고할 사이트 데이터 요약. 현재 index.json에 포함되어 ETC 탭에도 노출된다.

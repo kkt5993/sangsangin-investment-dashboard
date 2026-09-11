@@ -44,7 +44,7 @@ console.log('PASS: decision lifecycle, JSON/legacy preservation, collision copie
  await click('save');assert.equal(D.store(storage).entries().length,1);assert.equal(D.store(storage).entries()[0].thesis,input.thesis);
  await click('activate');assert.equal(D.store(storage).entries()[0].status,'실행');assert(view.querySelector('[data-ledger-stress]').textContent.includes('-2'));
  const shock=view.querySelector('[data-ledger-shock="us"]');shock.value=10;await shock.fire('input');assert(view.querySelector('[data-ledger-stress]').textContent.includes('2'));
- await click('entity');assert.equal(navigations[0].group,'Entity 360');assert.equal(navigations[0].state.entity,entities[0].id);
+ await click('entity');assert.equal(navigations[0].group,'기업 상세');assert.equal(navigations[0].state.entity,entities[0].id);
  const search=view.querySelector('[data-ledger-search]');search.value='no match';await search.fire('input');assert(view.querySelector('.ledger-card').hidden);search.value='';await search.fire('input');assert(!view.querySelector('.ledger-card').hidden);
  await click('close');await click('reopen');await click('delete');assert.equal(view.querySelectorAll('.ledger-card').length,0);
  const filter=view.querySelector('[data-ledger-filter]');filter.value='trash';await filter.fire('change');await click('restore');assert(!D.store(storage).entries()[0].deleted_at);
@@ -54,5 +54,5 @@ console.log('PASS: decision lifecycle, JSON/legacy preservation, collision copie
  D.bind(ev,{sections:[es]},(group,state)=>navigations.push({group,state}),{entity:edata.id});assert(ev.querySelector('[data-entity-body]').textContent.includes('Edited through form'));
  await ev.querySelector('[data-entity-decision]').fire('click');assert.equal(navigations.at(-1).state.decisionObject,edata.id);
  const esearch=ev.querySelector('[data-entity-search]');esearch.value='missing';await esearch.fire('input');assert(ev.querySelector('[data-entity-body]').textContent.includes('해당하는 종목이 없습니다'));esearch.value='Alpha';await esearch.fire('input');assert(ev.querySelector('[data-entity-body]').textContent.includes('Beta 2'));
- console.log('PASS: actual decision form save/edit, status controls, shock inputs, search reset, trash restoration and Entity 360 navigation callbacks.');
+ console.log('PASS: actual decision form save/edit, status controls, shock inputs, search reset, trash restoration and 기업 상세 navigation callbacks.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

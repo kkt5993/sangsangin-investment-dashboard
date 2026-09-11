@@ -114,7 +114,7 @@ def collect(d,session=None):
                 if key=='stations' and hasattr(e,'http_status'):
                     save(d.base/'sauron/stations-halted.json.gz',dict(checked_at=stamp(),http_status=e.http_status));state='halted'
         report['sources'].append(dict(key=key,state=state,requested=requested,retrieved_at=old.get('retrieved_at'),checked_at=old.get('checked_at'),error_type=error_type,http_status=http_status))
-        print('SAURON',key,state,flush=True)
+        print('위성·지구관측',key,state,flush=True)
     save(d.base/'sauron/collection.json.gz',report)
     return report
 

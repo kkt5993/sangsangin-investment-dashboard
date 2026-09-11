@@ -1,4 +1,4 @@
-# ARAGORN MAP
+# 업종·자산지도
 
 <!-- implementation:start -->
 ## 현재 팀 구현

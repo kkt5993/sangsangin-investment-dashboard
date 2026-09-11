@@ -373,3 +373,8 @@ attention_data/attention_views/attention-views.js/config으로수집·Entity360�
 첫브라우저검사에서ASML에Entity없음을발견. ASML1종목가격history를기존수집기로받아3년752일·USD·OHLC유효확인. 실제마지막9/9를9/10으로늘리지않음. ASML추가관찰(공식S&P500편입아님),Entity702·원장702상관재계산(합집합252일창/ASML245유효관측). 공식700+TSMC/ASML2. 가격추가갱신대상에attention_pages를포함. 재무/일정미확보는비움. 기존13F57기업73포지션유지,가격Overview바이트동일.
 
 최종314Python·두자료검증기·3JS회귀·173JS/MJS구문통과. Edge1440/1024/390에서10문서/601원장/각60점·기간수치·검색/빈값·모든Entity이동/원문/신호3규칙/기존4합류·Wikimedia소스·가로넘침0/오류0/외부요청0통과.390이미지육안확인. 초기수치검증에서ASML대각관측수를무조건252라고둔검사전제를245로정정(전체시장합집합창에비거래일포함),source시각원장확인. raw20260911T013531Z(부모20260911T005706Z),가격기준9/10. 최종게시후보run20260911T014736Z. 정본ATTENTION_CONTRACT.md;실제배포는state.json/attention-publication.json과attention-validation/browser-qa/build-verification/asml-verification확인. 원본사이트추가0,새AI세션0. 전체goal미완:전체기업뉴스/감성/정량뷰·13F연속/관계확장·REFERENCE_PARITY잔여계속.
+
+
+2026-09-11 화면 명칭 변경: 25개 주화면을 기능별 한국어 이름으로 통일했다. 통합예측·기업분석·업종/자산지도·글로벌 공급망·리서치 자료실·국면·수급/위험·실적/컨센서스·주간 기록·시장 요약, 세부 기업 상세·위성사진·위성/지구관측과 거시 국면/시장 쏠림을 반영했다. 표시 제목·탐색·현재 위치·요약/운영 카드·가이드 일치. URL 해시·JSON/개인 기록 식별자·실제 OCR 라이브러리명은 보존. build_all 최종 공개 단계의 display_names가 캐시 문구도 정리한다. 원자료/원본 사이트/모델 추가 호출0. 학습 캐시가 불필요하게 무효화되지 않도록 모델 소스 바이트/개행을 직전 검증 스테이지와 동일하게 유지했다.
+
+25스냅샷 287750숫자·11055식별자/URL 불변·225표시 문자열 변경 검증. 315Python·두 자료 검증기·3JS회귀·173JS/MJS구문 통과. Edge1440/1024/390에서25주화면·137공통하위그룹·기업이동·현황 모듈명·위성사진·탐색 검사, 기존390px 종목발굴 점수/자산배분 막대 가로넘침2곳만 CSS수정후 전범위 재통과. JS오류0/외부요청0/옛 표시명0/가로넘침0. 실제 수치/차트 구조/저장기록 유지, 전체 세부기능 목표는 여전히 미완. 가격9/10·raw20260911T013531Z 유지. 정본 UI_NAMES.md, runtime/names-build-verification/validation/browser-qa.json 및 names-followup-validation.log. 실제 게시 완료는 state.json/names-publication.json을 확인한다.

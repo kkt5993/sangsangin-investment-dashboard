@@ -76,7 +76,7 @@ def resolve(position,mappings,entities,now):
     if position['quantity_type']!='SH' or r['marketSector']!='Equity' or r['securityType'] not in ['Common Stock','ADR','REIT','GDR','NY Reg Shrs','MLP']:return None,'기업 주식·예탁증서·파트너십 범위 밖'
     ticker=r['ticker'];symbol=re.sub(r'^([A-Z]{1,6})[/.]([A-Z])$',r'\1-\2',ticker)
     candidates=[e for e in entities if e['market']=='US' and e['symbol']==symbol]
-    if len(candidates)!=1:return None,'Entity360 유니버스 밖' if not candidates else '기업 식별자 중복'
+    if len(candidates)!=1:return None,'기업 상세 유니버스 밖' if not candidates else '기업 식별자 중복'
     e=candidates[0]
     return dict(id=e['id'],symbol=e['symbol'],name=e['name'],figi=r['figi'],figi_name=r['name'],share_class_figi=r.get('shareClassFIGI'),security_type=r['securityType'],source_ticker=ticker,checked_at=record['checked_at'],url='https://www.openfigi.com/id/'+r['figi']),None
 

@@ -5,6 +5,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 load=lambda p:json.loads(p.read_text(encoding='utf8'))
 modules=json.loads((ROOT/'docs/modules.js').read_text(encoding='utf8').removeprefix('const MODULES = ').rstrip().removesuffix(';'))
+(ROOT/'research/MODULES.md').write_text('# 화면별 구현 문서\n\n'+'\n'.join(f"- [{m['title']}](modules/{m['id']}.md) — {m['purpose']}" for m in modules)+'\n',encoding='utf8')
 meta=load(ROOT/'docs/data/status.json')
 CODE={
  'rs':'market_modules.py · build.py · analytics.py · universe.py','momentum':'build.py · analytics.py · universe.py · momentum_highs.py · us100_data.py',
@@ -33,12 +34,12 @@ CODE['watch']+=' · technical_scan.py'
 for key in ['risk','pm_weekend','earnings']:CODE[key]+=' · flows.py · flows_data.py'
 # Original structures were read from the saved source and chart captions, offline.
 PARITY={
- 'overview':('TESSERACT6축·CROWDING5축·36월3D·4시점 적층·주도주','6/5축 원단위와 z·36시점 궤적/회전·4층 레이더·시총50표본/주도주10·현황','원본 z 창/극단치 설정·세계 전체 시총50·역사 발표 빈티지 동등성 미확보'),
+ 'overview':('거시 국면6축·시장 쏠림5축·36월3D·4시점 적층·주도주','6/5축 원단위와 z·36시점 궤적/회전·4층 레이더·시총50표본/주도주10·현황','원본 z 창/극단치 설정·세계 전체 시총50·역사 발표 빈티지 동등성 미확보'),
  'glance':('4단계 프로세스·구조·출처','PC 수집→검증→Vercel·평일08/18시 갱신·변경분 캐시','원본 Mac 서버 운영 대신 승인된 PC 실행 일정 사용'),
  'maximus':('지수·종목·거시 예측, 전문가 가중치·신호·시계열','2기본지수+Nasdaq·6매크로·종목 캐시·10전문가/ADF/SIS/게이트·68/95팬·R/I·원장','지수 이익앵커·SEC/KR수급·일부 입력·부분월/임의 티커 서버·PIT 미연결'),
  'dragonglass':('11개 하위 화면, 관계·시설·관측·원장','39객체·근거·3D/전파·8시나리오·701Entity·22시설RGB/NDVI·NASA배경·원장 프리모템/상관','전체255객체/581관계·고해상도 배경/지명·선행/후행·구루/사건·팀DB 미연결'),
  'aragorn':('3D 관계 탐색·자산 연간 퀼트','회전·객체 선택·11자산 2016~현재 연간 순위','인과 추정 관계 대신 공식 시장/업종 소속'),
- 'globe':('밸류체인53세부업종·기업/도시·3종교역선·SAURON','UN45지역 연간 총수출·방향/금액별 곡선·회전/확대/검색·정확한USD/분모·30일갱신·기업소재국표·SAURON 3D/지진/SGP4/6효과/카메라/투어/검색','기업151개 본사/도시·공급/수출/물류 근거·Google 실사3D 키 미연결'),
+ 'globe':('밸류체인53세부업종·기업/도시·3종교역선·위성·지구관측','UN45지역 연간 총수출·방향/금액별 곡선·회전/확대/검색·정확한USD/분모·30일갱신·기업소재국표·위성·지구관측 3D/지진/SGP4/6효과/카메라/투어/검색','기업151개 본사/도시·공급/수출/물류 근거·Google 실사3D 키 미연결'),
  'principium':('3유형·5단 상세·제목 관계지도·키워드 구체·등록/첨부','팀 작성/개인 리서치·5단 상세·공유 키워드 지도·회전 구체·PDF 파서/선택 OCR·이미지·휴지통/백업','LLM 요약·팀 공용 DB/인증·서버 방문 통계 미연결'),
  'regime':('US/KR 성장×물가 4분면·전이 표·RSI 이중축·거시 선','양국 국면·전이·주간 RSI/가격·성장/물가·한미13출처90일달력·국가/기간/분류검색','원본 세부 상태 판정·발표 시점 빈티지 동등성 미검증'),
  'rs':('35개 5Y z, 0/±1/±2·중앙 음영, 섹터 막대/히트맵, 강8약8표/8+6막대·15위표','공식35페어·고정축·KR/US 1W강약8표·1M막대·KOSPI200 KPI·시장필터·3유니버스 순위','조선 신규 상장으로 5Y 준비 구간 부족, z 비공개 세부 설정 미검증'),
@@ -60,7 +61,7 @@ PARITY={
  'ask_digest':('시장 brief·3기간·10테마·16종목·21자산·위험/4지표·모듈요약','달력수익·사업공식출처·RS16·9위험관측·4차트·20모듈·로컬 질문/첨부','1~2기업 테마 표본·구루/전체뉴스량·자동 AI 질의 미연결'),
 }
 labels={'partial':'부분 구현','operational':'계산·화면 연결','blocked':'추가 데이터 필요'}
-status_lines=['# 탭별 구현 현황','',f"가격 기준 {meta['as_of']} · 공개 탭 25개 · 분석/콘텐츠 연결 **{meta['implemented']}개** · Overview/At a Glance 2개.",'',
+status_lines=['# 탭별 구현 현황','',f"가격 기준 {meta['as_of']} · 공개 탭 25개 · 분석/콘텐츠 연결 **{meta['implemented']}개** · Overview/이용 안내 2개.",'',
  '연결은 완전 복제와 다르다. 공개된 차트 구조를 맞추면서 실자료 계산과 탐색 기능을 구현했다. 비공개 산식·관측치가 필요한 부분은 아래와 각 화면에 남겨 둔다. 원본 계산 서버와 수치 동등성 인증을 완료한 탭은 없다.','',
  f"로컬 가격 {meta['price_series']}계열, 거시 {meta['macro_series']}계열, 재무·가격 연결 {meta['financial_companies']}기업. 국내 컨센서스 빈티지 {meta['consensus_as_of']}. KRX 대형주100·KOSPI200 공식 응답201·IVV 주식504를 사용한다.",'',
  '| 탭 | 상태 | 연결 범위 | 남은 범위 |','|---|---|---|---|']
@@ -92,7 +93,7 @@ for m in modules:
 status_lines += ['','## 이번 검증 범위','','Python 날짜·수익률·학습 타깃·미래 변경 불변성·기하 패턴 검증, 실제 스냅샷의 OHLC/행렬/그래프 검증, JS 전체 23개 데이터 탭과 모든 하위 섹션의 오프라인 렌더링을 검사한다. 대표 SVG는 브라우저 없이 래스터화하여 차트 배치와 한글을 확인한다. 브라우저 이벤트 전체나 원본 픽셀 일치 검증을 완료했다는 뜻은 아니다.','',
  '재계산은 [README](../README.md), 공개 정의는 [DATA_DEFINITIONS](DATA_DEFINITIONS.md), 다음 보완은 [ROADMAP](ROADMAP.md)을 따른다.']
 parity += ['','## 공통 표시와 검사','','결측값은 0으로 채우지 않는다. 좁은 화면에서는 패널을 한 열로 배치하고 표는 스크롤한다. 신규 SVG는 로컬 코드로 생성하며 외부 차트 CDN을 요구하지 않는다. RS/모멘텀은 키보드 날짜 탐색, 새 3D/지구본은 회전·선택 제어를 제공한다.','',
- '시계열은 날짜 순서와 중복·미래 관측을 검사한다. 예측 타깃만 미래를 허용한다. OHLC 범위, 학습 타깃 만기, 구간 순서, 8개 표면 룩백, 캔들 120일/52주, 25탭 연결, 코드와 데이터 크기를 검사한다. 대표 SVG의 육안 확인을 브라우저 기능 검사 또는 원본 계산 동등성으로 표현하지 않는다.']
+ '시계열은 날짜 순서와 중복·미래 관측을 검사한다. 예측 타깃만 미래를 허용한다. OHLC 범위, 학습 타깃 만기, 구간 순서, 8개 표면 룩백, 캔들 120일/52주, 25탭 연결과 코드 구문을 검사한다. 대표 SVG의 육안 확인을 브라우저 기능 검사 또는 원본 계산 동등성으로 표현하지 않는다.']
 (ROOT/'research/IMPLEMENTATION_STATUS.md').write_text('\n'.join(status_lines)+'\n',encoding='utf8')
 (ROOT/'research/CHART_PARITY.md').write_text('\n'.join(parity)+'\n',encoding='utf8')
 views=['# 세부 화면 연결 현황','',f"가격 기준 {meta['as_of']}. 연결은 해당 화면에 실자료 계산·탐색이 있다는 뜻이며 원본 알고리즘의 완전 복제를 뜻하지 않습니다. 각 탭의 남은 범위도 함께 확인하세요.",'','| 대형 탭 | 세부 화면 | 상태 | 섹션 수 | 필요한 자료 |','|---|---|---|---:|---|']

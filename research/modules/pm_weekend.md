@@ -1,4 +1,4 @@
-# PM 주말 브리프
+# 주간 거시점검
 
 <!-- implementation:start -->
 ## 현재 팀 구현

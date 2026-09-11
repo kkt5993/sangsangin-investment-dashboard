@@ -1,4 +1,4 @@
-# MAXIMUS
+# 통합예측
 
 <!-- implementation:start -->
 ## 현재 팀 구현

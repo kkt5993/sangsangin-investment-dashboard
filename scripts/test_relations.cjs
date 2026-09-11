@@ -31,7 +31,7 @@ async function checks(){
  find('[data-rsearch]').value='nothing matches 498231';await find('[data-rsearch]').fire('input');assert.equal(all('[data-rnode]').length,0);find('[data-rsearch]').value='';await find('[data-rsearch]').fire('input');
  find('[data-rcontrol="kind"]').value='all';await find('[data-rcontrol="kind"]').fire('change');
  find('[data-rcontrol="relation"]').value='supplies';await find('[data-rcontrol="relation"]').fire('change');assert.equal(all('[data-redge]').length,4);
- await find('[data-rnode="stock:TSM"]').fire('click');assert.equal(find('[data-rcontrol="node"]').value,'stock:TSM');assert(find('[data-relation-detail]').innerHTML.includes('TSMC'));await find('[data-rentity]').fire('click');assert.equal(navigation[0],'Entity 360');
+ await find('[data-rnode="stock:TSM"]').fire('click');assert.equal(find('[data-rcontrol="node"]').value,'stock:TSM');assert(find('[data-relation-detail]').innerHTML.includes('TSMC'));await find('[data-rentity]').fire('click');assert.equal(navigation[0],'기업 상세');
  find('[data-rcorr]').checked=true;await find('[data-rcorr]').fire('change');assert(find('[data-relation-output]').innerHTML.includes('음의 부호 보존'));
  const chart=find('[data-relation-graph]'),before=chart.innerHTML;chart.events.pointerdown[0]({clientX:0,clientY:0});chart.events.pointermove[0]({clientX:40,clientY:10});chart.events.pointerup[0]({});flush();assert.notEqual(chart.innerHTML,before);
  chart.events.wheel[0]({deltaY:200,preventDefault(){}});assert(+find('[data-rzoom]').value<100);await find('[data-rreset]').fire('click');assert.equal(find('[data-rzoom]').value,'100');

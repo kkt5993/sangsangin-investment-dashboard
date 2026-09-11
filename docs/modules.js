@@ -3,7 +3,7 @@ const MODULES = [
     "purpose": "전체 모듈을 국면→주도→맥락→기회 순서로 요약하는 첫 화면. 별도의 예측 엔진이 아니라 모듈 스냅샷을 조합하는 진입점이다.",
     "build": [
       "data/index.json의 modules를 읽고 각 module.json을 연결한다. 현재 코드는 Promise.all로 전 모듈을 최초 로딩한다.",
-      "narrative·주간 연대기, DRAGONGLASS 요약, keycharts, Tesseract, crowding을 읽고 4개 PILLARS별 카드를 만든다.",
+      "narrative·주간 연대기, 기업분석 요약, keycharts, 거시 국면, 시장 쏠림을 읽고 4개 PILLARS별 카드를 만든다.",
       "카드 클릭을 mod-{module} 해시와 연결하고 as_of와 전체 generated_at을 구분해 표시한다.",
       "Canvas 장식은 cosmos/holo/aragorn에, 정보 렌더링은 app.js에 분리한다."
     ],
@@ -12,9 +12,9 @@ const MODULES = [
       "보조 데이터가 없을 때 전체 Summary가 사라지지 않는지 확인",
       "서로 다른 모듈 기준일과 하위 모델 기준일을 별도로 표시"
     ],
-    "gap": "Summary 문장은 저장된 시점의 관찰값이다. 현재 시장에 대한 독립 검증은 이 작업 범위에 포함하지 않았다.",
+    "gap": "시장 종합 문장은 저장된 시점의 관찰값이다. 현재 시장에 대한 독립 검증은 이 작업 범위에 포함하지 않았다.",
     "id": "overview",
-    "title": "Summary",
+    "title": "시장 종합",
     "group": "special"
   },
   {
@@ -32,7 +32,7 @@ const MODULES = [
     ],
     "gap": "설계 안내가 계산 코드 전체는 아니다. Python builder, 캐시, 환경설정, 학습 산출물, 운영 서버는 공개 프런트에서 복원할 수 없다.",
     "id": "glance",
-    "title": "At a Glance",
+    "title": "이용 안내",
     "group": "special"
   },
   {
@@ -51,17 +51,17 @@ const MODULES = [
     ],
     "gap": "실제 Python 모델 코드와 가중치·학습 데이터는 미공개. OOS나 룩어헤드 차단이라는 설명만으로 검증 완료라고 판단할 수 없다. 실계산 버튼은 누르지 않았다.",
     "id": "maximus",
-    "title": "MAXIMUS",
+    "title": "통합예측",
     "group": "special"
   },
   {
     "purpose": "기업·산업·매크로·시설·정책을 객체와 관계로 연결한 온톨로지. 11개 서브탭에 그래프, 워치리스트, 위성, 시나리오, 의사결정 원장이 있다.",
     "build": [
       "objects.id와 links의 양 끝 ID를 연결하고 kind_label/rel_label을 화면 명칭으로 사용한다.",
-      "관계 지도→Entity 360→관련 research/insights/news→시나리오 파급을 같은 객체 ID로 연결한다.",
+      "관계 지도→기업 상세→관련 research/insights/news→시나리오 파급을 같은 객체 ID로 연결한다.",
       "프런트의 영향도·중심성·시나리오 함수와 localStorage 원장 로직을 읽어 표시/연산 경계를 재현한다.",
       "sources는 소스 옵션 목록이며 모든 소스가 연결되어 있다는 뜻은 아니다. status/live_feeds와 실제 객체 데이터를 함께 확인한다.",
-      "실제 위성 타일 및 SAURON Cesium 화면은 외부 서비스 의존 기능이다. 우선 저장된 좌표·관측 메타데이터로 테스트하고 추가 수집은 독립 파이프라인으로 구현한다."
+      "실제 위성 타일 및 위성·지구관측 Cesium 화면은 외부 서비스 의존 기능이다. 우선 저장된 좌표·관측 메타데이터로 테스트하고 추가 수집은 독립 파이프라인으로 구현한다."
     ],
     "checks": [
       "객체 ID 유일성·관계 참조 무결성",
@@ -71,7 +71,7 @@ const MODULES = [
     ],
     "gap": "정적 관계망, 수집된 관측값, 미래 옵션/로드맵이 섞여 있다. satellite 측정 코드 및 모든 공급망 가중치의 추정 과정은 미공개다.",
     "id": "dragonglass",
-    "title": "DRAGONGLASS",
+    "title": "기업분석",
     "group": "special"
   },
   {
@@ -88,7 +88,7 @@ const MODULES = [
     ],
     "gap": "관계 생성 및 해석 문장 생성의 전체 builder 코드는 확보되지 않았다.",
     "id": "aragorn",
-    "title": "ARAGORN MAP",
+    "title": "업종·자산지도",
     "group": "special"
   },
   {
@@ -105,7 +105,7 @@ const MODULES = [
     ],
     "gap": "외부 지도 라이브러리와 지도 타일은 수집하지 않았다. UI 코드는 확보했으나 미러 빌더·교역경로 생성 코드는 미공개다.",
     "id": "globe",
-    "title": "GLOBAL UNIVERSE",
+    "title": "글로벌 공급망",
     "group": "special"
   },
   {
@@ -123,7 +123,7 @@ const MODULES = [
     ],
     "gap": "요약 생성 프롬프트·서버 코드는 없다. 원문 PDF·숨김 PDF·방문자 기록은 수집하지 않았다.",
     "id": "principium",
-    "title": "PRINCIPIUM",
+    "title": "리서치 자료실",
     "group": "special"
   },
   {
@@ -141,7 +141,7 @@ const MODULES = [
     ],
     "gap": "분류에 사용한 모든 임계값과 전처리 함수는 공개되어 있지 않다. rows의 comment와 차트 note가 가장 구체적인 공개 명세다.",
     "id": "regime",
-    "title": "경제·시장 국면 (미국·한국)",
+    "title": "국면",
     "group": "regime"
   },
   {
@@ -158,7 +158,7 @@ const MODULES = [
     ],
     "gap": "5년 창의 정확한 거래일 수·ddof·결측 정책은 공개 설명만으로 확정할 수 없다.",
     "id": "rs",
-    "title": "주간 상대강도 (RS)",
+    "title": "상대강도",
     "group": "momentum"
   },
   {
@@ -175,7 +175,7 @@ const MODULES = [
     ],
     "gap": "절대강세 합성 규칙과 데이터 오류 처리의 전체 코드가 필요하다.",
     "id": "momentum",
-    "title": "모멘텀 (섹터·절대·초과수익)",
+    "title": "모멘텀",
     "group": "momentum"
   },
   {
@@ -192,7 +192,7 @@ const MODULES = [
     ],
     "gap": "세부 피처 점수화·버킷 분기 임계값 전체는 builder 재작성 시 정의해야 한다.",
     "id": "discovery",
-    "title": "종목 발굴 (변곡·가속)",
+    "title": "종목 발굴",
     "group": "opportunity"
   },
   {
@@ -209,7 +209,7 @@ const MODULES = [
     ],
     "gap": "선별기 코드·시점별 유니버스·거래비용 포함 검증 결과는 미공개다.",
     "id": "strategies",
-    "title": "🎯 전략 스캐너 (신규 알파)",
+    "title": "투자전략",
     "group": "opportunity"
   },
   {
@@ -226,7 +226,7 @@ const MODULES = [
     ],
     "gap": "추정치 보정의 정확한 Python 규칙 및 역사적 컨센서스 저장 방식은 확인할 수 없다.",
     "id": "earnings",
-    "title": "실적 모멘텀 (대형주)",
+    "title": "실적·컨센서스",
     "group": "momentum"
   },
   {
@@ -243,7 +243,7 @@ const MODULES = [
     ],
     "gap": "성장주 모집단·스크리닝 초기 조건과 전체 컨센서스 수집 코드는 미공개다.",
     "id": "growth",
-    "title": "글로벌 성장주 모니터링",
+    "title": "성장 컨센서스",
     "group": "momentum"
   },
   {
@@ -261,7 +261,7 @@ const MODULES = [
     ],
     "gap": "배분 최적화·유니버스·학습 및 검증 전체 코드는 미공개. 현재 데이터에서는 alloc 기준일이 부모보다 오래되어 신선도 검사가 필요하다.",
     "id": "multiasset",
-    "title": "멀티에셋 모니터링",
+    "title": "자산배분",
     "group": "context"
   },
   {
@@ -280,7 +280,7 @@ const MODULES = [
     ],
     "gap": "딜러 포지션은 관측값이 아니라 가정. 사후 충격을 보고 추가한 취약성 룰은 별도 미래 구간 검증이 필요하다.",
     "id": "risk",
-    "title": "멀티 위험지표 (선제위험·감마)",
+    "title": "수급·위험",
     "group": "context"
   },
   {
@@ -295,9 +295,9 @@ const MODULES = [
       "적합도 100/100을 성공확률로 오인하지 않도록 표현",
       "상승·하락 대칭 조건 및 추후 수익 검증"
     ],
-    "gap": "At a Glance에는 ViT 표현이 있으나 현재 watch 표시는 룰 기반 패턴 스캐너다. 실제 패턴 검출 알고리즘은 미공개다.",
+    "gap": "이용 안내에는 ViT 표현이 있으나 현재 watch 표시는 룰 기반 패턴 스캐너다. 실제 패턴 검출 알고리즘은 미공개다.",
     "id": "watch",
-    "title": "워칭 차트 · 패턴 스캐너 (📈상승·📉하락)",
+    "title": "종목 차트",
     "group": "opportunity"
   },
   {
@@ -317,7 +317,7 @@ const MODULES = [
     ],
     "gap": "안내의 OOS 기간·피처 수·모델 수에 상충하는 설명이 있다. 원문에 과적합이 불가능하다는 취지의 표현이 있어도 재현 검증 사실로 채택하지 않는다.",
     "id": "ml",
-    "title": "ML·DL 지수예측 (KOSPI·NASDAQ·S&P)",
+    "title": "지수예측",
     "group": "regime"
   },
   {
@@ -336,7 +336,7 @@ const MODULES = [
     ],
     "gap": "docs에는 공적분이라는 이름이 있으나 공개 설명의 선별은 상관·Hurst 중심이다. 실제 공적분 검정 여부를 추정하지 않는다.",
     "id": "quant",
-    "title": "Quant Hedge (Multi Quant)",
+    "title": "퀀트전략",
     "group": "opportunity"
   },
   {
@@ -354,7 +354,7 @@ const MODULES = [
     ],
     "gap": "위험 합성의 전체 계수·게이트 함수·원자료 정합성은 독립 구현 때 검증해야 한다.",
     "id": "dynamics",
-    "title": "🌀 시장 속도·붕괴 취약성",
+    "title": "시장 변동성",
     "group": "context"
   },
   {
@@ -371,7 +371,7 @@ const MODULES = [
     ],
     "gap": "주간 글 생성 프롬프트·발행 승인 과정은 미공개다.",
     "id": "iw",
-    "title": "Images & Words (주간 기록)",
+    "title": "주간 기록",
     "group": "context"
   },
   {
@@ -388,7 +388,7 @@ const MODULES = [
     ],
     "gap": "주말 발표 당시 정보 집합과 전체 룰 코드가 없어 재현 구현에서 확정해야 한다.",
     "id": "pm_weekend",
-    "title": "PM 주말 브리프",
+    "title": "주간 거시점검",
     "group": "context"
   },
   {
@@ -405,7 +405,7 @@ const MODULES = [
     ],
     "gap": "세금·수수료·환헤지는 공개 비교 수치에 모두 반영된 것으로 가정하지 않는다.",
     "id": "etfmon",
-    "title": "💸 글로벌 ETF 큐레이션",
+    "title": "ETF 분석",
     "group": "context"
   },
   {
@@ -413,7 +413,7 @@ const MODULES = [
     "build": [
       "geoecon의 지역·뉴스·게이지·합성 지표를 표준화하고 근거 링크를 보존한다.",
       "워드클라우드·감성 요약·1주/1개월 변화·지역 지도·EPU/VIX/금리/유가 차트를 만든다.",
-      "지정학 영향도는 DRAGONGLASS의 객체/시나리오로 연결한다."
+      "지정학 영향도는 기업분석의 객체/시나리오로 연결한다."
     ],
     "checks": [
       "중복 기사 제거·언어별 감성 사전 차이",
@@ -422,11 +422,11 @@ const MODULES = [
     ],
     "gap": "감성 모델·키워드 추출과 기사 수집 전체 코드는 미공개다.",
     "id": "geoecon",
-    "title": "🌍 geo-economics",
+    "title": "지정학·경제",
     "group": "context"
   },
   {
-    "purpose": "ASK ARAGORN이 참고할 사이트 데이터 요약. 현재 index.json에 포함되어 ETC 탭에도 노출된다.",
+    "purpose": "시장 요약이 참고할 사이트 데이터 요약. 현재 index.json에 포함되어 ETC 탭에도 노출된다.",
     "build": [
       "brief/watchlist/cross_asset/macro_risk/research_recent/modules/ontology를 공통 식별자로 묶는다.",
       "ask.js의 POST /api/ask 요청은 질문을 보내고 응답을 표시한다. 실제 retrieval·모델·시스템 프롬프트는 서버 쪽이다.",
@@ -439,7 +439,7 @@ const MODULES = [
     ],
     "gap": "Cloudflare /api/ask 구현은 다운로드 가능한 프런트 소스에 포함되지 않는다. 질문 제출은 하지 않았다.",
     "id": "ask_digest",
-    "title": "ask_digest",
+    "title": "시장 요약",
     "group": "other"
   }
 ];

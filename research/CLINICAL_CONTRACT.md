@@ -1,6 +1,6 @@
 # 임상시험 등록부 관측 계약
 
-DRAGONGLASS 보존 데이터의 비만·GLP-1, Eli Lilly, UnitedHealth 세 범위를 [ClinicalTrials.gov 공식 API](https://clinicaltrials.gov/data-api/api)로 독립 수집한다. 원본의 검색식과 필터는 공개되지 않아 건수 동일성을 주장하지 않는다. 현재 검색식·범위·기관별 포함 조건은 `config/clinical_scopes.json`과 화면에서 확인한다.
+기업분석 보존 데이터의 비만·GLP-1, Eli Lilly, UnitedHealth 세 범위를 [ClinicalTrials.gov 공식 API](https://clinicaltrials.gov/data-api/api)로 독립 수집한다. 원본의 검색식과 필터는 공개되지 않아 건수 동일성을 주장하지 않는다. 현재 검색식·범위·기관별 포함 조건은 `config/clinical_scopes.json`과 화면에서 확인한다.
 
 ## 정의와 날짜
 

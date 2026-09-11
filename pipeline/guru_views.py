@@ -42,7 +42,7 @@ def views(d,dragon,now=None):
     view=dict(type='gurus',title='스마트머니 · 13F 공시 보유',group='지금 주목',items=items,collection=collection,source_vintage=path.parent.parent.name if path.exists() else None,
         scope='확인한 분기말 공시의 보유입니다. 현재 보유·매수 추천·전체 운용자산이 아니며 비공개 보유, 현금, 공매도 등은 포괄하지 않습니다. 인물명은 추적 분류이고 실제 보고 법인을 별도로 표시합니다. 최신 공시의 완전한 조회 여부는 수집 상태와 구분합니다.',
         weight_basis='비중 = 같은 CUSIP·주식 종류·수량 단위·PUT/CALL의 보고 금액 합 ÷ 전체 정보표 행의 보고 금액 합 ×100. 옵션의 보고 금액은 옵션 프리미엄·델타 노출이 아닙니다. 표지 총액과 정보표 합계를 별도로 대조합니다.')
-    view['identifiers']=dict(source='OpenFIGI',source_url='https://www.openfigi.com/api/documentation',source_vintage=identifiers.parent.parent.name if identifiers.exists() else None,collection=mapping_packet.get('collection',{}),linked_positions=linked,linked_entities=sum(bool(e['guru_positions']) for e in entities),excluded=excluded,scope='CUSIP→미국 FIGI→티커와 현재 Entity360의 정확한 일치만 연결합니다. 식별자 조회시각은 분기말 보유일과 다르며 과거 시점의 티커 대응을 보증하지 않습니다. 옵션은 기초종목 연결이며 주식 보유로 바꾸지 않습니다.')
+    view['identifiers']=dict(source='OpenFIGI',source_url='https://www.openfigi.com/api/documentation',source_vintage=identifiers.parent.parent.name if identifiers.exists() else None,collection=mapping_packet.get('collection',{}),linked_positions=linked,linked_entities=sum(bool(e['guru_positions']) for e in entities),excluded=excluded,scope='CUSIP→미국 FIGI→티커와 현재 기업 상세의 정확한 일치만 연결합니다. 식별자 조회시각은 분기말 보유일과 다르며 과거 시점의 티커 대응을 보증하지 않습니다. 옵션은 기초종목 연결이며 주식 보유로 바꾸지 않습니다.')
     dragon['sections']=[s for s in dragon['sections'] if s['type']!='gurus'];pos=next((i+1 for i,s in enumerate(dragon['sections']) if s['type']=='dragonfocus'),len(dragon['sections']));dragon['sections'].insert(pos,view)
     alert=next((s for s in dragon['sections'] if s['type']=='dragontriggers'),None)
     if alert:

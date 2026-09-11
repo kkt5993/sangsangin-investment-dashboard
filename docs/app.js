@@ -1,5 +1,5 @@
 'use strict';
-const GROUPS={special:'PLATFORM',regime:'REGIME',momentum:'MOMENTUM',context:'CONTEXT',opportunity:'OPPORTUNITY',other:'INTERNAL'};
+const GROUPS={special:'종합 분석',regime:'국면',momentum:'주도',context:'시장 환경',opportunity:'투자 기회',other:'기록'};
 const escapeHTML=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const content=document.querySelector('#content');
 const built=id=>BUILD_STATUS.modules[id]&&BUILD_STATUS.modules[id].status!=='blocked';
@@ -28,7 +28,7 @@ function renderCatalog(){
  const q=document.querySelector('#search').value.trim().toLowerCase();
  const items=MODULES.filter(m=>(group==='all'||m.group===group)&&(`${m.title} ${m.purpose}`).toLowerCase().includes(q));
  const box=document.querySelector('#catalog');if(!box)return;
- box.innerHTML=items.map(m=>`<a class="module-card ${built(m.id)?'built':''}" href="#${m.id}"><small>${GROUPS[m.group]} / ${escapeHTML(m.id.toUpperCase())}</small><h3>${escapeHTML(m.title)}</h3><p>${escapeHTML(m.purpose)}</p><div class="card-foot"><span>${statusLabel(m.id)}</span><span>↗</span></div></a>`).join('')||'<div class="empty">일치하는 화면이 없습니다.</div>';
+ box.innerHTML=items.map(m=>`<a class="module-card ${built(m.id)?'built':''}" href="#${m.id}"><small>${GROUPS[m.group]} / ${escapeHTML(m.title)}</small><h3>${escapeHTML(m.title)}</h3><p>${escapeHTML(m.purpose)}</p><div class="card-foot"><span>${statusLabel(m.id)}</span><span>↗</span></div></a>`).join('')||'<div class="empty">일치하는 화면이 없습니다.</div>';
  document.querySelectorAll('[data-group]').forEach(b=>{b.classList.toggle('active',b.dataset.group===group);b.setAttribute('aria-pressed',String(b.dataset.group===group));});
 }
 function overview(){
@@ -45,21 +45,21 @@ function overview(){
  content.querySelectorAll('[data-group]').forEach(b=>b.addEventListener('click',()=>{group=b.dataset.group;renderCatalog();}));renderCatalog();
 }
 function glance(){
- content.innerHTML=`<p class="eyebrow">AT A GLANCE</p><h1>데이터에서 판단까지</h1><p class="lead">수집, 계산, 설명, 화면을 나누면 각 결과의 근거를 확인하고 같은 조건으로 다시 계산할 수 있습니다.</p>${pipeline()}
+ content.innerHTML=`<p class="eyebrow">이용 안내</p><h1>데이터에서 판단까지</h1><p class="lead">수집, 계산, 설명, 화면을 나누면 각 결과의 근거를 확인하고 같은 조건으로 다시 계산할 수 있습니다.</p>${pipeline()}
  <div class="section-head"><h2>플랫폼의 기본 구조</h2></div><div class="flow"><div><b>데이터 수집</b><small>제공처 · 발표일 · 단위</small></div><div><b>분석 모듈</b><small>지표 · 룰 · 모델</small></div><div><b>스냅샷 발행</b><small>JSON · 차트 · 버전</small></div><div><b>리서치 화면</b><small>비교 · 근거 · 판단 기록</small></div></div>
  <div class="detail-grid"><section class="panel"><h2>구현 원칙</h2><ol class="steps"><li>가격·거시·재무의 데이터 계약과 단위를 먼저 확정합니다.</li><li>관측일과 이용 가능일을 구분하고 최신 수정 빈티지의 한계를 표시합니다.</li><li>공식 구성종목과 분류, 데이터 출처, 코드 버전을 결과에 연결합니다.</li><li>예측은 시간순으로 학습·평가하고 실패와 관측 수를 함께 기록합니다.</li></ol></section><section class="panel"><h2>현재 구현 범위</h2><p>${BUILD_STATUS.implemented}개 분석·콘텐츠 탭, 가격 ${BUILD_STATUS.price_series}개, 거시 ${BUILD_STATUS.macro_series}개 계열을 연결했습니다. 화면은 PC에서 저장한 계산 결과를 읽으며 수집·검증·게시 파이프라인은 평일08:00·18:00에 실행합니다.</p><div class="quiet">원본과 축·기간·패널 구조를 대조합니다. 공개되지 않은 모델, 교역·위성·개인 기록은 탭의 남은 항목에 표시합니다. 기준모형을 원본 엔진과 같은 모델로 표시하지 않습니다.</div></section></div>
  <p class="quiet">가격 품질: KRX 공식값으로 ${BUILD_STATUS.price_quality?.corrected||0}개 관측을 보정하고, 정렬이 불가능한 ${BUILD_STATUS.price_quality?.quarantined||0}개 관측을 제외했습니다. 원자료·보정 해시는 별도 보존합니다.</p><div class="section-head"><h2>데이터 소스</h2></div><div class="source-list">${['KRX · 구성종목·업종','iShares · 미국 대형주 공시','Yahoo Finance · 가격·재무·EPS 추정','FRED · 미국 거시·EPU','ECOS · 한국 거시','로컬 QuantiWise · 국내 컨센서스','CFTC · 주간 선물 포지션','공식 기관·BBC·DW RSS · 뉴스 제목','Natural Earth · 지도 경계'].map(t=>`<span>${t}</span>`).join('')}</div><p class="quiet">원자료와 수집 이력은 PC에 보관하고, GitHub에는 계산 코드·문서·차트용 결과를 게시합니다. 기록 화면의 개인 메모는 브라우저에만 저장됩니다.</p><p><a href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/DATA_DEFINITIONS.md">공식 정의·단위·시차 문서 ↗</a> · <a href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/IMPLEMENTATION_STATUS.md">탭별 구현 현황 ↗</a> · <a href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/SUBVIEWS.md">세부 화면 연결 현황 ↗</a> · <a href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/UPDATE_PIPELINE.md">갱신 파이프라인 ↗</a></p>
  <div class="section-head"><h2>구현 순서</h2></div>${roadmap()}`;
 }
 function detail(m){
- content.innerHTML=`<p class="eyebrow">${GROUPS[m.group]} / ${escapeHTML(m.id.toUpperCase())}</p><div class="title-row"><div><h1>${escapeHTML(m.title)}</h1><p class="lead">${escapeHTML(m.purpose)}</p></div><span class="count-badge">구현 가이드</span></div>
+ content.innerHTML=`<p class="eyebrow">${GROUPS[m.group]} / ${escapeHTML(m.title)}</p><div class="title-row"><div><h1>${escapeHTML(m.title)}</h1><p class="lead">${escapeHTML(m.purpose)}</p></div><span class="count-badge">구현 가이드</span></div>
  <div class="detail-grid"><section class="panel"><h2>어떻게 만들면 되는가</h2><ol class="steps">${m.build.map(s=>`<li>${escapeHTML(s)}</li>`).join('')}</ol><a class="method-link" href="https://github.com/kkt5993/sangsangin-investment-dashboard/blob/main/research/modules/${m.id}.md">Markdown 문서 ↗</a></section><section class="panel"><h2>검증할 것</h2><ul class="checklist">${m.checks.map(s=>`<li>${escapeHTML(s)}</li>`).join('')}</ul><div class="quiet"><h3>확인이 더 필요한 부분</h3>${escapeHTML(m.gap)}</div></section></div><div class="intro-note">공개된 화면 구조와 설명을 바탕으로 한 재작성 가이드입니다. 투자 신호의 실제 성능을 검증한 결과는 아닙니다.</div>`;
 }
 function render(){
  PriceDashboard.cancel();ResearchDashboard.cancel();OverviewViews.cancel();
  const id=location.hash.slice(1)||'overview';document.body.dataset.page=id;const m=MODULES.find(x=>x.id===id);
  if(!m){content.innerHTML='<h1>화면을 찾을 수 없습니다.</h1><a class="method-link" href="#overview">전체 보기</a>';return;}
- document.querySelector('#breadcrumb').textContent=id.toUpperCase();document.title=m.title+' · 상상인 투자 리서치';
+ document.querySelector('#breadcrumb').textContent=m.title;document.title=m.title+' · 상상인 투자 리서치';
  if(id==='overview')overview();else if(id==='glance')glance();else if(['rs','momentum'].includes(id))PriceDashboard.render(content,m);else if(built(id))ResearchDashboard.render(content,m);else detail(m);setActive();
 }
 document.querySelector('#search').addEventListener('input',()=>{renderNav();renderCatalog();});

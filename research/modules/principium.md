@@ -1,4 +1,4 @@
-# PRINCIPIUM
+# 리서치 자료실
 
 <!-- implementation:start -->
 ## 현재 팀 구현

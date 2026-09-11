@@ -1,4 +1,4 @@
-# At a Glance
+# 이용 안내
 
 <!-- implementation:start -->
 ## 현재 팀 구현

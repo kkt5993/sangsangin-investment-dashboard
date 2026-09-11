@@ -1,4 +1,4 @@
-"""Observed DRAGONGLASS signals; no network, invented live score or thesis."""
+"""Observed 기업분석 signals; no network, invented live score or thesis."""
 from copy import deepcopy
 from math import isfinite
 from datetime import date,timedelta
@@ -42,14 +42,14 @@ def monitor(dragon,discovery,ranks):
     known={e['symbol'] for e in entities}
     for symbol,items in signals.items():
         if symbol not in known:
-            for h in items.values():rejected.append(dict(symbol=symbol,signal=h['id'],date=h['date'],reason='현재 Entity360 유니버스에 없음'))
+            for h in items.values():rejected.append(dict(symbol=symbol,signal=h['id'],date=h['date'],reason='현재 기업 상세 유니버스에 없음'))
     for e in entities:
         hits=list(signals.get(e['symbol'],{}).values())
         if not fresh(e.get('date'),asof):
-            for h in hits:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='Entity360 가격일이 오래되거나 미래임'))
+            for h in hits:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='기업 상세 가격일이 오래되거나 미래임'))
             continue
         for h in hits:
-            if h['id']!='attention' and h['date']!=e['date']:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='Entity360 가격일 '+e['date']+'과 불일치'))
+            if h['id']!='attention' and h['date']!=e['date']:rejected.append(dict(symbol=e['symbol'],signal=h['id'],date=h['date'],reason='기업 상세 가격일 '+e['date']+'과 불일치'))
         hits=[h for h in hits if h['id']=='attention' or h['date']==e['date']]
         related=[r for r in docs if r['kind']=='official' and any(t['id']==e['id'] for t in r['targets'])]
         edges=[r for r in graph.get('links',[]) if e['id'] in [r['source'],r['target']]]

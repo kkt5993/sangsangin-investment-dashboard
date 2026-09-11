@@ -11,6 +11,6 @@ Permission to use, copy, modify, and/or distribute this software for any purpose
 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 
-## SAURON 3D runtime
+## 위성·지구관측 3D runtime
 
-CesiumJS1.145.0은 Apache-2.0이며 `docs/vendor/cesium/LICENSE`와 `ThirdParty.json`, `ThirdParty.extra.json`을 보존한다. satellite.js7.1.0은 MIT이며 `docs/vendor/satellite/LICENSE`를 보존한다. 두 패키지의 배포 출처/무결성은 config의 vendor manifest에 있다. SAURON은 번들 Natural Earth II를 기본으로 사용하고 선택 OSM의 © OpenStreetMap contributors 표기를 유지한다. 범위와 데이터 출처는 [SAURON 계약](SAURON_CONTRACT.md)을 참조한다.
+CesiumJS1.145.0은 Apache-2.0이며 `docs/vendor/cesium/LICENSE`와 `ThirdParty.json`, `ThirdParty.extra.json`을 보존한다. satellite.js7.1.0은 MIT이며 `docs/vendor/satellite/LICENSE`를 보존한다. 두 패키지의 배포 출처/무결성은 config의 vendor manifest에 있다. 위성·지구관측은 번들 Natural Earth II를 기본으로 사용하고 선택 OSM의 © OpenStreetMap contributors 표기를 유지한다. 범위와 데이터 출처는 [위성·지구관측 계약](SAURON_CONTRACT.md)을 참조한다.

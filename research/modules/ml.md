@@ -1,4 +1,4 @@
-# ML·DL 지수예측 (KOSPI·NASDAQ·S&P)
+# 지수예측
 
 <!-- implementation:start -->
 ## 현재 팀 구현

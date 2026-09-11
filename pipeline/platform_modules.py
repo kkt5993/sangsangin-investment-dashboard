@@ -66,7 +66,7 @@ COUNTRIES={'United States':[-98,39],'South Korea':[128,36],'Japan':[138,37],'Tai
 def networks(d,financial,ranks):
     graph=network_data(d,financial,ranks)
     aragorn=module('aragorn',d.as_of,'회전·선택 가능한 3D 관계 지도와 연간 수익률 퀼트를 구현했습니다. 관계는 KRX·미국 GICS 시장/업종 소속이라는 확인 가능한 사실만 연결합니다. 퀼트는 전년 말 대비 배당 조정종가이며 마지막 연도는 YTD입니다.',[graph,quilt(d)],missing=['원본의 매크로 인과 그래프 생성기가 없어 소속 관계를 인과관계로 표시하지 않습니다.'])
-    dragon=module('dragonglass',d.as_of,'Entity 360의 기업·업종 관계 탐색과 관측 수치·워치 기록을 연결했습니다. 관계를 선택하면 연결 객체와 수치가 표시됩니다. 판단·시나리오 메모는 브라우저 로컬 원장에 보관됩니다.',[dict(graph,group='관계 지도'),dict(table('Entity 360',['객체','유형','종목','연결 수','1M %','3M %','RS'],[[a['name'],a['kind'],a.get('symbol'),a['degree'],a.get('r1m'),a.get('r3m'),a.get('rs')] for a in graph['nodes']]),group='Entity 360'),dict(type='journal',title='워치·시나리오 원장',group='원장')],missing=['시설·위성 관측·공급망 연결·전파 가중치가 없어 이들 값은 만들지 않았습니다. 원본 11개 하위 화면 중 관계 지도·Entity 360·원장을 구현했습니다.'])
+    dragon=module('dragonglass',d.as_of,'기업 상세의 기업·업종 관계 탐색과 관측 수치·워치 기록을 연결했습니다. 관계를 선택하면 연결 객체와 수치가 표시됩니다. 판단·시나리오 메모는 브라우저 로컬 원장에 보관됩니다.',[dict(graph,group='관계 지도'),dict(table('기업 상세',['객체','유형','종목','연결 수','1M %','3M %','RS'],[[a['name'],a['kind'],a.get('symbol'),a['degree'],a.get('r1m'),a.get('r3m'),a.get('rs')] for a in graph['nodes']]),group='기업 상세'),dict(type='journal',title='워치·시나리오 원장',group='원장')],missing=['시설·위성 관측·공급망 연결·전파 가중치가 없어 이들 값은 만들지 않았습니다. 원본 11개 하위 화면 중 관계 지도·기업 상세·원장을 구현했습니다.'])
     rows=[a for a in financial if a['country'] in COUNTRIES]
     grouped=[]
     for country in sorted({a['country'] for a in rows}):

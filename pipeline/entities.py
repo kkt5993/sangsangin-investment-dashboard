@@ -1,4 +1,4 @@
-"""Dated Entity 360 cards from existing official universes and local observations."""
+"""Dated 기업 상세 cards from existing official universes and local observations."""
 import pandas as pd
 from .engine import number, points
 from .financial_modules import frame
@@ -51,5 +51,5 @@ def entity_view(d, ranks, financial, events, extra=None):
             entity['financial'] = {k: f[k] for k in ['financial_currency', 'financial_as_of', 'report_date',
                                                      'margin', 'net_income', 'eps1', 'eps2', 'estimate_currency']}
         entities.append(entity)
-    return dict(type='entities', title='Entity 360 · 공식 유니버스와 추가 사업 관찰', group='Entity 360', entities=entities,extra_symbols=additions,
+    return dict(type='entities', title='기업 상세 · 공식 유니버스와 추가 사업 관찰', group='기업 상세', entities=entities,extra_symbols=additions,
                 coverage={k: dict(available=v['available'], expected=v['expected'], membership_as_of=v['membership_as_of']) for k,v in ranks.items()})

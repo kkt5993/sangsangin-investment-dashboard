@@ -12,6 +12,7 @@ from .build import make_snapshots
 from .universe import symbols
 from .subview_modules import extend
 from .subviews import attach
+from .display_names import public_labels
 
 def build(d):
     rank=rankings(d);print('Official rankings',[(k,v['available'],v['expected']) for k,v in rank.items()],flush=True)
@@ -35,6 +36,9 @@ def build(d):
     status={}
     for file in (ROOT/'docs/data').glob('*.json'):
         a=read_json(file)
+        labeled=public_labels(a)
+        if labeled!=a:
+            a=labeled;write_json(file,a)
         if not isinstance(a,dict) or not a.get('module'):continue
         if a.get('schema_version')==2:
             a=attach(a);write_json(file,a)

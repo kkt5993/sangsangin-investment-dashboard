@@ -48,7 +48,7 @@ S&P500은 실제 `^GSPC`, 한국은 `^KS11` 종가의 단순수익률을 사용�
 
 [SF Fed Daily News Sentiment](https://www.frbsf.org/research-and-insights/data-and-indicators/daily-news-sentiment-index/)의 [공식 Excel](https://www.frbsf.org/wp-content/uploads/news_sentiment_data.xlsx) `Data` 시트에서 날짜와 `News Sentiment`를 읽는다. 미국 경제기사의 연속 감성지수이며 높을수록 긍정적이다. 차트 CSV는 두 자리로 반올림돼 있어 원지수 정밀도를 보존한 Excel을 사용한다. 백분위는 `(작은 값 수+동률 수/2)/252×100`; 상수 구간은50이다. 원본40%의 분모는 미공개이므로 대용임을 제목과 단위에서 밝힌다.
 
-수집기 `pipeline/risk_signals_data.py`는 평일08/18의 `refresh`에 연결했다. KRX는 승인된 `allow_krx_auth`가 있을 때만 인증 경로를 호출하며 로그를 노출하지 않는다. 처음1년, 이후 마지막 날짜부터10달력일 겹침의 신규·정정 행만 저장한다. 동일 최신 가격 세션이면 재조회하지 않는다. VKOSPI 이름/코드는30일 캐시로 다시 확인한다. 뉴스는7일마다 최대2MiB만 전송해 읽고 최근3년 값만 변경분으로 보관한다.
+수집기 `pipeline/risk_signals_data.py`는 평일08/18의 `refresh`에 연결했다. KRX는 승인된 `allow_krx_auth`가 있을 때만 인증 경로를 호출하며 로그를 노출하지 않는다. 처음1년, 이후 마지막 날짜부터10달력일 겹침의 신규·정정 행만 저장한다. 동일 최신 가격 세션이면 재조회하지 않는다. VKOSPI 이름/코드는30일 캐시로 다시 확인한다. 뉴스는7일마다 읽고 최근3년 값만 변경분으로 보관한다.
 
 이전 정상 관측은 실패 시 보존하고 실제 성공 시각을 바꾸지 않는다. 실패/권한 미사용과 자료 지연은 화면에서 별도로 확인한다. 원자료·인증된 HTML·조회 응답은 저장소 밖 PC에만 보관한다. 웹 브라우저는 원본 사이트나 KRX 계정에 직접 요청하지 않는다.
 

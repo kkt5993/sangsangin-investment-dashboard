@@ -28,7 +28,6 @@ SIDE_M = 4000
 PIXELS = 400
 MIN_CLEAR = .70
 MIN_CORE_CLEAR = .85
-MAX_TRANSFER = 192 * 1024 * 1024
 
 
 def stamp():
@@ -64,16 +63,16 @@ def registry():
 
 class Transfer:
     """All remote raster reads pass through strict HTTP Range validation."""
-    def __init__(self, limit=MAX_TRANSFER, session=None):
-        self.limit = limit; self.used = 0; self.requests = 0
+    def __init__(self, session=None):
+        self.used = 0; self.requests = 0
         self.session = session or requests.Session()
 
     def get(self, url, start, size):
         u = urlparse(url)
         if u.scheme != 'https' or u.netloc != HOST or not u.path.startswith('/sentinel-2-c1-l2a/') or u.query:
             raise ValueError('Only public, unsigned Earth Search C1 raster assets are accepted')
-        if size < 1 or size > 4*1024*1024 or self.used + size > self.limit:
-            raise ValueError('Satellite transfer budget exceeded')
+        if start < 0 or size < 1:
+            raise ValueError('Invalid raster byte range')
         self.requests += 1
         with self.session.get(url, headers={'Range': f'bytes={start}-{start+size-1}',
                 'Accept-Encoding': 'identity'}, stream=True, timeout=30, allow_redirects=False) as r:
@@ -84,7 +83,7 @@ class Transfer:
             if not match:
                 raise ValueError('Missing raster byte-range contract')
             lo, hi, total = map(int, match.groups())
-            if lo != start or hi != min(start+size, total)-1 or not 0 < total < 2**32:
+            if lo != start or hi != min(start+size, total)-1 or total <= 0:
                 raise ValueError('Incorrect raster byte range')
             content = r.raw.read(hi-lo+2)
             self.used += len(content)
@@ -209,8 +208,7 @@ def search(site, base, now):
     params = dict(collections=COLLECTION, bbox=','.join(map(str,[site['lon']-dx, site['lat']-dy, site['lon']+dx, site['lat']+dy])),
         datetime=(now-timedelta(days=60)).isoformat()+'/'+now.isoformat(), limit=MAX_CANDIDATES, sortby='-properties.datetime')
     with requests.get(API+'/search', params=params, stream=True, timeout=40) as r:
-        r.raise_for_status(); content = r.raw.read(2*1024*1024+1, decode_content=True)
-    if len(content) > 2*1024*1024: raise ValueError('STAC search exceeds2MiB')
+        r.raise_for_status(); content = r.raw.read(decode_content=True)
     result = json.loads(content); items = result.get('features')
     if not isinstance(items, list) or len(items) > MAX_CANDIDATES:
         raise ValueError('Unexpected STAC search result')

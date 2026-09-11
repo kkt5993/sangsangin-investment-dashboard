@@ -8,7 +8,6 @@ from .acquire import stamp
 
 URL='https://www.ishares.com/us/products/239723/ishares-s-p-100-etf/latest-holdings.csv'
 PRODUCT='https://www.ishares.com/us/products/239723/ishares-sp-100-etf'
-LIMIT=1024*1024
 
 
 def parse(content,as_of):
@@ -47,10 +46,8 @@ def collect(base,as_of):
         if raw.exists():content=raw.read_bytes()
         else:
             with requests.get(URL,timeout=(10,30),stream=True,headers={'Cache-Control':'no-cache'}) as response:
-                response.raise_for_status();parts=[];size=0
+                response.raise_for_status();parts=[]
                 for part in response.iter_content(64*1024):
-                    size+=len(part)
-                    if size>LIMIT:raise ValueError('Holdings response exceeds 1MiB')
                     parts.append(part)
                 content=b''.join(parts)
         result=parse(content,as_of)

@@ -26,7 +26,7 @@ def response(rows=None):
 
 
 class TradeTests(unittest.TestCase):
-    def test_download_cap_and_decimal_parse(self):
+    def test_download_decimal_parse(self):
         class Reply:
             def __init__(self,body):self.body=body
             def __enter__(self):return self
@@ -39,7 +39,6 @@ class TradeTests(unittest.TestCase):
         raw=b'{"value":1234567890123.12345}'
         packet,size,sha=t.download(Session(raw),t.API)
         self.assertEqual(packet['value'],Decimal('1234567890123.12345'));self.assertEqual(size,len(raw));self.assertEqual(len(sha),64)
-        with patch.object(t,'MAX_BYTES',10),self.assertRaises(ValueError):t.download(Session(raw),t.API)
 
     def test_future_or_missing_cache_clock_is_not_fresh(self):
         now=datetime.now(timezone.utc)

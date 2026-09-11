@@ -14,7 +14,6 @@ from .acquire import stamp
 from .chain_data import age_hours
 
 MANIFEST = 'chain/evidence_sources.json.gz'
-MAX_BYTES = 4 * 1024 * 1024
 
 
 def settings():
@@ -88,7 +87,6 @@ def fetch(url):
         data = bytearray()
         for part in response.iter_content(65536):
             data.extend(part)
-            if len(data) > MAX_BYTES:raise ValueError('Source transfer cap')
         if not data:raise ValueError('Empty source')
     return bytes(data)
 
@@ -108,7 +106,7 @@ def collect(d, fetcher=fetch, pause=time.sleep, now=None, config=None):
         row = dict(old, url=source['url'], attempted_at=now.isoformat())
         try:
             blob = fetcher(source['url'])
-            if not blob or len(blob) > MAX_BYTES:raise ValueError('Source transfer cap')
+            if not blob:raise ValueError('Empty source')
             sha = hashlib.sha256(blob).hexdigest();changed = bool(old.get('sha256') and old['sha256'] != sha)
             if old.get('sha256') != sha:
                 packed = gzip.compress(blob);target = d.base / ('chain/evidence/' + id + '.html.gz')

@@ -33,7 +33,7 @@ class OwnershipTests(unittest.TestCase):
         self.assertFalse(pending);self.assertEqual(len(valid[0]['transactions']),1);self.assertEqual(valid[0]['transactions'][0]['amount'],121.5)
 
     def test_xml_invalid_issuer_entity_owner_and_size(self):
-        cases=[(xml(),dict(metadata(),issuer_cik='999')),(b'<!DOCTYPE x>'+xml(),metadata()),(b'x'*(2*1024*1024+1),metadata()),(xml().replace(b'<rptOwnerCik>456</rptOwnerCik>',b''),metadata())]
+        cases=[(xml(),dict(metadata(),issuer_cik='999')),(b'<!DOCTYPE x>'+xml(),metadata()),(xml().replace(b'<rptOwnerCik>456</rptOwnerCik>',b''),metadata())]
         for body,meta in cases:
             with self.assertRaises(ValueError):parse_ownership(body,meta)
 

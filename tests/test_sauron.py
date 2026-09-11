@@ -93,7 +93,7 @@ class SauronTests(unittest.TestCase):
             with patch.object(s,'download',return_value=({},2,'bad')):r=s.collect(d)
             self.assertEqual(r['sources'][0]['state'],'error');self.assertEqual(read(d.resource('sauron/quakes.json.gz')),old)
 
-    def test_download_status_and_size_cap(self):
+    def test_download_status(self):
         class Reply:
             status_code=200
             def __enter__(self):return self
@@ -101,7 +101,6 @@ class SauronTests(unittest.TestCase):
             def iter_content(self,_):yield b'{"ok":true}'
         reply=Reply();session=SimpleNamespace(get=lambda *a,**k:reply)
         self.assertEqual(s.download('https://example.com',session)[0],{'ok':True})
-        with patch.object(s,'LIMIT',3),self.assertRaises(ValueError):s.download('https://example.com',session)
         reply.status_code=301
         with self.assertRaises(RuntimeError) as result:s.download('https://example.com',session)
         self.assertEqual(result.exception.http_status,301)

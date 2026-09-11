@@ -11,7 +11,6 @@ from .acquire import stamp
 
 QUAKES='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson'
 STATIONS='https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=JSON'
-LIMIT=1024*1024
 FIELDS=['OBJECT_NAME','OBJECT_ID','EPOCH','MEAN_MOTION','ECCENTRICITY','INCLINATION','RA_OF_ASC_NODE',
         'ARG_OF_PERICENTER','MEAN_ANOMALY','EPHEMERIS_TYPE','CLASSIFICATION_TYPE','NORAD_CAT_ID',
         'ELEMENT_SET_NO','REV_AT_EPOCH','BSTAR','MEAN_MOTION_DOT','MEAN_MOTION_DDOT']
@@ -92,7 +91,6 @@ def download(url,session):
         body=bytearray()
         for part in response.iter_content(16384):
             body.extend(part)
-            if len(body)>LIMIT:raise ValueError('Observation response cap')
         return json.loads(body),len(body),hashlib.sha256(body).hexdigest()
 
 

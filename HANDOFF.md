@@ -338,3 +338,6 @@ DRAGONGLASS 신호 후속: dragon_signals.py/dragon-signals.js는 원본 watch/a
 
 임상 검증 완료:289 Python·두 자료검증기·3 JS모음·170 JS/MJS구문 통과(105.610초). Edge1440/1024/390에서3범위×3조건/0모집표시/최초증감null/NCT원문·날짜·기관/LLY기업이동·임상촉매2건/기존동시신호4/넘침0/오류0/외부요청0확인,390px육안검수.9응답의totalCount/NCT목록과게시JSON직접대조,가격Overview바이트동일검증. 최초전용build에서상태빈티지와기존가격Overview빈티지충돌을검출하여가격계산빈티지는보존하고clinical supplemental_vintages/source_vintage로별도계보명시.
 raw20260911T001009Z(부모20260910T222302Z),가격9/10유지. 공식API수집11요청·재실행0;별도탐색version1/모집1/공식OAS4041 및웹문서조회는수집카운트와구분. 원본사이트요청0. 게시후보run20260911T001604Z,실제commit/state/clinical-publication/file-verification확인. 전체goal미완;13F·기업뉴스감성/관심도·정량뷰·전체관계및임상별변화이력등계속구현대상.
+
+
+용량 검사 완전 제거 후속: 사용자 재지시에 따라 남아 있던 다운로드 응답·압축 해제·SEC XML·지도 타일·PDF/OCR 설치·위성 요청별/실행별 바이트 상한도 제거했다. 총용량 순회/저장 한도 없음. 형식·해시·HTTP Range 일치와 필요한 관측 구역 읽기, 요청 간격·캐시·실패 시 이전 자료 보존은 유지한다. 기존 크기 거부 테스트는 실제 대형 응답 허용·내용/프로토콜 검증으로 갱신했다. 전체 검사와 게시 결과는 runtime/no-size-validation.json 및 runtime/no-size-publication.json을 확인한다. 전체 세부탭 목표는 미완이며 이번 작업은 용량 검사 제거다.

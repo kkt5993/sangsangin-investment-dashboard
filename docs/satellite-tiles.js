@@ -1,7 +1,7 @@
 /* NASA GIBS viewport tiles. No prefetch, persistent storage, credentials or proxy. */
 (function(root){
  'use strict';
- const MAX_LAT=85.0511287798066,MAX_NATIVE=8,MAX_TILE_BYTES=1024*1024;
+ const MAX_LAT=85.0511287798066,MAX_NATIVE=8;
  const BASE='https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/';
  const wrap=lon=>((lon+180)%360+360)%360-180;
  function plan(c,width,height){
@@ -36,11 +36,10 @@
       const r=await get(tile.url,{signal:controller.signal,credentials:'omit',referrerPolicy:'no-referrer',cache:'default'});
       if([401,403,429,503].includes(r.status))halted=true;
       if(!r.ok||!(r.headers.get('content-type')||'').toLowerCase().startsWith('image/jpeg'))throw Error('Tile unavailable');
-      if(Number(r.headers.get('content-length'))>MAX_TILE_BYTES)throw Error('Tile size');
       const reader=r.body.getReader(),chunks=[];let count=0;
-      try{while(true){const {done,value}=await reader.read();if(done)break;count+=value.byteLength;if(count>MAX_TILE_BYTES)throw Error('Tile size');chunks.push(value);}}catch(e){await reader.cancel();throw e;}finally{reader.releaseLock();}
+      try{while(true){const {done,value}=await reader.read();if(done)break;count+=value.byteLength;chunks.push(value);}}catch(e){await reader.cancel();throw e;}finally{reader.releaseLock();}
       if(disposed||controller.signal.aborted||!wanted.has(key))return;
-      // JPEG signature and bounded body; malformed image decoding is handled by the browser.
+      // JPEG signature; malformed image decoding is handled by the browser.
       const prefix=[];for(const chunk of chunks){for(const v of chunk){prefix.push(v);if(prefix.length===2)break;}if(prefix.length===2)break;}
       if(count<3||prefix[0]!==255||prefix[1]!==216)throw Error('Invalid JPEG');
       const blob=new Blob(chunks,{type:'image/jpeg'});

@@ -11,13 +11,11 @@ PACKAGES=[
  ('tesseract.js','6.0.1','/sPvMvrCtgxnNRCjbTYbr7BRu0yfWDsMZQ2a/T5aN/L1t8wUQN6tTWv6p6FwzpoEBA0jrN2UD2SX4QQFRdoDbA==',{'dist/tesseract.min.js':'tesseract.min.js','dist/worker.min.js':'worker.min.js','LICENSE.md':'LICENSE','dist/tesseract.min.js.LICENSE.txt':'tesseract.min.js.LICENSE.txt','dist/worker.min.js.LICENSE.txt':'worker.min.js.LICENSE.txt'}),
  ('tesseract.js-core','6.0.0','1Qncm/9oKM7xgrQXZXNB+NRh19qiXGhxlrR8EwFbK5SaUbPZnS5OMtP/ghtqfd23hsr1ZvZbZjeuAGcMxd/ooA==',{'tesseract-core-lstm.wasm.js':'core/tesseract-core-lstm.wasm.js','tesseract-core-simd-lstm.wasm.js':'core/tesseract-core-simd-lstm.wasm.js','LICENSE':'core/LICENSE'})]
 
-def download(url,path,limit):
+def download(url,path):
     if path.exists():return path.read_bytes()
     with requests.get(url,stream=True,timeout=(10,45)) as r:
-        r.raise_for_status();parts=[];size=0
+        r.raise_for_status();parts=[]
         for chunk in r.iter_content(65536):
-            size+=len(chunk)
-            if size>limit:raise ValueError('OCR dependency download exceeds limit')
             parts.append(chunk)
     raw=b''.join(parts);path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw);return raw
 
@@ -26,7 +24,7 @@ def main():
     previous=json.loads(manifest_path.read_text()) if manifest_path.exists() else {};selected={};sources=[]
     for name,version,integrity,names in PACKAGES:
         url=f'https://registry.npmjs.org/{name}/-/{name}-{version}.tgz'
-        raw=download(url,cache/f'{name}-{version}.tgz',16*2**20)
+        raw=download(url,cache/f'{name}-{version}.tgz')
         if base64.b64encode(hashlib.sha512(raw).digest()).decode()!=integrity:raise ValueError('OCR npm integrity mismatch')
         with tarfile.open(fileobj=io.BytesIO(raw),mode='r:gz') as archive:
             for source,target in names.items():selected[target]=archive.extractfile('package/'+source).read()
@@ -34,7 +32,7 @@ def main():
     for name in ['eng.traineddata','kor.traineddata','LICENSE']:
         model='best' if name=='kor.traineddata' else 'fast'
         url=f'https://raw.githubusercontent.com/tesseract-ocr/tessdata_{model}/4.1.0/'+name
-        raw=download(url,cache/(f'tessdata-{model}-4.1.0-'+name),16*2**20)
+        raw=download(url,cache/(f'tessdata-{model}-4.1.0-'+name))
         sha=hashlib.sha256(raw).hexdigest();prior=next((r for r in previous.get('sources',[]) if r['url']==url),None)
         if prior and prior['sha256']!=sha:raise ValueError('OCR language source changed')
         sources.append(dict(url=url,sha256=sha))

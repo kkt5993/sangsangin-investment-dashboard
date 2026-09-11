@@ -17,7 +17,6 @@ REFS = {'reporters': 'https://comtradeapi.un.org/files/v1/app/reference/Reporter
 FOLDER = 'trade/'
 CONFIG = read_json(ROOT/'config/trade_areas.json')
 AREAS = [dict(zip(CONFIG['columns'], row)) for row in CONFIG['areas']]
-MAX_BYTES = 1024 * 1024
 
 
 def query(code, year):
@@ -90,7 +89,6 @@ def download(session, url, params=None):
         body = bytearray()
         for chunk in response.iter_content(16384):
             body.extend(chunk)
-            if len(body) > MAX_BYTES: raise ValueError('Comtrade response byte cap')
         packet = json.loads(body, parse_float=Decimal)
         return packet, len(body), hashlib.sha256(body).hexdigest()
 

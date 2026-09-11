@@ -101,10 +101,11 @@ class SatelliteTests(unittest.TestCase):
             with self.assertRaises(ValueError): transfer.get(url,0,100)
         self.assertEqual(len(session.calls),1)
 
-    def test_transfer_limit_and_incorrect_range(self):
-        session=Session(b'a'*100000); transfer=sat.Transfer(limit=100,session=session)
-        with self.assertRaises(ValueError): transfer.get(URL,0,101)
-        self.assertEqual(len(session.calls),0)
+    def test_transfer_and_incorrect_range(self):
+        session=Session(b'a'*(5*1024*1024)); transfer=sat.Transfer(session=session)
+        content,total=transfer.get(URL,0,len(session.data))
+        self.assertEqual(content,session.data)
+        self.assertEqual(total,len(session.data))
         with patch.object(session,'get',return_value=Response(b'a'*100,5,20)):
             with self.assertRaises(ValueError): transfer.get(URL,0,16)
 

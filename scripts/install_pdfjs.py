@@ -10,17 +10,14 @@ from pipeline.store import DATA,write_json
 VERSION='6.3.289'
 URL=f'https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-{VERSION}.tgz'
 INTEGRITY='ZHjSVpDa3D6izMq8/04lvkhkATUmL9px6ChPaXc1k6nU2Mrhlg1/7F0bdUqCwUjw3NsPTfPZsMDUU6ZIcRaeQw=='
-LIMIT=16*1024*1024
 
 def main():
     archive=DATA/'runtime/dependencies'/f'pdfjs-dist-{VERSION}.tgz'
     if archive.exists():raw=archive.read_bytes()
     else:
         with requests.get(URL,stream=True,timeout=(10,45)) as r:
-            r.raise_for_status();parts=[];size=0
+            r.raise_for_status();parts=[]
             for chunk in r.iter_content(65536):
-                size+=len(chunk)
-                if size>LIMIT:raise ValueError('PDF.js download exceeds limit')
                 parts.append(chunk)
         raw=b''.join(parts)
     if base64.b64encode(hashlib.sha512(raw).digest()).decode()!=INTEGRITY:raise ValueError('PDF.js npm integrity mismatch')

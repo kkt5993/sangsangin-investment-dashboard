@@ -88,7 +88,6 @@ def raw_page(base,key,url):
         if hashlib.sha256(content).hexdigest()!=m['sha256']:raise ValueError('Calendar cache hash mismatch')
         return content,m
     time.sleep(.5);response=requests.get(url,timeout=25);response.raise_for_status();content=response.content
-    if len(content)>1500000:raise ValueError('Calendar HTML exceeds1.5MB')
     encoded=gzip.compress(content,mtime=0);p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(encoded)
     m=dict(url=response.url,retrieved_at=stamp(),bytes=len(content),sha256=hashlib.sha256(content).hexdigest());write_json(meta,m)
     return content,m

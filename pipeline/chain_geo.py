@@ -68,10 +68,8 @@ def collect(d):
                 blob=bytearray()
                 for part in response.iter_content(65536):
                     blob.extend(part)
-                    if len(blob)>8*1024*1024:raise ValueError('Gazetteer transfer cap')
             import io
             with zipfile.ZipFile(io.BytesIO(blob)) as z:
-                if z.getinfo('cities5000.txt').file_size>40*1024*1024:raise ValueError('Gazetteer expansion cap')
                 places(z.read('cities5000.txt').decode('utf-8').splitlines())
             target=d.base/'chain/cities5000.zip';target.parent.mkdir(parents=True,exist_ok=True)
             temp=target.with_suffix('.tmp');temp.write_bytes(blob);temp.replace(target);archive=target
@@ -92,7 +90,6 @@ def collect(d):
             save(d.base/'chain/locations.json.gz',previous)
         return previous
     with zipfile.ZipFile(archive) as z:
-        if z.getinfo('cities5000.txt').file_size>40*1024*1024:raise ValueError('Gazetteer expansion cap')
         gazetteer=places(z.read('cities5000.txt').decode('utf-8').splitlines())
     wanted={key(r['data'].get('city')) for r in profiles.values()}
     gazetteer=[p for p in gazetteer if p['aliases'] & wanted]

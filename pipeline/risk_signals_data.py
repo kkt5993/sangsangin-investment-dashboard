@@ -121,7 +121,6 @@ def fetch_vk(d,start,end):
             params=dict(contextName='finder_drvetcidx',value=quote('변동성'),viewCount=5,
                         bldPath='/dbms/comm/finder/finder_drvetcidx_autocomplete'),headers=auth.get_headers(),timeout=25)
         r.raise_for_status()
-        if len(r.content)>64*1024:raise ValueError('Unexpected KRX finder response')
         rows=[dict(name=x.get('data-nm'),indTpCd=x.get('data-cd'),idxIndCd=x.get('data-tp'))
               for x in BeautifulSoup(r.text,'html.parser').select('li') if x.get('data-nm')==VK_NAME]
         if rows!=[dict(name=VK_NAME,indTpCd='1',idxIndCd='300')]:raise ValueError('Official VKOSPI identity changed')
@@ -149,13 +148,10 @@ def collect(d,allow_krx_auth=False,fetch_news=None,fetch_investors=None,fetch_vk
             if fetch_news:blob=fetch_news()
             else:
                 with requests.get(NEWS_URL,timeout=30,stream=True) as response:
-                    response.raise_for_status();chunks=[];size=0
+                    response.raise_for_status();chunks=[]
                     for chunk in response.iter_content(64*1024):
-                        size+=len(chunk)
-                        if size>2*1024**2:raise ValueError('Unexpectedly large sentiment workbook')
                         chunks.append(chunk)
                     blob=b''.join(chunks)
-            if len(blob)>2*1024**2:raise ValueError('Unexpectedly large sentiment workbook')
             rows=sentiment_rows(pd.read_excel(io.BytesIO(blob),sheet_name='Data'),d.as_of)
             # The dashboard needs a trailing 252-observation position. Keep
             # three years of source observations, not another full history copy.

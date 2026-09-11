@@ -29,12 +29,12 @@ module.exports=(async()=>{
  blocked.update(tiles);for(let i=0;i<5;i++)await tick();assert.equal(limited,3);assert.equal(blocked.status().halted,true);blocked.dispose();
  let badCalls=0;const bad=T.create({urls,fetch:async()=>{badCalls++;return new Response('html',{headers:{'content-type':'text/html'}});}});
  bad.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(bad.status().failed,1);bad.update(tiles.slice(0,1));await tick();assert.equal(badCalls,1);bad.retry();await tick();assert.equal(badCalls,2);bad.dispose();
- const big=T.create({urls,fetch:async()=>new Response(new Uint8Array(1024*1024+1),{headers:{'content-type':'image/jpeg'}})});
- big.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(big.status().failed,1);assert.equal(big.status().cached,0);big.dispose();
+ const big=T.create({urls,fetch:async()=>new Response(Uint8Array.from({length:1024*1024+1},(_,i)=>i===0?255:i===1?216:0),{headers:{'content-type':'image/jpeg'}})});
+ big.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(big.status().failed,0);assert.equal(big.status().cached,1);big.dispose();
  const split=T.create({urls,fetch:async()=>new Response(new ReadableStream({start(c){c.enqueue(new Uint8Array([255]));c.enqueue(new Uint8Array([216,255,217]));c.close();}}),{headers:{'content-type':'image/jpeg'}})});
  split.update(tiles.slice(0,1));for(let i=0;i<5;i++)await tick();assert.equal(split.status().loaded,1);split.dispose();
  const bounded=T.create({urls,fetch:async()=>jpeg()});
  for(let i=0;i<60;i++){bounded.update([{...tiles[0],key:'8/0/'+i}]);for(let j=0;j<3;j++)await tick();}
  assert.equal(bounded.status().cached,48);bounded.dispose();
- console.log('Satellite tiles: Mercator/date-line/polar/overzoom geometry, visible-only requests, reuse, 3-request ceiling, cancellation, retry, rate-limit halt, size and URL cleanup passed.');
+ console.log('Satellite tiles: Mercator/date-line/polar/overzoom geometry, visible-only requests, reuse, 3-request ceiling, cancellation, retry, rate-limit halt, large tiles and URL cleanup passed.');
 })();

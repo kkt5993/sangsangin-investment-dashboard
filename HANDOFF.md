@@ -396,3 +396,6 @@ attention_data/attention_views/attention-views.js/config으로수집·Entity360�
 초기 엄격253일조건에서352개가제외되어원가격조사:2025-09-19가대부분종목에누락되어있음을확인. 시장달력을삭제하거나일수익을압축하지않고 최근127일·252일전기준점필수/최근253일가격최소220·실제결측일·일수익관측수를명시했다. 결측팩터0채움제거;완료12개월안정성·복리5D수익z. BAB가격일과Beta종료/관측수분리(KOSPI실제9/9). TSMOM달력12/3개월전이하최근가격·기준일원장,금리는상대변화만/노출null,crypto365·나머지252연환산. 원본명시6+팀추가6구분. 정밀평균/표준편차문자열보존으로화면반올림후역산오차제거. Hurst후보는NumPy배열선별하고상세OU는최종선택만계산;전체자료적재포함약34초. 전체원본PIT/비공개설정·비용후성과는미완이다.
 
 333Python·두자료검증기·3JS회귀·176JS/MJS구문 초기전체통과. 마지막Beta/TSMOM날짜원장 추가 및 외부에서병합된시장종합디자인910dbbb를보존한새stage20260911T032411Z에서전체재검증한다. 정본결과runtime/quant-screens-validation.json의run_id/status를확인할것. Edge1440/1024/390에서5그룹·10곡선점직접일치/±2·515원장행·검색/정렬/빈결과/펼침/왕복·가로넘침0/오류0/외부요청0,이미지육안검수. 원가격10페어/모든252차트점·100팩터점수독립검산,다른22JSON바이트불변. 정본QUANT_SCREENS_CONTRACT.md;runtime/quant-screens-source-verification/build-verification/browser-qa.json과실제게시quant-screens-publication.json/state.json확인. 전체goal미완이며REFERENCE_PARITY잔여계속.
+
+
+2026-09-11 차트 배치 밀도 개선: 시장 종합의 36개월 궤적과 적층 레이더를 같은 행에 배치하고 날짜/원수치 설명을 공유 행으로 옮겼다. 6/5축 KPI는 넓은 화면에서 한 줄, 원단위 4시점 원장은 펼침 영역에 보존했다. 주도주 리본은 760px 이상 실제 차트 폭에서 5종목씩 두 열, 그 아래에서 10종목 한 열로 재배치하며 공통 로그 축/실제 수익률/시총 두께/성장 색과 클릭·직접 카메라 조작을 보존한다. ResizeObserver는 탭 이탈 시 해제한다. 비교 가능한 시계열/산점도와 통합예측 카드는 데스크톱 두 열, 작은 화면 한 열로 조정했다. 데이터/모델/관측 계약 변경 및 수집 없음. 검증/배포 결과는 private runtime/density-validation.json과density-publication.json 확인.

@@ -145,3 +145,79 @@ main svg { font-family:inherit!important; font-variant-numeric:tabular-nums; }
 .sauron-stage button[aria-pressed=true]{background:#e9e5db;border-color:#9c9079}
 .sauron-hud-title small,.sauron-sensors small,.sauron-help,.sauron-loading{color:#6b655a}
 .sauron-attribution{background:#ffffffed}.sauron-attribution a,.sauron-stage .cesium-widget-credits a{color:#665a45}
+/* Align plot proportions and group simultaneous comparisons. */
+main { padding-top:32px; }
+.research-hero { padding:8px 0 20px; }
+.research-hero h1 { font-size:clamp(36px,3.5vw,50px); margin-bottom:16px; }
+.hero-asof { margin-top:16px; }
+.overview-coordinate { padding-top:24px; margin-bottom:32px; }
+.coordinate-header { margin-bottom:18px; }
+.overview-holo-grid { grid-template-columns:minmax(0,1.85fr) minmax(280px,1fr); gap:0 24px; }
+.overview-holo-grid figure:first-child { grid-column:auto; }
+.overview-holo-grid>figure:not(:first-child) { padding-top:0; border-top:0; }
+.overview-holo-grid .state-primary .scene-direct svg { max-height:none; }
+.overview-holo-grid .state-radar .scene-direct svg { max-height:none; aspect-ratio:400 / 460; }
+.state-reading { grid-column:1/-1; }
+.state-chart-notes { padding:10px 0; }
+.state-date-rail button { padding:10px 12px; }
+.overview-coordinate .projection-detail { min-height:0; padding:8px 0; }
+.state-axis-summary { padding:16px 0; margin:8px 0 16px; border-block:1px solid #e6e2d9; }
+.state-axis-summary h3 { font-size:12px; margin:0 0 10px; color:#857c6c; }
+.state-axis-summary .kpi-grid { grid-template-columns:repeat(6,minmax(0,1fr)); gap:0; }
+[data-coordinate='crowding'] .state-axis-summary .kpi-grid { grid-template-columns:repeat(5,minmax(0,1fr)); }
+.state-axis-summary .kpi:nth-child(n) { padding:0 14px; border-left:1px solid #e6e2d9; }
+.state-axis-summary .kpi:first-child { padding-left:0; border-left:0; }
+.state-axis-summary .kpi strong { font-size:25px; }
+.state-leaders { margin:20px 0; }
+.state-leaders figcaption { font-size:15px; font-weight:550; margin:0 0 12px; }
+.state-leaders [data-worm-detail] { font-size:12px; line-height:1.7; }
+.state-leaders [data-worm-detail] p { margin:8px 0; }
+.overview-coordinate details { margin:12px 0; }
+.overview-coordinate>.quiet { font-size:11px; line-height:1.7; margin:12px 0; }
+.scene-dock { padding:7px 12px; gap:6px; }
+.scene-input-hint { font-size:11px; }
+.chart-grid,.reading-grid,.feature-grid,.relation-columns,.digest-grid { gap:24px; }
+.analysis-section { margin:28px 0; }
+.analysis-heading { margin-top:30px; }
+.moe-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px; }
+.moe-card { display:block; padding-top:20px; }
+.moe-card h3,.moe-level { font-size:28px; margin-bottom:12px; }
+.moe-card h4 { font-size:18px; margin-top:22px; }
+.moe-bar-row { grid-template-columns:130px minmax(0,1fr) 46px; gap:10px; font-size:12px; margin:8px 0; }
+.chart-grid>.data-chart:has(svg[data-chart-type='line']) { grid-column:auto; }
+@media(min-width:1200px) {
+ .chart-grid:has(svg[data-chart-type='scatter3d']),.chart-grid:has(svg[data-chart-type='hologram']) { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .chart-grid>.data-chart:has(.scene-view) { grid-column:auto; }
+ .chart-grid>.data-chart:has(svg[data-chart-type='moe-topology']) { grid-column:1/-1; }
+}
+@media(max-width:1100px) {
+ .coordinate-header { grid-template-columns:1fr; gap:12px; }
+ .overview-holo-grid { grid-template-columns:minmax(0,1.6fr) minmax(270px,1fr); gap:0 20px; }
+ .state-axis-summary .kpi-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 0; }
+ [data-coordinate='crowding'] .state-axis-summary .kpi-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+ .state-axis-summary .kpi:nth-child(3n+1) { padding-left:0; border-left:0; }
+ .moe-grid { grid-template-columns:1fr; gap:24px; }
+}
+@media(max-width:760px) {
+ main { padding-top:24px; }
+ .overview-holo-grid { grid-template-columns:1fr; gap:16px; margin:0; }
+ .overview-holo-grid .state-primary { order:0; }
+ .overview-holo-grid .state-reading { order:1; }
+ .overview-holo-grid .state-radar { order:2; }
+ .overview-holo-grid .state-radar .scene-direct svg { max-height:340px; }
+ .state-axis-summary .kpi-grid,[data-coordinate='crowding'] .state-axis-summary .kpi-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 0; }
+ .state-axis-summary .kpi:nth-child(n) { padding:0 12px; border-left:1px solid #e6e2d9; }
+ .state-axis-summary .kpi:nth-child(odd) { padding-left:0; border-left:0; }
+ .state-axis-summary .kpi strong { font-size:26px; }
+ .state-reading { grid-column:auto; }
+ .coordinate-heading h2 { font-size:26px; }
+ .overview-coordinate { margin-bottom:28px; }
+ .state-date-rail button { padding:9px; }
+}
+@media print { .state-ledger { display:block; } .state-ledger>* { display:block; } }
+progress { accent-color:#8b8065; color:#8b8065; }
+progress::-webkit-progress-bar { background:#eeebe4; border-radius:6px; }
+progress::-webkit-progress-value { background:#8b8065; border-radius:6px; }
+progress::-moz-progress-bar { background:#8b8065; }
+.moe-card .data-table th,.moe-card .data-table td { padding:9px 12px; }
+.moe-card .data-table th button { min-height:28px; padding:3px 8px; }

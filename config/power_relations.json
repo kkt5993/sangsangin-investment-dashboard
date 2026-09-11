@@ -1,0 +1,159 @@
+{
+  "version": 1,
+  "sources": {
+    "ceg_msft": {
+      "title": "Constellation · Microsoft 전력구매계약",
+      "url": "https://investors.constellationenergy.com/news-releases/news-release-details/constellation-launch-crane-clean-energy-center-restoring-jobs",
+      "published_on": "2024-09-20",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    "ceg_crane_update": {
+      "title": "Constellation · 2026년 2분기 Crane 진행 상황",
+      "url": "https://www.constellationenergy.com/news/2026/08/constellation-reports-second-quarter-2026-results.html",
+      "published_on": "2026-08-06",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    "ceg_meta": {
+      "title": "Constellation · Meta Clinton 계약",
+      "url": "https://investors.constellationenergy.com/news-releases/news-release-details/constellation-meta-sign-20-year-deal-clean-reliable-nuclear",
+      "published_on": "2025-06-03",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    "vst_meta": {
+      "title": "Vistra · Meta 원자력 구매계약",
+      "url": "https://investor.vistracorp.com/2026-01-09-Vistra-and-Meta-Announce-Agreements-to-Support-Nuclear-Plants-in-PJM-and-Add-New-Nuclear-Generation-to-the-Grid",
+      "published_on": "2026-01-09",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    "nee_google": {
+      "title": "NextEra · Google Duane Arnold 계약",
+      "url": "https://www.investor.nexteraenergy.com/news-and-events/news-releases/2025/10-27-2025-203948689",
+      "published_on": "2025-10-27",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    "aes_msft": {
+      "title": "AES · Microsoft MISO 태양광 계약",
+      "url": "https://www.aes.com/newsroom/aes-delivers-more-carbon-free-power-support-microsoft-operations",
+      "published_on": "2025-03-06",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    }
+  },
+  "companies": [
+    {
+      "symbol": "CEG",
+      "name": "Constellation Energy"
+    },
+    {
+      "symbol": "MSFT",
+      "name": "Microsoft"
+    },
+    {
+      "symbol": "META",
+      "name": "Meta Platforms"
+    },
+    {
+      "symbol": "VST",
+      "name": "Vistra"
+    },
+    {
+      "symbol": "NEE",
+      "name": "NextEra Energy"
+    },
+    {
+      "symbol": "GOOGL",
+      "name": "Alphabet Class A"
+    },
+    {
+      "symbol": "AES",
+      "name": "AES"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "ceg_msft",
+      "source": "CEG",
+      "target": "MSFT",
+      "facility": "Crane Clean Energy Center",
+      "term_years": 20,
+      "contract_mw": 835,
+      "facility_mw": 835,
+      "delivery_status": "향후 공급 계획",
+      "schedule": "2027년 재가동 목표 · 2026-08-06 발표 기준",
+      "note": "원전 재가동과 인허가를 전제로 한 계약. 2024년 최초 2028년 계획을 후속 발표의2027년으로 갱신. PJM 계통 탈탄소 구매이며 전용선·현재 송전량이 아니다.",
+      "source_ids": [
+        "ceg_msft",
+        "ceg_crane_update"
+      ],
+      "announced_on": "2024-09-20",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    {
+      "id": "ceg_meta",
+      "source": "CEG",
+      "target": "META",
+      "facility": "Clinton Clean Energy Center",
+      "term_years": 20,
+      "contract_mw": 1121,
+      "facility_mw": null,
+      "delivery_status": "향후 구매 개시",
+      "schedule": "2027년6월 개시 예정",
+      "note": "기존 가동 원전의 계속 운영·증설을 지원하는 구매계약. 30MW 증설은1121MW에 포함되며 별도 합산하지 않는다.",
+      "source_ids": [
+        "ceg_meta"
+      ],
+      "announced_on": "2025-06-03",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    {
+      "id": "vst_meta",
+      "source": "VST",
+      "target": "META",
+      "facility": "Perry · Davis-Besse · Beaver Valley",
+      "term_years": 20,
+      "contract_mw": 2609,
+      "facility_mw": null,
+      "delivery_status": "단계적 구매 계획",
+      "schedule": "2026년 말 개시 · 2034년 전체 물량 목표",
+      "note": "기존2176MW와 증설433MW의 합계. 기존 물량은Perry/Davis-Besse, 증설은3개 원전. 전력은 공용 계통에 공급되며 현재 Meta에2609MW를 송전한다는 뜻이 아니다.",
+      "source_ids": [
+        "vst_meta"
+      ],
+      "announced_on": "2026-01-09",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    {
+      "id": "nee_google",
+      "source": "NEE",
+      "target": "GOOGL",
+      "facility": "Duane Arnold Energy Center",
+      "term_years": 25,
+      "contract_mw": null,
+      "facility_mw": 615,
+      "delivery_status": "재가동 조건부 계획",
+      "schedule": "2029년1분기 재가동 목표",
+      "note": "615MW는 발전소 전체 용량이다. CIPCO의 잔여 물량 구매가 있어 Google 계약MW는 미확인으로 남긴다. Google은 Alphabet 자회사에 대응하며 인허가 조건이 남는다.",
+      "source_ids": [
+        "nee_google"
+      ],
+      "announced_on": "2025-10-27",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    },
+    {
+      "id": "aes_msft",
+      "source": "AES",
+      "target": "MSFT",
+      "facility": "Michigan · Missouri · Illinois 태양광3사업",
+      "term_years": null,
+      "contract_mw": null,
+      "facility_mw": 475,
+      "delivery_status": "현재 가동 여부 미확인",
+      "schedule": "발표 당시2사업2025년 상반기 예상 · 현재 가동은 별도 미확인",
+      "note": "475MW는3사업 합계 용량이며 개별 계약 물량·기간은 미공개. 미국·중남미 기존1GW 초과 계약과 더하지 않는다. MISO 계통 공급 관계.",
+      "source_ids": [
+        "aes_msft"
+      ],
+      "announced_on": "2025-03-06",
+      "reviewed_at": "2026-09-11T05:45:32.202587+00:00"
+    }
+  ]
+}

@@ -137,6 +137,13 @@ def sources(d, dragon, now):
         r = row('macro:' + str(i), provider, '거시·시장', provider if provider.startswith('https://') else 'https://fred.stlouisfed.org/',
             24, now, count=len(records), state='unknown', detail='계열별 관측일과 수집일만 확인됩니다. 날짜만으로 24시간 캐시 준수 여부나 최근 요청 성공을 추정하지 않습니다.')
         r['series'] = records; rows.append(r)
+    power=packet('relations/power_sources.json.gz')
+    if power:
+        records=list(power.get('sources',{}).values());checks=[r['checked_at'] for r in records if r.get('checked_at')]
+        errors=sum(bool(r.get('error_type')) for r in records);changed=sum(bool(r.get('changed_since_review')) for r in records)
+        rows.append(row('power-contracts','발전사 · 전력구매계약 근거','기업 재무·일정','https://www.constellationenergy.com/',720,now,
+            checked=power.get('checked_at'),retrieved=min(checks,default=None),error=bool(errors),count=len(checks),
+            detail=f'공식 발표6문서 중 로컬 접근 확인 {len(checks)} · 최근 실패 {errors} · 변경 감지 {changed}. 계약5관계는 검토한 발표 기준이며 30일마다 문서 접근·변경만 재확인합니다. 공급 개시·계약 이행·새 발표 자동 판정이 아닙니다.'))
     return rows
 
 

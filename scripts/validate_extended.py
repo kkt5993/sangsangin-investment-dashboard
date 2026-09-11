@@ -238,6 +238,8 @@ def section(s,cutoff,module):
         assert [r['date'] for r in s['rows']]==sorted(set(r['date'] for r in s['rows']))
         for r in s['rows']:assert r['date'][:7]<cutoff[:7] and all(v is None or math.isfinite(v) and v>=0 for k,v in r.items() if k!='date')
     if kind=='relationlab':
+        from pipeline.power_relations import verify as verify_power
+        verify_power(s,cutoff)
         nodes={r['id']:r for r in s['nodes']};edges={r['id']:r for r in s['links']}
         window=s.get('correlation_window')
         if window:assert window['months']==3 and window['minimum']==45 and window['start']<window['end']==cutoff

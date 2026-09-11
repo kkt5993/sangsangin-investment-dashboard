@@ -97,6 +97,7 @@ def collect(parent,base,as_of,env,config,log):
     run('pipeline.attention_data')
     run('pipeline.company_news')
     run('pipeline.topic_news')
+    run('pipeline.power_relations')
     run('pipeline.news_tone')
     run('pipeline.chain_data')
     if config.get('allow_krx_auth'):run('pipeline.krx_reconcile','--allow-krx-auth')

@@ -91,8 +91,8 @@ def fetch(url):
     return bytes(data)
 
 
-def collect(d, fetcher=fetch, pause=time.sleep, now=None, config=None):
-    c = config or settings();now = now or datetime.now(timezone.utc);path = d.resource(MANIFEST)
+def collect(d, fetcher=fetch, pause=time.sleep, now=None, config=None, manifest=MANIFEST, folder="chain/evidence"):
+    c = config or settings();now = now or datetime.now(timezone.utc);path = d.resource(manifest)
     records = copy.deepcopy(read(path).get('sources', {})) if path.exists() else {}
     attempts = [];failed_hosts = set()
     for id, source in c['sources'].items():
@@ -109,7 +109,7 @@ def collect(d, fetcher=fetch, pause=time.sleep, now=None, config=None):
             if not blob:raise ValueError('Empty source')
             sha = hashlib.sha256(blob).hexdigest();changed = bool(old.get('sha256') and old['sha256'] != sha)
             if old.get('sha256') != sha:
-                packed = gzip.compress(blob);target = d.base / ('chain/evidence/' + id + '.html.gz')
+                packed = gzip.compress(blob);target = d.base / (folder + '/' + id + '.html.gz')
                 target.parent.mkdir(parents=True, exist_ok=True)
                 temporary = target.with_suffix('.tmp');temporary.write_bytes(packed);temporary.replace(target)
                 row['retrieved_at'] = now.isoformat()
@@ -119,5 +119,5 @@ def collect(d, fetcher=fetch, pause=time.sleep, now=None, config=None):
         except Exception as exc:
             row['error_type'] = type(exc).__name__;state = 'error';failed_hosts.add(host)
         records[id] = row;attempts.append(dict(id=id, state=state, requested=True));pause(2)
-    result = dict(sources=records, attempts=attempts, checked_at=stamp());save(d.base / MANIFEST, result)
+    result = dict(sources=records, attempts=attempts, checked_at=stamp());save(d.base / manifest, result)
     return result

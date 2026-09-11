@@ -7,16 +7,22 @@ from .platform_modules import LIBRARY
 
 def catalog(graph):
     sources=read_json(ROOT/'config/relation_evidence.json')['sources']
+    from .power_relations import settings as power_settings
+    sources={**sources,**power_settings()['sources']}
     by_url={v['url']:v for v in sources.values()}
     nodes={r['id']:r for r in graph['nodes']};documents={}
+    edges=list(graph['links'])
     for edge in graph['links']:
+        for source in edge.get('contract',{}).get('sources',[])[1:]:
+            edges.append(dict(edge,url=source['url']))
+    for edge in edges:
         url=edge.get('url','');parsed=urlparse(url)
         if parsed.scheme!='https' or not parsed.hostname or parsed.username or parsed.password:continue
         source=by_url.get(url,{})
         item=documents.setdefault(url,dict(id='source:'+hashlib.sha256(url.encode()).hexdigest()[:16],
             kind='official',title=source.get('title') or parsed.hostname+' · 사업·관계 근거',
             source=parsed.hostname,date=edge.get('reviewed_at'),date_kind='근거 검토일',
-            period_end=source.get('period_end'),url=url,targets=[],evidence=[],core='',direction='',horizon='',confidence=None))
+            published_on=source.get('published_on'),period_end=source.get('period_end'),url=url,targets=[],evidence=[],core='',direction='',horizon='',confidence=None))
         for id in [edge['source'],edge['target']]:
             node=nodes.get(id)
             if node and not any(t['id']==id for t in item['targets']):

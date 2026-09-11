@@ -7,7 +7,7 @@ from .engine import number,table
 from .store import ROOT,read_json
 from .relation_model import run_scenario,centrality,correlations,TRANSFER
 
-LABELS={'supplies':'공급','competes':'경쟁','part-of':'사업 연관','exposed-to':'노출','powers':'전력 공급','correlated':'실현 상관','builds':'건설·소유','hosts':'거점','pressures':'압박','drives':'유도','comention':'동시 언급','collaborates':'기술 협업'}
+LABELS={'supplies':'공급','competes':'경쟁','part-of':'사업 연관','exposed-to':'노출','powers':'전력 구매계약','correlated':'실현 상관','builds':'건설·소유','hosts':'거점','pressures':'압박','drives':'유도','comention':'동시 언급','collaborates':'기술 협업'}
 
 
 def inputs():return read_json(ROOT/'config/relation_evidence.json'),read_json(ROOT/'config/digest_themes.json')
@@ -17,6 +17,8 @@ def companies():
     evidence,themes=inputs();records={r['symbol']:dict(symbol=r['symbol'],name=r['name']) for r in evidence['companies']}
     for t in themes['themes']:
         for r in t['members']:records.setdefault(r['symbol'],dict(symbol=r['symbol'],name=r['name']))
+    from .power_relations import settings as power_settings
+    for r in power_settings()["companies"]:records.setdefault(r["symbol"],dict(r))
     return list(records.values())
 
 
@@ -67,6 +69,8 @@ def graph_data(d,entity_section):
     for r in evidence['links']:
         src=evidence['sources'][r['source_id']]
         links.append(dict(r,source='stock:'+r['source'],target='stock:'+r['target'],url=src['url'],reviewed_at=evidence['reviewed_at'],evidence='공시' if r['source_id'].startswith('nvda') else '공식 발표'))
+    from .power_relations import links as power_links
+    links.extend(power_links(d))
     for id,name,kind,s in [('macro:ust10','미국 국채10Y','macro',d.mac('DGS10')),('commodity:gold','금 선물','commodity',d.price('GC=F'))]:
         nodes[id]=dict(id=id,name=name,kind=kind,entity=False,role='시나리오 입력',value=number(s.iloc[-1]) if len(s) else None,date=str(s.index[-1].date()) if len(s) else None)
     for id,name in [('macro:ai_capex','AI CapEx 가정'),('macro:power_demand','전력 수요 가정')]:nodes[id]=dict(id=id,name=name,kind='assumption',entity=False,role='관측 수치가 없는 가정 입력',date=None,value=None)

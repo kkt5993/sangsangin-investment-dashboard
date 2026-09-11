@@ -66,8 +66,12 @@
   return {objects:ids.length,expected:total,available:pairs.length,mean:pairs.length?pairs.reduce((a,r)=>a+r.corr,0)/pairs.length:null,pairs:pairs.sort((a,b)=>b.corr-a.corr)};
  }
  const name=(g,id)=>g.nodes.find(n=>n.id===id)?.name||id;
+ function contractHTML(c){
+  if(!c)return '';
+  return `<details data-power-contract="${E(c.id)}"><summary>전력 계약 · 용량·기간·근거</summary><p>${E(c.facility)} · ${E(c.delivery_status)}</p><p>계약 물량 ${finite(c.contract_mw)?N(c.contract_mw)+' MW':'미공개·미확인'} · 시설/사업 용량 ${finite(c.facility_mw)?N(c.facility_mw)+' MW':'별도 미표기'} · 기간 ${finite(c.term_years)?c.term_years+'년':'미공개'}</p><p>발표 ${E(c.announced_on)} · ${E(c.schedule)}</p><p>${E(c.note)}</p><p>계통 전력 구매관계이며 실시간 송전량이 아닙니다. 용량은 시나리오 계수에 가중하지 않습니다.</p><ul>${c.sources.map(s=>`<li><a href="${E(safe(s.url))}" target="_blank" rel="noopener noreferrer">${E(s.title)} ↗</a> · 발표 ${E(s.published_on)} · 검토 ${E(s.reviewed_at)} · 문서 확인 ${E(s.checked_at||'미확보')}${s.changed_since_review?' · 문서 변경 감지·내용 재검토 필요':''}${s.error_type?' · 최근 조회 실패':''}</li>`).join('')}</ul><p>문서 확인은 접근·변경 검사입니다. 계약 이행·최신 내용 자동 검증은 아닙니다.</p></details>`;
+ }
  function edgeHTML(g,id){const e=g.links.find(r=>r.id===id);if(!e)return '';
-  return `<li>${E(name(g,e.source))} → ${E(name(g,e.target))} · ${E(g.relation_labels[e.relation])}: ${E(e.basis)} ${e.url?`<a href="${E(safe(e.url))}" target="_blank" rel="noopener noreferrer">${E(e.evidence)} ↗</a>`:E(e.evidence)} · 확인 ${E(e.reviewed_at)}${finite(e.corr)?` · ρ ${N(e.corr)} (${e.correlation_observations??e.observations}개, ${E(e.correlation_start??e.start)} ~ ${E(e.correlation_end??e.end)})`:''}</li>`;
+  return `<li>${E(name(g,e.source))} → ${E(name(g,e.target))} · ${E(g.relation_labels[e.relation])}: ${E(e.basis)} ${e.url?`<a href="${E(safe(e.url))}" target="_blank" rel="noopener noreferrer">${E(e.evidence)} ↗</a>`:E(e.evidence)} · 확인 ${E(e.reviewed_at)}${finite(e.corr)?` · ρ ${N(e.corr)} (${e.correlation_observations??e.observations}개, ${E(e.correlation_start??e.start)} ~ ${E(e.correlation_end??e.end)})`:''}${contractHTML(e.contract)}</li>`;
  }
  function paths(g,r){return `<details><summary>일차 충격별 영향 경로 ${r.contributions.length}개</summary>${r.contributions.map(c=>`<p>${N(c.value)} · ${c.hop}단계 · ${c.path.map(id=>E(name(g,id))).join(' → ')}</p><ul>${c.edges.map(id=>edgeHTML(g,id)).join('')||'<li>일차 가정 직접 입력</li>'}</ul>`).join('')}</details>`;}
  function rankings(g,impacts){

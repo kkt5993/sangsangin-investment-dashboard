@@ -7,6 +7,10 @@ const frames=new Map(),memory=new Map();let frameId=0;const flush=()=>{for(const
 const ctx=vm.createContext({window:{atob,requestAnimationFrame:f=>{frames.set(++frameId,f);return frameId;},cancelAnimationFrame:id=>frames.delete(id),localStorage:{getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v)}},TextEncoder,console});
 for(const f of ['charts','analysis-charts','relation-views','decision-ledger'])vm.runInContext(read('docs/'+f+'.js'),ctx);
 const R=ctx.window.RelationViews,plain=x=>JSON.parse(JSON.stringify(x));
+const power=g.links.filter(e=>e.contract);assert.equal(power.length,5);
+for(const edge of power){const html=R.entityNotes(edge.source,g);assert(html.includes('data-power-contract="'+edge.contract.id+'"'));assert(html.includes(edge.contract.announced_on));assert(html.includes('실시간 송전량이 아닙니다'));}
+const missingMW=R.entityNotes('stock:NEE',g);assert(missingMW.includes('계약 물량 미공개·미확인'));assert(missingMW.includes('615'));
+
 for(const s of g.scenarios)assert.deepEqual(plain(R.runScenario(g,s.seeds)),s.impacts,s.id+' Python / JS exact published parity');
 const small={nodes:['A','B','C'].map(id=>({id})),links:[{id:'a',source:'A',target:'B',relation:'supplies',weight:1},{id:'b',source:'B',target:'C',relation:'competes',weight:1}]};
 assert.equal(R.propagate(small,'A',1,1).B.value,.2016);assert.equal(R.propagate(small,'B').A.value,.5184);assert.equal(R.propagate(small,'A').C.value,-.072576);

@@ -626,6 +626,9 @@ for file in (ROOT/'docs/data').glob('*.json'):
             if p['latest'].get('rv21') is not None:assert math.isclose(p['daily_sigma_krw'],p['per_1pct_krw']*p['latest']['rv21']/math.sqrt(252),rel_tol=1e-6,abs_tol=.01)
         if p['next_expiry']:assert p['days_to_expiry']==(date.fromisoformat(p['next_expiry'])-date.fromisoformat(d['as_of'])).days>=0
         if p['latest'].get('score') is not None:assert 0<=p['latest']['score']<=100 and 0<=p['latest']['gate']<=1
+    if d['module']=='quant':
+        from pipeline.quant_validation import verify_quant
+        verify_quant(d)
     count+=1
 assert count==21,(count,'new schema modules expected')
 meta=load(ROOT/'docs/data/status.json');assert len(meta['modules'])==25 and meta['implemented']==23

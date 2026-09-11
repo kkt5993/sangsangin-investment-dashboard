@@ -65,6 +65,7 @@
   if(s.type==='gurus')return heading(s.title)+root.GuruViews.render(s,i);
   if(s.type==='attention')return heading(s.title)+root.AttentionViews.render(s,i);
   if(s.type==='relationdiscovery')return heading(s.title)+root.RelationDiscovery.render(s,i);
+  if(s.type==='quantledger')return heading(s.title)+root.QuantScreens.render(s,i);
   if(s.type==='companynews')return heading(s.title)+root.CompanyNews.render(s,i);
   if(['dragonsources','dragonstatus'].includes(s.type))return heading(s.title)+root.DragonOperations.render(s,i);
   if(s.type==='clinical')return heading(s.title)+root.ClinicalViews.render(s,i);
@@ -110,7 +111,7 @@
   if(s.type==='wordcloud'){const max=Math.max(1,...s.words.map(w=>w.count));return heading(s.title)+`<div class="word-cloud">${s.words.map(w=>`<span style="font-size:${14+24*w.count/max}px" title="기사 ${w.count}건">${E(w.term)} <small>${w.count}</small></span>`).join('')}</div>`;}
   if(s.type==='scenario')return heading(s.title)+`<div data-scenario="${i}"><div class="analysis-controls"><label>시장 <select data-scenario-market><option>KR</option><option>US</option></select></label><label>시장 충격 % <input data-shock type="number" min="-30" max="30" step="1" value="-10"></label></div><p class="quiet">예상 변화=최근252일 Beta×가정 충격. 인과 전파·확정 손익·실제 포트폴리오가 아닙니다.</p><div data-scenario-output></div></div>`;
   if(s.type==='table')return table(s);
-  if(s.type==='line')return figure(s.title,A.line(s));
+  if(s.type==='line')return figure(s.title,A.line(s),s.note||'');
   if(s.type==='bars')return figure(s.title,C.bars(s.rows,{unit:s.unit,title:s.title}));
   if(s.type==='heatmap')return C.heatmap(s.rows,s.columns,s.title);
   if(s.type==='scatter')return figure(s.title,A.scatter(s));
@@ -196,6 +197,7 @@
   root.AttentionViews?.bind(container,d,navigate);
   root.RelationDiscovery?.bind(container,d,navigate);
   root.CompanyNews?.bind(container,d,navigate);
+  root.QuantScreens?.bind(container,d);
   root.NetworkViews?.bind(container,d,m.id==='dragonglass'?navigate:null);
   root.TradeViews?.bind(container,d,st);root.SauronViews?.bind(container,d,st);root.ChainViews?.bind(container,d,st);
   root.DecisionLedger?.bind(container,d,navigate,st);

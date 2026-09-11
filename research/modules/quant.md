@@ -3,14 +3,14 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-10. Stat Arb / 멀티팩터 / BAB / 단기반전 / TSMOM.
+**부분 구현** · 가격 기준 2026-09-10. Stat Arb / 멀티팩터 / BAB / TSMOM / 단기반전.
 
-- 계산 코드: [quant_modules.py](../../pipeline/quant_modules.py)
+- 계산 코드: [quant_modules.py](../../pipeline/quant_modules.py) · [quant_screens.py](../../pipeline/quant_screens.py) · [quant-screens.js](../../docs/quant-screens.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/quant.json)
-- 계산/자료 계약: Naver 시가총액 KOSPI 상위 300·KOSDAQ 상위 150에서 우선주·SPAC·REIT를 제외합니다. 팩터는 8개 z-score(±2.5 제한) 가중합. BAB는 1년 KOSPI beta, TSMOM은 12M·3M 일치 및 변동성 10% 타게팅입니다. Stat Arb는 거래대금 상위 160 내 Hurst<0.5·Engle–Granger p<0.05로 선별합니다.
-- 남은 범위: 현재 유니버스의 스크리닝이며 역사 구성종목을 복원한 성과 검증이 아닙니다. 공적분 p값은 다중검정 보정 전이고 전체 구간 추정 헤지비율은 진입 시점 백테스트에 사용할 수 없습니다.
+- 계산/자료 계약: 현재 Naver KOSPI300·KOSDAQ150 필터 유니버스. 가격비 A/B의 상관0.5~0.95·Hurst<0.5 순 페어10개, 8팩터 횡단면 z±2.5 상위15, KOSPI Beta5분위/레그 역Beta, 12M·3M TSMOM과 추세 내5D 반전. 실제 날짜·결측·제외 및 점수 기여를 원장에 표시합니다.
+- 남은 범위: 현재 유니버스와 최신 정정가격의 단면 분석이며 역사 구성종목·PIT·대차/펀딩/거래비용 후 OOS 성과가 아닙니다. / 공개되지 않은 rolling/Hurst/MAX/월안정성 세부 설정은 명시한 팀 설정입니다. 가격비 평균회귀를 공적분 검증이나 베타중립으로 부르지 않습니다. / TSMOM 보존본에서 이름이 확인된6개 외 나머지6개는 팀이 선택했습니다. 금리 상대변화에 투자노출을 부여하지 않습니다.
 
-연결된 하위 그룹: Stat Arb, 멀티팩터, BAB, 단기반전, TSMOM.
+연결된 하위 그룹: Stat Arb, 멀티팩터, BAB, TSMOM, 단기반전.
 
 [공식 분류·단위·날짜](../DATA_DEFINITIONS.md) · [차트 대응표](../CHART_PARITY.md) · [재계산 및 검사](../../README.md)
 

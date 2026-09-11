@@ -18,7 +18,7 @@
 | DRAGONGLASS | 트리거·촉매 | 연결 | 2 |  |
 | DRAGONGLASS | 리서치 | 연결 | 1 |  |
 | DRAGONGLASS | 데이터 소스 | 연결 | 1 |  |
-| DRAGONGLASS | 현황판 | 연결 | 2 |  |
+| DRAGONGLASS | 현황판 | 연결 | 1 |  |
 | DRAGONGLASS | 방법론 | 연결 | 1 |  |
 | DRAGONGLASS | 공식 분류 | 연결 | 1 |  |
 | DRAGONGLASS | 시장 Beta 민감도 | 연결 | 1 |  |

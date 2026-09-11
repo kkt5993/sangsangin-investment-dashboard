@@ -188,6 +188,8 @@ def extend(d,objects,ranks):
     from .digest import digest_views
     from .relation_views import relation_views
     relation_views(d,objects['dragonglass'])
+    from .relation_discovery import views as relation_discovery_views
+    relation_discovery_views(d,objects['dragonglass'])
     from .satellite_views import satellite_views
     satellite_views(d,objects['dragonglass'])
     from .dragon_research import views as dragon_research_views

@@ -89,7 +89,7 @@
  function entityNotes(id,g){if(!g)return '';const links=g.links.filter(e=>e.source===id||e.target===id);return `<section><h3>사업·공급·경쟁 관계 ${links.length}개</h3>${g.nodes.some(n=>n.id===id)?'<button type="button" data-entity-relation>관계 지도에서 보기</button>':'<p>현재 근거 관계망 범위 밖입니다.</p>'}<ul>${links.map(e=>edgeHTML(g,e.id)).join('')}</ul></section>`;}
  function insights(g){
   const observed=g.links.filter(e=>finite(e.corr)),formal=observed.filter(e=>e.relation!=='correlated'),hidden=observed.filter(e=>e.relation==='correlated'),divergent=formal.filter(e=>e.corr*Math.sign(g.parameters.transfer[e.relation][0])<0);
-  return `<details><summary>관계와 가격 상관 대조 · 일치 ${formal.length-divergent.length} / 불일치 ${divergent.length} / 추가 관측 연결 ${hidden.length}</summary><p>순방향 가정계수와 실제 상관의 부호만 대조합니다. 같은 부호도 관계의 인과 증명이 아닙니다. 추가 관측 연결은 각 기업의 |ρ|≥0.6인 최강 쌍 중 공식 관계가 없는 쌍입니다. 선행·후행 효과를 추정하지 않았습니다.</p><h4>가정과 부호가 다른 관측</h4><ul>${divergent.map(e=>edgeHTML(g,e.id)).join('')||'<li>해당 없음</li>'}</ul><h4>추가 가격 상관 연결</h4><ul>${hidden.map(e=>edgeHTML(g,e.id)).join('')||'<li>해당 없음</li>'}</ul></details>`;
+  return `<details><summary>관계와 가격 상관 대조 · 일치 ${formal.length-divergent.length} / 불일치 ${divergent.length} / 추가 관측 연결 ${hidden.length}</summary><p>순방향 가정계수와 실제 상관의 부호만 대조합니다. 같은 부호도 관계의 인과 증명이 아닙니다. 추가 관측 연결은 최근3개월 |ρ|≥0.6인 쌍 중 공식 관계가 없는 쌍입니다. 동일 시장 선행·후행 탐색은 상단 별도 패널에서 검정 표본과 함께 확인합니다.</p><h4>가정과 부호가 다른 관측</h4><ul>${divergent.map(e=>edgeHTML(g,e.id)).join('')||'<li>해당 없음</li>'}</ul><h4>추가 가격 상관 연결</h4><ul>${hidden.map(e=>edgeHTML(g,e.id)).join('')||'<li>해당 없음</li>'}</ul></details>`;
  }
  function graphSVG(g,st={}){
   const yaw=st.yaw??.5,pitch=st.pitch??-.22,zoom=st.zoom??1,size=st.size??1,selected=st.node||'',kind=st.kind||'all',rel=st.relation||'all',q=(st.q||'').toLocaleLowerCase();

@@ -263,6 +263,17 @@ def section(s,cutoff,module):
         assert len(set(p['ids']))==count and len(raw)==length*2 and len(obs)==length and len(p['diagonal_valid'])==count
         assert p['window']<=252 and p['minimum']==200 and (p['end'] is None or p['end']<=cutoff)
         for (value,),n in zip(struct.iter_unpack('<h',raw),obs):assert value==32767 or -10000<=value<=10000 and 200<=n<=252
+    if kind=='companynews':
+        assert s['as_of']==cutoff and s['settings']['days']==7 and s['settings']['volume_threshold']==8
+        assert len({r['symbol'] for r in s['items']})==len(s['items'])
+        for r in s['items']:
+            assert r['tone'] is None and r['observed_count']==len(r['items'])==len({a['url'] for a in r['items']})
+            assert r['volume_hit']==(r['available'] and r['observed_count']>=8)
+            assert not r['error'] or not r['available']
+            for a in r['items']:
+                assert r['start']<=a['published_at'][:10]<=r['end']==cutoff and a['title'] and a['url'].startswith('https://')
+                assert a['first_seen_at']<=a['last_seen_at']<=s['computed_at']
+            assert r['latest']==max([a['published_at'] for a in r['items']],default=None)
     if kind=='relationdiscovery':
         from statsmodels.stats.multitest import multipletests
         assert s['period_start']<s['period_end']==cutoff and s['settings']['lags']==[1,3,5]

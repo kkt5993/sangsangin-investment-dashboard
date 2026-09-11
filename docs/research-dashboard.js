@@ -65,6 +65,7 @@
   if(s.type==='gurus')return heading(s.title)+root.GuruViews.render(s,i);
   if(s.type==='attention')return heading(s.title)+root.AttentionViews.render(s,i);
   if(s.type==='relationdiscovery')return heading(s.title)+root.RelationDiscovery.render(s,i);
+  if(s.type==='companynews')return heading(s.title)+root.CompanyNews.render(s,i);
   if(['dragonsources','dragonstatus'].includes(s.type))return heading(s.title)+root.DragonOperations.render(s,i);
   if(s.type==='clinical')return heading(s.title)+root.ClinicalViews.render(s,i);
   if(['dragonfocus','dragontriggers'].includes(s.type))return heading(s.title)+root.DragonSignals.render(s,i);
@@ -194,6 +195,7 @@
   root.DragonOperations?.bind(container,d,navigate);
   root.AttentionViews?.bind(container,d,navigate);
   root.RelationDiscovery?.bind(container,d,navigate);
+  root.CompanyNews?.bind(container,d,navigate);
   root.NetworkViews?.bind(container,d,m.id==='dragonglass'?navigate:null);
   root.TradeViews?.bind(container,d,st);root.SauronViews?.bind(container,d,st);root.ChainViews?.bind(container,d,st);
   root.DecisionLedger?.bind(container,d,navigate,st);

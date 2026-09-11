@@ -17,11 +17,11 @@ def save(path,data):
 
 def read(path):return json.loads(gzip.decompress(path.read_bytes()))
 
-def parse_feed(blob,source):
+def parse_feed(blob,source,limit=60):
     """RSS2, RDF/RSS1 and Atom; accept only dated HTTPS headline links."""
     root=ET.fromstring(blob);rows=[]
     local=lambda tag:tag.rsplit('}',1)[-1]
-    for item in [e for e in root.iter() if local(e.tag) in ['item','entry']][:60]:
+    for item in [e for e in root.iter() if local(e.tag) in ['item','entry']][:limit]:
         fields={local(e.tag):e for e in item};value=lambda k:''.join(fields[k].itertext()).strip() if k in fields else ''
         title=value('title');link=value('link')
         if not link:

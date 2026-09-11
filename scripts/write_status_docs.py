@@ -12,7 +12,7 @@ CODE={
  'etfmon':'etf_details.py','multiasset':'market_modules.py','dynamics':'market_modules.py','watch':'market_modules.py · patterns.py',
  'regime':'macro_modules.py','risk':'macro_modules.py · option_analytics.py','pm_weekend':'macro_modules.py','geoecon':'macro_modules.py',
  'earnings':'financial_modules.py','growth':'financial_modules.py · local_consensus.py','discovery':'discovery.py · financial_modules.py','strategies':'financial_modules.py',
- 'quant':'quant_modules.py','ml':'ml_models.py · ml_features.py · ml_ensemble.py · ml_transformer.py · ml_views.py','maximus':'maximus_model.py · maximus_features.py · maximus_moe.py · maximus_views.py',
+ 'quant':'quant_modules.py · quant_screens.py · quant-screens.js','ml':'ml_models.py · ml_features.py · ml_ensemble.py · ml_transformer.py · ml_views.py','maximus':'maximus_model.py · maximus_features.py · maximus_moe.py · maximus_views.py',
  'principium':'platform_modules.py','ask_digest':'platform_modules.py','iw':'platform_modules.py','aragorn':'platform_modules.py','dragonglass':'platform_modules.py','globe':'platform_modules.py',
 }
 for key in ['regime','risk','pm_weekend','geoecon','strategies','earnings','dragonglass','ask_digest','multiasset']:
@@ -52,7 +52,7 @@ PARITY={
  'risk':('US12/KR7 신호·CSD/군집4진단·옵션 GEX/스팟곡선·모델북 위험','19신호·KR63세션·공식 VKOSPI/수급·SF Fed 백분위·4진단/2보조곡선·33비중·120개월 위험·9요인·5가정','뉴스 분모/다단계 점수/기간은 팀 설정. 딜러 실제 포지션·전체 만기·실제 계좌 없음'),
  'watch':('KR/US 상승6·하락4, 일/주봉·MA·거래량·패턴 근거','5기하 패턴·피벗·120일/52주·MA·ADX/DI/MA4조건·12지표 점수','미공개 판정/ADX 합성 점수 동등성 미검증, 적합도는 성공확률 아님'),
  'ml':('3지수×1M/3M, 실제 막대/예측선·68/90%·적중점·z/확률/가격·OOS','6타깃·11모델+2앙상블·Shadow/강제변수·TreeSHAP·3패널 비교·장기/36월·24월표','CAPE/감성 등 일부 입력·원본 하이퍼파라미터·PIT 빈티지 동등성 미검증'),
- 'quant':('Stat Arb·8팩터·BAB·TSMOM·단기반전 5뷰','페어 z 0/±2·상관/Hurst/공적분/반감기·요인/비중·후보','현재 단면 스크리닝, 역사 구성·모든 전략 비용 후 OOS 필요'),
+ 'quant':('Stat Arb·8팩터·BAB·TSMOM·단기반전 5뷰','가격비 페어10/0·±2·상관/Hurst/반감기·팩터15/8기여·BAB분포·TSMOM12·검색/계산원장','현재 단면 스크리닝, 역사 구성·모든 전략 비용 후 OOS 필요'),
  'dynamics':('3지수+15주식, 8룩백×시간 변동성표면·β×τ·위험/가격·노출성과','18대상·표면 회전/시간·위상·0~100/65선·가격 우축·전일노출','21D/5D/expanding252는 명시적 팀 파라미터, 거래비용·차입금리 미반영'),
  'iw':('월말15복기·주간14연대기·국면/ML2그림·판단 원장','원점/실현 방향 집계·지난주 수치/차트 보존·36월3띠/7계열ML·기록별 그림 선택·첨부/백업','현재 자료 OOS 재구성·팀 국면 규칙이며 과거 실제 발행본/PIT/공용 DB 미연결'),
  'pm_weekend':('주말 매크로 다중 선·이중축·지표표','미국/한국 금리·물가·유동성 등 5년 패널·단위/최신일','원본 주간 서술 대신 자체 관측표'),

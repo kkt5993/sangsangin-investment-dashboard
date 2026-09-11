@@ -102,7 +102,7 @@ def module_summaries(objects):
         groups=list(dict.fromkeys(s.get('group','종합') for s in d.get('sections',[])))
         observations=[]
         for s in d.get('sections',[]):
-            if s['type']=='table' and s['rows']:
+            if s['type'] in ['table','quantledger'] and s['rows']:
                 observations.append(dict(title=s['title'],columns=s['columns'][:7],rows=[r[:7] for r in s['rows'][:2]]))
             if len(observations)>=2:break
         summaries.append(dict(module=key,title=labels.get(key,key),as_of=d['as_of'],status=d['status'],cards=d.get('cards',[])[:6],groups=groups,observations=observations,missing=d.get('missing',[]),method_note=d['method_note']))

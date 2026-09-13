@@ -25,6 +25,14 @@ class ClinicalTests(unittest.TestCase):
   with self.assertRaises(ValueError):C.normalize(response(phase='PHASE2'),'phase3','2026-09-10')
   with self.assertRaises(ValueError):C.normalize(response(),'all','2026-09-08')
   with self.assertRaises(ValueError):C.normalize({'totalCount':8,'studies':[]},'all','2026-09-10')
+ def test_sample_study_history_tracks_changes_without_claiming_full_registry(self):
+  first=dict(id='NCT00000001',title='Study',status='RECRUITING',phases=['PHASE3'],updated='2026-09-09',sponsor='Example',collaborators=[],url='https://clinicaltrials.gov/study/NCT00000001')
+  history=C.retain_study_history({},[first],'2026-09-10T00:00:00+00:00','2026-09-10T09:00:04')
+  self.assertEqual(first['changed_fields'],[]);self.assertEqual(len(history[first['id']]),1)
+  second={**first,'status':'COMPLETED','updated':'2026-09-11'};history=C.retain_study_history({'study_history':history},[second],'2026-09-12T00:00:00+00:00','2026-09-12T09:00:04')
+  self.assertEqual(second['changed_fields'],['status','updated']);self.assertEqual(len(second['history']),2)
+  third={**second};history=C.retain_study_history({'study_history':history},[third],'2026-09-13T00:00:00+00:00','2026-09-13T09:00:04')
+  self.assertEqual(len(third['history']),2);self.assertEqual(third['history'][-1]['last_observed_at'],'2026-09-13T00:00:00+00:00')
  def test_collection_cache_changed_registry_atomicity_and_retry(self):
   with tempfile.TemporaryDirectory() as tmp,patch.object(C,'settings',return_value={'version':1,'scopes':[SCOPE]}):
    root=Path(tmp);d=SimpleNamespace(base=root,resource=lambda p:root/p);s=Session();r=C.collect(d,s,NOW,lambda _:None);self.assertEqual(r['requests'],5);old=C.read(root/C.FILE);self.assertEqual(len(old['responses']),3);self.assertIsNone(old['scopes'][0]['changes']['all'])

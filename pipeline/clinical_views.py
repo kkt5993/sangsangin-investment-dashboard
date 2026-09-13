@@ -17,6 +17,6 @@ def views(d,dragon):
             alert['log'].append(dict(id='clinical:'+r['id'],date=latest['updated'],title=r['name'],kind='임상 등록부',detail=f"모집 중 {active}건 · 3상(전체 상태) {r['groups']['phase3']['count']}건 · 최근 기록 갱신일",url=latest['url']))
         alert['log'].sort(key=lambda r:(r['date'],r['id']),reverse=True);alert['log']=alert['log'][:8]
     dragon['missing']=[m.replace('완전한 합성점수와 임상 모집 로그는 미산출입니다.','완전한 합성점수는 미산출입니다.') for m in dragon['missing']]
-    gap='임상 등록부는 명시된3검색범위의 모집/3상 건수와 최근5기록만 제공합니다. 원본 검색식은 미공개이며 모든 계열사·약물과 연구별 전체 변화 이력은 미확보입니다.'
+    gap='임상 등록부는 명시된3검색범위의 모집/3상 건수와 최근5기록을 제공합니다. 표본에 들어온 연구의 상태 이력만 누적하며, 원본 검색식과 모든 계열사·약물·전체 연구별 변화 이력은 미확보입니다.'
     if gap not in dragon['missing']:dragon['missing'].append(gap)
     return dragon

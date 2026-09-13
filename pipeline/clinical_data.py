@@ -10,6 +10,7 @@ from .cache import chain
 API='https://clinicaltrials.gov/api/v2'
 FILE='clinical/observations.json.gz'
 FIELDS='NCTId,BriefTitle,OverallStatus,Phase,LeadSponsorName,CollaboratorName,LastUpdatePostDate'
+STUDY_FIELDS=('title','status','phases','updated','sponsor','collaborators','url')
 
 def stamp():return datetime.now(timezone.utc).isoformat()
 def read(path):return json.loads(gzip.decompress(path.read_bytes()))
@@ -47,6 +48,28 @@ def normalize(raw,kind,version):
     if [r['updated'] for r in rows]!=sorted((r['updated'] for r in rows),reverse=True):raise ValueError('Clinical sort contract')
     return dict(count=count,latest=rows)
 
+def retain_study_history(previous,rows,observed_at,data_version):
+    """Keep state changes for studies that enter the published five-record sample.
+
+    This deliberately is not an implied full-registry history: a study is only
+    observable after it appears in one of the explicitly collected samples.
+    """
+    source=previous.get('study_history',{}) if isinstance(previous,dict) else {}
+    history={key:[dict(item) for item in value if isinstance(item,dict)] for key,value in source.items() if isinstance(key,str) and isinstance(value,list)}
+    for row in rows:
+        state={key:row[key] for key in STUDY_FIELDS}
+        entries=history.get(row['id'],[]);last=entries[-1] if entries else None
+        earlier={key:last.get(key) for key in STUDY_FIELDS} if last else None
+        changed=[key for key in STUDY_FIELDS if earlier and earlier[key]!=state[key]]
+        if last and not changed:
+            last['last_observed_at']=observed_at;last['last_data_version']=data_version
+        else:
+            entries.append(dict(**state,first_observed_at=observed_at,last_observed_at=observed_at,first_data_version=data_version,last_data_version=data_version))
+        history[row['id']]=entries
+        row['history']=[dict(item) for item in entries]
+        row['changed_fields']=changed
+    return history
+
 def request(session,path,query,report,pause):
     pause(1);report['requests']+=1
     response=session.get(API+path,params=query,timeout=(10,30),headers={'User-Agent':'SangsanginResearch/1.0 (+https://github.com/kkt5993/sangsangin-investment-dashboard)'})
@@ -72,6 +95,8 @@ def collect(d,session=None,now=None,pause=time.sleep):
                 query=params(scope,kind);raw=request(session,'/studies',query,report,pause);groups[kind]={**normalize(raw,kind,dt),'query_url':API+'/studies?'+urlencode(query)};responses[scope['id']+':'+kind]=raw
             if any(groups[k]['count']>groups['all']['count'] for k in ['recruiting','phase3']):raise ValueError('Clinical subsets exceed total')
             previous=next((r for r in old.get('scopes',[]) if r['id']==scope['id']),None) if valid else None
+            for kind,group in groups.items():
+                group['study_history']=retain_study_history(previous.get('groups',{}).get(kind,{}) if previous else {},group['latest'],now.isoformat(),dt)
             collected.append(dict(**scope,groups=groups,previous_at=old.get('retrieved_at') if previous else None,changes={k:groups[k]['count']-previous['groups'][k]['count'] if previous else None for k in groups}))
         final=request(session,'/version',{},report,pause)
         if final.get('dataTimestamp')!=dt:raise ValueError('Registry changed during collection')

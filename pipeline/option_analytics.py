@@ -9,7 +9,14 @@ def gamma(spot,strike,vol,t,rate):
 
 def observation_sections(p):
     scope=p.get('scope') or {};band=scope.get('strike_band')
-    label=f"{scope['min_dte']}~{scope['max_dte']}일 · 행사가 ±{band*100:g}% · 공급된 범위 내 모든 만기" if p.get('scope_complete') and band is not None else '이전 제한 관측 · 7~45일 중 첫3만기 (전체 범위 미확보)'
+    if p.get('scope_complete') and band is not None:
+        label=f"{scope['min_dte']}~{scope['max_dte']}일 · 행사가 ±{band*100:g}% · 공급된 범위 내 모든 만기"
+    elif scope:
+        band_label='미제한' if band is None else f"±{band*100:g}%"
+        cap=f", 만기 상위 {scope['expiry_cap']}개 제한" if scope.get('expiry_cap') else ', 만기 제한 없음'
+        label=f"이전 제한 관측 ({scope.get('min_dte', '미확보')}~{scope.get('max_dte', '미확보')}일 · 행사가 {band_label}{cap})"
+    else:
+        label='이전 제한 관측 (범위 메타데이터 미제공)'
     return [table(p['symbol']+' 옵션 관측 범위',['항목','값'],[
         ['계산 범위',label],['계산 현물 · 옵션 원자료 USD',p['spot']],['옵션 수집 시각 UTC',p['retrieved_at']],
         ['공급처 시각 · 시간대 미제공',p.get('provider_timestamp')],['참고 종가 · 계산 현물과 별개',p.get('reference_close')],['참고 종가 기준일',p['price_date']],

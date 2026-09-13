@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 import pandas as pd
-from pipeline.overview_state import anchors,align,macro,history_z,relative36,liquidity,states,leaders
+from pipeline.overview_state import anchors,align,macro,history_z,relative36,liquidity,states,leaders,_to_usd_cap
 
 
 class Fixture:
@@ -74,6 +74,7 @@ class OverviewTests(unittest.TestCase):
             as_of='2026-09-08'
             fund={'US':raw('USD',1e11),'KR':raw('KRW',1.4e14),'NEG':raw('USD',1e9,-10),'MIS':raw('USD',1e9,10,'2025-03-31'),'EUR':raw('EUR',1e12)}
             def price(self,key,adjusted=True):
+                if key.endswith('=X') and key!='KRW=X':return pd.Series(dtype=float)
                 return pd.Series([1400.] if key=='KRW=X' else [100.,120.],index=pd.to_datetime(['2026-09-08'] if key=='KRW=X' else ['2025-09-08','2026-09-08']))
         result=leaders(D());self.assertEqual(result['pool'],4);self.assertEqual(result['eligible'],2)
         self.assertEqual({r['symbol'] for r in result['stocks']},{'US','KR'})
@@ -84,6 +85,26 @@ class OverviewTests(unittest.TestCase):
             def price(self,key,adjusted=True):
                 return pd.Series([1400.],index=pd.to_datetime(['2026-08-31'])) if key=='KRW=X' else super().price(key,adjusted)
         self.assertEqual([r['symbol'] for r in leaders(Stale())['stocks']],['US'])
+
+    def test_fx_direction_dates_unknown_currency_and_no_cap_cutoff(self):
+        class D:
+            as_of='2026-09-08'
+            def price(self,key,adjusted=True):
+                quotes={'KRW=X':1400.,'JPY=X':150.,'EURUSD=X':1.1,'GBPUSD=X':1.3}
+                if key not in quotes:return pd.Series(dtype=float)
+                return pd.Series([quotes[key],9999.],index=pd.to_datetime(['2026-09-07','2026-09-09']))
+        for currency,cap,want,pair in [('KRW',1.4e14,1e11,'KRW=X'),('JPY',1.5e13,1e11,'JPY=X'),('EUR',1e11,1.1e11,'EURUSD=X'),('GBP',1e11,1.3e11,'GBPUSD=X')]:
+            with self.subTest(currency=currency):
+                value,source,day=_to_usd_cap(D(),currency,cap)
+                self.assertAlmostEqual(value/want,1)
+                self.assertEqual((source,day),(pair,'2026-09-07'))
+        for currency in [None,'','XXX','CAD']:
+            self.assertEqual(_to_usd_cap(D(),currency,1e11),(None,None,None))
+        self.assertEqual(_to_usd_cap(D(),'USD',100)[0],100)
+        self.assertEqual(_to_usd_cap(D(),'USD',1e14)[0],1e14)
+        class Invalid(D):
+            def price(self,key,adjusted=True):return pd.Series([0.],index=pd.to_datetime(['2026-09-07']))
+        self.assertEqual(_to_usd_cap(Invalid(),'KRW',1e11),(None,None,None))
 
 
 if __name__=='__main__':unittest.main()

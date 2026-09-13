@@ -19,6 +19,21 @@ def graph():
 
 
 class RelationDiscoveryTests(unittest.TestCase):
+    def test_export_preserves_small_probabilities_and_threshold_decisions(self):
+        import json
+        from statsmodels.stats.multitest import multipletests
+        from pipeline.engine import clean_json
+        p=[1.234567891234e-8,7.52813827461e-7,0.0123456789123]
+        q=multipletests(p,method='fdr_by')[1]
+        raw={'sections':[{'type':'relationdiscovery','tests':[dict(p=a,q=b,edge=.0999999991) for a,b in zip(p,q)]}],
+             'other':1.234567891}
+        saved=json.loads(json.dumps(clean_json(clean_json(raw))))
+        rows=saved['sections'][0]['tests']
+        self.assertEqual([r['p'] for r in rows],p)
+        np.testing.assert_allclose([r['q'] for r in rows],multipletests([r['p'] for r in rows],method='fdr_by')[1],rtol=0,atol=1e-15)
+        self.assertTrue(all(r['edge']<.1 for r in rows))
+        self.assertEqual(saved['other'],1.234568)
+
     def test_f_matches_independent_statsmodels_implementation(self):
         rng=np.random.default_rng(50);frame=pd.DataFrame(rng.normal(size=(200,2)),index=pd.bdate_range('2025-01-01',periods=200),columns=['X','Y'])
         for lag in [1,3,5]:

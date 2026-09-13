@@ -51,6 +51,23 @@ def macro(d,key,index,freq='M',lag_months=1,lag_days=0,yoy=False):
     return align(s,available,s.index,index,200 if freq=='Q' else 95)
 
 
+def _fx_usd_rate(d,currency):
+    """Use the established earnings FX contract and retain its observation date."""
+    from .earnings_details import fx_rate
+    fx=fx_rate(d,currency)
+    rate=fx['rate'] if fx else None
+    if rate is None or not np.isfinite(rate) or rate<=0:return None,None,None
+    return rate,fx['symbol'],fx['date']
+
+
+def _to_usd_cap(d,currency,cap):
+    rate,source,rate_asof=_fx_usd_rate(d,currency)
+    if rate is None:return None,None,None
+    value=number(cap*rate)
+    if value is None or value<=0:return None,None,None
+    return value,source,rate_asof
+
+
 def price(d,key,index):
     s=d.price(key).loc[:d.as_of]
     return align(s,s.index,s.index,index,7)
@@ -85,10 +102,15 @@ def states(d):
     series['momentum']=((spy.value/spy.value.shift(12)-1)+(em.value/em.value.shift(12)-1))*50
     sp=d.price('^GSPC',False);gap=(sp/sp.rolling(200,min_periods=200).mean()-1)*100
     heat=align(gap,gap.index,gap.index,index,7);series['overheat']=heat.value
-    series['concentration']=relative36(spy.value/rsp.value);series['speculation']=relative36(high.value/low.value)
+    concentration_raw=(spy.value/rsp.value)
+    speculation_raw=(high.value/low.value)
+    concentration_raw=align(concentration_raw,concentration_raw.index,concentration_raw.index,index,7)
+    speculation_raw=align(speculation_raw,speculation_raw.index,speculation_raw.index,index,7)
+    series['concentration']=relative36(concentration_raw.value)
+    series['speculation']=relative36(speculation_raw.value)
     gdp=macro(d,'GDP',index,freq='Q',lag_months=2);series['valuation']=relative36(wil.value/gdp.value)
     series['complacency']=vix.value
-    observations.update(momentum=spy,overheat=heat,concentration=spy,speculation=high,valuation=wil,complacency=vix)
+    observations.update(momentum=spy,overheat=heat,concentration=concentration_raw,speculation=speculation_raw,valuation=wil,complacency=vix)
     values=pd.DataFrame(series,index=index);z=values.apply(history_z);z['complacency']=-z.complacency
     result=[]
     for id,title,keys in [('tesseract','거시 국면 · 세계의6축 상태',['growth','inflation','liquidity','profits','rate','momentum']),('crowding','시장 쏠림 · 시장 쏠림5축',['overheat','concentration','speculation','valuation','complacency'])]:
@@ -110,20 +132,20 @@ def states(d):
 
 
 def leaders(d):
-    candidates=[];fx=d.price('KRW=X',False);end=pd.Timestamp(d.as_of)
+    candidates=[];end=pd.Timestamp(d.as_of)
     for symbol,raw in d.fund.items():
         info=raw.get('info',{});cap=number(info.get('marketCap'));currency=info.get('currency')
-        if cap is None or cap<=0 or currency not in ['USD','KRW']:continue
-        if currency=='KRW':
-            if fx.empty or (end-fx.index[-1]).days>7:continue
-            cap/=fx.iloc[-1]
+        if cap is None or cap<=0:continue
+        cap_usd,cx_pair,cx_date=_to_usd_cap(d,currency,cap)
+        if cap_usd is None:continue
         p=d.price(symbol);before=p.loc[:end-pd.DateOffset(years=1)]
         if p.empty or before.empty or (end-p.index[-1]).days>7 or (end-pd.DateOffset(years=1)-before.index[-1]).days>7:continue
         ni=statement_series(frame(raw.get('quarterly_income')),'NetIncome').loc[:end];eg=None;period=None;previous=None
         if len(ni):
             period=ni.index[-1];prior=ni.loc[period-pd.DateOffset(years=1)-pd.Timedelta(days=10):period-pd.DateOffset(years=1)+pd.Timedelta(days=10)]
             if len(prior) and prior.iloc[-1]>0:eg=number((ni.iloc[-1]/prior.iloc[-1]-1)*100);previous=str(prior.index[-1].date())
-        candidates.append(dict(symbol=symbol,name=info.get('shortName') or symbol,cap_usd_bn=number(cap/1e9),currency=currency,fx_date=str(fx.index[-1].date()) if currency=='KRW' else None,momentum=number((p.iloc[-1]/before.iloc[-1]-1)*100),growth=eg,profit_period=str(period.date()) if period is not None else None,prior_profit_period=previous,financial_as_of=raw.get('retrieved_at'),price_date=str(p.index[-1].date())))
+        fx_date=cx_date if currency!='USD' else None
+        candidates.append(dict(symbol=symbol,name=info.get('shortName') or symbol,cap_usd_bn=number(cap_usd/1e9),currency=currency,fx_pair=cx_pair,fx_date=fx_date,momentum=number((p.iloc[-1]/before.iloc[-1]-1)*100),growth=eg,profit_period=str(period.date()) if period is not None else None,prior_profit_period=previous,financial_as_of=raw.get('retrieved_at'),price_date=str(p.index[-1].date())))
     pool=sorted(candidates,key=lambda r:-r['cap_usd_bn'])[:50];eligible=[r for r in pool if r['growth'] is not None]
     if eligible:
         f=pd.DataFrame(dict(cap=[np.log(r['cap_usd_bn']) for r in eligible],momentum=[r['momentum'] for r in eligible],growth=[r['growth'] for r in eligible]))
@@ -131,7 +153,7 @@ def leaders(d):
         zz=(f-f.mean())/f.std(ddof=0).replace(0,np.nan);score=zz.fillna(0).mul(pd.Series(dict(cap=.42,momentum=.35,growth=.23))).sum(axis=1)
         for row,value in zip(eligible,score):row['score']=number(value)
     return dict(stocks=sorted(eligible,key=lambda r:(-r['score'],r['symbol']))[:10],pool=len(pool),eligible=len(eligible),cached=len(d.fund),
-        note='현재 재무 캐시의 USD/KRW 환산 시총 상위50 표본에서 12M 가격·분기 순이익 YoY가 있는 종목의 상위10. 전체 세계 시총순위가 아닙니다. 주도력=log 시총 z×0.42+모멘텀 z×0.35+이익성장 z×0.23; 후자2개는 표본5/95분위 winsorize. 재무 수집 시각·관측 결산일·환율일을 보존합니다.')
+        note='현재 재무 캐시의 통화 환산 시총 상위50 표본에서 12M 가격·분기 순이익 YoY가 있는 종목의 상위10을 표시합니다. 전체 세계 시총순위가 아닙니다. 주도력=log 시총 z×0.42+모멘텀 z×0.35+이익성장 z×0.23; 후자2개는 표본5/95분위 winsorize. 재무 수집 시각·관측 결산일·환율일을 보존합니다.')
 
 
 def build_overview(d):

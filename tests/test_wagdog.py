@@ -4,6 +4,7 @@ from unittest.mock import Mock,patch
 import numpy as np
 from pipeline.wagdog import profile,roots,packets
 from pipeline.options_data import normalize,collect,FLOW_SCOPE
+from pipeline.option_analytics import observation_sections
 from pipeline.flows_data import collect_us_options
 from pipeline.events_data import save,read
 import pandas as pd
@@ -88,6 +89,23 @@ class OptionProfileTests(unittest.TestCase):
             self.assertEqual(p['provider_timestamp'],raw['provider_timestamp'])
             self.assertFalse(p['scope_complete'])
 
+    def test_observation_sections_show_scope_complete_range(self):
+        sections=observation_sections({
+            'symbol':'TEST','spot':100,'retrieved_at':'2026-09-09T00:00:00Z','provider_timestamp':'2026-09-09 03:00:00',
+            'price_date':'2026-09-09','expiries':['2026-09-16'],'contracts':12,'valid_oi':10,'valid_gamma':8,'put_call':1.1,
+            'net':2,'em_expiry':'2026-09-16','em_strike':100,'em':1.8,'em_low':99,'em_high':101,'rate':3.2,'rate_date':'2026-09-09',
+            'scope':{'min_dte':7,'max_dte':50,'strike_band':0.15},'scope_complete':True,'maturity':[]
+        })
+        self.assertEqual(sections[0]['rows'][0][1],'7~50일 · 행사가 ±15% · 공급된 범위 내 모든 만기')
+
+    def test_observation_sections_show_limited_scope_notice(self):
+        sections=observation_sections({
+            'symbol':'TEST','spot':100,'retrieved_at':'2026-09-09T00:00:00Z','provider_timestamp':None,
+            'price_date':'2026-09-09','expiries':['2026-09-16'],'contracts':12,'valid_oi':10,'valid_gamma':8,'put_call':1.1,
+            'net':2,'em_expiry':'2026-09-16','em_strike':100,'em':1.8,'em_low':99,'em_high':101,'scope':{'min_dte':7,'max_dte':45,'strike_band':0.15,'expiry_cap':3},'scope_complete':False,'maturity':[]
+        })
+        self.assertIn('만기 상위 3개 제한',sections[0]['rows'][0][1])
+
 class OptionCollectionTests(unittest.TestCase):
     def fixture(self,path):
         class Fixture:
@@ -129,5 +147,23 @@ class OptionCollectionTests(unittest.TestCase):
             event=read(d.base/'flows/earnings_TEST.json.gz')
             self.assertEqual(len(event['records']),2);self.assertEqual(event['expiry'],'2026-09-18')
             self.assertFalse((d.base/'flows/options_TEST.json.gz').exists())
+
+    def test_flow_option_scope_is_stock_contract(self):
+        with tempfile.TemporaryDirectory() as tmp,patch('pipeline.flows_data.time.sleep'),patch('pipeline.flows_data.US_STOCKS',['TEST']),patch('pipeline.flows_data.ETF_DEFINITIONS',[]),patch('pipeline.flows_data.pd.Timestamp.now',return_value=pd.Timestamp('2026-09-13T00:00:00Z')):
+            d=self.fixture(Path(tmp))
+            def make_raw():
+                rows=[]
+                for expiry in ['260915','260918','260925','261002','261009','261010']:
+                    for strike in [85000,95000,97500,100000,102500,105000,115000]:
+                        for side in ['C','P']:
+                            rows.append(dict(option='TEST'+expiry+side+f'{strike:08d}',open_interest=20,iv=.25,bid=1,ask=2))
+                return dict(symbol='TEST',timestamp='2026-09-09 03:00:00',data=dict(current_price=100,options=rows))
+            report=collect_us_options(d,{},allow_download=True,fetch=lambda s:make_raw())
+            self.assertEqual(report['rows'][0]['status'],'collected')
+            packet=read(d.base/'flows/options_TEST.json.gz')
+            self.assertEqual(packet['scope'],dict(version=1,min_dte=7,max_dte=45,strike_band=None,expiry_cap=3,expiry_time='16:00 America/New_York model convention',multiplier=100))
+            self.assertEqual(packet['expiries'],['2026-09-25','2026-10-02','2026-10-09'])
+            self.assertEqual({r['strike'] for r in packet['records']},{85,95,97.5,100,102.5,105,115})
+            self.assertEqual(len(packet['records']),3*7*2)  # 3 expiries × 7 strikes × 2 sides
 
 if __name__=='__main__':unittest.main()

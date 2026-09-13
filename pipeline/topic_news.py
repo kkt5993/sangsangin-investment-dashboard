@@ -10,6 +10,7 @@ from .company_news import canonical
 
 FILE='topic_news/feeds.json.gz'
 API='https://api.gdeltproject.org/api/v2/doc/doc'
+UA='sangsangin-dashboard-topic-news/1.0'
 
 
 def settings():return read_json(ROOT/'config/topic_news.json')['topics']
@@ -42,6 +43,29 @@ def normalize(blob):
     return sorted(rows.values(),key=lambda r:(r['time'],r['id']),reverse=True),len(packet['articles']),excluded
 
 
+def parse_limit_response(content):
+    # A valid article payload may quote the same words as a limit notice.
+    try:
+        packet=json.loads(content)
+        if isinstance(packet,dict) and isinstance(packet.get('articles'),list):return False
+    except (ValueError,UnicodeDecodeError):pass
+    text=content.decode('utf-8','ignore').lower()
+    return 'please limit requests to one every' in text or 'high-traffic users' in text or 'limit requests' in text
+
+
+def request_gdelt(session,url):
+    response=session.get(url,timeout=(10,30),headers={'User-Agent':UA})
+    if response.status_code in [401,403,429]:
+        raise requests.HTTPError(response=response)
+    response.raise_for_status()
+    if parse_limit_response(response.content):
+        code_response=requests.Response()
+        code_response.status_code=429
+        code_response.url=url
+        raise requests.HTTPError(response=code_response)
+    return response
+
+
 def collect(d,session=None,now=None,pause=time.sleep):
     now=now or datetime.now(timezone.utc)
     if now.tzinfo is None:raise ValueError('Timezone required')
@@ -51,14 +75,23 @@ def collect(d,session=None,now=None,pause=time.sleep):
     if previous.get('status') in ['error','access_refused'] and 0<=age(previous.get('attempted_at'),now)<1:return dict(report,status='backoff')
     packet=copy.deepcopy(packet);own=session is None;session=session or requests.Session()
     try:
+        aborted=False
+        abort_reason=None;abort_http_status=None
         for spec in settings():
             key=spec['id'];prior=packet['feeds'].get(key,{})
-            # Reuse the query's actual window, not a different date range.
             url=search_url(spec,d.as_of)
+            # Completed queries stay reusable even when an earlier query fails.
             if prior.get('url')==url and prior.get('data_query')==spec['query'] and not prior.get('error') and 0<=age(prior.get('checked_at'),now)<24:continue
+            if aborted:
+                packet['feeds'][key]=dict(
+                    prior,**spec,url=url,error='collection_aborted',
+                    deferred_at=now.isoformat(),abort_reason=abort_reason,
+                    abort_http_status=abort_http_status,
+                )
+                continue
             pause(6);report['requests']+=1
             try:
-                response=session.get(url,timeout=(10,30));response.raise_for_status()
+                response=request_gdelt(session,url)
                 rows,count,excluded=normalize(response.content);sha=hashlib.sha256(response.content).hexdigest();raw='topic_news/raw/'+sha+'.json'
                 if not d.resource(raw).exists():
                     target=d.base/raw;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(response.content)
@@ -69,10 +102,12 @@ def collect(d,session=None,now=None,pause=time.sleep):
             except Exception as error:
                 code=getattr(getattr(error,'response',None),'status_code',None)
                 report['errors'].append(dict(id=key,type=type(error).__name__,http_status=code))
-                packet['feeds'][key]=dict(prior,**spec,url=url,checked_at=now.isoformat(),error=type(error).__name__)
-                if code in [401,403,429]:report['status']='access_refused';break
-                if isinstance(error,requests.RequestException):report['status']='error';break
-            packet['collection']=dict(report,status='error' if report['errors'] else 'ok');save(d.base/FILE,packet)
+                packet['feeds'][key]=dict(prior,**spec,url=url,checked_at=now.isoformat(),error=type(error).__name__,
+                    http_status=code,deferred_at=None,abort_reason=None,abort_http_status=None)
+                if isinstance(error,requests.RequestException):
+                    report['status']='access_refused' if code in [401,403,429] else 'error'
+                    aborted=True;abort_reason=type(error).__name__;abort_http_status=code
+            packet['collection']=dict(report,status=report['status'] if aborted else ('error' if report['errors'] else 'ok'));save(d.base/FILE,packet)
         if report['requests']:
             if report['status']!='access_refused':report['status']='error' if report['errors'] else 'ok'
             packet['collection']=report;save(d.base/FILE,packet)
@@ -124,6 +159,8 @@ def views(d,dragon,now=None):
             sets[provider]=dict(items=enriched,count=len(enriched),tone_summary=summary,tone=summary['score'])
         items.append(dict(**spec,sets=sets,url=search_url(spec,d.as_of),available=bool(fresh),data_available=bool(valid_query and saved.get('retrieved_at')),retrieved_at=saved.get('retrieved_at'),
                           checked_at=saved.get('checked_at'),error=saved.get('error'),response_items=saved.get('response_items'),
+                          http_status=saved.get('http_status'),deferred_at=saved.get('deferred_at'),
+                          abort_reason=saved.get('abort_reason'),abort_http_status=saved.get('abort_http_status'),
                           capped=(saved.get('response_items') or 0)>=250,excluded_items=saved.get('excluded_items',0)))
     section=dict(type='topicnews',title='테마·국가·정책 뉴스',group='지금 주목',as_of=d.as_of,start=start,end=end,computed_at=now.isoformat(),items=items,
         collection=packet.get('collection',{}),source_vintage=p.parent.parent.name if p.exists() else None,

@@ -9,11 +9,16 @@ def number(x):
     try:return round(float(x),6) if np.isfinite(float(x)) else None
     except (ValueError,TypeError):return None
 
-def clean_json(obj):
-    if isinstance(obj,dict):return {str(k):clean_json(v) for k,v in obj.items()}
-    if isinstance(obj,(list,tuple,np.ndarray)):return [clean_json(v) for v in obj]
+def clean_json(obj,preserve_precision=False):
+    if isinstance(obj,dict):
+        # Statistical probabilities and derived scores must survive export together.
+        preserve_precision=(preserve_precision or obj.get('type') in {'relationdiscovery','companynews','topicnews'}
+                            or 'probabilities' in obj or 'tone_summary' in obj)
+        return {str(k):clean_json(v,preserve_precision) for k,v in obj.items()}
+    if isinstance(obj,(list,tuple,np.ndarray)):return [clean_json(v,preserve_precision) for v in obj]
     if isinstance(obj,np.bool_):return bool(obj)
-    if isinstance(obj,(float,np.floating)):return number(obj)
+    if isinstance(obj,(float,np.floating)):
+        return (float(obj) if np.isfinite(obj) else None) if preserve_precision else number(obj)
     if isinstance(obj,np.integer):return int(obj)
     if isinstance(obj,(pd.Timestamp,datetime)):return obj.isoformat()[:10]
     return obj

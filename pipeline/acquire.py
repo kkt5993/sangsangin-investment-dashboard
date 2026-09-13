@@ -123,12 +123,12 @@ def collect_macro(base,as_of,keys=None):
 
 
 def collect_fundamentals(base,limit=0,symbols=None):
-    folder=base/'fundamentals';folder.mkdir(exist_ok=True)
-    # Research universe is explicit; analyst retrieval is bounded, not all 500 stocks.
     if symbols is None:
-        from .strategy_cards import settings
-        symbols=sorted({m['symbol'] for m in reference_stocks()}|set(settings()['fundamental_support']))
-    members=[dict(symbol=s) for s in symbols];members=members[:limit] if limit else members
+        from .fundamental_universe import collect
+        return collect(base,limit=limit)
+    folder=base/'fundamentals';folder.mkdir(exist_ok=True)
+    members=[dict(symbol=s) for s in sorted(set(symbols))]
+    members=members[:limit] if limit else members
     for i,m in enumerate(members):
         s=m['symbol'];file=folder/(re.sub(r'[^A-Za-z0-9.-]','_',s)+'.json')
         if file.exists() or file.with_suffix('.json.gz').exists():continue

@@ -15,6 +15,17 @@ def resource(path):return SimpleNamespace(base=path,resource=lambda f:path/f)
 def feed(path,titles):save(path/'company_news/feeds.json.gz',dict(feeds={'A':{'items':[dict(title=t) for t in titles]}}))
 
 class ToneTests(unittest.TestCase):
+    def test_export_keeps_probabilities_and_derived_score_consistent(self):
+        import json
+        from pipeline.engine import clean_json
+        original=row(.56562745,.21326851)
+        for kind in ('companynews','topicnews'):
+            with self.subTest(kind=kind):
+                saved=json.loads(json.dumps(clean_json(clean_json({'type':kind,'items':[original]}))))
+                self.assertTrue(valid(saved['items'][0]))
+                self.assertEqual(saved['items'][0]['probabilities'],original['probabilities'])
+                self.assertEqual(saved['items'][0]['score'],original['score'])
+
     def test_exact_input_reuse_shared_titles_and_changed_revision(self):
         with tempfile.TemporaryDirectory() as name:
             p=Path(name);d=resource(p);feed(p,['Profit up','Profit  up','Loss down']);calls=[]

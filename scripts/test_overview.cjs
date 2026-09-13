@@ -5,6 +5,9 @@ function context(){let requests=0,resolve;const frames=new Map();let fid=0;const
  for(const n of ['charts','analysis-charts','overview-views'])vm.runInContext(read('docs/'+n+'.js'),ctx);return {V:ctx.window.OverviewViews,frames,requests:()=>requests,resolve:()=>resolve(),ctx};}
 async function checks(){
  const {V,frames}=context(),p=data.panels[0],crowd=data.panels[1];
+ const fxView=V.view({...data,leaders:{...data.leaders,stocks:[{...data.leaders.stocks[0],currency:'KRW',fx_pair:'KRW=X',fx_date:'2026-09-07'}]}});
+ assert(fxView.includes('시총 원통화'));assert(fxView.includes('환율 관측일'));
+ assert(fxView.includes('KRW=X'));assert(fxView.includes('2026-09-07'));
  for(const a of data.panels){const h=V.hologram(a),r=V.radar(a);assert.equal((h.match(/data-state-quadrant=/g)||[]).length,4);assert.equal((h.match(/data-state-date=/g)||[]).length,36);assert.equal((r.match(/data-stacked-date=/g)||[]).length,4);assert.equal((r.match(/data-radar-wall=/g)||[]).length,a.axes.length*3);assert(!/NaN|undefined|Infinity/.test(h+r));}
  // Axis domains must enclose every observation and zero; real small ranges must fill the frame.
  for(const panel of data.panels){const before=JSON.stringify(panel),roles=Object.fromEntries(panel.axes.map(a=>[a.role,a.key])),domains=V.spatialDomain(panel);

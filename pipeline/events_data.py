@@ -13,7 +13,16 @@ FEEDS=[('Federal Reserve','https://www.federalreserve.gov/feeds/press_all.xml'),
        ('BBC World','https://feeds.bbci.co.uk/news/world/rss.xml'),('DW','https://rss.dw.com/rdf/rss-en-all')]
 def save(path,data):
     encoded=gzip.compress(json.dumps(clean_json(data),ensure_ascii=False,allow_nan=False).encode(),mtime=0)
-    path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_bytes(encoded);tmp.replace(path)
+    path.parent.mkdir(parents=True,exist_ok=True);tmp=path.with_suffix('.tmp');tmp.write_bytes(encoded)
+    # Windows readers/antivirus can briefly deny replacement of the ledger.
+    # Keep the old file intact and retry only the atomic replacement.
+    for attempt in range(6):
+        try:
+            tmp.replace(path)
+            break
+        except PermissionError:
+            if attempt==5:raise
+            time.sleep(.1*2**attempt)
 
 def read(path):return json.loads(gzip.decompress(path.read_bytes()))
 

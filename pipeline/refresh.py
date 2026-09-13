@@ -72,7 +72,8 @@ def collect(parent,base,as_of,env,config,log):
             if child.exists() and prior.exists() and digest(child)==digest(prior):
                 child.unlink();del m['instruments'][key]
         write_json(mf,m)
-    if due(parent,'fundamentals',7):run('pipeline.acquire','fundamentals')
+    # Per-company freshness/backoff also covers newly disclosed constituents.
+    run('pipeline.acquire','fundamentals')
     if config.get('consensus_database') and due(parent,'local_consensus.json.gz',7):run('pipeline.local_consensus',config['consensus_database'])
     current=Data(as_of,base.name);collect_news(current)
     if due(parent,'events',3):collect_events(current,config.get('event_companies',60))

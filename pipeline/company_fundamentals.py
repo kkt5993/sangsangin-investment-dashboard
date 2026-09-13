@@ -16,6 +16,9 @@ from .financial_modules import frame
 REPORT='company_financial/collection.json.gz'
 
 
+class SourceRefused(RuntimeError):pass
+
+
 def usable_fund(raw):
     currency=raw.get('info',{}).get('financialCurrency')
     if raw.get('status')!='ok' or not isinstance(currency,str) or len(currency)!=3:return False
@@ -64,7 +67,10 @@ def fetch_fund(symbol,folder):
     from .acquire import collect_fundamentals
     folder.mkdir(parents=True,exist_ok=True)
     collect_fundamentals(folder,symbols=[symbol])
-    return read(folder/'fundamentals'/(symbol+'.json.gz'))
+    raw=read(folder/'fundamentals'/(symbol+'.json.gz'))
+    if any('YFRateLimitError' in e for e in [raw.get('error_type',''),*raw.get('errors',[])]):
+        raise SourceRefused('Provider rate limit')
+    return raw
 
 
 def fetch_calendar(symbol):
@@ -76,19 +82,28 @@ def fetch_calendar(symbol):
                 earnings_dates=json.loads(f.to_json(orient='split',date_format='iso')) if f is not None and len(f) else None)
 
 
-def collect(d,targets=None,fund_fetch=fetch_fund,calendar_fetch=fetch_calendar,pause=time.sleep,now=None):
+def collect(d,targets=None,fund_fetch=fetch_fund,calendar_fetch=fetch_calendar,pause=time.sleep,now=None,
+            kinds=('financial','calendar'),report_path=REPORT,stop_on_refusal=False):
+    if not kinds or not set(kinds)<={'financial','calendar'}:raise ValueError('Unknown collection kind')
+    live_clock=now is None
     now=pd.Timestamp(now or datetime.now(timezone.utc));targets=targets if targets is not None else settings()
-    prior_path=d.resource(REPORT);prior=read(prior_path) if prior_path.exists() else {}
+    prior_path=d.resource(report_path);prior=read(prior_path) if prior_path.exists() else {}
+    if stop_on_refusal and prior.get('refused_at') and 0<=age(now,prior['refused_at'])<3600:
+        return dict(prior,status='backoff',fetches=0)
     previous={(r['symbol'],r['kind']):r for r in prior.get('rows',[])}
-    dates=calendars(d);rows=[];fetches=0
+    dates=calendars(d) if 'calendar' in kinds else {};rows=[];fetches=0;refused_at=None
     for item in targets:
         symbol=item['symbol']
         for kind,old,days in [('financial',d.fund.get(symbol,{}),7),('calendar',dates.get(symbol,{}),3)]:
+            if kind not in kinds:continue
             if kind=='calendar' and symbol.endswith(('.KS','.KQ')):continue
+            if live_clock:now=pd.Timestamp(datetime.now(timezone.utc))
             valid=usable_fund if kind=='financial' else usable_calendar
-            row=dict(symbol=symbol,kind=kind,checked_at=now.isoformat(),retrieved_at=old.get('retrieved_at'))
+            row=dict(symbol=symbol,kind=kind,checked_at=now.isoformat(),retrieved_at=old.get('retrieved_at'),partial=bool(old.get('errors')))
             if valid(old) and 0<=age(now,old.get('retrieved_at'))<days*86400:
                 rows.append(dict(row,status='reused'));continue
+            if refused_at:
+                rows.append(dict(row,status='deferred',deferred_at=refused_at,error_type='SourceRefused'));continue
             before=previous.get((symbol,kind),{})
             if before.get('status') in ['retained','missing','backoff'] and 0<=age(now,before.get('attempted_at'))<3600:
                 rows.append(dict(row,status='backoff',attempted_at=before['attempted_at'],error_type=before.get('error_type')));continue
@@ -107,13 +122,15 @@ def collect(d,targets=None,fund_fetch=fetch_fund,calendar_fetch=fetch_calendar,p
                 if kind=='financial':d.fund[symbol]=raw
                 else:dates[symbol]=raw
                 row.update(status='collected',retrieved_at=raw['retrieved_at'],partial=bool(raw.get('errors')))
-            except Exception as error:row.update(status='retained' if valid(old) else 'missing',error_type=type(error).__name__)
+            except Exception as error:
+                row.update(status='retained' if valid(old) else 'missing',error_type=type(error).__name__)
+                if stop_on_refusal and isinstance(error,SourceRefused):refused_at=now.isoformat()
             rows.append(row)
-            save(d.base/REPORT,dict(checked_at=now.isoformat(),fetches=fetches,rows=rows))
+            save(d.base/report_path,dict(checked_at=now.isoformat(),fetches=fetches,rows=rows,refused_at=refused_at))
             print('COMPANY',kind,symbol,row['status'],flush=True);pause(1)
-    report=dict(checked_at=now.isoformat(),fetches=fetches,expected=len(targets),rows=rows,
-                status='partial' if any(r['status'] in ['retained','missing','backoff'] or r.get('partial') for r in rows) else 'ok')
-    save(d.base/REPORT,report);return report
+    report=dict(checked_at=now.isoformat(),fetches=fetches,expected=len(targets),rows=rows,refused_at=refused_at,
+                status='partial' if any(r['status'] in ['retained','missing','backoff','deferred'] or r.get('partial') for r in rows) else 'ok')
+    save(d.base/report_path,report);return report
 
 
 if __name__=='__main__':

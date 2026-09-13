@@ -1,15 +1,15 @@
 # Markdown 작업 인벤토리
 
-이 문서는 `scripts/write_work_inventory.py`가 생성한다. Markdown에 남은 미완료·후속 표현을 출처 줄과 함께 전수 색인한다.
+이 문서는 `scripts/write_work_inventory.py`가 생성한다. Markdown에 남은 미완료·후속 표현을 출처 줄과 함께 전수 색인한다. “검증과 남은 범위” 같은 섹션 제목은 작업이 아니므로 제외한다.
 체크박스는 현재 정본(패리티 표·로드맵·계약)의 실행 후보에만 사용한다. 운영·생성 문서는 중복·현황 증거이며, `HANDOFF.md`는 역사 인계 증거다. 어느 행도 코드·원자료·검증 결과 재확인 없이는 미완료 또는 완료로 단정하지 않는다.
 
-출처 파일 73개 · 표현 280개
+출처 파일 71개 · 표현 266개
 
 ## 분류
 
-- 현재 정본 실행 후보: 92개
+- 현재 정본 실행 후보: 82개
 - 운영 문서 증거: 11개
-- 생성·파생 문서 증거: 69개
+- 생성·파생 문서 증거: 65개
 - 역사 인계 증거: 108개
 
 ## 현재 정본 실행 후보
@@ -21,18 +21,9 @@
 - [ ] [research/ATTENTION_CONTRACT.md:23](ATTENTION_CONTRACT.md#L23) — 남은 범위: 전체 기업 뉴스·감성/커뮤니티·추가 문서 및 언어·리디렉션 합산, 제목 변경 전후의 리디렉션 열람을 검증한 연속성, 원본 비공개 비교 기간/PIT 동등성. 이 기능은10기업 문서 열람이며 뉴스 전체 구현 완료가 아니다.
 - [ ] [research/ATTENTION_CONTRACT.md:25](ATTENTION_CONTRACT.md#L25) — 기업 상세 누락 보완: 기존701기업에 ASML 미국 상장 종목을 추가했다. 보존 가격이 없어서 기존 수집기로 ASML 1종목의3년 일봉752건을 확보하고 OHLC 범위·USD 호가를 확인한다. 공식 S&P500 구성원으로 편입하지 않으며 추가 관찰 종목으로 표시한다. 기업 상세702기업의 가격/수익률/SPY Beta/252일 상관 원장을 함께 계산하고 다음 정기 가격 갱신에도 포함한다. ASML의 미확보 재무·실적 예정일은 임의로 채우지 않는다.
 
-### `research/CHAIN_UNIVERSE_CONTRACT.md`
-
-- [ ] [research/CHAIN_UNIVERSE_CONTRACT.md:43](CHAIN_UNIVERSE_CONTRACT.md#L43) — ## 완료 판단과 남은 범위
-
 ### `research/CLINICAL_CONTRACT.md`
 
-- [ ] [research/CLINICAL_CONTRACT.md:22](CLINICAL_CONTRACT.md#L22) — ## 화면과 남은 범위
 - [ ] [research/CLINICAL_CONTRACT.md:30](CLINICAL_CONTRACT.md#L30) — 원본의 정확한 검색식/기관별 인수·자회사 범위,전체 연구별 변화 이력·표본 밖 모집 전환 알림·규제 승인·임상 결과 해석은 남은 범위다. 표본 내 비모집→`RECRUITING` 전환 알림은 위 규칙대로 구현했으며, 최초 표본·기존 모집 상태를 새 알림으로 만들지 않는다. 13F·기업 뉴스 감성·관심량과 비공개 정량 투자뷰도 별도 구현 대상이다.
-
-### `research/COMPANY_FINANCIAL_CONTRACT.md`
-
-- [ ] [research/COMPANY_FINANCIAL_CONTRACT.md:21](COMPANY_FINANCIAL_CONTRACT.md#L21) — ## 검증과 남은 범위
 
 ### `research/COMPANY_NEWS_CONTRACT.md`
 
@@ -40,7 +31,6 @@
 - [ ] [research/COMPANY_NEWS_CONTRACT.md:13](COMPANY_NEWS_CONTRACT.md#L13) — 새 응답은 URL별 관측 목록과 합친다. 피드에서 사라진 기사는 과거 관측으로 남긴다. 최초 수집 시각을 보존하고 마지막 관측 시각·제목·공급처 발행 시각 정정은 새 관측으로 갱신한다. 이는 실제 발행 당시 수집 빈티지가 아니며 과거 시점 자료로 소급하지 않는다. 처음 수집하기 전의 전체 기사 이력은 미확보다.
 - [ ] [research/COMPANY_NEWS_CONTRACT.md:21](COMPANY_NEWS_CONTRACT.md#L21) — 기술 신호는 기존처럼 기업 가격일과 일치시킨다. 뉴스는 별도의 최근 기사 발행일·수집 시각을 기록하며 중복 피드나 반복 계산으로 뉴스1점을 중복 가산하지 않는다. 전체 점수·기대수익·실시간 종합 점수는 미산출을 유지한다. 제목에서 기업별 호재/악재를 단정하지 않으며 기업별 문맥 감성은 미확보로 유지하고, 연결된 영문 제목 전체의 톤은 아래 별도 모델 계약으로 분류한다. 문서 열람·뉴스 수·커뮤니티 반응을 서로 대체하지 않는다.
 - [ ] [research/COMPANY_NEWS_CONTRACT.md:25](COMPANY_NEWS_CONTRACT.md#L25) — 기업별 기사 수·최신5개 제목과 링크·나머지 기사 펼치기·발행/최초 관측/성공 수집/최근 시도·미확보 표시를 제공한다. 기업·티커·기사 제목 검색, 기사8건 조건/수집 상태 필터, 기업 상세 이동과 그 화면의 기사 패널, 신호 카드의 최신 기사/조건 근거를 연결한다. 브라우저에서는 데이터 JSON만 읽고 뉴스 사이트에 자동 요청하지 않는다.
-- [ ] [research/COMPANY_NEWS_CONTRACT.md:29](COMPANY_NEWS_CONTRACT.md#L29) — ## 검증과 남은 범위
 - [ ] [research/COMPANY_NEWS_CONTRACT.md:43](COMPANY_NEWS_CONTRACT.md#L43) — 40피드 모두 기업 상세와 연결한다. 기존 702개 상세에 ALAB·ARM·CRWV·ENTG·NBIS를 추가해 707개가 되었다. 한미사이언스(008930.KS)는 기존 KOSPI200 기업 상세를 재사용한다. 신규 미국 5개는 Nasdaq 종목 디렉터리의 종목명·시험종목 여부·ETF 여부를 확인했으며, 확인 시각과 공식 링크를 표시한다. 한미사이언스 식별자는 DART 회사 정보로 확인했다. 공식 지수 구성 및 업종은 종목 존재 확인과 별개다. 추가 5개는 공식 업종 미확보·추가 사업 관찰로 표시하고 RS를 임의로 채우지 않는다. 후속 재무·일정 보완에서 실제 자료를 추가 연결했다.
 
 ### `research/DIGEST_CONTRACT.md`
@@ -57,12 +47,10 @@
 
 ### `research/DRAGON_RESEARCH_CONTRACT.md`
 
-- [ ] [research/DRAGON_RESEARCH_CONTRACT.md:17](DRAGON_RESEARCH_CONTRACT.md#L17) — ## 정기 갱신과 남은 범위
 - [ ] [research/DRAGON_RESEARCH_CONTRACT.md:21](DRAGON_RESEARCH_CONTRACT.md#L21) — 원본 비공개 투자 리포트,167편 전체,투자뷰의 수치 기대수익,자동 해석과 팀 공용 저장소는 남은 차이다. 지금 주목과 트리거는 이 카탈로그와 주도주/발굴 관측을 연결했다. 나머지 미확보 신호와 원본 종합점수 차이는 신호 계약에 기록했다.
 
 ### `research/DRAGON_SIGNALS_CONTRACT.md`
 
-- [ ] [research/DRAGON_SIGNALS_CONTRACT.md:5](DRAGON_SIGNALS_CONTRACT.md#L5) — ## 관측과 미확보 항목
 - [ ] [research/DRAGON_SIGNALS_CONTRACT.md:7](DRAGON_SIGNALS_CONTRACT.md#L7) — 트리거 공개 규칙은 구루3, 주도주2, 발굴2, 관심급등2, 리서치 양의 기대수익2, 뉴스8건1, 감성양수1이다. 주도주·발굴과 지정10문서의 관심도 관측을 연결하며 같은 종목·같은 모듈은 중복 합산하지 않는다. 기업별 전체 뉴스/감성과 수치 투자뷰는 아직 없고13F의 최신 완전성과 시차 규칙은 검증 중이므로 전체점수는 null이다. 미확보를 관측0으로 확정하지 않는다. 두 기술 기반 신호는 독립 확률이나 검증된 투자 확신도가 아니다.
 - [ ] [research/DRAGON_SIGNALS_CONTRACT.md:23](DRAGON_SIGNALS_CONTRACT.md#L23) — 관심도 후속: Wikimedia 지정10기업 문서의 일별 열람·최근7일/직전7일·정확한 기업 연결·+40% 규칙을 연결했다. 최신10문서 중 급등0이며 기존4동시신호는 유지한다. 전체 뉴스 감성/관심도를 대표하는 값은 아니다. ATTENTION_CONTRACT.md 참조.
 - [ ] [research/DRAGON_SIGNALS_CONTRACT.md:27](DRAGON_SIGNALS_CONTRACT.md#L27) — 기업 뉴스 계약에 따라23피드의UTC7일실제관측이8건이상일때1점을추가한다. 가격일과별도로기사발행일/수집일을표시하며전체뉴스량·감성·과거시점예측으로해석하지않는다. 최신기사는지금주목카드와기업상세에서원문으로연결한다. 이전본문의기업뉴스미연결상태는이후속구현이우선한다.
@@ -105,8 +93,6 @@
 ### `research/IW_REVIEW_CONTRACT.md`
 
 - [ ] [research/IW_REVIEW_CONTRACT.md:3](IW_REVIEW_CONTRACT.md#L3) — 보존한 원본 IW의29행은 독립 지표29개가 아니라 월말 복기15건과 주간 연대기14건이다. 팀 화면은 같은 구성을 자체 ML 원장과 관측값으로 생성한다. 원본의 논평·이미지를 재게시하지 않는다. 원본 본문과 표의 합계가 다른 경우도 있어 방향 일치 건수와 상세 표는 반드시 같은 계산 결과에서 생성한다.
-- [ ] [research/IW_REVIEW_CONTRACT.md:11](IW_REVIEW_CONTRACT.md#L11) — ## 주간 연대기14건과 누적 보관
-- [ ] [research/IW_REVIEW_CONTRACT.md:33](IW_REVIEW_CONTRACT.md#L33) — ## 검증과 남은 범위
 
 ### `research/KR_SHORTGAMMA_CONTRACT.md`
 
@@ -128,7 +114,6 @@
 
 ### `research/NEWS_TONE_CONTRACT.md`
 
-- [ ] [research/NEWS_TONE_CONTRACT.md:25](NEWS_TONE_CONTRACT.md#L25) — ## 검증과 남은 범위
 - [ ] [research/NEWS_TONE_CONTRACT.md:29](NEWS_TONE_CONTRACT.md#L29) — 남은 범위는 전체 기업/제공처·완전한 과거 뉴스·기업을 대상으로 한 문맥감성·모델 교정/정확도 독립 평가·표본 밖 예측력이다. 제목 톤의 구현을 이 전체 범위의 완료로 세지 않는다.
 
 ### `research/OPTIONS_CONTRACT.md`
@@ -205,7 +190,6 @@
 
 - [ ] [research/TOPIC_NEWS_CONTRACT.md:17](TOPIC_NEWS_CONTRACT.md#L17) — 조회 실패는 기존 성공 응답을 보존한다. 검색식이 변경된 뒤 실패해도 이전 검색 결과를 새 검색식의 결과로 표시하지 않는다. `data_query`가 원자료의 검색식을 유지한다. 데이터 미확보는‘—’, 정상 조회에서 관측한 기사0개는‘0건’이다. 과거 검색 자료는 이전 자료로 표시하며 최신 성공으로 간주하지 않는다.
 - [ ] [research/TOPIC_NEWS_CONTRACT.md:19](TOPIC_NEWS_CONTRACT.md#L19) — 배치 중단 뒤 요청하지 않은 항목은 `collection_aborted`로 기록한다. `checked_at`은 실제 요청 시각만 유지하고 보류 시각은 `deferred_at`, 원인은 `abort_reason`/`abort_http_status`로 분리한다. 정상 캐시의24시간 재사용 여부를 중단 여부보다 먼저 검사하므로 앞선 실패가 이미 완료된 검색을 무효화하지 않는다. 유예 후 재실행은 미완료 검색만 요청한다. 화면에는 보류/실제 요청 시각과 원인, 같은 검색식·기간의 제공처 응답 링크를 표시한다. HTTP 오류는 JSON 형태의 본문이라도 성공 처리하지 않으며, 정상 기사 JSON 안의 제한 관련 문구는 제한 안내로 분류하지 않는다.
-- [ ] [research/TOPIC_NEWS_CONTRACT.md:31](TOPIC_NEWS_CONTRACT.md#L31) — ## 검증과 미완 범위
 - [ ] [research/TOPIC_NEWS_CONTRACT.md:33](TOPIC_NEWS_CONTRACT.md#L33) — 중복 URL·잘못된 시각·HTTPS 외 링크,0건/미확보 구분, 캐시 재사용,429/시간초과 배치 중단·백오프, 실패한 검색식 변경의 이전 결과 분리를 검사한다. 실제 기존 RSS와의 날짜·제목·일치 문구·분류 결과 대조 및 브라우저의20개 상세/분류/검색/펼치기를 확인한다. 성공·빈 응답·상한 도달의 GDELT 테스트는 합성 fixture 검사이며 실서버의 성공 조회 증거가 아니다.
 
 ### `research/TRADE_CONTRACT.md`
@@ -235,9 +219,7 @@
 ### `research/CHART_INTERACTION_GUIDE.md`
 
 - [research/CHART_INTERACTION_GUIDE.md:23](CHART_INTERACTION_GUIDE.md#L23) — - 성장주/표면/국면 및 Overview/공식 관계망의 원근은 화면 투영이다. 원래 값과 색/크기의 의미는 변경하지 않는다. 궤적의 표시 범위는 전체 관측과 0을 포함하도록 자동 조정한다. 성장주 크기 미확보는 기존 동일 크기 규칙을 따른다. 표면의 색은 낮은 청색에서 높은 보라색으로 정리했다.
-- [research/CHART_INTERACTION_GUIDE.md:48](CHART_INTERACTION_GUIDE.md#L48) — ### 공간 무대 후속
 - [research/CHART_INTERACTION_GUIDE.md:55](CHART_INTERACTION_GUIDE.md#L55) — 사용자의 후속 요청에 따라 Overview와 국면 3D 궤적의 고정 z 표시 절단을 없앴다. 전체 유효 관측과 0을 포함하는 축별 범위에 여유를 더한다. 점, 숫자 눈금, 0 평면과 사분면은 같은 좌표 변환을 사용한다. 원래 z·원단위·시계열은 변경하지 않는다. 축마다 범위가 다르므로 화면의 각도·거리를 축 사이의 동일한 z 거리로 읽지 않는다. 고정 비교 범위를 쓰는 레이더의 계약은 유지한다.
-- [research/CHART_INTERACTION_GUIDE.md:67](CHART_INTERACTION_GUIDE.md#L67) — ## 흰색·무광 후속 디자인
 
 ### `research/CHART_PARITY.md`
 
@@ -258,7 +240,6 @@
 
 ### `research/DESIGN_SYSTEM.md`
 
-- [research/DESIGN_SYSTEM.md:43](DESIGN_SYSTEM.md#L43) — ## 직접 조작과 객체 재질 (후속 사용자 요구)
 - [research/DESIGN_SYSTEM.md:62](DESIGN_SYSTEM.md#L62) — 사용자의 후속 요청에 따라 Overview와 국면 3D 궤적의 고정 z 표시 절단을 없앴다. 전체 유효 관측과 0을 포함하는 축별 범위에 여유를 더한다. 점, 숫자 눈금, 0 평면과 사분면은 같은 좌표 변환을 사용한다. 원래 z·원단위·시계열은 변경하지 않는다. 축마다 범위가 다르므로 화면의 각도·거리를 축 사이의 동일한 z 거리로 읽지 않는다. 고정 비교 범위를 쓰는 레이더의 계약은 유지한다.
 
 ### `research/IMPLEMENTATION_STATUS.md`
@@ -275,7 +256,6 @@
 
 ### `research/LOCAL_RESEARCH.md`
 
-- [research/LOCAL_RESEARCH.md:30](LOCAL_RESEARCH.md#L30) — ## 검증과 남은 범위
 - [research/LOCAL_RESEARCH.md:34](LOCAL_RESEARCH.md#L34) — 팀 공용 DB/로그인, 서버의 공개 게시/방문 통계, LLM 요약, ASK 자동 AI 질의 서버는 추가 구현 대상이다. PDF 파서·선택 OCR·페이지 재사용은 PDF 처리 계약을 따른다. 기간별 추세·테마·모듈별 집계는 ASK 계산 계약을 따른다. 새 저장 기능을 이들 전체 기능의 완료로 세지 않는다. IW의15개월 복기·14주 연대기·두 그림과 날짜 보존은 별도 계산 계약을 따른다.
 
 ### `research/modules/aragorn.md`

@@ -26,6 +26,10 @@ CANONICAL = {
 def entries(path):
     for number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
         text = line.strip()
+        # A heading such as "검증과 남은 범위" names a section; it is not an
+        # independent unfinished task.  Only index the statements beneath it.
+        if re.match(r'^#{1,6}\s+', text):
+            continue
         if PATTERN.search(text):
             # A copied source sentence can contain a link relative to its own
             # document.  Keep its label, not a now-invalid nested link.
@@ -61,7 +65,7 @@ def main():
     lines=[
         '# Markdown 작업 인벤토리',
         '',
-        '이 문서는 `scripts/write_work_inventory.py`가 생성한다. Markdown에 남은 미완료·후속 표현을 출처 줄과 함께 전수 색인한다.',
+        '이 문서는 `scripts/write_work_inventory.py`가 생성한다. Markdown에 남은 미완료·후속 표현을 출처 줄과 함께 전수 색인한다. “검증과 남은 범위” 같은 섹션 제목은 작업이 아니므로 제외한다.',
         '체크박스는 현재 정본(패리티 표·로드맵·계약)의 실행 후보에만 사용한다. 운영·생성 문서는 중복·현황 증거이며, `HANDOFF.md`는 역사 인계 증거다. 어느 행도 코드·원자료·검증 결과 재확인 없이는 미완료 또는 완료로 단정하지 않는다.',
         '',
         f'출처 파일 {sum(len(files) for files in groups.values())}개 · 표현 {total}개',

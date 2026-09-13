@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-10. S&P500 / KOSPI / NASDAQ / NVIDIA / Microsoft / Apple / Alphabet / Amazon / Meta / Broadcom / Tesla / Netflix / Palantir / 삼성전자 / SK하이닉스 / LG에너지솔루션 / 삼성바이오로직스 / 현대차.
+**부분 구현** · 가격 기준 2026-09-13. S&P500 / KOSPI / NASDAQ / NVIDIA / Microsoft / Apple / Alphabet / Amazon / Meta / Broadcom / Tesla / Netflix / Palantir / 삼성전자 / SK하이닉스 / LG에너지솔루션 / 삼성바이오로직스 / 현대차.
 
 - 계산 코드: [market_modules.py](../../pipeline/market_modules.py) · [dynamics_model.py](../../pipeline/dynamics_model.py) · [dynamics-views.js](../../docs/dynamics-views.js) · [dynamics-export.js](../../docs/dynamics-export.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/dynamics.json)

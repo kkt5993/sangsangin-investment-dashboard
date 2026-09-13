@@ -28,7 +28,7 @@
 ### `research/CLINICAL_CONTRACT.md`
 
 - [ ] [research/CLINICAL_CONTRACT.md:22](CLINICAL_CONTRACT.md#L22) — ## 화면과 남은 범위
-- [ ] [research/CLINICAL_CONTRACT.md:30](CLINICAL_CONTRACT.md#L30) — 원본의 정확한 검색식/기관별 인수·자회사 범위,전체 연구별 변화 이력·신규 모집 알림·규제 승인·임상 결과 해석은 남은 범위다. 13F·기업 뉴스 감성·관심량과 비공개 정량 투자뷰도 별도 구현 대상이다.
+- [ ] [research/CLINICAL_CONTRACT.md:30](CLINICAL_CONTRACT.md#L30) — 원본의 정확한 검색식/기관별 인수·자회사 범위,전체 연구별 변화 이력·표본 밖 모집 전환 알림·규제 승인·임상 결과 해석은 남은 범위다. 표본 내 비모집→`RECRUITING` 전환 알림은 위 규칙대로 구현했으며, 최초 표본·기존 모집 상태를 새 알림으로 만들지 않는다. 13F·기업 뉴스 감성·관심량과 비공개 정량 투자뷰도 별도 구현 대상이다.
 
 ### `research/COMPANY_FINANCIAL_CONTRACT.md`
 

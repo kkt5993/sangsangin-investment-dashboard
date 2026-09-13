@@ -52,9 +52,10 @@ class OwnershipTests(unittest.TestCase):
             f=self.filing();f['accepted_at']=at;valid,pending=eligible_filings([f],'2026-09-08');self.assertFalse(valid);self.assertTrue(any(why in r for r in pending[0]['reasons']))
         f=self.filing();f['accepted_at']='2026-09-09T03:59:59Z';self.assertEqual(len(eligible_filings([f],'2026-09-08')[0]),1)
 
-    def test_amendment_quarantine_and_accession_dedup(self):
+    def test_unambiguous_amendment_replaces_original_and_ambiguous_amendments_quarantine(self):
         f=self.filing();am=copy.deepcopy(f);am.update(accession='0000000456-26-000002',form='4/A',original_filing_date=f['filing_date'])
-        valid,pending=eligible_filings([f,f,am],'2026-09-08');self.assertFalse(valid);self.assertEqual(len(pending),2)
+        valid,pending=eligible_filings([f,f,am],'2026-09-08');self.assertEqual(len(valid),1);self.assertFalse(pending);self.assertEqual(valid[0]['form'],'4/A');self.assertEqual(valid[0]['amends_accession'],f['accession'])
+        other=copy.deepcopy(f);other['accession']='0000000456-26-000003';valid,pending=eligible_filings([f,other,am],'2026-09-08');self.assertFalse(valid);self.assertEqual({r['accession'] for r in pending},{f['accession'],other['accession'],am['accession']})
         f['filing_date']=None;am['original_filing_date']=None;am['transactions'][0]['date']='2026-08-29';am['transactions']=am['transactions'][:1]
         self.assertEqual(len(eligible_filings([f,am],'2026-09-08')[0]),1)
         self.assertEqual(len(eligible_filings([f,f],'2026-09-08')[0]),1)

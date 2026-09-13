@@ -22,7 +22,8 @@ module.exports=(async()=>{
  q.value='none-found-9234';await q.fire('input');assert.equal(symbols().length,0);assert(out.innerHTML.includes('현재 필터'));
  q.value='';await q.fire('input');const c=grid.querySelectorAll('[data-ownership-detail]').find(b=>b.dataset.ownershipDetail==='CEG');await c.fire('click');assert(out.innerHTML.includes('0000905148-26-003642'));
  assert.equal(s.pending.length,1);assert.equal(s.pending[0].symbol,'AVGO');assert(!symbols().includes('AVGO'));assert(V.filing(s.pending[0]).includes('집계 제외'));
- const first=s.cards[0].filings[0];assert(first.study.curve.length>2);assert(V.filing(first).includes('SPY 대비 누적 %p'));
+const first=s.cards[0].filings[0];assert(first.study.curve.length>2);assert(V.filing(first).includes('SPY 대비 누적 %p'));
+assert(V.filing({...first,form:'4/A',amends_accession:'0000000000-00-000000',amendment_status:'원공시를 대체한 최신 정정본'}).includes('원 공시 0000000000-00-000000을 더하지 않고 대체했습니다.'));
  const bad=structuredClone(first);bad.owners[0].name='<img src=x onerror=alert(1)>';bad.source_url='javascript:alert(1)';const safe=V.filing(bad);assert(!safe.includes('<img'));assert(safe.includes('&lt;img'));assert(!safe.includes('href="javascript:'));
  assert(read('docs/research-dashboard.js').includes('root.OwnershipViews.bind(container,d.sections)'));
  const empty={...s,cards:[],pending:[],comparison:[],scope:{...s.scope,confirmed_filings:0,confirmed_rows:0}};assert(V.render(empty,0).includes('확인 공시가 없어'));assert(!/NaN|Infinity|undefined/.test(V.render(empty,0)));

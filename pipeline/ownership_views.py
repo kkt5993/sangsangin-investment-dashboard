@@ -8,25 +8,40 @@ from .financial_modules import frame
 from .sec_ownership import records,accepted_utc
 from .events_data import read
 
+def amendment_resolution(filings,cutoff):
+    """Return only unambiguous Form 4/A replacements before the as-of cutoff."""
+    unique={r['accession']:r for r in filings};replacements={};unresolved=set();superseded=set()
+    amendments=[r for r in unique.values() if r.get('form')=='4/A' and accepted_utc(r.get('accepted_at')) and pd.Timestamp(accepted_utc(r['accepted_at']))<cutoff]
+    by_original={}
+    for amendment in amendments:
+        owners={r['cik'] for r in amendment['owners']}
+        candidates=[r for r in unique.values() if r.get('form')=='4' and r.get('issuer_cik')==amendment.get('issuer_cik') and r.get('filing_date')==amendment.get('original_filing_date') and {o['cik'] for o in r['owners']}==owners]
+        if len(candidates)!=1:
+            unresolved.add(amendment['accession']);unresolved.update(r['accession'] for r in candidates);continue
+        by_original.setdefault(candidates[0]['accession'],[]).append(amendment)
+    for original,edits in by_original.items():
+        edits.sort(key=lambda r:accepted_utc(r['accepted_at']))
+        replacements[original]=edits[-1];superseded.update(r['accession'] for r in edits[:-1])
+    return replacements,unresolved,superseded
+
 def eligible_filings(filings,as_of):
     start=str((pd.Timestamp(as_of)-pd.Timedelta(days=89)).date())
     end=(pd.Timestamp(as_of)+pd.Timedelta(days=1)).tz_localize('America/New_York').tz_convert('UTC')
     result=[];rejected=[]
-    unique={r['accession']:r for r in filings}
-    amendments=[r for r in unique.values() if r['form']=='4/A' and accepted_utc(r.get('accepted_at')) and pd.Timestamp(r['accepted_at'])<end]
+    unique={r['accession']:r for r in filings};replacements,unresolved,superseded=amendment_resolution(unique.values(),end)
+    amended={edit['accession']:original for original,edit in replacements.items()}
     for f in unique.values():
         owners={r['cik'] for r in f['owners']};why=[]
-        accepted=accepted_utc(f.get('accepted_at'))
-        if f['form']!='4':why.append('정정공시 개별 대조 필요')
+        accepted=accepted_utc(f.get('accepted_at'));effective=f
+        if f['accession'] in replacements or f['accession'] in superseded:continue
+        if f['form']=='4/A' and f['accession'] in amended:
+            effective=dict(f,amends_accession=amended[f['accession']],amendment_status='원공시를 대체한 최신 정정본')
+        elif f['form']!='4':why.append('정정공시 원본 대조 미확정')
+        if f['accession'] in unresolved:why.append('정정 대상이 하나로 확인되지 않음')
         if accepted is None:why.append('SEC 접수 시각 미확보')
         elif pd.Timestamp(accepted)>=end:why.append('기준일 이후 접수')
-        for amendment in amendments:
-            if amendment['issuer_cik']!=f['issuer_cik'] or not owners.intersection(r['cik'] for r in amendment['owners']):continue
-            original=amendment.get('original_filing_date')
-            overlaps=set(r['date'] for r in amendment['transactions']).intersection(r['date'] for r in f['transactions'])
-            if (original and original==f.get('filing_date')) or overlaps:why.append('동일 보고자·거래기간의 정정공시 존재')
         rows=[]
-        for r in f['transactions']:
+        for r in effective['transactions']:
             try:
                 if date.fromisoformat(r['date']).isoformat()!=r['date']:continue
             except (ValueError,TypeError):continue
@@ -36,7 +51,7 @@ def eligible_filings(filings,as_of):
             if accepted and r['date']>str(pd.Timestamp(accepted).tz_convert('America/New_York').date()):why.append('거래일이 접수일 이후')
             rows.append(dict(r,amount=number(r['shares']*r['price'])))
         if not rows:continue
-        item=dict(f,transactions=rows,reasons=list(dict.fromkeys(why)))
+        item=dict(effective,transactions=rows,reasons=list(dict.fromkeys(why)))
         (rejected if why else result).append(item)
     return sorted(result,key=lambda r:r['accepted_at'],reverse=True),sorted(rejected,key=lambda r:r['accession'])
 

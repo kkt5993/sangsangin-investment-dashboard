@@ -55,4 +55,11 @@ class ClinicalTests(unittest.TestCase):
    root=Path(tmp);d=SimpleNamespace(base=root,resource=lambda p:root/p);C.collect(d,Session(),NOW,lambda _:None)
    obj={'missing':[],'sections':[{'type':'dragontriggers','items':[{'observed_score':4}],'log':[]}]};views(d,obj);first=copy.deepcopy(obj);views(d,obj);self.assertEqual(first,obj);self.assertEqual(obj['sections'][0]['items'][0]['observed_score'],4);self.assertEqual(obj['sections'][0]['log'][0]['kind'],'임상 등록부')
    p=C.read(root/C.FILE);p['scopes'][0]['groups']['recruiting']={'count':0,'latest':[]};C.save(root/C.FILE,p);views(d,obj);self.assertEqual(obj['sections'][0]['log'],[]);self.assertEqual(obj['sections'][-1]['items'][0]['groups']['recruiting']['count'],0)
+ def test_views_alerts_only_observed_transition_to_recruiting(self):
+  with tempfile.TemporaryDirectory() as tmp,patch.object(C,'settings',return_value={'version':1,'scopes':[SCOPE]}):
+   root=Path(tmp);d=SimpleNamespace(base=root,resource=lambda p:root/p);C.collect(d,Session(),NOW,lambda _:None);p=C.read(root/C.FILE);study=p['scopes'][0]['groups']['all']['latest'][0]
+   study.update(status='RECRUITING',changed_fields=['status'],history=[dict(status='COMPLETED'),dict(status='RECRUITING')]);C.save(root/C.FILE,p)
+   obj={'missing':[],'sections':[{'type':'dragontriggers','items':[],'log':[]}]};views(d,obj)
+   self.assertEqual([r['kind'] for r in obj['sections'][0]['log']],['임상 등록부','임상 모집 상태 변경'])
+   p=C.read(root/C.FILE);p['scopes'][0]['groups']['all']['latest'][0]['changed_fields']=[];C.save(root/C.FILE,p);self.assertEqual(C.read(root/C.FILE)['scopes'][0]['groups']['all']['latest'][0]['changed_fields'],[]);views(d,obj);self.assertEqual(sum(r['kind']=='임상 모집 상태 변경' for r in obj['sections'][0]['log']),1)
 if __name__=='__main__':unittest.main()

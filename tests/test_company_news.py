@@ -4,7 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 import requests
-from pipeline.company_news import normalize,canonical,collect,views,FILE,feed_url,read,save
+from pipeline.company_news import normalize,canonical,collect,views,FILE,feed_url,read,save,settings
 from pipeline.dragon_signals import monitor
 
 NOW=datetime(2026,9,11,2,tzinfo=timezone.utc)
@@ -30,6 +30,11 @@ class Session:
 
 
 class CompanyNewsTests(unittest.TestCase):
+    def test_dated_membership_expands_explicit_feed_scope_without_duplicates(self):
+        d=resource(Path('.'));d.members={'us_largecap':{'members':[{'symbol':'BBB','name':'Company B'},{'symbol':'AAA','name':'Different'}]},'us100':{'members':[{'symbol':'CCC','name':'Company C'}]},'kr_largecap':{'members':[]},'kospi200':{'members':[{'symbol':'BBB','name':'Company B'}]}}
+        with patch('pipeline.company_news.read_json',return_value={'companies':SPEC}):
+            rows=settings(d)
+        self.assertEqual([r['symbol'] for r in rows],['AAA','BBB','CCC']);self.assertEqual(next(r for r in rows if r['symbol']=='AAA')['name'],'Company A');self.assertEqual(next(r for r in rows if r['symbol']=='BBB')['scope'],'official_universe')
     def test_dates_entities_and_tracking_dedup(self):
         r=normalize(rss())[0];self.assertEqual(r['title'],'A & B');self.assertEqual(r['published_at'],'2026-09-10T09:00:00+00:00');self.assertEqual(r['url'],'https://example.org/a?id=1')
         self.assertEqual(canonical('https://example.org/a?id=1&utm_source=x#part'),r['url'])

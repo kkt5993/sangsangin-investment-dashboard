@@ -13,7 +13,22 @@ FILE='company_news/feeds.json.gz'
 SOURCE='Yahoo Finance RSS'
 
 
-def settings():return read_json(ROOT/'config/company_news.json')['companies']
+def settings(d=None):
+    """Configured observations plus the current official company universe.
+
+    Callers without a dated Data object retain the explicitly verified list;
+    collection and views use the dated membership snapshot so the public scope
+    grows with the entity universe rather than an unrelated static ticker list.
+    """
+    configured=read_json(ROOT/'config/company_news.json')['companies']
+    if d is None:return configured
+    out={r['symbol']:dict(r) for r in configured}
+    members=getattr(d,'members',{})
+    for key in ['kr_largecap','kospi200','us_largecap','us100']:
+        for member in members.get(key,{}).get('members',[]):
+            symbol=member.get('symbol')
+            if symbol:out.setdefault(symbol,dict(symbol=symbol,name=member.get('name') or symbol,scope='official_universe'))
+    return [out[symbol] for symbol in sorted(out)]
 def feed_url(symbol):return 'https://finance.yahoo.com/rss/headline?'+urlencode(dict(s=symbol,region='US',lang='en-US'))
 
 
@@ -45,7 +60,7 @@ def collect(d,session=None,now=None,pause=time.sleep):
     if previous.get('status') in ['error','access_refused'] and 0<=age(previous.get('attempted_at'),now)<1:return dict(report,status='backoff')
     packet=copy.deepcopy(packet);own=session is None;session=session or requests.Session()
     try:
-        for spec in settings():
+        for spec in settings(d):
             symbol=spec['symbol'];prior=packet['feeds'].get(symbol,{})
             if prior.get('url')==feed_url(symbol) and not prior.get('error') and 0<=age(prior.get('checked_at'),now)<24:continue
             report['requests']+=1;pause(1)
@@ -79,7 +94,7 @@ def views(d,dragon,now=None):
     start=(date.fromisoformat(d.as_of)-timedelta(days=6)).isoformat();items=[]
     entity_section=next(s for s in dragon['sections'] if s['type']=='entities');entities={e['symbol']:e for e in entity_section['entities']}
     for e in entities.values():e.pop('company_news',None)
-    for spec in settings():
+    for spec in settings(d):
         r=raw.get('feeds',{}).get(spec['symbol'],{})
         rows=[a for a in r.get('items',[]) if start<=a['published_at'][:10]<=d.as_of]
         fresh=r.get('url')==feed_url(spec['symbol']) and bool(r.get('retrieved_at')) and not r.get('error') and 0<=age(r.get('retrieved_at'),now)<=36

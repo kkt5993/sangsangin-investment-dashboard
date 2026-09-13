@@ -4,7 +4,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 import requests
-from pipeline.attention_data import normalize, collect, save, read, FILE
+from pipeline.attention_data import normalize, normalize_identity, collect, save, read, FILE, identity_url
 from pipeline.attention_views import metrics, views
 
 
@@ -34,7 +34,18 @@ class AttentionTests(unittest.TestCase):
         self.assertIsNone(metrics(p,'2026-09-09')['change'])
 
     def packet(self):
-        return dict(project='en.wikipedia.org',pages={'NVDA':dict(**self.spec,project='en.wikipedia.org',points=self.points(),checked_at=self.now.isoformat(),retrieved_at=self.now.isoformat(),requested_end='2026-09-09',source_url='https://wikimedia.org/test',error=None)})
+        return dict(project='en.wikipedia.org',pages={'NVDA':dict(**self.spec,project='en.wikipedia.org',identity=dict(title='Nvidia',checked_at=self.now.isoformat(),source_url=identity_url(self.spec['pageid']),error=None),title_changes=[],points=self.points(),checked_at=self.now.isoformat(),retrieved_at=self.now.isoformat(),requested_end='2026-09-09',source_url='https://wikimedia.org/test',error=None)})
+
+    def test_page_identity_requires_fixed_page_and_wikidata_and_title_changes_reset_points(self):
+        raw={'query':{'pages':[{'pageid':self.spec['pageid'],'title':'Nvidia','pageprops':{'wikibase_item':self.spec['wikidata']}}]}}
+        self.assertEqual(normalize_identity(raw,self.spec),'Nvidia')
+        with self.assertRaises(ValueError):normalize_identity({'query':{'pages':[{'pageid':self.spec['pageid'],'title':'Nvidia','pageprops':{}}]}},self.spec)
+        with tempfile.TemporaryDirectory() as td,patch('pipeline.attention_data.settings',return_value=dict(project='en.wikipedia.org',pages=[self.spec])):
+            base=Path(td);d=SimpleNamespace(as_of='2026-09-10',base=base,resource=lambda n:base/n);packet=self.packet();packet['pages']['NVDA']['title']='Old Nvidia';packet['pages']['NVDA']['identity']['checked_at']=(self.now-timedelta(days=31)).isoformat();save(base/FILE,packet)
+            identity=lambda:raw;pageviews=lambda:self.raw('2026-08-27',14,False)
+            session=SimpleNamespace(get=lambda target,*a,**k:SimpleNamespace(raise_for_status=lambda:None,json=identity if target.startswith('https://en.wikipedia.org/') else pageviews))
+            report=collect(d,session,self.now,pause=lambda _:None);self.assertEqual(report['requests'],2)
+            got=read(base/FILE)['pages']['NVDA'];self.assertEqual(got['title'],'Nvidia');self.assertEqual(got['title_changes'][0]['from_title'],'Old Nvidia');self.assertEqual(got['points'][0]['date'],'2026-08-27')
 
     def test_cache_revisions_gap_and_failure_preserve(self):
         with tempfile.TemporaryDirectory() as td:
@@ -64,7 +75,7 @@ class AttentionTests(unittest.TestCase):
             views(d,dragon,self.now+timedelta(days=4));self.assertFalse(dragon['sections'][-1]['items'][0]['spike'])
             for point in packet['pages']['NVDA']['points'][:7]:point['views']=0
             views(d,dragon,self.now);self.assertFalse(dragon['sections'][-1]['items'][0]['fresh'])
-            packet['pages']['NVDA']['title']='different';views(d,dragon,self.now);self.assertEqual(dragon['sections'][-1]['items'][0]['points'],[])
+            packet['pages']['NVDA']['wikidata']='different';views(d,dragon,self.now);self.assertEqual(dragon['sections'][-1]['items'][0]['points'],[])
 
 
 if __name__=='__main__':unittest.main()

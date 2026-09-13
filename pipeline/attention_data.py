@@ -8,6 +8,7 @@ from .store import ROOT, read_json
 
 FILE = 'attention/pageviews.json.gz'
 API = 'https://wikimedia.org/api/rest_v1/metrics/pageviews/per-article/'
+IDENTITY_API = 'https://en.wikipedia.org/w/api.php'
 
 
 def settings():
@@ -26,6 +27,20 @@ def age(value, now):
 
 def url(project, title, start, end):
     return API + project + '/all-access/user/' + quote(title.replace(' ', '_'), safe='') + '/daily/' + start.replace('-', '') + '00/' + end.replace('-', '') + '00'
+
+
+def identity_url(pageid):
+    return IDENTITY_API + '?action=query&format=json&formatversion=2&prop=pageprops&pageids=' + quote(str(pageid), safe='')
+
+
+def normalize_identity(raw, spec):
+    pages=raw.get('query',{}).get('pages')
+    if not isinstance(pages,list) or len(pages)!=1:
+        raise ValueError('Wikipedia identity response')
+    page=pages[0];title=page.get('title');wikidata=page.get('pageprops',{}).get('wikibase_item')
+    if page.get('pageid')!=spec['pageid'] or not isinstance(title,str) or not title or wikidata!=spec['wikidata']:
+        raise ValueError('Wikipedia page identity mismatch')
+    return title
 
 
 def normalize(raw, project, title, start, end):
@@ -65,22 +80,41 @@ def collect(d, session=None, now=None, pause=time.sleep):
     try:
         for spec in cfg['pages']:
             prior = packet['pages'].get(spec['symbol'], {})
-            same = all(prior.get(k) == spec[k] for k in ['title', 'pageid', 'wikidata']) and prior.get('project') == cfg['project']
-            if same and prior.get('requested_end') == end and not prior.get('error') and 0 <= age(prior.get('checked_at'), now) < 24:
+            same = all(prior.get(k) == spec[k] for k in ['pageid', 'wikidata']) and prior.get('project') == cfg['project']
+            identity = prior.get('identity', {}) if same else {}
+            title = identity.get('title') if 0 <= age(identity.get('checked_at'), now) < 30 * 24 else None
+            if title is None:
+                report['requests'] += 1; report['status'] = 'ok'; pause(1)
+                try:
+                    response=session.get(identity_url(spec['pageid']),timeout=(10,30),headers={'User-Agent':'SangsanginResearch/1.0 (+https://github.com/kkt5993/sangsangin-investment-dashboard)'})
+                    response.raise_for_status();title=normalize_identity(response.json(),spec)
+                    identity=dict(title=title,checked_at=now.isoformat(),source_url=identity_url(spec['pageid']),error=None)
+                except Exception as exc:
+                    code=getattr(getattr(exc,'response',None),'status_code',None);report['errors'].append(dict(symbol=spec['symbol'],type=type(exc).__name__,http_status=code,stage='identity'))
+                    packet['pages'][spec['symbol']]=dict(prior,checked_at=now.isoformat(),identity=dict(**identity,checked_at=now.isoformat(),error=type(exc).__name__),error=type(exc).__name__)
+                    report['status']='access_refused' if code in [401,403,429] else 'error'
+                    if code in [401,403,429]:break
+                    continue
+            if same and prior.get('title') == title and prior.get('requested_end') == end and not prior.get('error') and 0 <= age(prior.get('checked_at'), now) < 24:
                 continue
+            title_changed=same and prior.get('title') not in [None,title]
             prior = prior if same else {}
             old_points = prior.get('points', [])
+            if title_changed:
+                old_points=[]
             start = max(date.fromisoformat(old_points[-1]['date']) - timedelta(days=6), date.fromisoformat(end) - timedelta(days=59)).isoformat() if old_points else (date.fromisoformat(end) - timedelta(days=59)).isoformat()
             if start > end:
                 continue  # Historical rebuild does not overwrite a later cache.
-            target = url(cfg['project'], spec['title'], start, end); report['requests'] += 1; report['status'] = 'ok'; pause(1)
+            target = url(cfg['project'], title, start, end); report['requests'] += 1; report['status'] = 'ok'; pause(1)
             try:
                 response = session.get(target, timeout=(10, 30), headers={'User-Agent': 'SangsanginResearch/1.0 (+https://github.com/kkt5993/sangsangin-investment-dashboard)'})
                 response.raise_for_status()
-                points = normalize(response.json(), cfg['project'], spec['title'], start, end)
+                points = normalize(response.json(), cfg['project'], title, start, end)
                 merged = {r['date']: r for r in old_points if r['date'] < start or r['date'] > end}
                 merged.update({r['date']: r for r in points})
-                packet['pages'][spec['symbol']] = dict(**spec, project=cfg['project'], points=[merged[k] for k in sorted(merged)],
+                changes=list(prior.get('title_changes',[]))
+                if title_changed:changes.append(dict(from_title=prior['title'],to_title=title,at=now.isoformat()))
+                packet['pages'][spec['symbol']] = dict(**{**spec,'title':title}, project=cfg['project'], identity=identity, title_changes=changes, points=[merged[k] for k in sorted(merged)],
                     checked_at=now.isoformat(), retrieved_at=now.isoformat(), requested_end=end, source_url=target, error=None)
             except Exception as exc:
                 code = getattr(getattr(exc, 'response', None), 'status_code', None)

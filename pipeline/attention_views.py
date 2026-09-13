@@ -27,17 +27,18 @@ def views(d, dragon, now=None):
         e.pop('attention', None)
     for spec in cfg['pages']:
         p = packet.get('pages', {}).get(spec['symbol'], {})
-        same = all(p.get(k) == spec[k] for k in ['title', 'pageid', 'wikidata']) and p.get('project') == cfg['project']
+        same = all(p.get(k) == spec[k] for k in ['pageid', 'wikidata']) and p.get('project') == cfg['project']
+        title=p.get('title') if same and isinstance(p.get('title'),str) else spec['title']
         points = deepcopy(p.get('points', [])) if same else []
         points = [r for r in points if r['date'] <= d.as_of]
         metric = metrics(points, d.as_of); end = metric['end']
         fresh = bool(metric['complete'] and metric['change'] is not None and end and 0 <= (date.fromisoformat(d.as_of) - date.fromisoformat(end)).days <= 3
                      and 0 <= age(p.get('retrieved_at'), now) <= 72 and not p.get('error'))
         match = [e for e in entities if e['symbol'] == spec['symbol']]
-        item = dict(**spec, entity=match[0]['id'] if len(match) == 1 else None, points=points, metrics=metric, fresh=fresh,
+        item = dict(**{**spec,'title':title}, entity=match[0]['id'] if len(match) == 1 else None, points=points, metrics=metric, fresh=fresh,
                     spike=bool(fresh and metric['change'] is not None and metric['change'] >= 40),
                     retrieved_at=p.get('retrieved_at') if same else None, checked_at=p.get('checked_at'), error=p.get('error'),
-                    source_url=p.get('source_url') if same else None, article_url='https://' + cfg['project'] + '/wiki/' + quote(spec['title'].replace(' ', '_'), safe=''))
+                    source_url=p.get('source_url') if same else None, identity=p.get('identity') if same else None, title_changes=p.get('title_changes',[]) if same else [], article_url='https://' + cfg['project'] + '/wiki/' + quote(title.replace(' ', '_'), safe=''))
         items.append(item)
         if len(match) == 1:
             match[0]['attention'] = deepcopy(item)

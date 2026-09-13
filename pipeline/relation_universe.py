@@ -4,7 +4,17 @@ from urllib.parse import urlsplit
 from .store import ROOT,read_json
 
 def settings():
-    c=read_json(ROOT/'config/relation_universe.json');validate(c);return c
+    c=read_json(ROOT/'config/relation_universe.json')
+    additions=read_json(ROOT/'config/relation_universe_additions.json')
+    assert additions['version']==1
+    c={**c,'companies':c['companies']+additions['companies'],
+       'unresolved':additions['unresolved'], 'reviewed_at':additions['reviewed_at'],
+       'note':additions['note']}
+    validate(c);return c
+
+def price_symbols():
+    """Explicit source-identified relation instruments for incremental prices."""
+    return sorted(r['symbol'] for r in settings()['companies'])
 
 def validate(c):
     assert c['version']==1 and datetime.fromisoformat(c['reviewed_at']).tzinfo is not None

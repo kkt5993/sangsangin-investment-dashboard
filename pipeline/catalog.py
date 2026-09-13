@@ -58,8 +58,9 @@ def reference_stocks():
 
 
 def extra_price_symbols():
+    from .relation_universe import price_symbols
     from .universe import symbols
     return sorted({r['symbol'] for c in etfs() for r in c['items']} |
                   {s for s,n,g in MULTI+SCAN_EXTRA} | {s for _,s,_ in INDICES} |
                   {s for s,n in DYNAMICS_STOCKS} |
-                  set(symbols()) | set(DETAIL_PRICES) | {'LQD','ACWI','SOXX','FXE','FXY','BIL','^VIX','^VIX3M','^SKEW','^TNX','^RUT'})
+                  set(symbols()) | set(price_symbols()) | set(DETAIL_PRICES) | {'LQD','ACWI','SOXX','FXE','FXY','BIL','^VIX','^VIX3M','^SKEW','^TNX','^RUT'})

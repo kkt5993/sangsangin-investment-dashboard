@@ -1,6 +1,7 @@
 import copy,unittest
 from pipeline import relation_universe as U
 from pipeline.relation_views import companies
+from pipeline.catalog import extra_price_symbols
 
 class RelationUniverseTest(unittest.TestCase):
     def test_collision_and_aliases(self):
@@ -8,7 +9,10 @@ class RelationUniverseTest(unittest.TestCase):
         self.assertNotIn('TEL',aliases);self.assertIn('TEL',[r['alias'] for r in c['unresolved']])
         self.assertEqual(aliases['HANMI'],'042700.KS');self.assertEqual(aliases['008930'],'008930.KS')
         self.assertEqual(aliases['APPLEINC'],aliases['AAPL']);self.assertEqual(aliases['CHEVRONCORPO'],aliases['CVX'])
-        self.assertEqual(len(c['companies']),107);self.assertEqual(len(aliases),110);self.assertEqual(len(c['unresolved']),49)
+        self.assertEqual(len(c['companies']),149);self.assertEqual(len(aliases),153);self.assertEqual(len(c['unresolved']),6)
+        self.assertEqual(aliases['INSMED'],'INSM');self.assertEqual(aliases['STMICROELECT'],'STM')
+        self.assertEqual(len(U.price_symbols()),149)
+        self.assertTrue(set(U.price_symbols()) <= set(extra_price_symbols()))
     def test_symbol_registry_deduplicates(self):
         symbols=[r['symbol'] for r in companies()];self.assertEqual(len(symbols),len(set(symbols)))
         self.assertNotIn('TEL',symbols);self.assertIn('AES',symbols)

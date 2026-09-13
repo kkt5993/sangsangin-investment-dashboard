@@ -50,7 +50,9 @@ def prices(parent,base,as_of,members=None,now=None):
     from .catalog import DETAIL_PRICES
     from .attention_data import settings as attention_settings
     from .company_news import settings as news_settings
-    wanted=universe_symbols(members or parent.members)|set(DETAIL_PRICES)|{p['symbol'] for p in attention_settings()['pages']}|{p['symbol'] for p in news_settings()}
+    from .relation_universe import price_symbols as relation_price_symbols
+    wanted=(universe_symbols(members or parent.members)|set(DETAIL_PRICES)|set(relation_price_symbols())|
+            {p['symbol'] for p in attention_settings()['pages']}|{p['symbol'] for p in news_settings()})
     # Newly disclosed constituents get one bounded 3-year history. Subsequent
     # runs add only changed bars. Unavailable tickers remain explicit coverage gaps.
     additions=sorted(wanted-set(parent.frames))[:25]

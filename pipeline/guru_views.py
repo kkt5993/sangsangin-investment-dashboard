@@ -2,7 +2,7 @@
 from copy import deepcopy
 from datetime import date,datetime,timezone
 from decimal import Decimal
-from .guru_data import FILE,read,settings,latest
+from .guru_data import FILE,read,settings,latest,history
 from .guru_identifiers import FILE as IDENTIFIERS,resolve
 
 def holdings(report):
@@ -18,6 +18,26 @@ def holdings(report):
         g['value']=str(g['value']);g['quantity']=str(g['quantity']);out.append(g)
     return sorted(out,key=lambda r:(-Decimal(r['value']),r['cusip'],r['share_class'],r['option'] or ''))
 
+def changes(current,previous):
+    """Exact reported-position differences; no trade-date or flow inference."""
+    def index(report):
+        out={}
+        if not report or report.get('resolution','holdings')!='holdings':return out
+        for r in holdings(report):out[(r['cusip'],r['share_class'],r['quantity_type'],r['option'])]=r
+        return out
+    new,old=index(current),index(previous);out=[]
+    for key in sorted(set(new)|set(old)):
+        a,b=new.get(key),old.get(key)
+        if not b:status='신규 보고'
+        elif not a:status='보고 제외'
+        elif Decimal(a['value'])>Decimal(b['value']):status='보고 금액 증가'
+        elif Decimal(a['value'])<Decimal(b['value']):status='보고 금액 감소'
+        else:status='보고 금액 동일'
+        item=dict(cusip=key[0],share_class=key[1],quantity_type=key[2],option=key[3],status=status,
+                  issuer=(a or b)['issuer'],current_value=(a or {}).get('value'),previous_value=(b or {}).get('value'))
+        out.append(item)
+    return out
+
 def views(d,dragon,now=None):
     now=now or datetime.now(timezone.utc)
     path=d.resource(FILE);packet=read(path) if path.exists() else {};reports=packet.get('filings',[]);items=[]
@@ -25,7 +45,11 @@ def views(d,dragon,now=None):
     entities=next((s['entities'] for s in dragon['sections'] if s['type']=='entities'),[]);entity_lookup={e['id']:e for e in entities};excluded={};linked=0
     for e in entities:e['guru_positions']=[]
     for manager in settings():
-        report=latest(reports,manager['cik'],d.as_of);item=deepcopy(manager);item.update(report=None,holdings=[],ledger=[])
+        report=latest(reports,manager['cik'],d.as_of);series=history(reports,manager['cik'],d.as_of);item=deepcopy(manager);item.update(report=None,holdings=[],ledger=[],history=[],changes=[])
+        for prior in series:
+            item['history'].append(dict(report_date=prior['report_date'],filing_date=prior['filing_date'],accepted_at=prior['accepted_at'],form=prior['form'],resolution=prior['resolution'],entry_total=prior['entry_total'],table_sum=str(prior['table_sum']),value_total=str(prior['value_total']),index_url=prior['index_url'],accessions=prior.get('accessions',[])))
+        if len(series)>1 and series[0]['resolution']=='holdings' and series[1]['resolution']=='holdings':
+            item['changes']=changes(series[0],series[1])
         if report:
             item['report']={k:deepcopy(v) for k,v in report.items() if k not in ['entries','contact_hash']}
             for key in ['value_total','table_sum','reconciliation_difference']:item['report'][key]=str(report[key])
@@ -59,6 +83,6 @@ def views(d,dragon,now=None):
                 if r['id']=='guru':r['status']='공시 연결 · 신호 보류';r['basis']='6개 보고 법인 공시·확인된 CUSIP 기업 대응 연결. 최신 공시 완전성과 분기 시차 검증 전 +3 합산 보류'
     dragon['missing']=[m.replace('·13F·정량 투자뷰','·정량 투자뷰') for m in dragon['missing']]
     dragon['missing']=[m for m in dragon['missing'] if not m.startswith('13F는6개 보고 법인의 확인 공시')]
-    gap='13F는6개 보고 법인 공시와 확인된 CUSIP의 기업 상세를 연결합니다. 최신 전체 조회·과거 연속 변화·미대응 식별자와 구루 뉴스/관심분야 자동집계는 미완이며 신호점수에 합산하지 않습니다.'
+    gap='13F는6개 보고 법인의 최대4개 분기 공시와 확인된 CUSIP의 기업 상세를 연결합니다. 보고 금액 변화는 인접 보고기간의 공시 차이이며 거래일·순매수·현재 보유가 아닙니다. 오래된 전체 submissions 탐색, 미대응 식별자와 구루 뉴스/관심분야 자동집계는 미완이며 신호점수에 합산하지 않습니다.'
     if gap not in dragon['missing']:dragon['missing'].append(gap)
     return dragon

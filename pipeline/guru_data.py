@@ -16,6 +16,7 @@ from .cache import chain
 
 FILE='guru/observations.json.gz'
 FORMS={'13F-HR','13F-HR/A','13F-NT','13F-NT/A'}
+HISTORY_PERIODS=4
 
 def stamp():return datetime.now(timezone.utc).isoformat()
 def read(path):return json.loads(gzip.decompress(path.read_bytes()))
@@ -104,24 +105,35 @@ def parse_reviewed_table(text,meta,entry_total,value_total):
     m=dict(meta,mode='reviewed_sec_rendered',reviewed_at=stamp(),extract_sha256=hashlib.sha256(text.encode()).hexdigest())
     return normalized(m,rows,entry_total,value_total)
 
-def latest(records,cik,asof):
-    eligible=[r for r in records if r['cik']==cik and r['filing_date']<=asof and utc(r['accepted_at']).date().isoformat()<=asof and r['report_date']<=asof]
-    if not eligible:return None
-    period=max(r['report_date'] for r in eligible);items=sorted((r for r in eligible if r['report_date']==period),key=lambda r:(r['accepted_at'],r['accession']))
+def eligible(records,cik,asof):
+    return [r for r in records if r['cik']==cik and r['filing_date']<=asof and utc(r['accepted_at']).date().isoformat()<=asof and r['report_date']<=asof]
+
+def resolve_period(records,cik,period):
+    items=sorted((r for r in records if r['cik']==cik and r['report_date']==period),key=lambda r:(r['accepted_at'],r['accession']))
+    if not items:return None
     state=None;accessions=[]
     for r in items:
         if r['form'].startswith('13F-NT'):
             state=copy.deepcopy(r);state['resolution']='notice';accessions=[r['accession']];continue
         if not r['amendment'] or r['amendment']=='RESTATEMENT':
-            state=copy.deepcopy(r);accessions=[r['accession']]
+            state=copy.deepcopy(r);state['resolution']='holdings';accessions=[r['accession']]
         elif state and state.get('resolution')=='holdings':
             if state['unit']!=r['unit']:raise ValueError('13F amendment units differ')
             state['entries']+=copy.deepcopy(r['entries']);state['entry_total']+=r['entry_total'];state['value_total']+=r['value_total'];state['accepted_at']=r['accepted_at'];state['filing_date']=r['filing_date'];state['confidential']|=r['confidential'];accessions.append(r['accession'])
         else:
             state=copy.deepcopy(r);state['resolution']='amendment_base_missing';accessions=[r['accession']];continue
-        state['resolution']='holdings'
-    state['table_sum']=sum(r['value'] for r in state['entries']);state['reconciliation_difference']=state['table_sum']-state['value_total']
+    if state['resolution']=='holdings':
+        state['table_sum']=sum(r['value'] for r in state['entries']);state['reconciliation_difference']=state['table_sum']-state['value_total']
     state['accessions']=accessions;return state
+
+def latest(records,cik,asof):
+    rows=eligible(records,cik,asof)
+    return resolve_period(rows,cik,max((r['report_date'] for r in rows),default=None))
+
+def history(records,cik,asof,periods=HISTORY_PERIODS):
+    rows=eligible(records,cik,asof)
+    dates=sorted({r['report_date'] for r in rows},reverse=True)[:periods]
+    return [resolve_period(rows,cik,period) for period in dates]
 
 class Refused(Exception):pass
 def collect(d,contact=None,session=None,now=None,pause=time.sleep):
@@ -153,9 +165,9 @@ def collect(d,contact=None,session=None,now=None,pause=time.sleep):
             rows=[{k:v[i] for k,v in recent.items()} for i in range(n)]
             rows=[r for r in rows if r['form'] in FORMS and r['filingDate']<=d.as_of]
             if not rows:report['errors'].append(dict(cik=cik,reason='recent_metadata_missing_13f'));continue
-            period=max(r['reportDate'] for r in rows)
+            periods=sorted({r['reportDate'] for r in rows},reverse=True)[:HISTORY_PERIODS]
             save(d.base/('guru/submissions/'+cik+'.json.gz'),data)
-            for r in sorted((r for r in rows if r['reportDate']==period),key=lambda r:r['acceptanceDateTime']):
+            for r in sorted((r for r in rows if r['reportDate'] in periods),key=lambda r:(r['reportDate'],r['acceptanceDateTime']),reverse=True):
                 accession=r['accessionNumber']
                 if accession in known:continue
                 prefix='https://www.sec.gov/Archives/edgar/data/'+str(int(cik))+'/'+accession.replace('-','')+'/'

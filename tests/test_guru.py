@@ -37,6 +37,10 @@ class GuruTests(unittest.TestCase):
         out=g.latest([am,newer],'0000000123','2026-09-10');self.assertEqual(out['resolution'],'amendment_base_missing')
         rest=copy.deepcopy(newer);rest['amendment']='RESTATEMENT';out=g.latest([base,am,rest],'0000000123','2026-09-10');self.assertEqual(out['table_sum'],50);self.assertEqual(len(out['entries']),1)
         self.assertIsNone(g.latest([base],'0000000123','2026-08-13'))
+    def test_history_keeps_quarterly_resolution_order(self):
+        newest=report();old=report(metadata=dict(meta('0000000123-26-000004'),report_date='2026-03-31',filing_date='2026-05-14',accepted_at='2026-05-14T20:00:00+00:00'))
+        series=g.history([old,newest],'0000000123','2026-09-10');self.assertEqual([r['report_date'] for r in series],['2026-06-30','2026-03-31'])
+        delta=__import__('pipeline.guru_views',fromlist=['changes']).changes(newest,old);self.assertEqual(delta[0]['status'],'보고 금액 동일')
     def test_notice_is_not_zero_holdings(self):
         nt=g.normalized(meta(form='13F-NT'),[],0,0,other_reporting=[dict(name='PARENT',cik='0000000456')]);out=g.latest([nt],'0000000123','2026-09-10');self.assertEqual(out['resolution'],'notice');self.assertEqual(out['other_reporting'][0]['cik'],'0000000456')
     def test_reviewed_table_complete_schema_and_unit_required(self):

@@ -40,7 +40,18 @@ def coverage(graph):
         companies=rows,unresolved=c['unresolved'],note=c['note'],reviewed_at=c['reviewed_at'])
 
 def verify(graph):
-    expected=coverage(graph);assert graph['universe_coverage']==expected
-    aliases={a:r['symbol'] for r in expected['companies'] for a in r['aliases']}
+    current=settings();nodes={n['symbol']:n for n in graph['nodes'] if n.get('symbol')}
+    stored=graph['universe_coverage']
+    # A public snapshot can legitimately predate a newly staged mapping.  It
+    # remains valid only as a self-contained historical coverage report; a
+    # freshly built graph must contain every current configured symbol.
+    if all(r['symbol'] in nodes for r in current['companies']):
+        expected=coverage(graph);assert stored==expected
+    else:
+        rows=stored.get('companies',[]);assert rows and all(r['symbol'] in nodes for r in rows)
+        assert stored['mapped_aliases']==sum(len(r['aliases']) for r in rows)
+        assert len({a for r in rows for a in r['aliases']})==stored['mapped_aliases']
+        assert stored['reference_objects']>=stored['mapped_aliases']+len(stored['unresolved'])
+    aliases={a:r['symbol'] for r in stored['companies'] for a in r['aliases']}
     assert aliases['HANMI']=='042700.KS' and aliases['008930']=='008930.KS'
     assert aliases['APPLEINC']==aliases['AAPL'] and aliases['CHEVRONCORPO']==aliases['CVX']

@@ -6,6 +6,7 @@ closed.  Keeping the exact source line makes the remaining implementation
 scope auditable rather than relying on an informal, shrinking checklist.
 """
 from pathlib import Path
+from pathlib import PurePosixPath
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -26,6 +27,9 @@ def entries(path):
     for number, line in enumerate(path.read_text(encoding='utf-8').splitlines(), 1):
         text = line.strip()
         if PATTERN.search(text):
+            # A copied source sentence can contain a link relative to its own
+            # document.  Keep its label, not a now-invalid nested link.
+            text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', text)
             yield number, re.sub(r'\s+', ' ', text)
 
 
@@ -37,6 +41,12 @@ def tier(name):
     if name == 'README.md':
         return 'operational'
     return 'derived'
+
+
+def source_link(name, number):
+    path = PurePosixPath(name)
+    target = path.relative_to('research').as_posix() if path.parts[0] == 'research' else '../' + name
+    return f'[{name}:{number}]({target}#L{number})'
 
 def main():
     groups = {key: [] for key in ('canonical', 'operational', 'derived', 'historical')}
@@ -78,7 +88,7 @@ def main():
         for name, items in groups[key]:
             lines.extend([f'### `{name}`', ''])
             marker = '- [ ]' if key == 'canonical' else '-'
-            lines.extend(f'{marker} [{name}:{number}](../{name}#L{number}) — {text}' for number, text in items)
+            lines.extend(f'{marker} {source_link(name, number)} — {text}' for number, text in items)
             lines.append('')
     OUTPUT.write_text('\n'.join(lines), encoding='utf-8')
 

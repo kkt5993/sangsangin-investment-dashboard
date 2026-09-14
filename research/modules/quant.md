@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-13. Stat Arb / 멀티팩터 / BAB / TSMOM / 단기반전.
+**부분 구현** · 가격 기준 2026-09-14. Stat Arb / 멀티팩터 / BAB / TSMOM / 단기반전.
 
 - 계산 코드: [quant_modules.py](../../pipeline/quant_modules.py) · [quant_screens.py](../../pipeline/quant_screens.py) · [quant-screens.js](../../docs/quant-screens.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/quant.json)

@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-13. 리스크 콕핏 / 신호등 US·KR / 선제위험·감마 / 파생·옵션 / KOSPI 숏감마 / 쏠림·신용 / CFTC 포지션 / 파생 Wag-the-Dog / 비펀더멘탈 수급.
+**부분 구현** · 가격 기준 2026-09-14. 리스크 콕핏 / 신호등 US·KR / 선제위험·감마 / 파생·옵션 / KOSPI 숏감마 / 쏠림·신용 / CFTC 포지션 / 파생 Wag-the-Dog / 비펀더멘탈 수급.
 
 - 계산 코드: [macro_modules.py](../../pipeline/macro_modules.py) · [option_analytics.py](../../pipeline/option_analytics.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [cot_data.py](../../pipeline/cot_data.py) · [wagdog.py](../../pipeline/wagdog.py) · [kr_shortgamma.py](../../pipeline/kr_shortgamma.py) · [kr_shortgamma_data.py](../../pipeline/kr_shortgamma_data.py) · [risk_cockpit.py](../../pipeline/risk_cockpit.py) · [risk_signals.py](../../pipeline/risk_signals.py) · [risk_signals_data.py](../../pipeline/risk_signals_data.py) · [flows.py](../../pipeline/flows.py) · [flows_data.py](../../pipeline/flows_data.py)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/risk.json)

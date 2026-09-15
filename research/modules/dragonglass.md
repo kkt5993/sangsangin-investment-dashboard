@@ -3,7 +3,7 @@
 <!-- implementation:start -->
 ## 현재 팀 구현
 
-**부분 구현** · 가격 기준 2026-09-14. 관계 지도 / 지금 주목 / 위성사진 / 기업 상세 / 시나리오 / 결정 원장 / 트리거·촉매 / 리서치 / 데이터 소스 / 현황판 / 방법론 / 공식 분류 / 시장 Beta 민감도.
+**부분 구현** · 가격 기준 2026-09-15. 관계 지도 / 지금 주목 / 위성사진 / 기업 상세 / 시나리오 / 결정 원장 / 트리거·촉매 / 리서치 / 데이터 소스 / 현황판 / 방법론 / 공식 분류 / 시장 Beta 민감도.
 
 - 계산 코드: [platform_modules.py](../../pipeline/platform_modules.py) · [subview_modules.py](../../pipeline/subview_modules.py) · [company_news.py](../../pipeline/company_news.py) · [news_tone.py](../../pipeline/news_tone.py) · [company-news.js](../../docs/company-news.js) · [entities.py](../../pipeline/entities.py) · [relation_model.py](../../pipeline/relation_model.py) · [relation_views.py](../../pipeline/relation_views.py) · [relation_discovery.py](../../pipeline/relation_discovery.py) · [relation-discovery.js](../../docs/relation-discovery.js)
 - 화면: [research-dashboard.js](../../docs/research-dashboard.js) · [계산 결과](../../docs/data/dragonglass.json)
